@@ -1,15 +1,10 @@
 import React from 'react';
 import { 
-  LayoutDashboard, 
+  Crosshair, 
+  Radio, 
   UserCheck, 
-  FileCheck2, 
-  Globe2, 
-  Building2, 
-  Sparkles, 
-  KanbanSquare, 
-  LineChart, 
-  Settings,
-  CheckSquare
+  Send, 
+  Settings
 } from 'lucide-react';
 
 export interface TabItem {
@@ -20,17 +15,42 @@ export interface TabItem {
   description: string;
 }
 
-const TABS: TabItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, description: 'Resumen ejecutivo y acciones recomendadas' },
-  { id: 'profile', label: 'Perfil', icon: UserCheck, description: 'Master Profile y Banco de Logros' },
-  { id: 'cvs', label: 'CVs', icon: FileCheck2, description: 'Generación de plantillas y versiones de CV' },
-  { id: 'sources', label: 'Fuentes', icon: Globe2, badge: 'Portales', description: 'Directorio y Lanzador de 11 Categorías & 25+ Portales' },
-  { id: 'companies', label: 'Empresas & Careers', icon: Building2, badge: 'Links', description: 'Monitoreo de links oficiales de carreras y vacantes' },
-  { id: 'offers', label: 'Ofertas', icon: Sparkles, badge: 'Resultados', description: 'Buscador con Google 2 semanas y Pipeline Maestro de 5 Pasos' },
-  { id: 'batch_applications', label: 'Postulación en Lote', icon: CheckSquare, badge: 'SOLID Lote', description: 'Revisión unificada, verificación de enlaces y despacho masivo' },
-  { id: 'applications', label: 'Candidaturas', icon: KanbanSquare, badge: 'Progreso', description: 'Seguimiento del progreso de cada solicitud' },
-  { id: 'intelligence', label: 'Inteligencia', icon: LineChart, description: 'Estadísticas, conversión y Asesor IA' },
-  { id: 'settings', label: 'Configuración', icon: Settings, description: 'Agentes, LLMs y copias de seguridad' }
+const TACTICAL_STATIONS: TabItem[] = [
+  { 
+    id: 'dashboard', 
+    label: 'War Room', 
+    icon: Crosshair, 
+    badge: 'HUD',
+    description: 'Centro de Mando, Briefing Diario y Estatus de Visado' 
+  },
+  { 
+    id: 'market_radar', 
+    label: 'Radar de Mercado', 
+    icon: Radio, 
+    badge: 'Recon',
+    description: '350+ Vacantes, 3 Cuadrantes de Visado y Empresas Target' 
+  },
+  { 
+    id: 'agent_dossier', 
+    label: 'Dossier del Agente', 
+    icon: UserCheck, 
+    badge: 'Armería',
+    description: 'Perfil Geofísico, Máster Kiel y CVs Adaptados (ES/EN)' 
+  },
+  { 
+    id: 'mission_control', 
+    label: 'Sala de Control', 
+    icon: Send, 
+    badge: 'Misiones',
+    description: 'Kanban de Candidaturas, Cartas y Funnel de Conversión' 
+  },
+  { 
+    id: 'settings', 
+    label: 'Cuartel General', 
+    icon: Settings, 
+    badge: 'HQ Tools',
+    description: 'Extensión Chrome, Git-Scraper y Respaldo JSON' 
+  }
 ];
 
 interface SidebarProps {
@@ -39,25 +59,36 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab }) => {
+  // Map legacy tab IDs to parent stations if needed
+  const resolveActiveStation = (tabId: string): string => {
+    if (['offers', 'sources', 'companies'].includes(tabId)) return 'market_radar';
+    if (['profile', 'cvs'].includes(tabId)) return 'agent_dossier';
+    if (['applications', 'batch_applications', 'intelligence'].includes(tabId)) return 'mission_control';
+    return tabId;
+  };
+
+  const currentStation = resolveActiveStation(activeTab);
+
   return (
-    <aside className="w-64 bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0 min-h-[calc(100vh-65px)] shadow-lg text-slate-100">
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-          Navegación Principal
+    <aside className="w-64 bg-[#0a0f1d] border-r border-slate-800 flex flex-col shrink-0 min-h-[calc(100vh-65px)] shadow-2xl text-slate-100">
+      <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
+        <div className="px-3 py-2 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400/80 flex items-center justify-between">
+          <span>ESTACIONES DE MANDO</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
         </div>
 
-        {TABS.map((tab) => {
+        {TACTICAL_STATIONS.map((tab) => {
           const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
+          const isActive = currentStation === tab.id;
 
           return (
             <button
               key={tab.id}
               id={`tab-btn-${tab.id}`}
               onClick={() => onSelectTab(tab.id)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
+              className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-xs font-semibold transition-all group ${
                 isActive
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm'
+                  ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/40 shadow-md ring-1 ring-emerald-500/20'
                   : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 border border-transparent'
               }`}
             >
@@ -65,14 +96,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab }) => {
                 <Icon className={`h-4 w-4 transition-colors ${
                   isActive ? 'text-emerald-400' : 'text-slate-400 group-hover:text-slate-200'
                 }`} />
-                <span className="font-medium">{tab.label}</span>
+                <span className="font-mono tracking-tight font-bold">{tab.label}</span>
               </div>
 
               {tab.badge && (
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
                   isActive 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                    : 'bg-slate-800 text-slate-400 border border-slate-700'
+                    : 'bg-slate-800/80 text-slate-400 border border-slate-700/60'
                 }`}>
                   {tab.badge}
                 </span>
@@ -82,15 +113,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab }) => {
         })}
       </nav>
 
-      {/* Footer Info */}
-      <div className="p-3 border-t border-slate-800 bg-slate-900/60 text-[11px] text-slate-400 space-y-1">
+      {/* Operative Intelligence Footer */}
+      <div className="p-3 border-t border-slate-800/80 bg-slate-950/80 text-[11px] font-mono text-slate-400 space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-slate-400 font-medium">Ubicación:</span>
-          <span className="font-semibold text-emerald-400">Bilbao, Bizkaia</span>
+          <span className="text-slate-400 font-medium">ESTADO VISADO:</span>
+          <span className="font-bold text-sky-400">§20 / Ley 14</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-slate-400 font-medium">Anti-Alucinación:</span>
-          <span className="font-semibold text-emerald-400">Estricto</span>
+          <span className="text-slate-400 font-medium">BASE TÁCTICA:</span>
+          <span className="font-bold text-emerald-400">Bilbao (Bizkaia)</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-slate-400 font-medium">CONTROL:</span>
+          <span className="font-bold text-emerald-300 flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            HUMAN-IN-THE-LOOP
+          </span>
         </div>
       </div>
     </aside>

@@ -5,28 +5,57 @@ import { ContextualHelpModal } from './components/layout/ContextualHelpModal';
 import { GuidedTourOverlay } from './components/layout/GuidedTourOverlay';
 import { ProtocolModal } from './components/offers/ProtocolModal';
 
-import { DashboardTab } from './components/dashboard/DashboardTab';
-import { MasterProfileTab } from './components/profile/MasterProfileTab';
-import { CVManagementTab } from './components/cvs/CVManagementTab';
-import { SourcesTab } from './components/sources/SourcesTab';
-import { OffersTab } from './components/offers/OffersTab';
-import { CompaniesTab } from './components/companies/CompaniesTab';
-import { ApplicationsTab } from './components/applications/ApplicationsTab';
-import { BatchApplicationsTab } from './components/applications/BatchApplicationsTab';
-import { IntelligenceTab } from './components/intelligence/IntelligenceTab';
+import { WarRoomTab } from './components/warroom/WarRoomTab';
+import { MarketRadarTab } from './components/radar/MarketRadarTab';
+import { AgentDossierTab } from './components/dossier/AgentDossierTab';
+import { MissionControlTab } from './components/control/MissionControlTab';
 import { SettingsTab } from './components/settings/SettingsTab';
 
-import { runDailyJobSearchWorkflow, runUpdateDocumentationWorkflow, runProcessApplicationWorkflow } from './services/agents';
 import { getStoredOffers, saveStoredOffers, getStoredProfile } from './services/db';
 import { calculateMatchScore } from './services/matchEngine';
 import type { JobOffer } from './types/offers';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
+  const [dossierSubTab, setDossierSubTab] = useState<'profile' | 'cvs'>('profile');
+  const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
+
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isGuidedTourOpen, setIsGuidedTourOpen] = useState(false);
   const [isProtocolOpen, setIsProtocolOpen] = useState(false);
   const [dataRefreshKey, setDataRefreshKey] = useState(0);
+
+  const handleNavigate = (stationId: string, subTab?: string) => {
+    if (stationId === 'market_radar' || ['offers', 'sources', 'companies'].includes(stationId)) {
+      if (subTab === 'sources' || stationId === 'sources') setRadarSubTab('sources');
+      else if (subTab === 'companies' || stationId === 'companies') setRadarSubTab('companies');
+      else setRadarSubTab('offers');
+      setActiveTab('market_radar');
+      return;
+    }
+
+    if (stationId === 'agent_dossier' || ['profile', 'cvs'].includes(stationId)) {
+      if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('cvs');
+      else setDossierSubTab('profile');
+      setActiveTab('agent_dossier');
+      return;
+    }
+
+    if (stationId === 'mission_control' || ['applications', 'batch_applications', 'intelligence'].includes(stationId)) {
+      if (subTab === 'batch' || stationId === 'batch_applications') setMissionSubTab('batch');
+      else if (subTab === 'intelligence' || stationId === 'intelligence') setMissionSubTab('intelligence');
+      else setMissionSubTab('applications');
+      setActiveTab('mission_control');
+      return;
+    }
+
+    setActiveTab(stationId);
+  };
+
+  const handleRefreshData = () => {
+    setDataRefreshKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     try {
@@ -62,7 +91,7 @@ export function App() {
           matchScore
         } as JobOffer;
         saveStoredOffers([newOffer, ...currentOffers]);
-        setActiveTab('offers');
+        handleNavigate('market_radar', 'offers');
         // Clean URL parameter
         window.history.replaceState({}, document.title, window.location.pathname);
       }
@@ -71,81 +100,53 @@ export function App() {
     }
   }, []);
 
-  const handleRefreshData = () => {
-    setDataRefreshKey(prev => prev + 1);
-  };
-
-  const handleRunWorkflow = (workflowName: string) => {
-    if (workflowName === '/daily-job-search') {
-      runDailyJobSearchWorkflow();
-      handleRefreshData();
-      setActiveTab('offers');
-    } else if (workflowName === '/update-documentation') {
-      runUpdateDocumentationWorkflow();
-      handleRefreshData();
-      setActiveTab('tutorial');
-    } else if (workflowName === '/process-application') {
-      runProcessApplicationWorkflow('off-101');
-      handleRefreshData();
-      setActiveTab('applications');
-    }
-  };
-
-  const handleStartApplicationFromOffer = (offerId: string) => {
-    runProcessApplicationWorkflow(offerId);
-    handleRefreshData();
-    setActiveTab('applications');
+  const handleStartApplicationFromOffer = (_offerId: string) => {
+    handleNavigate('mission_control', 'applications');
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
       <Navbar
         currentTab={activeTab}
         onOpenContextHelp={() => setIsHelpOpen(true)}
         onStartGuidedTour={() => setIsGuidedTourOpen(true)}
         onOpenProtocolModal={() => setIsProtocolOpen(true)}
         onRefreshData={handleRefreshData}
+        onSelectStation={(id) => handleNavigate(id)}
       />
 
       <div className="flex-1 flex overflow-hidden">
         <Sidebar
           activeTab={activeTab}
-          onSelectTab={(tabId) => setActiveTab(tabId)}
+          onSelectTab={(tabId) => handleNavigate(tabId)}
         />
 
         <main key={dataRefreshKey} className="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
           {activeTab === 'dashboard' && (
-            <DashboardTab
-              onSelectTab={(tabId) => setActiveTab(tabId)}
-              onRunWorkflow={handleRunWorkflow}
-              onSelectOffer={() => {
-                setActiveTab('offers');
-              }}
-              onSelectApplication={() => {
-                setActiveTab('applications');
-              }}
+            <WarRoomTab
+              onSelectStation={(station, subTab) => handleNavigate(station, subTab)}
+              onLaunchRadar={() => handleNavigate('market_radar', 'offers')}
             />
           )}
 
-          {activeTab === 'profile' && <MasterProfileTab />}
-
-          {activeTab === 'cvs' && <CVManagementTab />}
-
-          {activeTab === 'sources' && <SourcesTab />}
-
-          {activeTab === 'offers' && (
-            <OffersTab
+          {activeTab === 'market_radar' && (
+            <MarketRadarTab
+              initialSubTab={radarSubTab}
               onStartApplication={handleStartApplicationFromOffer}
             />
           )}
 
-          {activeTab === 'companies' && <CompaniesTab />}
+          {activeTab === 'agent_dossier' && (
+            <AgentDossierTab
+              initialSubTab={dossierSubTab}
+            />
+          )}
 
-          {activeTab === 'batch_applications' && <BatchApplicationsTab />}
-
-          {activeTab === 'applications' && <ApplicationsTab />}
-
-          {activeTab === 'intelligence' && <IntelligenceTab />}
+          {activeTab === 'mission_control' && (
+            <MissionControlTab
+              initialSubTab={missionSubTab}
+            />
+          )}
 
           {activeTab === 'settings' && (
             <SettingsTab
@@ -159,13 +160,13 @@ export function App() {
         currentTab={activeTab}
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
-        onGoToTutorial={() => setActiveTab('tutorial')}
+        onGoToTutorial={() => handleNavigate('dashboard')}
       />
 
       <GuidedTourOverlay
         isOpen={isGuidedTourOpen}
         onClose={() => setIsGuidedTourOpen(false)}
-        onSelectTab={(tabId) => setActiveTab(tabId)}
+        onSelectTab={(tabId) => handleNavigate(tabId)}
       />
 
       <ProtocolModal
