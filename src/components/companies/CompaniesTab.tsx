@@ -4,7 +4,6 @@ import {
   Newspaper, 
   ShieldAlert, 
   MessageSquare, 
-  Sparkles, 
   ExternalLink,
   Briefcase,
   PlusCircle,
@@ -68,19 +67,11 @@ export const CompaniesTab: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={() => setIsExploreModalOpen(true)}
-            className="px-4 py-2 bg-gradient-to-r from-emerald-600 via-lime-600 to-amber-500 hover:from-emerald-500 hover:to-amber-400 text-white font-extrabold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5"
-          >
-            <Sparkles className="h-4 w-4" />
-            <span>✨ Explorar (no disponible)</span>
-          </button>
-
-          <button
             onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 font-semibold text-xs rounded-xl border border-emerald-700/60 transition flex items-center space-x-1.5"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5"
           >
-            <PlusCircle className="h-4 w-4 text-emerald-400" />
-            <span>Agregar Empresa</span>
+            <PlusCircle className="h-4 w-4" />
+            <span>Agregar Empresa / Instituto</span>
           </button>
         </div>
       </div>
