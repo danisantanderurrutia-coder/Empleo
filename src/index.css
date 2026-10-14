@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply font-sans antialiased min-h-screen text-slate-100;
+    background-color: #090d16;
+    background-image: 
+      radial-gradient(circle at 20% 10%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(14, 165, 233, 0.04) 0%, transparent 40%),
+      linear-gradient(to bottom, #0f172a, #090d16, #05080e);
+    color: #f8fafc;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+    font-weight: 700;
+  }
+}
+
+/* Executive Modern Dark Slate Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Sober Executive Modern Slate Panels & Cards */
+.glass-panel {
+  background: #131c2e !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  color: #f8fafc !important;
+}
+
+.glass-card {
+  background: #131c2e !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s ease-in-out;
+  color: #f8fafc !important;
+}
+
+.glass-card:hover {
+  border-color: #334155 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #10b981 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.retro-red-glow {
+  color: #10b981;
+}
+
+.retro-red-box {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Print styles for CV export */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-cv, #printable-cv * {
+    visibility: visible;
+  }
+  #printable-cv {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
