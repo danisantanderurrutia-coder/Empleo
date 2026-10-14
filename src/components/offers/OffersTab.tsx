@@ -23,7 +23,7 @@ import { runDailyPipelineEuskadi } from '../../services/dailyPipelineEngine';
 import { searchRealPublicJobs } from '../../services/publicJobApis';
 
 import { FiveStepPipelineModal } from './FiveStepPipelineModal';
-import { ProtocolModal } from './ProtocolModal';
+import { TacticalHelpAndProtocolModal } from '../common/TacticalHelpAndProtocolModal';
 
 import { checkUrlLiveness } from '../../services/liveWebScraper';
 import { ShieldCheck } from 'lucide-react';
@@ -965,9 +965,10 @@ export const OffersTab: React.FC<OffersTabProps> = ({
         onExplorationCompleted={refreshOffers}
       />
 
-      <ProtocolModal
+      <TacticalHelpAndProtocolModal
         isOpen={isProtocolModalOpen}
         onClose={() => setIsProtocolModalOpen(false)}
+        initialTab="protocol"
       />
     </div>
   );
