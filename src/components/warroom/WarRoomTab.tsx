@@ -10,7 +10,7 @@ import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredComp
 import { TacticalGlobeHUD } from './TacticalGlobeHUD';
 
 interface WarRoomTabProps {
-  onSelectStation: (stationId: string, subTab?: string) => void;
+  onSelectStation: (stationId: string, subTab?: string, filter?: string) => void;
   onLaunchRadar: () => void;
 }
 
@@ -356,11 +356,105 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       </div>
 
       {/* -------------------------------------------------------------
+       * TACTICAL PIPELINE MODULE: 3 FASES MEDIADAS POR EL USUARIO
+       * ------------------------------------------------------------- */}
+      <div className="relative z-10 mt-6 p-5 rounded-2xl bg-[#0a0f1d]/90 border border-slate-700/80 shadow-2xl backdrop-blur-md">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 mb-4 gap-2">
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-mono font-black text-red-500 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+              PIPELINE OPERATIVO // 3 FASES MEDIADAS POR EL USUARIO
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-emerald-400 border border-slate-700 font-bold">
+              100% HUMAN-IN-THE-LOOP
+            </span>
+          </div>
+          <span className="text-[11px] font-mono text-slate-300 font-medium">
+            Operador: Daniel Santander (Doble M.Sc. • Geofísica)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* FASE 1 */}
+          <div 
+            onClick={() => onSelectStation('market_radar', 'offers', 'ALL')}
+            className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-red-500 transition cursor-pointer group flex flex-col justify-between shadow-md"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-mono font-black text-white uppercase tracking-wider group-hover:text-red-400 transition">
+                  FASE 1: RECONOCIMIENTO
+                </span>
+                <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800">
+                  PASO 1
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
+                Revisión manual de 350+ vacantes indexadas, Euraxess (§20 AufenthG) y centros I+D vascos con activación de filtros estratégicos.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-red-400 font-bold flex items-center justify-between">
+              <span>EXPLORAR VACANTES & FUENTES</span>
+              <span className="group-hover:translate-x-1 transition">»</span>
+            </div>
+          </div>
+
+          {/* FASE 2 */}
+          <div 
+            onClick={() => onSelectStation('agent_dossier', 'cvs')}
+            className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-amber-500 transition cursor-pointer group flex flex-col justify-between shadow-md"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-mono font-black text-white uppercase tracking-wider group-hover:text-amber-400 transition">
+                  FASE 2: SELECCIÓN & ARMERÍA
+                </span>
+                <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">
+                  PASO 2
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
+                Guardado táctico de ofertas de interés y configuración del armamento curricular (ES para Euskadi, EN internacional, Lebenslauf para Alemania).
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-amber-400 font-bold flex items-center justify-between">
+              <span>CONFIGURAR ARMAMENTO CV</span>
+              <span className="group-hover:translate-x-1 transition">»</span>
+            </div>
+          </div>
+
+          {/* FASE 3 */}
+          <div 
+            onClick={() => onSelectStation('mission_control', 'applications')}
+            className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-sky-500 transition cursor-pointer group flex flex-col justify-between shadow-md"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-mono font-black text-white uppercase tracking-wider group-hover:text-sky-400 transition">
+                  FASE 3: PREPARACIÓN & DESPACHO
+                </span>
+                <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">
+                  PASO 3
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
+                Asistencia en argumentos de entrevista específicos por empresa, cartas de motivación y despacho manual con confirmación humana.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-sky-400 font-bold flex items-center justify-between">
+              <span>CONTROL DE MISIONES KANBAN</span>
+              <span className="group-hover:translate-x-1 transition">»</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* -------------------------------------------------------------
        * TACTICAL MODE LAUNCH CARDS (RAINBOW SIX SIEGE STYLE)
        * ------------------------------------------------------------- */}
-      <div className="relative z-10 mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="relative z-10 mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <button
-          onClick={onLaunchRadar}
+          onClick={() => onSelectStation('market_radar', 'offers', 'GERMANY')}
           className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-red-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
@@ -368,14 +462,14 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               PLAY RANKED // ALEMANIA
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              Euraxess • §20 AufenthG
+              Euraxess • §20 AufenthG • DACH
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-red-400 group-hover:translate-x-1 transition" />
         </button>
 
         <button
-          onClick={() => onSelectStation('market_radar', 'companies')}
+          onClick={() => onSelectStation('market_radar', 'companies', 'BILBAO')}
           className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
@@ -383,7 +477,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               PLAY STANDARD // EUSKADI
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              BC3 • Tecnalia • IDOM
+              BC3 • Tecnalia • IDOM • Euskadi
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
@@ -398,7 +492,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               OPERATORS // ARMERÍA CV
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              ES • EN • Lebenslauf
+              ES • EN • Lebenslauf Alemán
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-1 transition" />
@@ -413,7 +507,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               LOCKER // MISIÓN KANBAN
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              {activeApplications.length} Postulaciones en Curso
+              {activeApplications.length} Postulaciones Activas
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition" />

@@ -171,8 +171,8 @@ Geofísico y Especialista Senior en Políticas Ambientales con **Doble Titulaci�
         <div className="flex items-center justify-between p-5 border-b border-slate-800 shrink-0">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                Pipeline Maestro de 5 Pasos
+              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                Fase 3: Preparación Asistida de Candidatura
               </span>
               <h3 className="font-bold text-white text-base">{offer.title}</h3>
             </div>

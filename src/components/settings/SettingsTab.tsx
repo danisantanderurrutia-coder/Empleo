@@ -21,7 +21,8 @@ import {
   CloudRain,
   Landmark,
   Trash2,
-  AlertCircle
+  AlertCircle,
+  ChevronLeft
 } from 'lucide-react';
 import { 
   getStoredSettings, 
@@ -41,9 +42,10 @@ import type { ConnectedPortalAccount, SupportedPortalName } from '../../services
 
 interface SettingsTabProps {
   onRefreshData: () => void;
+  onReturnToHub?: () => void;
 }
 
-export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData }) => {
+export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onReturnToHub }) => {
   const [settings, setSettings] = useState<AppSettings>(getStoredSettings());
   const [portals, setPortals] = useState<ConnectedPortalAccount[]>(getConnectedPortals());
   const [activePortalTab, setActivePortalTab] = useState<SupportedPortalName>('XING (Alemania & DACH)');
@@ -177,29 +179,51 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-slate-800">
-        <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Settings className="h-5 w-5 text-indigo-400" />
-            <span>Configuración del Sistema & Gestor de Perfiles en Portales</span>
-          </h2>
-          <p className="text-xs text-slate-400">
-            Sincronización real con tus cuentas en LinkedIn, UNjobs, XING, GreenJobs e InfoJobs. Cero datos ficticios.
-          </p>
+    <div className="space-y-5 animate-fadeIn">
+      {/* Rainbow Six Siege Tactical Top Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl bg-[#0a0f1d]/95 border border-slate-700/80 shadow-2xl backdrop-blur-md gap-4">
+        <div className="flex items-center gap-3">
+          {onReturnToHub && (
+            <button
+              onClick={onReturnToHub}
+              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 hover:border-slate-400 transition flex items-center gap-1.5 cursor-pointer shadow"
+              title="Volver a la consola central Career"
+            >
+              <ChevronLeft className="h-4 w-4 text-slate-400" />
+              <span>« CAREER HUB</span>
+            </button>
+          )}
+
+          <div className="h-9 w-9 rounded-xl bg-slate-800 text-slate-200 flex items-center justify-center border border-slate-700 shrink-0">
+            <Settings className="h-5 w-5" />
+          </div>
+
+          <div>
+            <div className="flex items-center space-x-2">
+              <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
+                HQ // CUARTEL GENERAL & CONFIGURACIÓN
+              </h1>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-bold hidden sm:inline-block">
+                PROTOCOLOS & BACKUP
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 font-sans">
+              Credenciales de portales reales, copias de seguridad JSON y auditoría anti-alucinaciones.
+            </p>
+          </div>
         </div>
 
         <button
           onClick={handleSaveSettings}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl shadow-lg transition flex items-center space-x-2"
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-mono font-bold text-xs rounded-xl border border-slate-600 shadow-lg transition flex items-center space-x-2 self-start md:self-auto cursor-pointer"
         >
           {isSaved ? (
             <>
-              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-              <span>Guardado</span>
+              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              <span>GUARDADO</span>
             </>
           ) : (
-            <span>Guardar Configuración</span>
+            <span>GUARDAR CONFIGURACIÓN</span>
           )}
         </button>
       </div>

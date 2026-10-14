@@ -42,9 +42,9 @@ const STEPS: GuidedStep[] = [
   },
   {
     tabId: 'applications',
-    title: 'Paso 6: Pipeline de Candidaturas (9 Pasos)',
-    description: 'Flujo paso a paso desde revisión de oferta hasta entrevista y contratación.',
-    actionHint: 'IMPORTANTE: En el Paso 6/7, la IA requerirá tu aprobación humana manual obligatoria antes de enviar.'
+    title: 'Fase 3: Preparación de Candidaturas & Despacho Asistido',
+    description: 'Gestión asistida de cada postulación con aprobación humana manual obligatoria antes de enviar.',
+    actionHint: 'IMPORTANTE: La app nunca envía automáticamente; requiere tu aprobación humana en cada candidatura.'
   },
   {
     tabId: 'intelligence',

@@ -49,11 +49,11 @@ export const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
         };
       case 'applications':
         return {
-          title: 'Pipeline de Candidaturas en 9 Pasos',
+          title: 'Fase 3 del Pipeline: Despacho Asistido & Seguimiento',
           summary: 'Flujo estructurado con guardagujas de Aprobación Humana Obligatoria.',
           tips: [
-            'La IA no puede enviar solicitudes sin tu confirmación en el Paso 7.',
-            'El sistema registra un historial de auditoría de cada cambio.'
+            'El Pipeline general consta de 3 Fases: 1. Exploración ➔ 2. Selección & Armería ➔ 3. Despacho Asistido.',
+            'La IA no puede enviar solicitudes sin tu confirmación expresa en cada candidatura.'
           ]
         };
       default:

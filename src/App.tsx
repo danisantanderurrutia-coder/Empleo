@@ -19,6 +19,7 @@ export function App() {
   const [theme, setTheme] = useState<AppTheme>(getStoredTheme());
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
+  const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
   const [dossierSubTab, setDossierSubTab] = useState<'profile' | 'cvs'>('profile');
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
 
@@ -36,7 +37,11 @@ export function App() {
     saveStoredTheme(newTheme);
   };
 
-  const handleNavigate = (stationId: string, subTab?: string) => {
+  const handleNavigate = (stationId: string, subTab?: string, filterParam?: string) => {
+    if (filterParam) {
+      setRadarLocationFilter(filterParam);
+    }
+
     if (stationId === 'market_radar' || ['offers', 'sources', 'companies'].includes(stationId)) {
       if (subTab === 'sources' || stationId === 'sources') setRadarSubTab('sources');
       else if (subTab === 'companies' || stationId === 'companies') setRadarSubTab('companies');
@@ -131,33 +136,38 @@ export function App() {
         <main key={dataRefreshKey} className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto w-full max-w-none">
           {activeTab === 'dashboard' && (
             <WarRoomTab
-              onSelectStation={(station, subTab) => handleNavigate(station, subTab)}
-              onLaunchRadar={() => handleNavigate('market_radar', 'offers')}
+              onSelectStation={(station, subTab, filter) => handleNavigate(station, subTab, filter)}
+              onLaunchRadar={() => handleNavigate('market_radar', 'offers', 'ALL')}
             />
           )}
 
           {activeTab === 'market_radar' && (
             <MarketRadarTab
               initialSubTab={radarSubTab}
+              initialFilter={radarLocationFilter}
               onStartApplication={handleStartApplicationFromOffer}
+              onReturnToHub={() => handleNavigate('dashboard')}
             />
           )}
 
           {activeTab === 'agent_dossier' && (
             <AgentDossierTab
               initialSubTab={dossierSubTab}
+              onReturnToHub={() => handleNavigate('dashboard')}
             />
           )}
 
           {activeTab === 'mission_control' && (
             <MissionControlTab
               initialSubTab={missionSubTab}
+              onReturnToHub={() => handleNavigate('dashboard')}
             />
           )}
 
           {activeTab === 'settings' && (
             <SettingsTab
               onRefreshData={handleRefreshData}
+              onReturnToHub={() => handleNavigate('dashboard')}
             />
           )}
         </main>

@@ -4,8 +4,9 @@ import {
   Sparkles, 
   Globe2, 
   Building2, 
-  ExternalLink, 
-  ShieldCheck, 
+  ChevronLeft,
+  ExternalLink,
+  ShieldCheck,
   Award,
   Layers
 } from 'lucide-react';
@@ -15,69 +16,105 @@ import { CompaniesTab } from '../companies/CompaniesTab';
 
 interface MarketRadarTabProps {
   initialSubTab?: 'offers' | 'sources' | 'companies';
+  initialFilter?: string;
   onStartApplication: (offerId: string) => void;
+  onReturnToHub?: () => void;
 }
 
 export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({ 
   initialSubTab = 'offers', 
-  onStartApplication 
+  initialFilter = 'ALL',
+  onStartApplication,
+  onReturnToHub
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'offers' | 'sources' | 'companies'>(initialSubTab);
 
   return (
-    <div className="space-y-6 text-slate-100 animate-fadeIn">
-      {/* Station Navigation Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between glass-panel p-4 rounded-2xl border border-slate-800 bg-[#111827] shadow-lg gap-4">
+    <div className="space-y-5 text-slate-100 animate-fadeIn">
+      {/* Rainbow Six Siege Tactical Top Bar & Pipeline Indicator */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl bg-[#0a0f1d]/95 border border-slate-700/80 shadow-2xl backdrop-blur-md gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+          {onReturnToHub && (
+            <button
+              onClick={onReturnToHub}
+              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 hover:border-red-500 transition flex items-center gap-1.5 cursor-pointer shadow"
+              title="Volver a la consola central Career"
+            >
+              <ChevronLeft className="h-4 w-4 text-red-500" />
+              <span>« CAREER HUB</span>
+            </button>
+          )}
+
+          <div className="h-9 w-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/30 shrink-0">
             <Radio className="h-5 w-5" />
           </div>
+
           <div>
-            <h1 className="text-base font-bold text-white flex items-center gap-2 font-mono uppercase tracking-tight">
-              <span>Estación 1: Radar de Mercado & Reconocimiento</span>
-            </h1>
-            <p className="text-xs text-slate-400">
-              Monitoreo unificado de vacantes indexadas, cuadrantes estratégicos de visado y empresas target.
+            <div className="flex items-center space-x-2">
+              <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
+                PLAY // RADAR TÁCTICO DE MERCADO
+              </h1>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800 font-extrabold hidden sm:inline-block">
+                FASE 1 ACTIVA
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 font-sans">
+              Reconocimiento de vacantes, telemetría de visado AufenthG §20 / Ley 14 e institutos I+D.
             </p>
           </div>
         </div>
 
-        {/* Sub-Tabs Switcher */}
-        <div className="flex items-center p-1 bg-slate-900/90 rounded-xl border border-slate-800 shrink-0">
+        {/* 3-Stage Pipeline Indicator */}
+        <div className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800">
+          <span className="px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/40">
+            1. RECONOCIMIENTO & FUENTES
+          </span>
+          <span className="text-slate-600 font-black">➔</span>
+          <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
+            2. SELECCIÓN & ARMERÍA
+          </span>
+          <span className="text-slate-600 font-black">➔</span>
+          <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
+            3. PREPARACIÓN & DESPACHO
+          </span>
+        </div>
+
+        {/* Game Mode Sub-Tabs Switcher */}
+        <div className="flex items-center p-1 bg-slate-950 rounded-xl border border-slate-800 shrink-0">
           <button
             onClick={() => setActiveSubTab('offers')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 ${
               activeSubTab === 'offers'
-                ? 'bg-emerald-600 text-white shadow-sm font-bold'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-red-600 text-white shadow font-black'
+                : 'text-slate-300 hover:text-white'
             }`}
           >
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Vacantes Indexadas</span>
+            <span>VACANTES (350+)</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('sources')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 ${
               activeSubTab === 'sources'
-                ? 'bg-emerald-600 text-white shadow-sm font-bold'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-red-600 text-white shadow font-black'
+                : 'text-slate-300 hover:text-white'
             }`}
           >
             <Globe2 className="h-3.5 w-3.5" />
-            <span>Cuadrantes de Visado</span>
+            <span>CUADRANTES VISADO</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('companies')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 ${
               activeSubTab === 'companies'
-                ? 'bg-emerald-600 text-white shadow-sm font-bold'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-red-600 text-white shadow font-black'
+                : 'text-slate-300 hover:text-white'
             }`}
           >
             <Building2 className="h-3.5 w-3.5" />
-            <span>Empresas & Institutos</span>
+            <span>CENTROS I+D</span>
           </button>
         </div>
       </div>
@@ -85,7 +122,10 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
       {/* SUB-PANEL 1: OFFERS RADAR */}
       {activeSubTab === 'offers' && (
         <div className="space-y-4">
-          <OffersTab onStartApplication={onStartApplication} />
+          <OffersTab 
+            onStartApplication={onStartApplication} 
+            initialLocationFilter={initialFilter}
+          />
         </div>
       )}
 

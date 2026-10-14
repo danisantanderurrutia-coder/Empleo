@@ -29,10 +29,14 @@ import { checkUrlLiveness } from '../../services/liveWebScraper';
 import { ShieldCheck } from 'lucide-react';
 
 interface OffersTabProps {
+  initialLocationFilter?: string;
   onStartApplication: (offerId: string) => void;
 }
 
-export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
+export const OffersTab: React.FC<OffersTabProps> = ({ 
+  initialLocationFilter = 'ALL',
+  onStartApplication 
+}) => {
   const [offers, setOffers] = useState<JobOffer[]>(getStoredOffers());
   const [selectedOfferForRationale, setSelectedOfferForRationale] = useState<JobOffer | null>(null);
   const [selectedOfferForPipeline, setSelectedOfferForPipeline] = useState<JobOffer | null>(null);
@@ -150,7 +154,14 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
     setTimeout(() => setSearchResultSummary(null), 7000);
   };
 
-  const [selectedLocationFilter, setSelectedLocationFilter] = useState<string>('ALL');
+  const [selectedLocationFilter, setSelectedLocationFilter] = useState<string>(initialLocationFilter);
+
+  useEffect(() => {
+    if (initialLocationFilter) {
+      setSelectedLocationFilter(initialLocationFilter);
+    }
+  }, [initialLocationFilter]);
+
   const [includeRemote, setIncludeRemote] = useState<boolean>(true);
 
   const [matchOperator, setMatchOperator] = useState<'OR' | 'AND'>('OR');
@@ -275,7 +286,10 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
 
     // 3. Strict Selected Location Enforcement
     let matchesLocation = true;
-    if (selectedLocationFilter === 'BILBAO') {
+    if (selectedLocationFilter === 'GERMANY') {
+      const isGermanyLoc = locLower.includes('alemania') || locLower.includes('germany') || locLower.includes('deutschland') || locLower.includes('berlin') || locLower.includes('munich') || locLower.includes('münchen') || locLower.includes('kiel') || locLower.includes('hamburg') || locLower.includes('frankfurt') || locLower.includes('cologne') || locLower.includes('köln') || locLower.includes('euraxess') || (offer.sourceName || '').toLowerCase().includes('euraxess');
+      matchesLocation = isGermanyLoc || isRemoteOffer;
+    } else if (selectedLocationFilter === 'BILBAO') {
       const isBilbaoLoc = locLower.includes('bilbao') || locLower.includes('bizkaia') || locLower.includes('erandio') || locLower.includes('leioa') || locLower.includes('barakaldo') || locLower.includes('zamudio') || locLower.includes('getxo');
       matchesLocation = isBilbaoLoc || (includeRemote && isRemoteOffer && !isForeignLocation);
     } else if (selectedLocationFilter === 'DONOSTIA') {
@@ -642,11 +656,21 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
               onClick={() => setSelectedLocationFilter('ALL')}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
                 selectedLocationFilter === 'ALL'
-                  ? 'bg-slate-800 text-white border border-slate-700'
+                  ? 'bg-slate-800 text-white border border-slate-700 font-bold'
                   : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
               }`}
             >
               Todas ({offers.length})
+            </button>
+            <button
+              onClick={() => setSelectedLocationFilter('GERMANY')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
+                selectedLocationFilter === 'GERMANY'
+                  ? 'bg-red-500/20 text-red-300 border border-red-500/40 font-bold'
+                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
+              }`}
+            >
+              🇩🇪 Alemania / DACH (§20)
             </button>
             <button
               onClick={() => setSelectedLocationFilter('BILBAO')}
@@ -781,10 +805,10 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
                     <div className="flex flex-col space-y-1.5">
                       <button
                         onClick={() => setSelectedOfferForPipeline(offer)}
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-1"
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-1.5"
                       >
                         <Sparkles className="h-3.5 w-3.5 text-white" />
-                        <span>⚡ Pipeline Maestro 5 Pasos</span>
+                        <span>⚡ Preparar Candidatura (Fase 3)</span>
                       </button>
 
                       <div className="flex items-center space-x-1">

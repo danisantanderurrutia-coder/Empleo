@@ -78,18 +78,18 @@ export const ApplicationsTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-[#0a0f1d]/90 border border-slate-700/80 shadow-md gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <KanbanSquare className="h-5 w-5 text-indigo-400" />
-            <span>Candidaturas — Flujo Paso a Paso (9 Pasos)</span>
+          <h2 className="text-lg font-bold text-white flex items-center gap-2 font-mono uppercase">
+            <KanbanSquare className="h-5 w-5 text-sky-400" />
+            <span>Fase 3 del Pipeline: Despacho Asistido & Seguimiento</span>
           </h2>
-          <p className="text-xs text-slate-400">
-            Pipeline estructurado: 1) Oferta → 2) Empresa → 3) CV → 4) Carta → 5) Formulario → 6) Revisión → 7) Enviar (Confirmación Humana) → 8) Entrevista → 9) Resultado.
+          <p className="text-xs text-slate-300 mt-1">
+            Pipeline Maestro de 3 Fases: 1. Exploración & Fuentes ➔ 2. Selección & Armería CV ➔ 3. Preparación & Despacho Asistido.
           </p>
         </div>
 
-        <div className="flex items-center space-x-2 text-xs bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 text-amber-300">
+        <div className="flex items-center space-x-2 text-xs bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30 text-amber-300 font-mono font-bold shrink-0">
           <Lock className="h-4 w-4 text-amber-400" />
           <span>Aprobación Humana Obligatoria para Envíos</span>
         </div>

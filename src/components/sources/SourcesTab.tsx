@@ -55,7 +55,7 @@ export const SourcesTab: React.FC = () => {
             <Globe2 className="h-6 w-6 text-emerald-400" />
             <span>Directorio de Portales de Empleo (11 Categorías & 25+ Plataformas)</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-300 mt-1">
             Revisa, testea y escanea independientemente cada portal con enlaces a sus páginas oficiales (sin escaneo automático).
           </p>
         </div>
