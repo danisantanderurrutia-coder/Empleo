@@ -139,23 +139,60 @@ export const saveStoredOffers = (offers: JobOffer[]): void => {
 
 export const getStoredCompanies = (): CompanyDossier[] => {
   const data = localStorage.getItem(KEYS.COMPANIES);
-  if (!data) {
+  let list: CompanyDossier[] = [];
+  
+  if (data) {
+    try {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) list = parsed;
+    } catch {
+      list = [];
+    }
+  }
+
+  // Fallback to older keys if empty
+  if (list.length === 0) {
+    const historicalKeys = [
+      'job_search_os_companies_v18',
+      'job_search_os_companies_v17',
+      'job_search_os_companies_v16',
+      'job_search_os_companies_v15',
+      'job_search_os_companies',
+      'companies'
+    ];
+    for (const k of historicalKeys) {
+      const oldData = localStorage.getItem(k);
+      if (oldData) {
+        try {
+          const parsed = JSON.parse(oldData);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            list = parsed;
+            break;
+          }
+        } catch {
+          // continue checking
+        }
+      }
+    }
+  }
+
+  // Ensure all 18 authentic institutions & enterprises are populated without overwriting user customizations
+  const existingIds = new Set(list.map(c => c.id));
+  const existingNames = new Set(list.map(c => c.name.trim().toLowerCase()));
+  const missing = initialCompanies.filter(c => !existingIds.has(c.id) && !existingNames.has(c.name.trim().toLowerCase()));
+
+  if (missing.length > 0) {
+    const merged = [...list, ...missing];
+    saveStoredCompanies(merged);
+    return merged;
+  }
+
+  if (list.length === 0) {
     saveStoredCompanies(initialCompanies);
     return initialCompanies;
   }
-  try {
-    const list: CompanyDossier[] = JSON.parse(data);
-    const existingIds = new Set(list.map(c => c.id));
-    const missing = initialCompanies.filter(c => !existingIds.has(c.id));
-    if (missing.length > 0) {
-      const merged = [...list, ...missing];
-      saveStoredCompanies(merged);
-      return merged;
-    }
-    return list.length > 0 ? list : initialCompanies;
-  } catch {
-    return initialCompanies;
-  }
+
+  return list;
 };
 
 export const saveStoredCompanies = (companies: CompanyDossier[]): void => {

@@ -13,9 +13,11 @@ import { SettingsTab } from './components/settings/SettingsTab';
 
 import { getStoredOffers, saveStoredOffers, getStoredProfile } from './services/db';
 import { calculateMatchScore } from './services/matchEngine';
+import { getStoredTheme, saveStoredTheme, applyThemeToDOM, type AppTheme } from './services/themeManager';
 import type { JobOffer } from './types/offers';
 
 export function App() {
+  const [theme, setTheme] = useState<AppTheme>(getStoredTheme());
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
   const [dossierSubTab, setDossierSubTab] = useState<'profile' | 'cvs'>('profile');
@@ -25,6 +27,15 @@ export function App() {
   const [isGuidedTourOpen, setIsGuidedTourOpen] = useState(false);
   const [isProtocolOpen, setIsProtocolOpen] = useState(false);
   const [dataRefreshKey, setDataRefreshKey] = useState(0);
+
+  useEffect(() => {
+    applyThemeToDOM(theme);
+  }, [theme]);
+
+  const handleThemeChange = (newTheme: AppTheme) => {
+    setTheme(newTheme);
+    saveStoredTheme(newTheme);
+  };
 
   const handleNavigate = (stationId: string, subTab?: string) => {
     if (stationId === 'market_radar' || ['offers', 'sources', 'companies'].includes(stationId)) {
@@ -105,9 +116,11 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+    <div className={`min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white theme-${theme}`} data-theme={theme}>
       <Navbar
         currentTab={activeTab}
+        currentTheme={theme}
+        onThemeChange={handleThemeChange}
         onOpenContextHelp={() => setIsHelpOpen(true)}
         onStartGuidedTour={() => setIsGuidedTourOpen(true)}
         onOpenProtocolModal={() => setIsProtocolOpen(true)}

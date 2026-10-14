@@ -441,9 +441,622 @@ export const initialSources: JobSource[] = [
 ];
 
 
-export const initialOffers: JobOffer[] = [];
+export const initialCompanies: CompanyDossier[] = [
+  {
+    id: 'comp-bc3',
+    name: 'BC3 - Basque Centre for Climate Change',
+    website: 'https://www.bc3research.org/',
+    sector: 'Investigación Climática & Modelación Biofísica (BRTA / Ikerbasque)',
+    size: '50-150 investigadores',
+    headquarters: 'Leioa / Bilbao (Parque Científico UPV/EHU, Bizkaia)',
+    description: 'Centro de investigación de excelencia María de Maeztu enfocado en las causas y consecuencias del cambio climático, modelación de servicios ecosistémicos (plataforma k.LAB / ARIES) y gobernanza de la transición justa.',
+    keyProjects: [
+      'Plataforma k.LAB / ARIES para modelado biofísico interoperable de servicios ecosistémicos',
+      'Políticas de descarbonización e inventarios de emisiones de GEI en cuencas europeas',
+      'Evaluación de resiliencia climática territorial e impactos socioeconómicos'
+    ],
+    recentNews: [
+      {
+        title: 'Convocatorias abiertas de proyectos de investigación en modelación climática y ecosistemas',
+        date: '2026-09-15',
+        snippet: 'Líneas prioritarias en contabilidad de carbono e interoperabilidad de datos geoespaciales.'
+      }
+    ],
+    workCulture: [
+      'Investigación puntera interdisciplinar',
+      'Entorno multinacional y bilingüe (EN/ES/EU)',
+      'Alto rigor metodológico y publicaciones internacionales'
+    ],
+    redFlags: ['Procesos de selección muy rigurosos basados en méritos y alineamiento metodológico'],
+    interviewArguments: [
+      'Experiencia directa en cuantificación empírica de flujos de GEI (torres eddy covariance en CAU Kiel) y modelación biofísica con R/Python.',
+      'Manejo avanzado de balance de cuencas hidrológicas y análisis espacial (QGIS, GEE).',
+      'Base sólida en geofísica matemática (U. de Chile) complementada con visión de políticas europeas de sostenibilidad.'
+    ],
+    techStack: ['R', 'Python', 'QGIS', 'Google Earth Engine', 'k.LAB / ARIES', 'EddyPro'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-tecnalia',
+    name: 'Tecnalia Research & Innovation',
+    website: 'https://www.tecnalia.com/',
+    sector: 'I+D+i Aplicada & Transición Ecológica',
+    size: '1.400+ investigadores',
+    headquarters: 'Derio / Bilbao (Bizkaia)',
+    description: 'El mayor centro de investigación aplicada y desarrollo tecnológico de España y uno de los principales de Europa, con divisiones líderes en Transición Energética, Clima, Ecosistemas Urbanos y Soluciones Basadas en la Naturaleza.',
+    keyProjects: [
+      'Gemelos digitales para resiliencia climática urbana y ordenamiento territorial',
+      'Modelos predictivos de inundabilidad y balance hídrico en cuencas fluviales',
+      'Valorización de biomasa y ecodiseño industrial'
+    ],
+    recentNews: [
+      {
+        title: 'Expansión de programas de adaptación climática y gemelos digitales en Euskadi',
+        date: '2026-10-01',
+        snippet: 'Licitaciones europeas Horizonte Europa en soluciones basadas en la naturaleza.'
+      }
+    ],
+    workCulture: [
+      'Orientación a proyectos industriales y europeos',
+      'Transferencia tecnológica directa',
+      'Equipos multidisciplinares de ingeniería y ciencias ambientales'
+    ],
+    redFlags: ['Ritmo ágil de entrega y plazos ajustados en licitaciones europeas'],
+    interviewArguments: [
+      'Doble perfil científico-técnico capaz de integrar sensorización de campo con modelos numéricos y geoespaciales.',
+      'Semifinalista en el UN Citiverse Challenge con gemelo digital territorial para resiliencia.',
+      'Experiencia de trabajo trilingüe y adaptación inmediata a consorcios europeos.'
+    ],
+    techStack: ['Python', 'QGIS', 'IoT Sensor Networks', 'ArcGIS', 'R'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-neiker',
+    name: 'Neiker - Instituto Vasco de Investigación y Desarrollo Agrario',
+    website: 'https://neiker.eus/',
+    sector: 'Agroecología, Suelos & Servicios Ecosistémicos (BRTA)',
+    size: '150-250 empleados',
+    headquarters: 'Arkaute (Vitoria-Gasteiz) / Derio (Bizkaia)',
+    description: 'Entidad pública dedicada a la I+D+i agroganadera y ambiental de Euskadi. Referente en calidad biológica de suelos, salud edáfica, mitigación de GEI y agroecología.',
+    keyProjects: [
+      'Monitoreo continuo de salud del suelo y secuestro edáfico de carbono (Directiva Suelos UE)',
+      'Impacto de prácticas agroecológicas en la retención de agua y biodiversidad',
+      'Vigilancia de plagas y balance hídrico ante eventos climáticos extremos'
+    ],
+    recentNews: [
+      {
+        title: 'Liderazgo en proyectos europeos de protección y salud del suelo edáfico',
+        date: '2026-09-20',
+        snippet: 'Implementación de metodologías pioneras de análisis biológico y físico de suelos.'
+      }
+    ],
+    workCulture: [
+      'Cercanía con el sector primario vasco y la administración pública',
+      'Investigación aplicada sobre el terreno',
+      'Científicos edafólogos y ecólogos de primer nivel'
+    ],
+    redFlags: ['Requiere disponibilidad para trabajo de campo regular en fincas experimentales y cuencas'],
+    interviewArguments: [
+      'Formación especializada en conservación y protección del suelo en Kiel y Poznań.',
+      'Diseñador en permacultura certificado (EPAC Chile) con conocimiento de diseño keyline y regeneración de suelos.',
+      'Capacidad de muestreo riguroso y análisis estadístico robusto de variables edáficas.'
+    ],
+    techStack: ['R', 'QGIS', 'Muestreo Edáfico', 'Sensores de Humedad TDR', 'Cámaras de Flujo'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-idom',
+    name: 'IDOM Consulting, Engineering & Architecture',
+    website: 'https://www.idom.com/',
+    sector: 'Consultoría Ambiental Internacional, Hidrología e Infraestructuras',
+    size: '4.500+ empleados',
+    headquarters: 'Bilbao (Sede Central Zorrotzaurre, Bizkaia)',
+    description: 'Multinacional independiente de consultoría e ingeniería con sede central en Bilbao. Lidera grandes estudios de impacto ambiental, modelación hidrológica, salvaguardias socioambientales y resiliencia climática para el Banco Mundial, BID y la Comisión Europea.',
+    keyProjects: [
+      'Estudios de modelación hidrológica de cuencas y mapas de inundabilidad',
+      'Auditorías de salvaguardias socioambientales en proyectos de infraestructura en LatAm y África',
+      'Estrategias de transición energética y planes de adaptación al cambio climático'
+    ],
+    recentNews: [
+      {
+        title: 'Apertura de nuevos contratos marco de consultoría ambiental internacional',
+        date: '2026-10-05',
+        snippet: 'Creciente demanda de perfiles en modelación de cuencas y gestión de recursos hídricos.'
+      }
+    ],
+    workCulture: [
+      'Propiedad 100% de los empleados (asociados)',
+      'Proyección internacional en más de 120 países',
+      'Alta exigencia técnica y rigor en documentación'
+    ],
+    redFlags: ['Picos de trabajo elevados durante entrega de licitaciones internacionales'],
+    interviewArguments: [
+      'Geofísico con dominio numérico de mecánica de fluidos e hidrología de cuencas.',
+      'Experiencia en asesoría técnica ante comisiones parlamentarias y diálogo multiactor.',
+      'Bilingüe español/inglés con soltura para interactuar con clientes multilaterales.'
+    ],
+    techStack: ['HEC-RAS', 'Iber', 'QGIS', 'Python', 'AutoCAD Civil 3D'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-azti',
+    name: 'AZTI - Marine & Food Technology',
+    website: 'https://www.azti.es/',
+    sector: 'Investigación Marina, Oceanografía y Costas (BRTA)',
+    size: '250-350 investigadores',
+    headquarters: 'Pasaia (Gipuzkoa) / Sukarrieta (Bizkaia)',
+    description: 'Centro científico y tecnológico especializado en el medio marino y la cadena de valor alimentaria. Líder en monitoreo oceanográfico, dinámica de sedimentos costeros y gestión de pesquerías sostenibles.',
+    keyProjects: [
+      'Red de radares costeros de alta frecuencia HF y boyas oceanográficas',
+      'Modelado hidrodinámico de estuarios y dinámica sedimentaria en el Golfo de Bizkaia',
+      'Evaluación de impacto del calentamiento y acidificación oceánica'
+    ],
+    recentNews: [
+      {
+        title: 'Convocatorias de monitorización satelital y oceanografía operativa en el Cantábrico',
+        date: '2026-08-30',
+        snippet: 'Nuevos sensores autónomos para seguimiento ambiental costero.'
+      }
+    ],
+    workCulture: [
+      'Fuerte vinculación al litoral y a los ecosistemas marinos',
+      'Alta productividad en proyectos científicos europeos',
+      'Colaboración estrecha con administraciones marítimas'
+    ],
+    redFlags: ['Campañas oceanográficas y embarques periódicos requeridos para ciertos puestos'],
+    interviewArguments: [
+      'Formación de origen en geofísica con base en física de la Tierra, dinámica de fluidos y oleaje.',
+      'Procesamiento avanzado de series temporales y datos geoespaciales con Python y R.',
+      'Compromiso demostrado con la conservación de humedales costeros y zonas de transición.'
+    ],
+    techStack: ['Python', 'Matlab / Octave', 'QGIS', 'Copernicus Marine Data', 'Series Temporales'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-ihobe',
+    name: 'IHOBE - Sociedad Pública de Gestión Ambiental',
+    website: 'https://www.ihobe.eus/',
+    sector: 'Gestión Ambiental Pública & Políticas de Sostenibilidad',
+    size: '50-100 empleados',
+    headquarters: 'Bilbao (Bizkaia)',
+    description: 'Sociedad pública adscrita al Departamento de Desarrollo Económico, Sostenibilidad y Medio Ambiente del Gobierno Vasco. Diseña e implementa la Estrategia Vasca de Cambio Climático (Klima 2050), el Plan de Suelos Contaminados y la economía circular en Euskadi.',
+    keyProjects: [
+      'Observatorio de Cambio Climático de Euskadi y Red KLIMATEK',
+      'Inventario y remediación de suelos históricamente alterados de la CAV',
+      'Guías de compra pública verde y ecodiseño industrial'
+    ],
+    recentNews: [
+      {
+        title: 'Actualización del catálogo de herramientas de adaptación climática para municipios vascos',
+        date: '2026-09-10',
+        snippet: 'Impulso a la renaturalización y resiliencia territorial en Euskadi.'
+      }
+    ],
+    workCulture: [
+      'Servicio público, vocación territorial y rigor técnico',
+      'Articulación entre administración, empresas y centros de investigación',
+      'Enfoque en políticas y resultados medibles'
+    ],
+    redFlags: ['Procesos de contratación pública sujetos a baremación oficial'],
+    interviewArguments: [
+      'Doble máster europeo en gestión y protección ambiental (Kiel/Poznań) centrado en políticas territoriales.',
+      'Comprensión integral del marco normativo ambiental europeo (Directiva Suelos, Pacto Verde, Taxonomía).',
+      'Residencia e implicación directa en Bilbao/Bizkaia con interés a largo plazo en el territorio.'
+    ],
+    techStack: ['GIS', 'Inventarios GEI', 'Métricas ESG', 'Evaluación de Impacto'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-aclima',
+    name: 'Aclima - Basque Environment Cluster',
+    website: 'https://aclima.eus/',
+    sector: 'Clúster Empresarial & Ecosistema Ambiental de Euskadi',
+    size: '10-25 equipo de gestión (representa a 120+ entidades)',
+    headquarters: 'Bilbao (Bizkaia)',
+    description: 'Asociación Clúster de Industrias de Medio Ambiente de Euskadi. Aglutina a la cadena de valor de la ecoindustria vasca: residuos, suelos, agua, aire, cambio climático y ecodiseño.',
+    keyProjects: [
+      'Iniciativas de simbiosis industrial y valorización de subproductos en Bizkaia',
+      'Fomento de licitaciones multilaterales consorciadas para empresas vascas en el exterior',
+      'Mapeo de talento y competencias clave para la transición ecológica'
+    ],
+    recentNews: [
+      {
+        title: 'Publicación del informe de coyuntura y oportunidades de empleo en el sector verde vasco',
+        date: '2026-09-28',
+        snippet: 'Demanda creciente de especialistas en análisis de datos ambientales y gestión hídrica.'
+      }
+    ],
+    workCulture: [
+      'Networking institucional de alto nivel',
+      'Dinamismo en gestión de proyectos de innovación colaborativa',
+      'Visión panorámica de todo el tejido industrial y consultor vasco'
+    ],
+    redFlags: ['Puestos de gestión en el clúster suelen tener alta polivalencia organizativa'],
+    interviewArguments: [
+      'Capacidad de interlocución entre el mundo científico-técnico y las necesidades empresariales reales.',
+      'Visión internacional de mejores prácticas en Europa del Norte (Alemania/Polonia).',
+      'Habilidad demostrada para dinamizar mesas de trabajo multiactor y sintetizar datos complejos.'
+    ],
+    techStack: ['Gestión de Proyectos', 'Inteligencia de Mercado', 'Análisis de Redes de Clúster'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-cic-energigune',
+    name: 'CIC energiGUNE',
+    website: 'https://cicenergigune.com/',
+    sector: 'I+D en Almacenamiento de Energía & Baterías (BRTA)',
+    size: '180-250 investigadores',
+    headquarters: 'Parque Tecnológico de Álava (Miñano, Vitoria-Gasteiz)',
+    description: 'Centro de investigación referente en Europa en almacenamiento electroquímico (baterías de estado sólido, sodio) y térmico para energías renovables y movilidad sostenible.',
+    keyProjects: [
+      'Iniciativa europea Battery 2030+ y desarrollo de celdas libres de cobalto',
+      'Sistemas de almacenamiento térmico para calor industrial descarbonizado',
+      'Análisis de ciclo de vida (LCA) y huella de carbono de nuevos materiales de almacenamiento'
+    ],
+    recentNews: [
+      {
+        title: 'Nuevos laboratorios de prototipado y validación de tecnologías de almacenamiento',
+        date: '2026-08-15',
+        snippet: 'Convocatorias continuas de personal investigador e ingenieros de sostenibilidad.'
+      }
+    ],
+    workCulture: [
+      'Investigación de vanguardia mundial',
+      'Entorno multicultural con más de 20 nacionalidades',
+      'Equipamiento de última generación (difracción de rayos X, salas secas)'
+    ],
+    redFlags: ['Fuerte focalización en ciencia de materiales y electroquímica'],
+    interviewArguments: [
+      'Base sólida en física y matemáticas que permite abordar modelación termodinámica y análisis de balance de masas.',
+      'Especialización en análisis de ciclo de vida (LCA) y evaluación de huella ambiental de tecnologías de transición.',
+      'Experiencia en redacción y justificación de proyectos europeos.'
+    ],
+    techStack: ['Python', 'LCA OpenLCA / SimaPro', 'Modelación Térmica', 'Análisis de Datos'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-cristina-enea',
+    name: 'Fundación Cristina Enea',
+    website: 'https://www.cristinaenea.eus/',
+    sector: 'Educación Ambiental, Transición Ecosocial & Cultura de Sostenibilidad',
+    size: '15-30 empleados',
+    headquarters: 'Donostia-San Sebastián (Gipuzkoa)',
+    description: 'Fundación municipal y centro de recursos medioambientales de referencia en Gipuzkoa. Genera conocimiento, debate ciudadano y estrategias participativas para la transición ecológica urbana y la defensa de la biodiversidad.',
+    keyProjects: [
+      'Observatorio de Sostenibilidad de San Sebastián',
+      'Programas de renaturalización urbana y ciencia ciudadana en cuencas del Urumea',
+      'Exposiciones y debates sobre justicia climática y decrecimiento'
+    ],
+    recentNews: [
+      {
+        title: 'Lanzamiento de las jornadas anuales sobre biodiversidad urbana y adaptación local',
+        date: '2026-09-05',
+        snippet: 'Enfoque en la integración de conocimiento científico en la toma de decisiones ciudadana.'
+      }
+    ],
+    workCulture: [
+      'Sensibilidad ecológica profunda y compromiso social',
+      'Trabajo cercano a la comunidad local y centros educativos',
+      'Foco en la divulgación científica rigurosa y accesible'
+    ],
+    redFlags: ['Presupuestos de proyectos medianos dependientes de convenios institucionales'],
+    interviewArguments: [
+      'Trayectoria probada en educación y divulgación ambiental, incluyendo exposiciones internacionales (Oslo, Bonn).',
+      'Diseño agroecológico y permacultura aplicable a renaturalización urbana y huertos comunitarios.',
+      'Habilidad pedagógica para traducir datos biofísicos complejos a narrativas transformadoras.'
+    ],
+    techStack: ['Divulgación Científica', 'Ciencia Ciudadana', 'Facilitación Participativa', 'QGIS'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-ecodes',
+    name: 'ECODES - Ecología y Desarrollo',
+    website: 'https://ecodes.org/',
+    sector: 'Think Tank Ambiental, Gobernanza del Agua y Descarbonización',
+    size: '40-70 profesionales',
+    headquarters: 'Zaragoza / Madrid / Bilbao',
+    description: 'Organización referente en España que actúa como puente entre la sociedad civil, las administraciones públicas y el sector privado para acelerar la transición hacia una economía neutra en carbono y socialmente justa.',
+    keyProjects: [
+      'Iniciativa CeroCO2 para huella de carbono y compensación de emisiones con impacto social',
+      'Gobernanza participativa del agua y adaptación a la sequía en cuencas ibéricas',
+      'Observatorio de la Transición Justa y pobreza energética'
+    ],
+    recentNews: [
+      {
+        title: 'Presentación del informe sobre políticas de resiliencia hídrica ante el cambio climático',
+        date: '2026-09-18',
+        snippet: 'Propuestas concretas de gestión de la demanda y protección de caudales ecológicos.'
+      }
+    ],
+    workCulture: [
+      'Incidencia política constructiva basada en evidencias científicas',
+      'Cultura de trabajo en red y alianzas amplias',
+      'Enfoque propositivo y de soluciones viables'
+    ],
+    redFlags: ['Dependencia de convocatorias competitivas y donaciones institucionales'],
+    interviewArguments: [
+      'Autor de presentaciones técnicas ante el Congreso de Chile sobre gestión de cuencas y riesgo de incendios.',
+      'MSc en Environmental Management con comprensión de instrumentos de gobernanza ambiental.',
+      'Alineamiento ético total con los principios de transición justa y equidad territorial.'
+    ],
+    techStack: ['Gobernanza Ambiental', 'Inventarios de Emisiones', 'Gestión de Cuencas', 'Incidencia Política'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-alboan',
+    name: 'Alboan ONGD',
+    website: 'https://www.alboan.org/',
+    sector: 'Cooperación Internacional, Justicia Ambiental y Defensores del Territorio',
+    size: '40-60 personas',
+    headquarters: 'Bilbao (Bizkaia) / Donostia / Pamplona',
+    description: 'ONGD jesuita en Euskadi y Navarra. Trabaja en la defensa de los derechos humanos y la justicia socioambiental en comunidades del Sur Global (América Latina, África, India) y la movilización ciudadana en Euskadi.',
+    keyProjects: [
+      'Defensa de defensores y defensoras de la tierra y los bienes comunes en la Amazonía',
+      'Campaña Tecnología Libre de Conflicto sobre cadenas globales de suministro y minerales',
+      'Proyectos de soberanía alimentaria y adaptación al cambio climático en comunidades indígenas'
+    ],
+    recentNews: [
+      {
+        title: 'Convocatorias de cooperación descentralizada y educación transformadora en Euskadi',
+        date: '2026-09-12',
+        snippet: 'Énfasis en los vínculos entre crisis climática y derechos de los pueblos indígenas.'
+      }
+    ],
+    workCulture: [
+      'Fuerte compromiso ético y humano',
+      'Respeto mutuo y horizontalidad en las relaciones con contrapartes del Sur',
+      'Enfoque de género y decolonial'
+    ],
+    redFlags: ['Salarios del tercer sector regulados por convenio de acción social'],
+    interviewArguments: [
+      'Experiencia en investigación sobre impactos de monocultivos forestales con comunidades locales en América Latina.',
+      'Colaboración con redes globales como Global Forest Coalition y Environmental Paper Network.',
+      'Competencias en diseño permacultural, agroecología y mediación comunitaria.'
+    ],
+    techStack: ['Formulación de Proyectos UE/AECID', 'Enfoque de Marco Lógico', 'Salvaguardias Socioambientales'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-mundubat',
+    name: 'Mundubat',
+    website: 'https://www.mundubat.org/',
+    sector: 'Soberanía Alimentaria, Derechos Territoriales y Solidaridad Internacional',
+    size: '30-45 personas',
+    headquarters: 'Bilbao (Bizkaia)',
+    description: 'Organización vasca de cooperación internacional y transformación social. Centrada en la soberanía alimentaria, la agroecología, la defensa de los derechos colectivos territoriales y los derechos del campesinado.',
+    keyProjects: [
+      'Apoyo a sistemas agroalimentarios locales y redes campesinas agroecológicas',
+      'Incidencia en políticas públicas de comercio justo y debida diligencia empresarial',
+      'Defensa de las comunidades rurales frente al extractivismo en América Latina'
+    ],
+    recentNews: [
+      {
+        title: 'Nuevos proyectos de agroecología y transición alimentaria en Euskadi y América Latina',
+        date: '2026-08-25',
+        snippet: 'Articulación con movimientos sociales y administraciones locales.'
+      }
+    ],
+    workCulture: [
+      'Militancia activa, horizontalidad y asamblearismo',
+      'Solidaridad internacionalista y respeto a la autonomía comunitaria',
+      'Espacio de debate político profundo'
+    ],
+    redFlags: ['Estructura muy arraigada al tejido asociativo local que valora trayectoria previa en movimientos sociales'],
+    interviewArguments: [
+      'Compromiso práctico en agroecología (PDC certificado) y defensa de sistemas hídricos comunitarios.',
+      'Testimonio oficial en el Congreso de Chile sobre los impactos territoriales del modelo forestal.',
+      'Conexión vivencial y política con las luchas socioambientales latinoamericanas.'
+    ],
+    techStack: ['Agroecología', 'Facilitación Comunitaria', 'Gestión de Subvenciones AVCD/Gobierno Vasco'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-elankidetza',
+    name: 'eLankidetza - Agencia Vasca de Cooperación y Solidaridad',
+    website: 'https://www.elankidetza.euskadi.eus/',
+    sector: 'Administración Pública / Cooperación al Desarrollo de Euskadi',
+    size: '30-50 personas',
+    headquarters: 'Vitoria-Gasteiz / Bilbao',
+    description: 'Entidad pública dependiente del Gobierno Vasco encargada de planificar, gestionar y evaluar las políticas públicas vascas de cooperación internacional para el desarrollo y solidaridad transformadora.',
+    keyProjects: [
+      'Convocatorias anuales de proyectos de cooperación y ayuda humanitaria internacional',
+      'Estrategia vasca de transición ecológica justa en cooperación internacional',
+      'Seguimiento y evaluación técnica de programas plurianuales en cuencas prioritarias'
+    ],
+    recentNews: [
+      {
+        title: 'Resolución de convocatorias estratégicas de cooperación con enfoque ecológico y de género',
+        date: '2026-09-30',
+        snippet: 'Priorización de iniciativas de mitigación y soberanía alimentaria.'
+      }
+    ],
+    workCulture: [
+      'Gestión pública con altos estándares de transparencia y control de gasto',
+      'Compromiso social de país respaldado por la sociedad vasca',
+      'Rigor administrativo y normativo'
+    ],
+    redFlags: ['Puestos fijos sujetos a procesos de selección pública de la administración vasca'],
+    interviewArguments: [
+      'Capacidad de evaluación técnica y metodológica de proyectos con criterios de impacto ambiental medibles.',
+      'Doble formación en ciencias duras (geofísica) y políticas ambientales europeas.',
+      'Conocimiento exhaustivo del contexto latinoamericano y de la cooperación descentralizada.'
+    ],
+    techStack: ['Evaluación de Impacto', 'Marco Lógico', 'Directrices de Cooperación Vasca', 'Auditoría Técnica'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-epn',
+    name: 'Environmental Paper Network (EPN)',
+    website: 'https://environmentalpaper.org/',
+    sector: 'Coalición Científica y de Incidencia Internacional en Bosques y Carbono',
+    size: 'Red internacional de más de 150 organizaciones',
+    headquarters: 'Alemania / Internacional',
+    description: 'Red global de organizaciones de la sociedad civil que monitorea y combate la expansión de monocultivos de árboles industriales, la deforestación y la falsa neutralidad de la bioenergía de biomasa.',
+    keyProjects: [
+      'Auditoría de integridad de créditos de carbono en el sector forestal y de plantaciones',
+      'Campaña global contra los subsidios a la biomasa leñosa a gran escala en la UE (RED III)',
+      'Monitoreo de derechos humanos y tenencia de tierras en zonas de monocultivos'
+    ],
+    recentNews: [
+      {
+        title: 'Publicación del informe sobre los impactos climáticos ocultos de la bioenergía industrial',
+        date: '2026-07-20',
+        snippet: 'Análisis cuantitativo de la deuda de carbono y el impacto en sumideros forestales.'
+      }
+    ],
+    workCulture: [
+      'Trabajo remoto global altamente coordinado',
+      'Investigación técnica independiente para desmantelar greenwashing',
+      'Colaboración solidaria entre científicos y activistas de campo'
+    ],
+    redFlags: ['Financiación dependiente de fundaciones filantrópicas internacionales'],
+    interviewArguments: [
+      'Investigador con experiencia directa como autor de informes técnicos para EPN y GFC sobre plantaciones de biomasa.',
+      'Dominio de contabilidad de carbono e inconsistencias en salvaguardias ambientales de la cadena de suministro.',
+      'Red de contactos activa en Alemania, Europa y América Latina.'
+    ],
+    techStack: ['Contabilidad de Carbono', 'Análisis Satelital GIS', 'Redacción de Informes Técnicos', 'Incidencia Política'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-gfc',
+    name: 'Global Forest Coalition',
+    website: 'https://globalforestcoalition.org/',
+    sector: 'Políticas Globales de Biodiversidad, Bosques y Derechos Colectivos',
+    size: 'Red internacional con 125+ organizaciones en 70 países',
+    headquarters: 'Alemania / Países Bajos / Internacional',
+    description: 'Coalición internacional de ONG y organizaciones de Pueblos Indígenas que defiende políticas de conservación forestal basadas en los derechos humanos y combate soluciones basadas en el mercado que destruyen ecosistemas.',
+    keyProjects: [
+      'Observatorio de Falsas Soluciones Climáticas y Mercados Voluntarios de Carbono',
+      'Campaña por la Conservación Comunitaria de Bosques e iniciativa ICCAs',
+      'Monitoreo de las negociaciones de la COP del Convenio sobre la Diversidad Biológica (CDB)'
+    ],
+    recentNews: [
+      {
+        title: 'Participación en las negociaciones del CDB sobre financiamiento de la biodiversidad',
+        date: '2026-09-02',
+        snippet: 'Demanda de apoyo directo a las comunidades locales frente a los esquemas de compensación.'
+      }
+    ],
+    workCulture: [
+      'Perspectiva global anticolonial y de justicia de género',
+      'Facilitación multicultural en inglés, español y francés',
+      'Incidencia directa en cumbres de la ONU (CMNUCC, CDB)'
+    ],
+    redFlags: ['Organización con horarios flexibles adaptados a husos horarios globales'],
+    interviewArguments: [
+      'Trayectoria demostrada como investigador colaborador en informes de impacto del sector de celulosa y biomasa.',
+      'Manejo riguroso del marco científico de sumideros de carbono y dinámicas de suelos edáficos.',
+      'Compromiso genuino con los derechos colectivos de las comunidades guardianas de ecosistemas.'
+    ],
+    techStack: ['Gobernanza de la Biodiversidad', 'Políticas ONU', 'Análisis Socioambiental', 'Comunicaciones Estratégicas'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-cau-kiel',
+    name: 'CAU Kiel - Coastal & Peatland Research Group',
+    website: 'https://www.uni-kiel.de/',
+    sector: 'Investigación Universitaria de Excelencia en Turberas y Ecosistemas Costeros',
+    size: '3.500+ investigadores y docentes',
+    headquarters: 'Kiel (Schleswig-Holstein, Alemania)',
+    description: 'Universidad de excelencia alemana con uno de los institutos de geociencias y ciencias ambientales más prestigiosos de Europa. Lidera la investigación en restauración de turberas, balances de GEI con eddy covariance y dinámica de cuencas en el Báltico y Mar del Norte.',
+    keyProjects: [
+      'Monitoreo continuo micrometeorológico de flujos de CO2 y CH4 en turberas restauradas (paludicultura)',
+      'Dinámica hidrogeoquímica y transporte de nutrientes en cuencas agrícolas del norte de Alemania',
+      'Modelado numérico de interacción océano-atmósfera y balance sedimentario costero'
+    ],
+    recentNews: [
+      {
+        title: 'Ampliación de la red de torres de flujo micrometeorológico en turberas del norte de Alemania',
+        date: '2026-10-10',
+        snippet: 'Medición de alta frecuencia de balance de carbono para políticas de descarbonización de la UE.'
+      }
+    ],
+    workCulture: [
+      'Máximo rigor académico y metodológico alemán',
+      'Laboratorios e instrumentación de campo de última generación',
+      'Publicación en revistas científicas de alto impacto (Nature, Global Change Biology)'
+    ],
+    redFlags: ['Exige titulación oficial alemana o homologada para contratos de personal investigador (con la que Daniel cuenta)'],
+    interviewArguments: [
+      'Investigador activo en el laboratorio de turberas de CAU Kiel con experiencia práctica en torres eddy covariance y cámaras estáticas.',
+      'Doble titulación M.Sc. en Environmental Management por CAU Kiel con evaluación sobresaliente.',
+      'Dominio de tratamiento de datos crudos de alta frecuencia en R y modelación espacial.'
+    ],
+    techStack: ['EddyPro', 'R', 'Python', 'Sensores Micrometeorológicos Licor', 'QGIS'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-iberdrola',
+    name: 'Iberdrola Renovable & Innovación',
+    website: 'https://www.iberdrola.com/',
+    sector: 'Energías Renovables, Redes Eléctricas y Descarbonización',
+    size: '40.000+ empleados',
+    headquarters: 'Bilbao (Torre Iberdrola, Bizkaia)',
+    description: 'Líder energético global con sede mundial en Bilbao. Mayor productor de energía eólica del mundo y pionero en la transición energética hacia un modelo 100% renovable, redes inteligentes e hidrógeno verde.',
+    keyProjects: [
+      'Parques eólicos marinos (offshore) en el Mar del Norte y Báltico (Wikinger, Baltic Eagle)',
+      'Integración de biodiversidad y restauración ambiental en plantas fotovoltaicas y eólicas',
+      'Estudios de impacto ambiental y licencias de conexión para proyectos internacionales'
+    ],
+    recentNews: [
+      {
+        title: 'Inversiones récord en redes inteligentes e innovación renovable internacional',
+        date: '2026-10-08',
+        snippet: 'Compromiso de cero emisiones netas en Alcances 1, 2 y 3 para 2040.'
+      }
+    ],
+    workCulture: [
+      'Gran multinacional del IBEX 35 con recursos técnicos avanzados',
+      'Oportunidades de movilidad internacional en Europa y América',
+      'Enfoque en excelencia operativa y cumplimiento de plazos'
+    ],
+    redFlags: ['Estructura corporativa jerárquica con procesos de decisión más lentos que en pymes'],
+    interviewArguments: [
+      'Perfil geofísico idóneo para prospección de recursos eólicos/solares y geotecnia ambiental marina.',
+      'Familiaridad con los mercados energéticos de Alemania y España.',
+      'Dominio de herramientas SIG para optimización del emplazamiento de activos renovables.'
+    ],
+    techStack: ['GIS', 'Python', 'Modelos Meteorológicos', 'ESG Reporting', 'Estudios de Impacto'],
+    lastResearched: '2026-10-14'
+  },
+  {
+    id: 'comp-siemens-gamesa',
+    name: 'Siemens Gamesa Renewable Energy',
+    website: 'https://www.siemensgamesa.com/',
+    sector: 'Tecnología Eólica Terrestre y Marina',
+    size: '25.000+ empleados',
+    headquarters: 'Zamudio (Parque Científico y Tecnológico de Bizkaia)',
+    description: 'Líder mundial en fabricación, instalación y mantenimiento de aerogeneradores para energía eólica onshore y offshore, con centros de ingeniería clave en Zamudio (Bizkaia).',
+    keyProjects: [
+      'Desarrollo de palas de aerogenerador 100% reciclables (RecyclableBlade)',
+      'Modelado de recurso eólico y micrometeorología en terrenos complejos',
+      'Evaluación de impacto ambiental y acústico en proyectos eólicos internacionales'
+    ],
+    recentNews: [
+      {
+        title: 'Lanzamiento de nuevas turbinas marinas de alta potencia para el mercado europeo',
+        date: '2026-09-14',
+        snippet: 'Desarrollo de proyectos estratégicos de I+D en el Parque Tecnológico de Zamudio.'
+      }
+    ],
+    workCulture: [
+      'Cultura de ingeniería eólica alemana-española',
+      'Enfoque en seguridad, calidad y sostenibilidad de materiales',
+      'Inglés como lengua principal de trabajo técnico'
+    ],
+    redFlags: ['Reestructuraciones corporativas periódicas vinculadas a la integración en Siemens Energy'],
+    interviewArguments: [
+      'Formación sólida en geofísica y mecánica de fluidos aplicable a la física del viento y capas límite atmosféricas.',
+      'Capacidad de modelación estadística y geoespacial en R y Python.',
+      'Doble formación germano-iberoamericana ideal para la cultura binacional de la compañía.'
+    ],
+    techStack: ['Python', 'WAsP / WindPRO', 'QGIS', 'Análisis Micrometeorológico', 'LCA'],
+    lastResearched: '2026-10-14'
+  }
+];
 
-export const initialCompanies: CompanyDossier[] = [];
+export const initialOffers: JobOffer[] = [];
 
 export const initialApplications: ApplicationItem[] = [];
 
