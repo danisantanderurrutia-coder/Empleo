@@ -10,11 +10,11 @@ import { SettingsTab } from './components/settings/SettingsTab';
 
 import { getStoredOffers, saveStoredOffers, getStoredProfile, getStoredApplications, saveStoredApplications } from './services/db';
 import { calculateMatchScore } from './services/matchEngine';
-import { getStoredTheme, saveStoredTheme, applyThemeToDOM, type AppTheme } from './services/themeManager';
+import { getStoredTheme, applyThemeToDOM, type AppTheme } from './services/themeManager';
 import type { JobOffer } from './types/offers';
 
 export function App() {
-  const [theme, setTheme] = useState<AppTheme>(getStoredTheme());
+  const [theme] = useState<AppTheme>(getStoredTheme());
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
   const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
@@ -27,11 +27,6 @@ export function App() {
   useEffect(() => {
     applyThemeToDOM(theme);
   }, [theme]);
-
-  const handleThemeChange = (newTheme: AppTheme) => {
-    setTheme(newTheme);
-    saveStoredTheme(newTheme);
-  };
 
   const handleNavigate = (stationId: string, subTab?: string, filterParam?: string) => {
     if (filterParam) {
@@ -153,8 +148,6 @@ export function App() {
     <div className={`min-h-screen w-full bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white theme-${theme}`} data-theme={theme}>
       <Navbar
         currentTab={activeTab}
-        currentTheme={theme}
-        onThemeChange={handleThemeChange}
         onOpenUnifiedHelp={() => setIsUnifiedHelpOpen(true)}
         onSelectStation={(id, subTab) => handleNavigate(id, subTab)}
       />

@@ -4,7 +4,8 @@ import {
   ChevronRight, 
   Globe2,
   Tv,
-  Sparkles
+  Sparkles,
+  KanbanSquare
 } from 'lucide-react';
 import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
 import { TacticalGlobeHUD } from './TacticalGlobeHUD';
@@ -22,10 +23,29 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
   const [showPlanetaryHUD, setShowPlanetaryHUD] = useState(false);
 
-  const highMatchOffers = offers.filter(o => o.matchScore?.totalScore >= 70);
+  // Compute live data metrics
+  const highMatchOffers = offers.filter(o => (o.matchScore?.totalScore || 0) >= 70);
+  const germanyOffers = offers.filter(o => {
+    const loc = (o.location || '').toLowerCase();
+    return loc.includes('alemania') || loc.includes('germany') || loc.includes('potsdam') || loc.includes('kiel') || loc.includes('berlin') || loc.includes('berlín');
+  });
+  const euskadiOffers = offers.filter(o => {
+    const loc = (o.location || '').toLowerCase();
+    return loc.includes('bilbao') || loc.includes('bizkaia') || loc.includes('donostia') || loc.includes('euskadi');
+  });
+  const remoteOffers = offers.filter(o => {
+    const loc = (o.location || '').toLowerCase();
+    return loc.includes('remoto') || loc.includes('remote');
+  });
+
+  // Locker stages
+  const colRadar = applications.filter(a => a.currentStage <= 2 && a.status === 'En Progreso');
+  const colPrep = applications.filter(a => a.currentStage >= 3 && a.currentStage <= 5 && a.status === 'En Progreso');
+  const colSent = applications.filter(a => (a.currentStage >= 6 && a.currentStage <= 7) || a.status === 'Enviada');
+  const colInterviews = applications.filter(a => a.currentStage === 8 || a.status === 'Entrevista');
   const activeApplications = applications.filter(a => a.status !== 'Desestimada');
 
-  // Photographic Assets from Unsplash for realistic tactical atmosphere
+  // Photographic Assets from Unsplash for realistic tactical atmosphere (Preserved 100%)
   const backgroundWall = 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1920&q=80';
   const tacticalOperative = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80';
   const droneScreen = 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
@@ -56,7 +76,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           </h1>
         </div>
 
-        {/* Tactical Planetary Toggle & Mode Switcher */}
+        {/* Tactical Planetary Toggle, Radar & Locker Quick Action */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setShowPlanetaryHUD(!showPlanetaryHUD)}
@@ -71,11 +91,20 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           </button>
 
           <button
+            onClick={() => onSelectStation('mission_control', 'applications')}
+            className="px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900/90 hover:bg-slate-800 text-sky-300 border border-slate-700 hover:border-sky-500 shadow transition flex items-center gap-1.5 cursor-pointer"
+            title="Abrir el Tablero Kanban y Despacho Asistido en Locker"
+          >
+            <KanbanSquare className="h-3.5 w-3.5 text-sky-400" />
+            <span>LOCKER ({activeApplications.length})</span>
+          </button>
+
+          <button
             onClick={onLaunchRadar}
             className="px-4 py-1.5 rounded-lg text-xs font-mono font-extrabold bg-red-600 hover:bg-red-500 text-white shadow-lg transition flex items-center gap-1.5 cursor-pointer"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            <span>DESPLEGAR RADAR (350+)</span>
+            <span>DESPLEGAR RADAR ({offers.length}+)</span>
           </button>
         </div>
       </div>
@@ -168,17 +197,17 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                 REPLAYS
               </span>
               <span className="text-[10px] font-mono font-black px-1.5 py-0.5 rounded bg-red-600 text-white shadow">
-                BETA
+                LIVE
               </span>
             </div>
 
-            <div className="flex flex-col items-center justify-center my-3 z-10">
+            <div className="flex flex-col items-center justify-center my-3 z-10 text-center">
               <Tv className="h-10 w-10 text-slate-200 group-hover:text-sky-300 transition mb-1 drop-shadow" />
               <span className="text-sm font-mono font-black text-white uppercase tracking-wider drop-shadow">
-                RADAR: 350+ VACANTES
+                RADAR: {offers.length} VACANTES
               </span>
-              <span className="text-[11px] text-slate-200 font-mono font-medium drop-shadow">
-                Click para desplegar telemetría
+              <span className="text-[11px] text-slate-200 font-mono font-medium drop-shadow mt-0.5">
+                {germanyOffers.length} Alemania • {euskadiOffers.length} Euskadi • {remoteOffers.length} Remoto
               </span>
             </div>
 
@@ -240,9 +269,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
           {/* Tile 2.2: REPUTATION */}
           <div 
-            onClick={() => onSelectStation('settings')}
+            onClick={() => onSelectStation('mission_control', 'applications')}
             className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)] transition cursor-pointer"
-            title="Click para ver Cuartel General & Auditoría de Fuentes"
+            title="Click para ver Locker y Despacho Asistido"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100 group-hover:text-emerald-300 transition">
@@ -254,7 +283,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             </div>
 
             {/* Silver Reputation Badge */}
-            <div className="flex flex-col items-center justify-center my-2">
+            <div className="flex flex-col items-center justify-center my-2 text-center">
               <div className="w-12 h-12 rounded-lg bg-slate-800 border-2 border-slate-400 flex items-center justify-center shadow-lg mb-1.5 group-hover:scale-105 transition">
                 <Award className="h-7 w-7 text-white" />
               </div>
@@ -262,13 +291,13 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                 RESPECTABLE
               </h4>
               <span className="text-xs font-mono font-bold text-slate-200">
-                100% Postulación Asistida por Ti
+                {colSent.length > 0 ? `${colSent.length} Envíos Confirmados por Ti` : '100% Despacho Mediado por Ti'}
               </span>
             </div>
 
             <div className="text-[11px] font-mono font-bold text-slate-200 text-center border-t border-slate-700 pt-1.5 flex items-center justify-between">
               <span>CERO BOTS • AUDITORÍA LIMPIA</span>
-              <span className="text-emerald-400 font-mono text-[10px]">HQ »</span>
+              <span className="text-emerald-400 font-mono text-[10px]">LOCKER »</span>
             </div>
           </div>
         </div>
@@ -283,18 +312,18 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               STATISTICS
             </h3>
             <span className="text-[10px] font-mono text-slate-300 font-bold uppercase tracking-widest">
-              ACCOUNT BASED STATISTICS
+              ACCOUNT & OPERATIONAL METRICS
             </span>
           </div>
 
           {/* Row 1: Big 3 Numbers */}
-          <div className="grid grid-cols-3 gap-2 border-b border-slate-700 pb-4">
+          <div className="grid grid-cols-3 gap-2 border-b border-slate-700 pb-3">
             <button 
               onClick={() => onSelectStation('market_radar', 'offers', 'ALL')}
               className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-red-500 transition text-left cursor-pointer group"
-              title="Click para ver todas las 350+ vacantes en el Radar"
+              title="Click para ver todas las vacantes en el Radar"
             >
-              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider group-hover:text-red-400 transition">Targets Found</div>
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider group-hover:text-red-400 transition">Targets Radar</div>
               <div className="text-2xl font-black text-white font-sans drop-shadow">{offers.length}</div>
             </button>
 
@@ -317,54 +346,108 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             </button>
           </div>
 
-          {/* Row 2: Most Played Specialists (Rounds) */}
-          <div className="space-y-1.5 border-b border-slate-700 pb-4">
-            <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
-              Most Targeted Sectors (Dossiers)
+          {/* Row 1.5: LIVE LOCKER PIPELINE TRACKER */}
+          <div className="space-y-1.5 border-b border-slate-700 pb-3">
+            <div className="flex items-center justify-between text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
+              <span className="flex items-center gap-1.5">
+                <KanbanSquare className="h-3.5 w-3.5 text-sky-400" />
+                <span>LOCKER // MISIÓN KANBAN EN VIVO</span>
+              </span>
+              <button
+                onClick={() => onSelectStation('mission_control', 'applications')}
+                className="text-[10px] text-sky-400 hover:text-white cursor-pointer font-bold"
+              >
+                ABRIR TABLERO »
+              </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 font-mono text-xs">
-              <button 
-                onClick={() => onSelectStation('market_radar', 'companies', 'BILBAO')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left cursor-pointer group"
-                title="Filtrar por I+D+i Euskadi (BC3, Tecnalia, Neiker)"
+            <div className="grid grid-cols-4 gap-1.5 font-mono text-xs">
+              <button
+                onClick={() => onSelectStation('mission_control', 'applications')}
+                className="p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-500 transition text-left cursor-pointer group"
+                title="Ofertas en Radar / Guardadas en Locker"
               >
-                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-emerald-300">I+D+i Euskadi</div>
-                <div className="font-bold text-white text-base">6 centros</div>
+                <div className="text-[10px] text-slate-400 truncate group-hover:text-slate-200">En Radar</div>
+                <div className="font-black text-white text-base">{colRadar.length}</div>
               </button>
 
-              <button 
-                onClick={() => onSelectStation('market_radar', 'companies')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left cursor-pointer group"
-                title="Filtrar por Consultoría Ambiental (IDOM, etc.)"
+              <button
+                onClick={() => onSelectStation('mission_control', 'applications')}
+                className="p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-sky-500 transition text-left cursor-pointer group"
+                title="Candidaturas en Preparación (CV / Carta)"
               >
-                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-sky-300">Consultoría</div>
-                <div className="font-bold text-white text-base">5 centros</div>
+                <div className="text-[10px] text-slate-400 truncate group-hover:text-sky-300">En Prep</div>
+                <div className="font-black text-sky-400 text-base">{colPrep.length}</div>
               </button>
 
-              <button 
-                onClick={() => onSelectStation('market_radar', 'sources')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left cursor-pointer group"
-                title="Ver fuentes de Gobernanza y Redes Globales"
+              <button
+                onClick={() => onSelectStation('mission_control', 'applications')}
+                className="p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-emerald-500 transition text-left cursor-pointer group"
+                title="Postulaciones Despachadas con Aprobación Humana"
               >
-                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-amber-300">Gobernanza</div>
-                <div className="font-bold text-white text-base">7 fuentes</div>
+                <div className="text-[10px] text-slate-400 truncate group-hover:text-emerald-300">Enviadas</div>
+                <div className="font-black text-emerald-400 text-base">{colSent.length}</div>
+              </button>
+
+              <button
+                onClick={() => onSelectStation('mission_control', 'applications')}
+                className="p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-purple-500 transition text-left cursor-pointer group"
+                title="Entrevistas Activas"
+              >
+                <div className="text-[10px] text-slate-400 truncate group-hover:text-purple-300">Entrevistas</div>
+                <div className="font-black text-purple-400 text-base">{colInterviews.length}</div>
               </button>
             </div>
           </div>
 
-          {/* Row 3: Ranked, Unranked & Quick Match (Operator Cards) */}
+          {/* Row 2: Most Targeted Sectors (Dossiers) */}
+          <div className="space-y-1.5 border-b border-slate-700 pb-3">
+            <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
+              Teatros de Operación Activos
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 font-mono text-xs">
+              <button 
+                onClick={() => onSelectStation('market_radar', 'offers', 'BILBAO')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left cursor-pointer group"
+                title="Filtrar por I+D+i Euskadi (BC3, Tecnalia, Neiker)"
+              >
+                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-emerald-300">📍 Euskadi Ley 14</div>
+                <div className="font-bold text-white text-base">{euskadiOffers.length} vacantes</div>
+              </button>
+
+              <button 
+                onClick={() => onSelectStation('market_radar', 'offers', 'GERMANY')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left cursor-pointer group"
+                title="Filtrar por Alemania / DACH (§20 AufenthG)"
+              >
+                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-sky-300">🇩🇪 DACH §20</div>
+                <div className="font-bold text-white text-base">{germanyOffers.length} vacantes</div>
+              </button>
+
+              <button 
+                onClick={() => onSelectStation('market_radar', 'offers', 'REMOTE')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left cursor-pointer group"
+                title="Filtrar por 100% Remoto UE"
+              >
+                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-amber-300">🌐 Remoto UE</div>
+                <div className="font-bold text-white text-base">{remoteOffers.length} vacantes</div>
+              </button>
+            </div>
+          </div>
+
+          {/* Row 3: Specialist Profile Configurations */}
           <div className="space-y-2">
             <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
-              Specialist Profile Configurations
+              Especialidades del Operador Daniel Santander
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               {/* Operator 1: Geofísica & Modelación */}
               <button 
-                onClick={() => onSelectStation('agent_dossier', 'cvs')}
+                onClick={() => onSelectStation('agent_dossier', 'showcase')}
                 className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition flex items-center space-x-3 text-left cursor-pointer group"
-                title="Click para ver CV de Geofísica & Modelación"
+                title="Click para ver Showcase del Operador"
               >
                 <img 
                   src={operatorIana} 
@@ -372,17 +455,17 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                   className="w-10 h-10 rounded-full object-cover border border-slate-500 group-hover:border-sky-400 shrink-0" 
                 />
                 <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-sky-300">GEOFÍSICA</div>
+                  <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-sky-300">GEOFÍSICA & GIS</div>
                   <div className="text-[10px] font-mono text-slate-300 font-semibold">U. de Chile</div>
-                  <div className="text-[10px] font-mono text-emerald-400 font-bold">73.8% Match Rate</div>
+                  <div className="text-[10px] font-mono text-emerald-400 font-bold">R • Python • QGIS</div>
                 </div>
               </button>
 
               {/* Operator 2: Biofísica & CAU Kiel */}
               <button 
-                onClick={() => onSelectStation('agent_dossier', 'cvs')}
+                onClick={() => onSelectStation('agent_dossier', 'showcase')}
                 className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition flex items-center space-x-3 text-left cursor-pointer group"
-                title="Click para ver CV y Lebenslauf de CAU Kiel"
+                title="Click para ver Showcase del Operador"
               >
                 <img 
                   src={operatorEla} 
@@ -390,9 +473,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                   className="w-10 h-10 rounded-full object-cover border border-slate-500 group-hover:border-emerald-400 shrink-0" 
                 />
                 <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-emerald-300">BIOFÍSICA</div>
-                  <div className="text-[10px] font-mono text-slate-300 font-semibold">CAU Kiel / Poznań</div>
-                  <div className="text-[10px] font-mono text-sky-400 font-bold">81.0% Match Rate</div>
+                  <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-emerald-300">GESTIÓN AMBIENTAL</div>
+                  <div className="text-[10px] font-mono text-slate-300 font-semibold">Doble M.Sc. CAU Kiel</div>
+                  <div className="text-[10px] font-mono text-sky-400 font-bold">Políticas • Suelos • Clima</div>
                 </div>
               </button>
             </div>
@@ -415,7 +498,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             </span>
           </div>
           <span className="text-[11px] font-mono text-slate-300 font-medium">
-            Operador: Daniel Santander (Doble M.Sc. • Geofísica)
+            Operador: {profile.fullName || 'Daniel Santander'} (Doble M.Sc. Kiel • Geofísica U. de Chile)
           </span>
         </div>
 
@@ -431,11 +514,11 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                   FASE 1: RECONOCIMIENTO
                 </span>
                 <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800">
-                  PASO 1
+                  {offers.length} VACANTES
                 </span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
-                Revisión manual de 350+ vacantes indexadas, Euraxess (§20 AufenthG) y centros I+D vascos con activación de filtros estratégicos.
+                Revisión táctica de {offers.length} vacantes verificadas ({germanyOffers.length} DACH §20, {euskadiOffers.length} Euskadi Ley 14 y {remoteOffers.length} Remoto UE).
               </p>
             </div>
             <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-red-400 font-bold flex items-center justify-between">
@@ -446,7 +529,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
           {/* FASE 2 */}
           <div 
-            onClick={() => onSelectStation('agent_dossier', 'cvs')}
+            onClick={() => onSelectStation('agent_dossier', 'showcase')}
             className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-amber-500 transition cursor-pointer group flex flex-col justify-between shadow-md"
           >
             <div>
@@ -455,11 +538,11 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                   FASE 2: SELECCIÓN & ARMERÍA
                 </span>
                 <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">
-                  PASO 2
+                  3 LOADOUTS
                 </span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
-                Guardado táctico de ofertas de interés y configuración del armamento curricular (ES para Euskadi, EN internacional, Lebenslauf para Alemania).
+                Armamento curricular listo: Español para Euskadi, Inglés para organismos internacionales y Lebenslauf para Alemania.
               </p>
             </div>
             <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-amber-400 font-bold flex items-center justify-between">
@@ -479,15 +562,15 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                   FASE 3: PREPARACIÓN & DESPACHO
                 </span>
                 <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">
-                  PASO 3
+                  {activeApplications.length} EN LOCKER
                 </span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
-                Asistencia en argumentos de entrevista específicos por empresa, cartas de motivación y despacho manual con confirmación humana.
+                Locker táctico: {colPrep.length} en preparación, {colSent.length} despachadas con tu confirmación y {colInterviews.length} entrevistas activas.
               </p>
             </div>
             <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-sky-400 font-bold flex items-center justify-between">
-              <span>CONTROL DE MISIONES KANBAN</span>
+              <span>TABLERO KANBAN & DESPACHO</span>
               <span className="group-hover:translate-x-1 transition">»</span>
             </div>
           </div>
@@ -507,14 +590,14 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               PLAY RANKED // ALEMANIA
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              Euraxess • §20 AufenthG • DACH
+              {germanyOffers.length} Vacantes §20 AufenthG • DACH
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-red-400 group-hover:translate-x-1 transition" />
         </button>
 
         <button
-          onClick={() => onSelectStation('market_radar', 'companies', 'BILBAO')}
+          onClick={() => onSelectStation('market_radar', 'offers', 'BILBAO')}
           className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
@@ -522,22 +605,22 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               PLAY STANDARD // EUSKADI
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              BC3 • Tecnalia • IDOM • Euskadi
+              {euskadiOffers.length} Vacantes Ley 14 • Centros I+D
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
         </button>
 
         <button
-          onClick={() => onSelectStation('agent_dossier', 'cvs')}
+          onClick={() => onSelectStation('agent_dossier', 'showcase')}
           className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
             <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-amber-400 transition">
-              OPERATORS // ARMERÍA CV
+              OPERATORS // SHOWCASE
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              ES • EN • Lebenslauf Alemán
+              Daniel Santander • Clearance 50
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-1 transition" />
@@ -552,7 +635,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               LOCKER // MISIÓN KANBAN
             </div>
             <div className="text-[11px] text-slate-300 font-mono font-medium">
-              {activeApplications.length} Postulaciones Activas
+              {activeApplications.length} Candidaturas en Seguimiento
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition" />
