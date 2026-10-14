@@ -1,13 +1,16 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages & Daily Job Scraper
 
 on:
   push:
     branches:
       - main
+  schedule:
+    # Runs automatically every day at 06:00 UTC (08:00 CET)
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -24,6 +27,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Daily Job Scraper
+        run: python scripts/job_scraper.py
+
+      - name: Commit updated jobs.json on schedule (if changed)
+        if: github.event_name == 'schedule'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/jobs.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(data): automated daily job ingestion [skip ci]" && git push)
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

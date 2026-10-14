@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
   MapPin, 
@@ -20,6 +20,7 @@ import { WebsitePreviewModal } from '../common/WebsitePreviewModal';
 import { AntigravityExploreModal } from '../common/AntigravityExploreModal';
 import { runAutonomousGlobalSearch } from '../../services/antigravitySearchEngine';
 import { runDailyPipelineEuskadi } from '../../services/dailyPipelineEngine';
+import { searchRealPublicJobs } from '../../services/publicJobApis';
 
 import { FiveStepPipelineModal } from './FiveStepPipelineModal';
 import { ProtocolModal } from './ProtocolModal';
@@ -44,6 +45,20 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
   const [isSearchingAi, setIsSearchingAi] = useState(false);
   const [isPurgingLinks, setIsPurgingLinks] = useState(false);
   const [searchResultSummary, setSearchResultSummary] = useState<string | null>(null);
+
+  useEffect(() => {
+    const current = getStoredOffers();
+    if (current.length === 0) {
+      setIsSearchingAi(true);
+      searchRealPublicJobs('').then(res => {
+        if (res.offers.length > 0) {
+          setOffers(res.offers);
+          saveStoredOffers(res.offers);
+        }
+        setIsSearchingAi(false);
+      }).catch(() => setIsSearchingAi(false));
+    }
+  }, []);
 
   const refreshOffers = () => {
     setOffers(getStoredOffers());
@@ -123,7 +138,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
   };
 
   const handleRunAutonomousSearch = async (query?: string) => {
-    const targetQuery = query || searchQuery || 'Suelos, gobernanza ambiental y clima en España, Euskadi y Bilbao';
+    const targetQuery = query !== undefined ? query : searchQuery;
     setIsSearchingAi(true);
     setSearchResultSummary(null);
 
@@ -148,7 +163,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
     }
   });
   const [newKeywordInput, setNewKeywordInput] = useState('');
-  const [selectedActiveKeywords, setSelectedActiveKeywords] = useState<string[]>(['Suelos & Biogeoquímica', 'Gobernanza Ambiental']);
+  const [selectedActiveKeywords, setSelectedActiveKeywords] = useState<string[]>([]);
 
   // Associated Terms Map (Semantic Expansion)
   const ASSOCIATED_TERMS_MAP: Record<string, string[]> = {
@@ -334,7 +349,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({ onStartApplication }) => {
           <button
             onClick={async () => {
               setIsSearchingAi(true);
-              const res = await runDailyPipelineEuskadi();
+              const res = await runDailyPipelineEuskadi(searchQuery);
               setOffers(res.scoutedOffers);
               setIsSearchingAi(false);
               setSearchResultSummary(res.summary);

@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Empleo — Capturador de Ofertas",
+  "version": "1.0.0",
+  "description": "Captura con un clic ofertas de empleo desde LinkedIn, InfoJobs, Indeed, portales de investigación o empresas y las envía a tu panel Empleo.",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Capturar Oferta para Empleo"
+  }
+}

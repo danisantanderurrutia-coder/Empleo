@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Capturador de Ofertas — Empleo</title>
+  <style>
+    body {
+      width: 350px;
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #10b981;
+    }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #059669;
+    }
+    .btn-secondary {
+      background: #334155;
+      margin-bottom: 6px;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+    }
+    .field {
+      margin-bottom: 8px;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 2px;
+    }
+    input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 8px;
+      color: #f1f5f9;
+      font-size: 12px;
+    }
+    textarea {
+      height: 70px;
+      resize: vertical;
+    }
+    .status {
+      font-size: 11px;
+      color: #38bdf8;
+      margin-bottom: 8px;
+      min-height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ Empleo — Capturador</h1>
+  <button id="btnCapture" class="btn">Capturar Oferta de la Pestaña Activa</button>
+  <div id="status" class="status"></div>
+
+  <div id="formContainer" style="display: none;">
+    <div class="field">
+      <label>Título del Puesto</label>
+      <input type="text" id="jobTitle" />
+    </div>
+    <div class="field">
+      <label>Empresa / Institución</label>
+      <input type="text" id="jobCompany" />
+    </div>
+    <div class="field">
+      <label>Ubicación</label>
+      <input type="text" id="jobLocation" />
+    </div>
+    <div class="field">
+      <label>URL</label>
+      <input type="text" id="jobUrl" readonly />
+    </div>
+    <div class="field">
+      <label>Descripción / Requisitos</label>
+      <textarea id="jobDescription"></textarea>
+    </div>
+
+    <button id="btnCopyJson" class="btn btn-secondary">📋 Copiar JSON para Empleo</button>
+    <button id="btnOpenApp" class="btn">🚀 Abrir en Portal Empleo</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

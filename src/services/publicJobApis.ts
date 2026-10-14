@@ -47,19 +47,103 @@ const stripHtml = (html?: string): string => {
 };
 
 /**
+ * Tokenizes and translates user search terms into English/international technical equivalents.
+ */
+export const mapQueryToSearchTerms = (query: string): string[] => {
+  const q = query.toLowerCase().trim();
+  if (!q) return [];
+
+  const translations: Record<string, string[]> = {
+    'suelo': ['soil', 'land', 'edafolog', 'agriculture'],
+    'suelos': ['soil', 'land', 'edafolog', 'agriculture'],
+    'clima': ['climate', 'environmental', 'carbon', 'sustainab'],
+    'cambio climático': ['climate', 'carbon', 'transition', 'net zero'],
+    'cambio climatico': ['climate', 'carbon', 'transition', 'net zero'],
+    'gobernanza': ['governance', 'policy', 'advocacy'],
+    'política': ['policy', 'governance', 'advocacy'],
+    'politica': ['policy', 'governance', 'advocacy'],
+    'políticas': ['policy', 'governance', 'advocacy'],
+    'politicas': ['policy', 'governance', 'advocacy'],
+    'geofísica': ['geophysics', 'geology', 'spatial', 'gis'],
+    'geofisica': ['geophysics', 'geology', 'spatial', 'gis'],
+    'teledetección': ['remote sensing', 'gis', 'spatial', 'satellite', 'earth observation'],
+    'teledeteccion': ['remote sensing', 'gis', 'spatial', 'satellite', 'earth observation'],
+    'cuencas': ['watershed', 'hydrolog', 'water', 'basin'],
+    'hidrología': ['hydrolog', 'water', 'watershed'],
+    'hidrologia': ['hydrolog', 'water', 'watershed'],
+    'r': ['r', 'data', 'statistics', 'shiny'],
+    'python': ['python', 'data', 'developer'],
+    'gis': ['gis', 'spatial', 'qgis', 'cartography', 'arcgis'],
+    'qgis': ['gis', 'spatial', 'qgis'],
+    'ambiental': ['environmental', 'ecology', 'sustainab'],
+    'investigación': ['research', 'scientist', 'fellow', 'postdoc'],
+    'investigacion': ['research', 'scientist', 'fellow', 'postdoc'],
+    'carbono': ['carbon', 'ghg', 'emissions', 'net zero']
+  };
+
+  const tokens = new Set<string>();
+
+  for (const [key, list] of Object.entries(translations)) {
+    if (q.includes(key)) {
+      list.forEach(item => tokens.add(item));
+    }
+  }
+
+  const words = q.split(/[\s,+/]+/).filter(w => w.length > 2);
+  for (const word of words) {
+    if (translations[word]) {
+      translations[word].forEach(item => tokens.add(item));
+    } else {
+      tokens.add(word);
+    }
+  }
+
+  return Array.from(tokens);
+};
+
+/**
+ * Loads authentic jobs ingested by the automated Git-Scraper (`public/data/jobs.json`).
+ * Hosted on the repository's own origin: 100% CORS-free and reliable.
+ */
+export const fetchStaticIngestedJobs = async (): Promise<JobOffer[]> => {
+  try {
+    const res = await fetch('./data/jobs.json');
+    if (!res.ok) return [];
+    const data: JobOffer[] = await res.json();
+    const profile = getStoredProfile();
+
+    return data.map(offer => ({
+      ...offer,
+      matchScore: calculateMatchScore(offer, profile)
+    }));
+  } catch (err) {
+    console.warn('[PublicJobApis] Static jobs.json not available yet:', err);
+    return [];
+  }
+};
+
+/**
  * Fetches real job openings from Remotive Public API (CORS open).
  */
 export const fetchRemotiveJobs = async (query: string = ''): Promise<JobOffer[]> => {
   try {
-    const searchParam = query.trim() ? `&search=${encodeURIComponent(query.trim())}` : '';
-    const res = await fetch(`https://remotive.com/api/remote-jobs?limit=15${searchParam}`);
+    const tokens = mapQueryToSearchTerms(query);
+    const searchParam = tokens.length > 0 ? `&search=${encodeURIComponent(tokens[0])}` : '';
+    const res = await fetch(`https://remotive.com/api/remote-jobs?limit=25${searchParam}`);
     if (!res.ok) return [];
     const data = await res.json();
     const jobs: RemotiveJob[] = data.jobs || [];
     const profile = getStoredProfile();
     const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
 
-    return jobs.map(j => {
+    const filtered = tokens.length > 0
+      ? jobs.filter(j => {
+          const text = `${j.title || ''} ${j.category || ''} ${(j.tags || []).join(' ')} ${stripHtml(j.description)}`.toLowerCase();
+          return tokens.some(t => text.includes(t.toLowerCase()));
+        })
+      : jobs;
+
+    return filtered.slice(0, 20).map(j => {
       const isRemote = true;
       const location = j.candidate_required_location || 'Remoto (Global)';
       const locLower = location.toLowerCase();
@@ -77,7 +161,7 @@ export const fetchRemotiveJobs = async (query: string = ''): Promise<JobOffer[]>
         sourceId: 'src-remotive-api',
         sourceName: 'Remotive (API Pública)',
         publishedDate: j.publication_date ? j.publication_date.split('T')[0] : timestamp.split(' ')[0],
-        rawDescription: cleanDesc.slice(0, 1000),
+        rawDescription: cleanDesc.slice(0, 1200),
         requirements: Array.isArray(j.tags) ? j.tags.slice(0, 10) : [],
         responsibilities: [],
         status: 'Nueva',
@@ -109,17 +193,16 @@ export const fetchArbeitnowJobs = async (query: string = ''): Promise<JobOffer[]
     const jobs: ArbeitnowJob[] = data.data || [];
     const profile = getStoredProfile();
     const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
-    const qLower = query.toLowerCase().trim();
 
-    const filtered = qLower
-      ? jobs.filter(j => 
-          (j.title || '').toLowerCase().includes(qLower) ||
-          (j.description || '').toLowerCase().includes(qLower) ||
-          (j.tags || []).some(t => t.toLowerCase().includes(qLower))
-        )
+    const tokens = mapQueryToSearchTerms(query);
+    const filtered = tokens.length > 0
+      ? jobs.filter(j => {
+          const text = `${j.title || ''} ${stripHtml(j.description)} ${(j.tags || []).join(' ')} ${j.location || ''}`.toLowerCase();
+          return tokens.some(t => text.includes(t.toLowerCase()));
+        })
       : jobs;
 
-    return filtered.slice(0, 15).map(j => {
+    return filtered.slice(0, 25).map(j => {
       const location = j.location || (j.remote ? 'Remoto (Europa)' : 'Alemania');
       const locLower = location.toLowerCase();
       const isBilbao = locLower.includes('bilbao') || locLower.includes('bizkaia');
@@ -139,9 +222,9 @@ export const fetchArbeitnowJobs = async (query: string = ''): Promise<JobOffer[]
         isRemote: !!j.remote,
         url: j.url,
         sourceId: 'src-arbeitnow-api',
-        sourceName: 'Arbeitnow (API Pública)',
+        sourceName: 'Arbeitnow (Alemania & Europa)',
         publishedDate: pubDate,
-        rawDescription: cleanDesc.slice(0, 1000),
+        rawDescription: cleanDesc.slice(0, 1200),
         requirements: Array.isArray(j.tags) ? j.tags.slice(0, 10) : [],
         responsibilities: [],
         status: 'Nueva',
@@ -167,8 +250,9 @@ export const fetchArbeitnowJobs = async (query: string = ''): Promise<JobOffer[]
  */
 export const fetchJobicyJobs = async (query: string = ''): Promise<JobOffer[]> => {
   try {
-    const count = 15;
-    const tagParam = query.trim() ? `&tag=${encodeURIComponent(query.trim())}` : '';
+    const tokens = mapQueryToSearchTerms(query);
+    const count = 20;
+    const tagParam = tokens.length > 0 ? `&tag=${encodeURIComponent(tokens[0])}` : '';
     const res = await fetch(`https://jobicy.com/api/v2/remote-jobs?count=${count}${tagParam}`);
     if (!res.ok) return [];
     const data = await res.json();
@@ -176,7 +260,14 @@ export const fetchJobicyJobs = async (query: string = ''): Promise<JobOffer[]> =
     const profile = getStoredProfile();
     const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
 
-    return jobs.map(j => {
+    const filtered = tokens.length > 0
+      ? jobs.filter(j => {
+          const text = `${j.jobTitle || ''} ${stripHtml(j.jobDescription || j.jobExcerpt)} ${j.jobGeo || ''}`.toLowerCase();
+          return tokens.some(t => text.includes(t.toLowerCase()));
+        })
+      : jobs;
+
+    return filtered.slice(0, 20).map(j => {
       const location = j.jobGeo || 'Remoto (Global)';
       const locLower = location.toLowerCase();
       const isBilbao = locLower.includes('bilbao') || locLower.includes('bizkaia');
@@ -194,12 +285,12 @@ export const fetchJobicyJobs = async (query: string = ''): Promise<JobOffer[]> =
         isRemote: true,
         url: j.url,
         sourceId: 'src-jobicy-api',
-        sourceName: 'Jobicy (API Pública)',
+        sourceName: 'Jobicy (API Remota)',
         publishedDate: j.pubDate ? j.pubDate.split(' ')[0] : timestamp.split(' ')[0],
         salaryMin: minSal,
         salaryMax: maxSal,
         salaryCurrency: j.salaryCurrency || undefined,
-        rawDescription: cleanDesc.slice(0, 1000),
+        rawDescription: cleanDesc.slice(0, 1200),
         requirements: [],
         responsibilities: [],
         status: 'Nueva',
@@ -221,29 +312,39 @@ export const fetchJobicyJobs = async (query: string = ''): Promise<JobOffer[]> =
 };
 
 /**
- * Multi-source real public search combining Remotive, Arbeitnow and Jobicy.
+ * Multi-source real search combining:
+ * 1. Ingested static repository jobs (`jobs.json`) with zero CORS barriers
+ * 2. Live Arbeitnow public API (Europe / Germany)
+ * 3. Live Remotive public API (Global remote)
+ * 4. Live Jobicy public API (Global remote)
  */
 export const searchRealPublicJobs = async (query: string = ''): Promise<{
   offers: JobOffer[];
   totalFound: number;
   sourcesSearched: string[];
 }> => {
-  const [remotive, arbeitnow, jobicy] = await Promise.all([
-    fetchRemotiveJobs(query),
+  const [staticJobs, arbeitnow, remotive, jobicy] = await Promise.all([
+    fetchStaticIngestedJobs(),
     fetchArbeitnowJobs(query),
+    fetchRemotiveJobs(query),
     fetchJobicyJobs(query)
   ]);
 
-  const combined = [...remotive, ...arbeitnow, ...jobicy];
+  const combined = [...staticJobs, ...arbeitnow, ...remotive, ...jobicy];
 
-  // Deduplicate by URL
+  // Deduplicate by URL or title+company
   const unique = combined.filter((item, index, self) =>
-    index === self.findIndex(o => o.url === item.url || (o.title === item.title && o.company === item.company))
+    index === self.findIndex(o => (o.url && o.url === item.url) || (o.title === item.title && o.company === item.company))
   );
 
   return {
     offers: unique,
     totalFound: unique.length,
-    sourcesSearched: ['Remotive (API)', 'Arbeitnow (API)', 'Jobicy (API)']
+    sourcesSearched: [
+      'Base Ingestada GitHub (jobs.json)',
+      'Arbeitnow (API)',
+      'Remotive (API)',
+      'Jobicy (API)'
+    ]
   };
 };

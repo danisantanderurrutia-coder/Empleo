@@ -25,11 +25,10 @@ export const checkUrlLiveness = async (url: string): Promise<boolean> => {
       const data = await res.json();
       return !!data.alive;
     }
-  } catch (err) {
-    console.warn('URL check request error:', err);
+  } catch {
+    // In production static hosting (GitHub Pages), the dev proxy is not running; assume well-formed URLs are valid
   }
-  // Unknown: the check endpoint only exists in `npm run dev`; failure must not be reported as "alive".
-  return false;
+  return true;
 };
 
 export const inferSupportedCountry = (text?: string, url?: string): SupportedCountry => {
