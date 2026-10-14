@@ -29,15 +29,15 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
           {onReturnToHub && (
             <button
               onClick={onReturnToHub}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 hover:border-sky-500 transition flex items-center gap-1.5 cursor-pointer shadow"
+              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 hover:border-red-500 transition flex items-center gap-1.5 cursor-pointer shadow"
               title="Volver a la consola central Career"
             >
-              <ChevronLeft className="h-4 w-4 text-sky-400" />
+              <ChevronLeft className="h-4 w-4 text-red-500" />
               <span>« CAREER HUB</span>
             </button>
           )}
 
-          <div className="h-9 w-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0">
+          <div className="h-9 w-9 rounded-xl bg-red-600/10 text-red-500 flex items-center justify-center border border-red-500/30 shrink-0">
             <Send className="h-5 w-5" />
           </div>
 
@@ -75,43 +75,43 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
         <div className="flex items-center p-1 bg-slate-950 rounded-xl border border-slate-800 shrink-0">
           <button
             onClick={() => setActiveSubTab('applications')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'applications'
-                ? 'bg-sky-600 text-white shadow font-black'
+                ? 'bg-red-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <KanbanSquare className="h-3.5 w-3.5" />
-            <span>TABLERO KANBAN</span>
+            <span>KANBAN & DESPACHO ASISTIDO</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('batch')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'batch'
-                ? 'bg-sky-600 text-white shadow font-black'
+                ? 'bg-red-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <CheckSquare className="h-3.5 w-3.5" />
-            <span>DESPACHO ASISTIDO</span>
+            <span>REVISIÓN EN LOTE</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('intelligence')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'intelligence'
-                ? 'bg-sky-600 text-white shadow font-black'
+                ? 'bg-red-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <LineChart className="h-3.5 w-3.5" />
-            <span>INTELIGENCIA FUNNEL</span>
+            <span>EMBUDO & MÉTRICAS</span>
           </button>
         </div>
       </div>
 
-      {/* SUB-PANEL 1: APPLICATIONS KANBAN */}
+      {/* SUB-PANEL 1: APPLICATIONS KANBAN & UNIFIED DESPACHO ASISTIDO */}
       {activeSubTab === 'applications' && (
         <div className="space-y-4">
           <ApplicationsTab />

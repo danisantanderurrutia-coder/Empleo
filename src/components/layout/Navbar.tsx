@@ -2,11 +2,9 @@ import React from 'react';
 import { 
   Crosshair, 
   HelpCircle, 
-  ShieldCheck, 
-  Compass,
-  Sun,
-  Zap,
-  Moon
+  Sun, 
+  Zap, 
+  Moon 
 } from 'lucide-react';
 import type { AppTheme } from '../../services/themeManager';
 
@@ -14,40 +12,30 @@ interface NavbarProps {
   currentTab: string;
   currentTheme: AppTheme;
   onThemeChange: (theme: AppTheme) => void;
-  onOpenContextHelp: () => void;
-  onStartGuidedTour: () => void;
-  onOpenProtocolModal: () => void;
-  onRefreshData: () => void;
-  onSelectStation?: (stationId: string) => void;
+  onOpenUnifiedHelp: () => void;
+  onSelectStation?: (stationId: string, subTab?: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   currentTheme,
   onThemeChange,
-  onOpenContextHelp,
-  onStartGuidedTour,
-  onOpenProtocolModal,
+  onOpenUnifiedHelp,
   onSelectStation
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#0a0f1d]/95 backdrop-blur-md border-b border-slate-800 px-5 py-3 flex items-center justify-between shadow-2xl text-slate-100 font-mono transition-colors">
-      {/* Brand Header */}
+    <header className="sticky top-0 z-40 w-full bg-[#080d19]/95 backdrop-blur-md border-b border-slate-800 px-5 py-3 flex items-center justify-between shadow-2xl text-slate-100 font-mono transition-colors">
+      {/* Clean Brand Header */}
       <div className="flex items-center space-x-3">
-        <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-inner shrink-0">
-          <Crosshair className="h-5 w-5 text-emerald-400" />
+        <div className="h-9 w-9 rounded-xl bg-red-600/10 border border-red-500/30 flex items-center justify-center shadow-inner shrink-0 text-red-500">
+          <Crosshair className="h-5 w-5" />
         </div>
         <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="font-bold text-base tracking-tight text-white flex items-center gap-1.5 font-sans">
-              EMPLEO <span className="text-emerald-400 font-mono text-xs font-black px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30">TACTICAL OPS</span>
-            </h1>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-800 text-sky-400 border border-slate-700 hidden sm:inline-block">
-              CAU Kiel / U. de Chile
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-300 font-medium hidden sm:block font-sans">
-            Consola Estratégica de Búsqueda y Postulación (Alemania, Euskadi & Remoto)
+          <h1 className="font-black text-lg tracking-tight text-white font-sans">
+            EMPLEO
+          </h1>
+          <p className="text-[11px] text-slate-300 font-mono hidden sm:block">
+            Alemania • Euskadi • Remoto
           </p>
         </div>
       </div>
@@ -66,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         <button
-          onClick={() => onSelectStation && onSelectStation('agent_dossier')}
+          onClick={() => onSelectStation && onSelectStation('agent_dossier', 'showcase')}
           className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
             ['agent_dossier', 'profile', 'cvs'].includes(currentTab)
               ? 'text-white border-b-2 border-red-600 font-black' 
@@ -110,74 +98,58 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
       </div>
 
-      {/* Right Controls: Theme Switcher & Actions */}
-      <div className="flex items-center space-x-2">
+      {/* Right Controls: Unified Help/Protocol & Theme Switcher */}
+      <div className="flex items-center space-x-2.5">
         {/* Tactical Theme Switcher */}
         <div className="flex items-center p-0.5 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-inner">
           <button
             onClick={() => onThemeChange('luminous')}
-            title="Modo Aero-Luminoso (Laboratorio Científico / Alto Contraste)"
-            className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition ${
+            title="Modo High-Contrast Luminous"
+            className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer ${
               currentTheme === 'luminous'
-                ? 'bg-emerald-600 text-white shadow font-bold'
+                ? 'bg-sky-600 text-white shadow font-bold'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <Sun className="h-3.5 w-3.5" />
-            <span className="hidden md:inline text-[11px]">Luminoso</span>
+            <span className="hidden lg:inline text-[11px]">Cyan</span>
           </button>
 
           <button
             onClick={() => onThemeChange('cyber')}
-            title="Modo Cyber-Táctico (Misión Secreta / Solarpunk Neon)"
-            className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition ${
+            title="Modo Cyber-Táctico Rainbow Six"
+            className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer ${
               currentTheme === 'cyber'
-                ? 'bg-emerald-500 text-slate-950 shadow font-bold'
+                ? 'bg-red-600 text-white shadow font-bold'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <Zap className="h-3.5 w-3.5" />
-            <span className="hidden md:inline text-[11px]">Cyber</span>
+            <span className="hidden lg:inline text-[11px]">Tactical</span>
           </button>
 
           <button
             onClick={() => onThemeChange('dark')}
-            title="Modo Deep Slate (Operaciones Nocturnas)"
-            className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition ${
+            title="Modo Stealth Nocturno"
+            className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer ${
               currentTheme === 'dark'
                 ? 'bg-slate-700 text-white shadow font-bold'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <Moon className="h-3.5 w-3.5" />
-            <span className="hidden md:inline text-[11px]">Dark</span>
+            <span className="hidden lg:inline text-[11px]">Dark</span>
           </button>
         </div>
 
+        {/* Combined Ayuda, Guía & Protocolo Button */}
         <button
-          onClick={onOpenProtocolModal}
-          className="flex items-center space-x-1 text-xs text-emerald-400 bg-emerald-950/60 hover:bg-emerald-900/60 px-3 py-1.5 rounded-lg border border-emerald-500/30 font-medium transition cursor-pointer"
-          title="Ver el Protocolo Táctico Anti-Alucinaciones & Visado"
+          onClick={onOpenUnifiedHelp}
+          className="flex items-center space-x-1.5 text-xs text-slate-200 bg-slate-900/90 hover:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700/80 hover:border-red-500 transition cursor-pointer font-mono font-bold shadow"
+          title="Centro de Mando: Ayuda, Guía de Estaciones y Protocolo de Visados"
         >
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-          <span className="font-semibold text-[11px] hidden sm:inline">Protocolo</span>
-        </button>
-
-        <button
-          onClick={onStartGuidedTour}
-          className="flex items-center space-x-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition"
-        >
-          <Compass className="h-3.5 w-3.5 text-amber-400" />
-          <span className="hidden sm:inline">Guía</span>
-        </button>
-
-        <button
-          onClick={onOpenContextHelp}
-          className="flex items-center space-x-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition"
-          title="Ayuda de la estación actual"
-        >
-          <HelpCircle className="h-3.5 w-3.5 text-emerald-400" />
-          <span className="hidden sm:inline">Ayuda</span>
+          <HelpCircle className="h-3.5 w-3.5 text-red-500" />
+          <span className="hidden sm:inline">Ayuda & Protocolo</span>
         </button>
       </div>
     </header>

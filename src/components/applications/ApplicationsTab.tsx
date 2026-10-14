@@ -1,196 +1,876 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   KanbanSquare, 
   Lock, 
   Building2, 
-  ChevronRight
+  PlusCircle,
+  Search,
+  Sparkles,
+  MapPin,
+  ExternalLink,
+  Trash2,
+  Copy,
+  Check,
+  FileText,
+  ArrowRight,
+  ArrowLeft,
+  X,
+  CheckCircle2,
+  Send,
+  HelpCircle
 } from 'lucide-react';
-import { getStoredApplications, saveStoredApplications } from '../../services/db';
+import { getStoredApplications, saveStoredApplications, getStoredProfile } from '../../services/db';
 import type { ApplicationItem, ApplicationStage } from '../../types/applications';
+import type { JobOffer } from '../../types/offers';
 import { STAGES } from '../../types/applications';
-import { ApplicationDetailModal } from './ApplicationDetailModal';
-import { SubmissionConfirmModal } from './SubmissionConfirmModal';
+import { generateTailoredCoverLetter, generateApplicationQA } from '../../services/coverLetterCopilot';
+import { AddApplicationModal } from './AddApplicationModal';
+
+const buildMockOfferFromApp = (app: ApplicationItem): JobOffer => ({
+  id: app.offerId,
+  title: app.offerTitle,
+  company: app.companyName,
+  location: app.location,
+  isBilbaoLocation: app.location.toLowerCase().includes('bilbao') || app.location.toLowerCase().includes('bizkaia'),
+  isRemote: app.location.toLowerCase().includes('remoto') || app.location.toLowerCase().includes('remote'),
+  url: app.offerUrl || '',
+  sourceId: 'src-manual',
+  sourceName: 'Locker Target',
+  publishedDate: app.createdDate,
+  rawDescription: app.interviewNotes || '',
+  requirements: app.adaptedCvSummary || [],
+  responsibilities: [],
+  status: 'Nueva',
+  extractedAt: app.createdDate,
+  matchScore: {
+    totalScore: 90,
+    skillFitScore: 35,
+    locationScore: 25,
+    salaryScore: 15,
+    experienceScore: 10,
+    companyQualityScore: 5,
+    matchingSkills: [],
+    missingSkills: [],
+    rationale: [],
+    pendingVerificationRequirements: []
+  }
+});
+
+const DEFAULT_SEED_APPS: ApplicationItem[] = [
+  {
+    id: 'CAND-2026-001',
+    offerId: 'seed-bc3-01',
+    offerTitle: 'Senior Research Fellow in Climatology & Ecosystem Accounting',
+    companyName: 'BC3 Basque Centre for Climate Change',
+    location: 'Bilbao / Leioa, Bizkaia',
+    currentStage: 2,
+    status: 'En Progreso',
+    createdDate: '2026-10-10',
+    updatedDate: '2026-10-14',
+    offerUrl: 'https://www.bc3research.org/careers.html',
+    humanApprovalGranted: false,
+    adaptedCvSummary: ['R (sf, terra, ggplot2)', 'Modelización de Servicios Ecosistémicos', 'Políticas Ambientales UE'],
+    interviewNotes: 'Puesto estratégico en Euskadi. Posibilidad de tramitación vía Ley 14/2013 (UGE Investigadores).',
+    history: [
+      {
+        id: 'h-1',
+        timestamp: '2026-10-10 10:30',
+        stage: 1,
+        title: 'Vacante detectada e interceptada en portal de BC3',
+        actor: 'Usuario'
+      }
+    ]
+  },
+  {
+    id: 'CAND-2026-002',
+    offerId: 'seed-gfz-02',
+    offerTitle: 'Scientific Project Lead – Earth Observation & Climate Risk Analytics',
+    companyName: 'GFZ German Research Centre for Geosciences',
+    location: 'Potsdam / Berlín, Alemania',
+    currentStage: 4,
+    status: 'En Progreso',
+    createdDate: '2026-10-08',
+    updatedDate: '2026-10-13',
+    offerUrl: 'https://www.gfz-potsdam.de/en/career',
+    humanApprovalGranted: false,
+    adaptedCvSummary: ['Observación de la Tierra', 'Python / Rasterio / Scikit-learn', 'AufenthG §20'],
+    interviewNotes: 'Convenio TV-L E13. Compatible 100% con título Double M.Sc. CAU Kiel y visado §20.',
+    history: [
+      {
+        id: 'h-2',
+        timestamp: '2026-10-08 14:00',
+        stage: 3,
+        title: 'CV adaptado y carta de presentación borrador generada',
+        actor: 'Usuario'
+      }
+    ]
+  },
+  {
+    id: 'CAND-2026-003',
+    offerId: 'seed-unep-03',
+    offerTitle: 'IMEO Methane Alert and Response System Implementation Coordinator',
+    companyName: 'United Nations Environment Programme (UNEP)',
+    location: 'París, Francia / 100% Remoto Europa',
+    currentStage: 7,
+    status: 'Enviada',
+    createdDate: '2026-09-28',
+    updatedDate: '2026-10-05',
+    offerUrl: 'https://unjobs.org/vacancies/1786913775321',
+    humanApprovalGranted: true,
+    approvalTimestamp: '2026-10-05 16:20',
+    adaptedCvSummary: ['Monitoreo Satelital MARS', 'Gobernanza Climática', 'Inglés C1 / Francés'],
+    interviewNotes: 'Postulación oficial enviada por portal Inspira. Esperando respuesta de primera ronda.',
+    history: [
+      {
+        id: 'h-3',
+        timestamp: '2026-10-05 16:20',
+        stage: 7,
+        title: 'Postulación confirmada y enviada formalmente por el usuario.',
+        actor: 'Usuario'
+      }
+    ]
+  }
+];
 
 export const ApplicationsTab: React.FC = () => {
-  const [applications, setApplications] = useState<ApplicationItem[]>(getStoredApplications());
-  const [selectedApp, setSelectedApp] = useState<ApplicationItem | null>(null);
-  const [confirmingApp, setConfirmingApp] = useState<ApplicationItem | null>(null);
+  const [applications, setApplications] = useState<ApplicationItem[]>(() => {
+    const stored = getStoredApplications();
+    if (stored.length === 0) {
+      saveStoredApplications(DEFAULT_SEED_APPS);
+      return DEFAULT_SEED_APPS;
+    }
+    return stored;
+  });
 
-  const handleAdvanceStage = (appId: string, targetStage: ApplicationStage) => {
-    const updated = applications.map(a => {
-      if (a.id === appId) {
-        return {
-          ...a,
-          currentStage: targetStage,
-          updatedDate: new Date().toISOString().split('T')[0],
-          history: [
-            ...a.history,
-            {
-              id: `h-${Date.now()}`,
-              timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
-              stage: targetStage,
-              title: `Candidatura avanzada al Paso ${targetStage}: ${STAGES.find(s => s.stage === targetStage)?.label}`,
-              actor: 'Usuario' as const
-            }
-          ]
-        };
-      }
-      return a;
-    });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'germany' | 'euskadi' | 'remote' | 'interviews'>('all');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [assistedDispatchApp, setAssistedDispatchApp] = useState<ApplicationItem | null>(null);
+  
+  // Assisted dispatch internal state
+  const [letterLang, setLetterLang] = useState<'es' | 'en' | 'de'>('es');
+  const [copiedLetter, setCopiedLetter] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    saveStoredApplications(applications);
+  }, [applications]);
+
+  const handleAddApplication = (newApp: ApplicationItem) => {
+    const updated = [newApp, ...applications];
     setApplications(updated);
-    saveStoredApplications(updated);
-    if (selectedApp && selectedApp.id === appId) {
-      setSelectedApp(updated.find(a => a.id === appId) || null);
+  };
+
+  const handleDeleteApplication = (appId: string) => {
+    if (window.confirm('¿Confirmas que deseas eliminar esta oferta/candidatura de tu Locker?')) {
+      const updated = applications.filter(a => a.id !== appId);
+      setApplications(updated);
+      if (assistedDispatchApp?.id === appId) {
+        setAssistedDispatchApp(null);
+      }
     }
   };
 
-  const handleConfirmSubmission = (appId: string) => {
-    const updated = applications.map(a => {
-      if (a.id === appId) {
-        return {
-          ...a,
-          currentStage: 7 as ApplicationStage,
-          status: 'Enviada' as const,
-          humanApprovalGranted: true,
-          approvalTimestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
-          updatedDate: new Date().toISOString().split('T')[0],
-          history: [
-            ...a.history,
-            {
-              id: `h-${Date.now()}`,
-              timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
-              stage: 7 as ApplicationStage,
-              title: 'ENVÍO CONFIRMADO MANUALMENTE POR EL USUARIO (Paso 7 completado).',
-              actor: 'Usuario' as const
-            }
-          ]
-        };
+  const handleMoveStage = (appId: string, direction: 'prev' | 'next') => {
+    const updated = applications.map(app => {
+      if (app.id !== appId) return app;
+
+      let newStage = app.currentStage;
+      let newStatus = app.status;
+
+      if (direction === 'next') {
+        if (newStage < 9) newStage = (newStage + 1) as ApplicationStage;
+        if (newStage >= 7) {
+          if (newStage === 7) newStatus = 'Enviada';
+          else if (newStage === 8) newStatus = 'Entrevista';
+          else if (newStage === 9) newStatus = 'Oferta Recibida';
+        }
+      } else {
+        if (newStage > 1) newStage = (newStage - 1) as ApplicationStage;
+        if (newStage < 7) newStatus = 'En Progreso';
       }
-      return a;
+
+      return {
+        ...app,
+        currentStage: newStage,
+        status: newStatus,
+        updatedDate: new Date().toISOString().split('T')[0],
+        history: [
+          ...app.history,
+          {
+            id: `h-${Date.now()}`,
+            timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
+            stage: newStage,
+            title: `Candidatura movida a Etapa ${newStage}: ${STAGES.find(s => s.stage === newStage)?.shortName}`,
+            actor: 'Usuario' as const
+          }
+        ]
+      };
     });
+
     setApplications(updated);
-    saveStoredApplications(updated);
-    setConfirmingApp(null);
-    if (selectedApp && selectedApp.id === appId) {
-      setSelectedApp(updated.find(a => a.id === appId) || null);
-    }
   };
+
+  const handleConfirmHumanSubmission = (appId: string) => {
+    const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
+    const updated = applications.map(app => {
+      if (app.id !== appId) return app;
+      return {
+        ...app,
+        currentStage: 7 as ApplicationStage,
+        status: 'Enviada' as const,
+        humanApprovalGranted: true,
+        approvalTimestamp: timestamp,
+        updatedDate: timestamp.split(' ')[0],
+        history: [
+          ...app.history,
+          {
+            id: `h-${Date.now()}`,
+            timestamp,
+            stage: 7 as ApplicationStage,
+            title: 'ENVÍO CONFIRMADO FORMALMENTE (Paso 7 - Aprobación Humana Concedida)',
+            actor: 'Usuario' as const
+          }
+        ]
+      };
+    });
+
+    setApplications(updated);
+    setAssistedDispatchApp(prev => prev && prev.id === appId ? { ...prev, currentStage: 7, status: 'Enviada', humanApprovalGranted: true } : prev);
+  };
+
+  // Filter applications
+  const filteredApps = applications.filter(app => {
+    const query = searchQuery.toLowerCase().trim();
+    const matchQuery = !query || 
+      app.offerTitle.toLowerCase().includes(query) ||
+      app.companyName.toLowerCase().includes(query) ||
+      app.location.toLowerCase().includes(query);
+
+    if (!matchQuery) return false;
+
+    if (selectedFilter === 'germany') {
+      const loc = app.location.toLowerCase();
+      return loc.includes('alemania') || loc.includes('germany') || loc.includes('berlín') || loc.includes('potsdam') || loc.includes('kiel');
+    }
+    if (selectedFilter === 'euskadi') {
+      const loc = app.location.toLowerCase();
+      return loc.includes('bilbao') || loc.includes('bizkaia') || loc.includes('donostia') || loc.includes('euskadi');
+    }
+    if (selectedFilter === 'remote') {
+      const loc = app.location.toLowerCase();
+      return loc.includes('remoto') || loc.includes('remote');
+    }
+    if (selectedFilter === 'interviews') {
+      return app.currentStage === 8 || app.status === 'Entrevista';
+    }
+
+    return true;
+  });
+
+  // Group into 5 primary tactical columns:
+  // 1. Radar / Guardadas (Stages 1-2)
+  // 2. Preparación / Cartas & CV (Stages 3-5)
+  // 3. Postuladas / Despachadas (Stages 6-7)
+  // 4. Entrevistas en Curso (Stage 8)
+  // 5. Concluidas / Histórico (Stage 9 or Final outcomes)
+  const colRadar = filteredApps.filter(a => a.currentStage <= 2 && a.status === 'En Progreso');
+  const colPrep = filteredApps.filter(a => a.currentStage >= 3 && a.currentStage <= 5 && a.status === 'En Progreso');
+  const colSent = filteredApps.filter(a => (a.currentStage === 6 || a.currentStage === 7) || a.status === 'Enviada');
+  const colInterviews = filteredApps.filter(a => a.currentStage === 8 || a.status === 'Entrevista');
+  const colDone = filteredApps.filter(a => a.currentStage >= 9 || a.status === 'Oferta Recibida' || a.status === 'Desestimada' || a.status === 'Pausada');
+
+  const profile = getStoredProfile();
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-[#0a0f1d]/90 border border-slate-700/80 shadow-md gap-4">
-        <div>
-          <h2 className="text-lg font-bold text-white flex items-center gap-2 font-mono uppercase">
-            <KanbanSquare className="h-5 w-5 text-sky-400" />
-            <span>Fase 3 del Pipeline: Despacho Asistido & Seguimiento</span>
-          </h2>
-          <p className="text-xs text-slate-300 mt-1">
-            Pipeline Maestro de 3 Fases: 1. Exploración & Fuentes ➔ 2. Selección & Armería CV ➔ 3. Preparación & Despacho Asistido.
-          </p>
+    <div className="space-y-6 text-slate-100 font-sans animate-fadeIn">
+      
+      {/* Tactical Hero Control Header */}
+      <div className="p-5 rounded-2xl bg-[#0a0f1d]/95 border border-slate-700/80 shadow-2xl backdrop-blur-md space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0 shadow-inner">
+              <KanbanSquare className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <h2 className="text-base font-black text-white font-mono uppercase tracking-tight">
+                  LOCKER // TABLERO KANBAN & DESPACHO ASISTIDO
+                </h2>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
+                  CONTROL HUMANO 100%
+                </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-900 text-sky-300 border border-slate-700 hidden sm:inline-block">
+                  OPERADOR: {profile.fullName.toUpperCase()}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 font-sans mt-0.5">
+                Consola unificada: guarda ofertas de interés, genera cartas a medida (ES/EN/DE) y confirma despachos oficiales.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2.5 shrink-0">
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-mono font-black text-xs rounded-xl shadow-lg hover:shadow-red-500/30 transition flex items-center space-x-1.5 cursor-pointer uppercase tracking-wider"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span>+ Añadir Nueva Oferta</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-2 text-xs bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30 text-amber-300 font-mono font-bold shrink-0">
-          <Lock className="h-4 w-4 text-amber-400" />
-          <span>Aprobación Humana Obligatoria para Envíos</span>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {applications.map((app) => {
-          const currentStageObj = STAGES.find(s => s.stage === app.currentStage);
-          const needsHumanApproval = app.currentStage === 6 && !app.humanApprovalGranted;
-
-          return (
-            <div
-              key={app.id}
-              className={`glass-panel p-5 rounded-2xl border transition space-y-4 ${
-                needsHumanApproval 
-                  ? 'border-amber-500/50 bg-amber-500/5' 
-                  : 'border-slate-800'
+        {/* Filter and Search Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
+          <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+            <button
+              onClick={() => setSelectedFilter('all')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                selectedFilter === 'all'
+                  ? 'bg-slate-700 text-white shadow font-black border border-slate-500'
+                  : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800'
               }`}
             >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
-                      {app.id}
-                    </span>
-                    <h3 className="font-bold text-base text-white">{app.offerTitle}</h3>
-                  </div>
-                  <div className="flex items-center space-x-3 text-xs text-slate-300">
-                    <span className="flex items-center space-x-1">
-                      <Building2 className="h-3.5 w-3.5 text-indigo-400" />
-                      <strong className="text-white">{app.companyName}</strong>
-                    </span>
-                    <span>•</span>
-                    <span>📍 {app.location}</span>
-                    <span>•</span>
-                    <span className="text-emerald-400 font-medium">{app.status}</span>
-                  </div>
-                </div>
+              Todas ({applications.length})
+            </button>
+            <button
+              onClick={() => setSelectedFilter('euskadi')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                selectedFilter === 'euskadi'
+                  ? 'bg-emerald-600 text-white shadow font-black border border-emerald-500'
+                  : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800'
+              }`}
+            >
+              📍 Bilbao / Euskadi
+            </button>
+            <button
+              onClick={() => setSelectedFilter('germany')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                selectedFilter === 'germany'
+                  ? 'bg-sky-600 text-white shadow font-black border border-sky-500'
+                  : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800'
+              }`}
+            >
+              🇩🇪 Alemania (§20)
+            </button>
+            <button
+              onClick={() => setSelectedFilter('remote')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                selectedFilter === 'remote'
+                  ? 'bg-amber-600 text-white shadow font-black border border-amber-500'
+                  : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800'
+              }`}
+            >
+              🌐 Remoto UE
+            </button>
+            <button
+              onClick={() => setSelectedFilter('interviews')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                selectedFilter === 'interviews'
+                  ? 'bg-purple-600 text-white shadow font-black border border-purple-500'
+                  : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800'
+              }`}
+            >
+              🎯 Entrevistas
+            </button>
+          </div>
 
-                <div className="flex items-center space-x-3 shrink-0">
-                  {needsHumanApproval && (
-                    <button
-                      onClick={() => setConfirmingApp(app)}
-                      className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow transition flex items-center space-x-1.5"
-                    >
-                      <Lock className="h-3.5 w-3.5" />
-                      <span>Confirmar Envío (Paso 7)</span>
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => setSelectedApp(app)}
-                    className="px-4 py-2 bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600/30 font-semibold text-xs rounded-xl border border-indigo-500/30 transition flex items-center space-x-1"
-                  >
-                    <span>Gestionar Candidatura</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 pt-2 border-t border-slate-800">
-                <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span>Paso Actual: <strong className="text-indigo-300">{currentStageObj?.label}</strong></span>
-                  <span className="font-mono text-[11px]">Etapa {app.currentStage} / 9</span>
-                </div>
-
-                <div className="flex items-center space-x-1">
-                  {STAGES.map((st) => (
-                    <div
-                      key={st.stage}
-                      className={`h-2 flex-1 rounded-full transition-all ${
-                        app.currentStage >= st.stage
-                          ? st.stage === 7 && !app.humanApprovalGranted
-                            ? 'bg-amber-400 animate-pulse'
-                            : 'bg-indigo-500'
-                          : 'bg-slate-800'
-                      }`}
-                      title={st.label}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+          <div className="relative w-full sm:w-64">
+            <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Buscar en el Locker..."
+              className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 font-mono"
+            />
+          </div>
+        </div>
       </div>
 
-      <ApplicationDetailModal
-        application={selectedApp}
-        isOpen={!!selectedApp}
-        onClose={() => setSelectedApp(null)}
-        onAdvanceStage={handleAdvanceStage}
-        onRequestSubmissionApproval={(app) => setConfirmingApp(app)}
+      {/* 5-Column Tactical Kanban Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-start">
+        
+        {/* COL 1: GUARDADAS / EN RADAR */}
+        <KanbanColumn
+          title="📌 EN RADAR // GUARDADAS"
+          badgeColor="bg-slate-800 text-slate-300 border-slate-700"
+          count={colRadar.length}
+          description="Ofertas interceptadas para análisis"
+        >
+          {colRadar.map(app => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              onMoveStage={handleMoveStage}
+              onDelete={handleDeleteApplication}
+              onOpenDispatch={() => setAssistedDispatchApp(app)}
+              canMovePrev={false}
+              canMoveNext={true}
+            />
+          ))}
+          {colRadar.length === 0 && <EmptyColumnPlaceholder text="Sin ofertas guardadas en radar" />}
+        </KanbanColumn>
+
+        {/* COL 2: PREPARACIÓN / CARTAS & DOSSIER */}
+        <KanbanColumn
+          title="⚡ PREPARACIÓN // DOSSIER"
+          badgeColor="bg-sky-950 text-sky-300 border-sky-700"
+          count={colPrep.length}
+          description="Adaptando CV y redactando carta"
+        >
+          {colPrep.map(app => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              onMoveStage={handleMoveStage}
+              onDelete={handleDeleteApplication}
+              onOpenDispatch={() => setAssistedDispatchApp(app)}
+              canMovePrev={true}
+              canMoveNext={true}
+            />
+          ))}
+          {colPrep.length === 0 && <EmptyColumnPlaceholder text="Sin candidaturas en preparación" />}
+        </KanbanColumn>
+
+        {/* COL 3: POSTULADAS / DESPACHADAS */}
+        <KanbanColumn
+          title="🚀 POSTULADAS // ENVIADAS"
+          badgeColor="bg-emerald-950 text-emerald-300 border-emerald-700"
+          count={colSent.length}
+          description="Envío oficial confirmado por usuario"
+        >
+          {colSent.map(app => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              onMoveStage={handleMoveStage}
+              onDelete={handleDeleteApplication}
+              onOpenDispatch={() => setAssistedDispatchApp(app)}
+              canMovePrev={true}
+              canMoveNext={true}
+            />
+          ))}
+          {colSent.length === 0 && <EmptyColumnPlaceholder text="Sin postulaciones enviadas" />}
+        </KanbanColumn>
+
+        {/* COL 4: ENTREVISTAS */}
+        <KanbanColumn
+          title="🎯 ENTREVISTAS // EN CURSO"
+          badgeColor="bg-purple-950 text-purple-300 border-purple-700"
+          count={colInterviews.length}
+          description="Rondas técnicas o institucionales"
+        >
+          {colInterviews.map(app => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              onMoveStage={handleMoveStage}
+              onDelete={handleDeleteApplication}
+              onOpenDispatch={() => setAssistedDispatchApp(app)}
+              canMovePrev={true}
+              canMoveNext={true}
+            />
+          ))}
+          {colInterviews.length === 0 && <EmptyColumnPlaceholder text="Sin entrevistas activas" />}
+        </KanbanColumn>
+
+        {/* COL 5: CONCLUIDAS / HISTÓRICO */}
+        <KanbanColumn
+          title="🏁 HISTÓRICO // CONCLUIDAS"
+          badgeColor="bg-slate-900 text-slate-400 border-slate-800"
+          count={colDone.length}
+          description="Ofertas recibidas, declinadas o cerradas"
+        >
+          {colDone.map(app => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              onMoveStage={handleMoveStage}
+              onDelete={handleDeleteApplication}
+              onOpenDispatch={() => setAssistedDispatchApp(app)}
+              canMovePrev={true}
+              canMoveNext={false}
+            />
+          ))}
+          {colDone.length === 0 && <EmptyColumnPlaceholder text="Sin histórico registrado" />}
+        </KanbanColumn>
+
+      </div>
+
+      {/* Manual Add Offer Modal */}
+      <AddApplicationModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAddApplication={handleAddApplication}
       />
 
-      <SubmissionConfirmModal
-        application={confirmingApp}
-        isOpen={!!confirmingApp}
-        onClose={() => setConfirmingApp(null)}
-        onConfirmSubmission={handleConfirmSubmission}
-      />
+      {/* Slide-over / Modal: DESPACHO ASISTIDO */}
+      {assistedDispatchApp && (
+        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn font-sans">
+          <div className="bg-[#0b1220] max-w-4xl w-full rounded-2xl border border-slate-700 shadow-2xl flex flex-col max-h-[92vh] text-slate-100 overflow-hidden">
+            
+            {/* Dispatch Header */}
+            <div className="flex items-center justify-between p-5 border-b border-slate-800 bg-[#080d19] shrink-0">
+              <div className="flex items-center space-x-3">
+                <div className="p-2.5 rounded-xl bg-red-600/20 text-red-500 border border-red-500/40">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <h3 className="font-mono font-black text-white text-base uppercase tracking-tight">
+                      DESPACHO ASISTIDO // {assistedDispatchApp.id}
+                    </h3>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-600 font-bold">
+                      FASE 3
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 font-sans mt-0.5">
+                    {assistedDispatchApp.offerTitle} • <strong className="text-white">{assistedDispatchApp.companyName}</strong> ({assistedDispatchApp.location})
+                  </p>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setAssistedDispatchApp(null)} 
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Dispatch Content Tabs / Sections */}
+            <div className="p-6 space-y-6 overflow-y-auto flex-1 font-sans text-xs">
+              
+              {/* Section 1: Tailored Cover Letter Generator */}
+              <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2 font-mono font-bold text-white text-sm">
+                    <FileText className="h-4 w-4 text-red-500" />
+                    <span>CARTA DE PRESENTACIÓN A MEDIDA (TEMPLATE TÁCTICO)</span>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center p-0.5 bg-slate-950 rounded-lg border border-slate-800 font-mono text-[11px]">
+                      <button
+                        onClick={() => setLetterLang('es')}
+                        className={`px-2.5 py-1 rounded transition cursor-pointer ${letterLang === 'es' ? 'bg-red-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+                      >
+                        🇪🇸 Español
+                      </button>
+                      <button
+                        onClick={() => setLetterLang('en')}
+                        className={`px-2.5 py-1 rounded transition cursor-pointer ${letterLang === 'en' ? 'bg-red-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+                      >
+                        🇬🇧 English
+                      </button>
+                      <button
+                        onClick={() => setLetterLang('de')}
+                        className={`px-2.5 py-1 rounded transition cursor-pointer ${letterLang === 'de' ? 'bg-red-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+                      >
+                        🇩🇪 Deutsch
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        const offer = buildMockOfferFromApp(assistedDispatchApp);
+                        const letter = generateTailoredCoverLetter(offer, letterLang);
+                        navigator.clipboard.writeText(letter.fullMarkdown);
+                        setCopiedLetter(true);
+                        setTimeout(() => setCopiedLetter(null as any), 2000);
+                      }}
+                      className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono font-bold rounded-lg border border-slate-600 flex items-center space-x-1.5 transition cursor-pointer"
+                    >
+                      {copiedLetter ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5 text-slate-300" />}
+                      <span>{copiedLetter ? '¡Copiado!' : 'Copiar Carta'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 font-mono text-slate-300 text-[11px] leading-relaxed whitespace-pre-line max-h-52 overflow-y-auto">
+                  {(() => {
+                    const offer = buildMockOfferFromApp(assistedDispatchApp);
+                    const letter = generateTailoredCoverLetter(offer, letterLang);
+                    return letter.fullMarkdown;
+                  })()}
+                </div>
+              </div>
+
+              {/* Section 2: Strategic Talking Points & Pre-Filled Answers */}
+              <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 space-y-3">
+                <div className="flex items-center space-x-2 font-mono font-bold text-white text-sm">
+                  <Sparkles className="h-4 w-4 text-amber-400" />
+                  <span>ARGUMENTARIO ESTRATÉGICO PARA ENTREVISTAS & FORMULARIOS</span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {(() => {
+                    const offer = buildMockOfferFromApp(assistedDispatchApp);
+                    const qa = generateApplicationQA(offer);
+                    return qa.map((item, idx) => (
+                      <div key={idx} className="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-200 font-sans">{item.question}</span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(item.recommendedAnswer);
+                              setCopiedIndex(idx);
+                              setTimeout(() => setCopiedIndex(null), 2000);
+                            }}
+                            className="text-[10px] text-slate-400 hover:text-white flex items-center space-x-1 cursor-pointer font-mono"
+                          >
+                            {copiedIndex === idx ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                            <span>{copiedIndex === idx ? 'Copiado' : 'Copiar'}</span>
+                          </button>
+                        </div>
+                        <p className="text-[11px] text-slate-400 font-sans">{item.recommendedAnswer}</p>
+                        <p className="text-[10px] text-amber-400/80 font-mono">Tip: {item.tips}</p>
+                      </div>
+                    ));
+                  })()}
+                </div>
+              </div>
+
+              {/* Section 3: Official Human Confirmation */}
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Lock className="h-5 w-5 text-amber-400" />
+                    <div>
+                      <h4 className="font-mono font-bold text-white text-xs uppercase">
+                        VERIFICACIÓN HUMANA OBLIGATORIA (FASE 7)
+                      </h4>
+                      <p className="text-[11px] text-slate-300">
+                        Ningún envío se realiza a espaldas del usuario. Una vez enviada la candidatura en la web oficial, confirma aquí para trasladar al estado &quot;Postuladas&quot;.
+                      </p>
+                    </div>
+                  </div>
+
+                  {assistedDispatchApp.humanApprovalGranted ? (
+                    <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-600 font-mono font-bold text-xs shrink-0">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                      <span>Envío Confirmado ({assistedDispatchApp.approvalTimestamp})</span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleConfirmHumanSubmission(assistedDispatchApp.id)}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-black text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 cursor-pointer shrink-0 uppercase tracking-wide"
+                    >
+                      <Send className="h-3.5 w-3.5" />
+                      <span>Confirmar Envío Oficial</span>
+                    </button>
+                  )}
+                </div>
+
+                {assistedDispatchApp.offerUrl && (
+                  <div className="pt-2 border-t border-amber-500/20 flex items-center justify-between text-[11px]">
+                    <span className="text-slate-300">Enlace oficial a la vacante:</span>
+                    <a
+                      href={assistedDispatchApp.offerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sky-400 hover:text-sky-300 underline font-mono flex items-center gap-1"
+                    >
+                      <span>Abrir Portal de Postulación</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-800 bg-[#080d19] flex justify-end shrink-0">
+              <button
+                onClick={() => setAssistedDispatchApp(null)}
+                className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold font-mono text-xs rounded-xl border border-slate-700 transition cursor-pointer"
+              >
+                Cerrar Despacho
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+};
+
+// ----------------------------------------------------
+// SUB-COMPONENTS: COLUMN & CARD
+// ----------------------------------------------------
+
+interface KanbanColumnProps {
+  title: string;
+  badgeColor: string;
+  count: number;
+  description: string;
+  children: React.ReactNode;
+}
+
+const KanbanColumn: React.FC<KanbanColumnProps> = ({
+  title,
+  badgeColor,
+  count,
+  description,
+  children
+}) => {
+  return (
+    <div className="bg-[#0b1220]/90 border border-slate-800/90 rounded-2xl p-3.5 flex flex-col space-y-3 shadow-xl min-h-[580px]">
+      <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+        <div>
+          <h3 className="font-mono font-black text-white text-xs tracking-tight uppercase flex items-center gap-1.5">
+            <span>{title}</span>
+          </h3>
+          <p className="text-[10px] text-slate-400 font-mono mt-0.5">{description}</p>
+        </div>
+        <span className={`text-[11px] font-mono font-black px-2 py-0.5 rounded-lg border ${badgeColor}`}>
+          {count}
+        </span>
+      </div>
+
+      <div className="space-y-3 flex-1 overflow-y-auto">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const EmptyColumnPlaceholder: React.FC<{ text: string }> = ({ text }) => {
+  return (
+    <div className="p-6 rounded-xl border border-dashed border-slate-800/80 text-center flex flex-col items-center justify-center text-slate-400 text-xs font-mono space-y-1 my-4">
+      <HelpCircle className="h-5 w-5 text-slate-400" />
+      <span>{text}</span>
+    </div>
+  );
+};
+
+interface ApplicationCardProps {
+  app: ApplicationItem;
+  onMoveStage: (appId: string, direction: 'prev' | 'next') => void;
+  onDelete: (appId: string) => void;
+  onOpenDispatch: () => void;
+  canMovePrev: boolean;
+  canMoveNext: boolean;
+}
+
+const ApplicationCard: React.FC<ApplicationCardProps> = ({
+  app,
+  onMoveStage,
+  onDelete,
+  onOpenDispatch,
+  canMovePrev,
+  canMoveNext
+}) => {
+  const isGermany = app.location.toLowerCase().includes('alemania') || app.location.toLowerCase().includes('germany') || app.location.toLowerCase().includes('potsdam') || app.location.toLowerCase().includes('kiel');
+  const isEuskadi = app.location.toLowerCase().includes('bilbao') || app.location.toLowerCase().includes('bizkaia') || app.location.toLowerCase().includes('donostia');
+  const isRemote = app.location.toLowerCase().includes('remoto') || app.location.toLowerCase().includes('remote');
+
+  return (
+    <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-red-500/60 shadow-lg space-y-2.5 transition group">
+      
+      {/* Top Card Bar */}
+      <div className="flex items-center justify-between text-[10px] font-mono">
+        <span className="px-1.5 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800 font-bold">
+          {app.id}
+        </span>
+
+        {isGermany && (
+          <span className="px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700 font-bold">
+            🇩🇪 §20 AufenthG
+          </span>
+        )}
+        {isEuskadi && (
+          <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold">
+            📍 Ley 14 Bilbao
+          </span>
+        )}
+        {isRemote && (
+          <span className="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700 font-bold">
+            🌐 Remoto UE
+          </span>
+        )}
+      </div>
+
+      {/* Main Title & Organization */}
+      <div>
+        <h4 className="font-bold text-white text-xs leading-snug line-clamp-2 hover:text-red-400 transition font-sans">
+          {app.offerTitle}
+        </h4>
+        <div className="flex items-center space-x-1 text-[11px] text-slate-300 font-mono mt-1">
+          <Building2 className="h-3 w-3 text-red-500 shrink-0" />
+          <span className="truncate">{app.companyName}</span>
+        </div>
+        <div className="flex items-center space-x-1 text-[10px] text-slate-400 font-mono mt-0.5">
+          <MapPin className="h-3 w-3 text-slate-500 shrink-0" />
+          <span className="truncate">{app.location}</span>
+        </div>
+      </div>
+
+      {/* Notes / Salary snippet if any */}
+      {app.interviewNotes && (
+        <div className="p-2 rounded bg-slate-950 text-[10px] text-slate-400 font-mono border border-slate-800 line-clamp-2">
+          {app.interviewNotes}
+        </div>
+      )}
+
+      {/* Quick Move and Action Bar */}
+      <div className="flex items-center justify-between pt-2 border-t border-slate-800/80">
+        <div className="flex items-center space-x-1">
+          <button
+            onClick={() => onMoveStage(app.id, 'prev')}
+            disabled={!canMovePrev}
+            title="Mover a etapa anterior"
+            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-25 disabled:hover:bg-slate-800 cursor-pointer transition"
+          >
+            <ArrowLeft className="h-3 w-3" />
+          </button>
+          <button
+            onClick={() => onMoveStage(app.id, 'next')}
+            disabled={!canMoveNext}
+            title="Mover a siguiente etapa"
+            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-25 disabled:hover:bg-slate-800 cursor-pointer transition"
+          >
+            <ArrowRight className="h-3 w-3" />
+          </button>
+        </div>
+
+        <div className="flex items-center space-x-1.5">
+          <button
+            onClick={onOpenDispatch}
+            className="px-2.5 py-1 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white rounded-lg text-[10px] font-mono font-bold transition flex items-center space-x-1 border border-red-500/40 cursor-pointer"
+            title="Abrir Despacho Asistido (Cartas, Argumentos y Envío)"
+          >
+            <Sparkles className="h-3 w-3" />
+            <span>Despacho</span>
+          </button>
+
+          {app.offerUrl && (
+            <a
+              href={app.offerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer transition"
+              title="Abrir oferta web"
+            >
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
+
+          <button
+            onClick={() => onDelete(app.id)}
+            className="p-1 rounded bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-400 cursor-pointer transition"
+            title="Eliminar de Locker"
+          >
+            <Trash2 className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 };

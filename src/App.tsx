@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/layout/Navbar';
-import { ContextualHelpModal } from './components/layout/ContextualHelpModal';
-import { GuidedTourOverlay } from './components/layout/GuidedTourOverlay';
-import { ProtocolModal } from './components/offers/ProtocolModal';
+import { TacticalHelpAndProtocolModal } from './components/common/TacticalHelpAndProtocolModal';
 
 import { WarRoomTab } from './components/warroom/WarRoomTab';
 import { MarketRadarTab } from './components/radar/MarketRadarTab';
@@ -10,7 +8,7 @@ import { AgentDossierTab } from './components/dossier/AgentDossierTab';
 import { MissionControlTab } from './components/control/MissionControlTab';
 import { SettingsTab } from './components/settings/SettingsTab';
 
-import { getStoredOffers, saveStoredOffers, getStoredProfile } from './services/db';
+import { getStoredOffers, saveStoredOffers, getStoredProfile, getStoredApplications, saveStoredApplications } from './services/db';
 import { calculateMatchScore } from './services/matchEngine';
 import { getStoredTheme, saveStoredTheme, applyThemeToDOM, type AppTheme } from './services/themeManager';
 import type { JobOffer } from './types/offers';
@@ -20,12 +18,10 @@ export function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
   const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
-  const [dossierSubTab, setDossierSubTab] = useState<'profile' | 'cvs'>('profile');
+  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'profile' | 'cvs'>('showcase');
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
 
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [isGuidedTourOpen, setIsGuidedTourOpen] = useState(false);
-  const [isProtocolOpen, setIsProtocolOpen] = useState(false);
+  const [isUnifiedHelpOpen, setIsUnifiedHelpOpen] = useState(false);
   const [dataRefreshKey, setDataRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -50,9 +46,10 @@ export function App() {
       return;
     }
 
-    if (stationId === 'agent_dossier' || ['profile', 'cvs'].includes(stationId)) {
+    if (stationId === 'agent_dossier' || ['showcase', 'profile', 'cvs'].includes(stationId)) {
       if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('cvs');
-      else setDossierSubTab('profile');
+      else if (subTab === 'profile' || stationId === 'profile') setDossierSubTab('profile');
+      else setDossierSubTab('showcase');
       setActiveTab('agent_dossier');
       return;
     }
@@ -115,7 +112,40 @@ export function App() {
     }
   }, []);
 
-  const handleStartApplicationFromOffer = (_offerId: string) => {
+  const handleStartApplicationFromOffer = (offerId: string) => {
+    const currentOffers = getStoredOffers();
+    const targetOffer = currentOffers.find(o => o.id === offerId);
+    if (targetOffer) {
+      const currentApps = getStoredApplications();
+      const existing = currentApps.find(a => a.offerId === offerId);
+      if (!existing) {
+        const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
+        const newApp = {
+          id: `CAND-${Date.now().toString().slice(-6)}`,
+          offerId: targetOffer.id,
+          offerTitle: targetOffer.title,
+          companyName: targetOffer.company,
+          location: targetOffer.location,
+          currentStage: 1 as const,
+          status: 'En Progreso' as const,
+          createdDate: timestamp.split(' ')[0],
+          updatedDate: timestamp.split(' ')[0],
+          offerUrl: targetOffer.url,
+          humanApprovalGranted: false,
+          adaptedCvSummary: targetOffer.requirements || [],
+          history: [
+            {
+              id: `h-${Date.now()}`,
+              timestamp,
+              stage: 1 as const,
+              title: `Oferta guardada en Locker desde el Radar`,
+              actor: 'Usuario' as const
+            }
+          ]
+        };
+        saveStoredApplications([newApp, ...currentApps]);
+      }
+    }
     handleNavigate('mission_control', 'applications');
   };
 
@@ -125,11 +155,8 @@ export function App() {
         currentTab={activeTab}
         currentTheme={theme}
         onThemeChange={handleThemeChange}
-        onOpenContextHelp={() => setIsHelpOpen(true)}
-        onStartGuidedTour={() => setIsGuidedTourOpen(true)}
-        onOpenProtocolModal={() => setIsProtocolOpen(true)}
-        onRefreshData={handleRefreshData}
-        onSelectStation={(id) => handleNavigate(id)}
+        onOpenUnifiedHelp={() => setIsUnifiedHelpOpen(true)}
+        onSelectStation={(id, subTab) => handleNavigate(id, subTab)}
       />
 
       <div className="flex-1 flex overflow-hidden w-full">
@@ -173,22 +200,9 @@ export function App() {
         </main>
       </div>
 
-      <ContextualHelpModal
-        currentTab={activeTab}
-        isOpen={isHelpOpen}
-        onClose={() => setIsHelpOpen(false)}
-        onGoToTutorial={() => handleNavigate('dashboard')}
-      />
-
-      <GuidedTourOverlay
-        isOpen={isGuidedTourOpen}
-        onClose={() => setIsGuidedTourOpen(false)}
-        onSelectTab={(tabId) => handleNavigate(tabId)}
-      />
-
-      <ProtocolModal
-        isOpen={isProtocolOpen}
-        onClose={() => setIsProtocolOpen(false)}
+      <TacticalHelpAndProtocolModal
+        isOpen={isUnifiedHelpOpen}
+        onClose={() => setIsUnifiedHelpOpen(false)}
       />
     </div>
   );

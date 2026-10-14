@@ -2,7 +2,7 @@ import { getStoredProfile } from './db';
 import type { JobOffer } from '../types/offers';
 
 export interface GeneratedCoverLetter {
-  language: 'es' | 'en';
+  language: 'es' | 'en' | 'de';
   title: string;
   salutation: string;
   bodyParagraphs: string[];
@@ -21,10 +21,10 @@ export interface ApplicationQAPair {
  * and in the offer, and leaves [COMPLETAR] placeholders where the user must write their own,
  * truthful content. It never claims skills, achievements or knowledge of the company.
  */
-export const generateTailoredCoverLetter = (offer: JobOffer, language: 'es' | 'en' = 'es'): GeneratedCoverLetter => {
+export const generateTailoredCoverLetter = (offer: JobOffer, language: 'es' | 'en' | 'de' = 'es'): GeneratedCoverLetter => {
   const profile = getStoredProfile();
-  const companyName = offer.company || (language === 'en' ? 'the organisation' : 'la organización');
-  const jobTitle = offer.title || (language === 'en' ? 'the position' : 'el puesto');
+  const companyName = offer.company || (language === 'en' ? 'the organisation' : language === 'de' ? 'die Organisation' : 'la organización');
+  const jobTitle = offer.title || (language === 'en' ? 'the position' : language === 'de' ? 'die Stelle' : 'el puesto');
   const location = offer.location || '';
   const skills = profile.skills.slice(0, 6).map(s => s.name).join(', ');
   const contact = [profile.email, profile.phone, profile.location].filter(Boolean).join(' | ');
@@ -42,6 +42,26 @@ export const generateTailoredCoverLetter = (offer: JobOffer, language: 'es' | 'e
     return {
       language: 'en',
       title: `Cover Letter - ${jobTitle} (${companyName})`,
+      salutation,
+      bodyParagraphs,
+      closing,
+      fullMarkdown
+    };
+  }
+
+  if (language === 'de') {
+    const salutation = `Sehr geehrte Damen und Herren,`;
+    const bodyParagraphs = [
+      `hiermit bewerbe ich mich mit großem Interesse auf die Stelle als ${jobTitle} bei ${companyName}${location ? ` (${location})` : ''}.`,
+      `[COMPLETAR: Erläutern Sie mit eigenen Worten Ihre einschlägige Erfahrung.${skills ? ` Profil-Kenntnisse: ${skills}.` : ''}]`,
+      `[COMPLETAR: Begründen Sie Ihre Motivation für ${companyName}.]`,
+      'Über eine Einladung zu einem persönlichen Gespräch freue ich mich sehr.'
+    ];
+    const closing = `Mit freundlichen Grüßen,\n${profile.fullName}`;
+    const fullMarkdown = `**${profile.fullName}**  \n${contact}\n\n**${companyName}**  \n**Position:** ${jobTitle}\n\n${salutation}\n\n${bodyParagraphs.join('\n\n')}\n\n${closing}`.trim();
+    return {
+      language: 'de',
+      title: `Anschreiben - ${jobTitle} (${companyName})`,
       salutation,
       bodyParagraphs,
       closing,
