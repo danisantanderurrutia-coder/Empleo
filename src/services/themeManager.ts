@@ -1,13 +1,19 @@
-export type AppTheme = 'luminous' | 'cyber' | 'dark';
+export type AppTheme = 'cyber' | 'luminous' | 'dark';
 
-const THEME_KEY = 'job_search_os_theme_v2';
+const THEME_KEY = 'job_search_os_theme_v3';
 
 export const getStoredTheme = (): AppTheme => {
+  try {
+    localStorage.removeItem('job_search_os_theme');
+    localStorage.removeItem('job_search_os_theme_v2');
+  } catch {
+    // ignore
+  }
   const saved = localStorage.getItem(THEME_KEY);
-  if (saved === 'luminous' || saved === 'cyber' || saved === 'dark') {
+  if (saved === 'cyber' || saved === 'luminous' || saved === 'dark') {
     return saved;
   }
-  return 'luminous'; // Default to the fresh, crisp, luminous command console
+  return 'cyber'; // Default to the AAA Tactical High-Contrast Console
 };
 
 export const saveStoredTheme = (theme: AppTheme): void => {

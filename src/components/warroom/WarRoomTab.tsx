@@ -102,12 +102,12 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
          * ========================================================= */}
         <div className="md:col-span-3 space-y-4 flex flex-col justify-between">
           {/* Tile 1.1: CLEARANCE LEVEL */}
-          <div className="bg-[#121927]/90 backdrop-blur-md rounded-xl p-5 border border-slate-700/80 shadow-2xl flex flex-col justify-between min-h-[195px] relative overflow-hidden group hover:border-slate-500 transition">
+          <div className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl flex flex-col justify-between min-h-[195px] relative overflow-hidden group hover:border-slate-400 transition">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-300">
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100">
                 CLEARANCE LEVEL
               </span>
-              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+              <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
                 MAX ACCESO
               </span>
             </div>
@@ -116,22 +116,22 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             <div className="flex flex-col items-center justify-center my-2">
               <div className="relative flex items-center justify-center">
                 {/* SVG Tactical Laurel Wreath */}
-                <svg viewBox="0 0 100 100" className="w-20 h-20 text-slate-300 drop-shadow-lg">
+                <svg viewBox="0 0 100 100" className="w-20 h-20 text-slate-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
                   <path 
                     d="M 28 65 C 22 55, 22 35, 35 25 C 40 22, 45 20, 50 20 C 55 20, 60 22, 65 25 C 78 35, 78 55, 72 65" 
                     fill="none" 
                     stroke="currentColor" 
-                    strokeWidth="3" 
+                    strokeWidth="3.5" 
                     strokeDasharray="4 2"
                   />
                   <path 
                     d="M 20 60 Q 25 45 35 38 M 80 60 Q 75 45 65 38" 
                     fill="none" 
                     stroke="currentColor" 
-                    strokeWidth="2" 
+                    strokeWidth="2.5" 
                   />
                 </svg>
-                <span className="absolute text-2xl font-black text-white font-sans tracking-tight">
+                <span className="absolute text-2xl font-black text-white font-sans tracking-tight drop-shadow-md">
                   50
                 </span>
               </div>
@@ -139,11 +139,11 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
             {/* XP Progress Bar */}
             <div className="space-y-1">
-              <div className="h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
-                <div className="h-full bg-slate-300 w-full" />
+              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                <div className="h-full bg-slate-100 w-full" />
               </div>
-              <div className="text-[10px] font-mono text-slate-400 text-left">
-                0/1000
+              <div className="text-[11px] font-mono font-bold text-slate-200 text-left">
+                1000 / 1000 XP
               </div>
             </div>
           </div>
@@ -151,33 +151,33 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           {/* Tile 1.2: REPLAYS [BETA] */}
           <div 
             onClick={onLaunchRadar}
-            className="rounded-xl p-5 border border-slate-700/80 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-sky-500/80 transition"
+            className="rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-sky-400 transition"
             style={{
-              backgroundImage: `linear-gradient(to top, rgba(10, 16, 26, 0.95), rgba(10, 16, 26, 0.6)), url('${droneScreen}')`,
+              backgroundImage: `linear-gradient(to top, rgba(10, 16, 26, 0.95), rgba(10, 16, 26, 0.55)), url('${droneScreen}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
           >
             <div className="flex items-center space-x-1.5 z-10">
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-white drop-shadow">
                 REPLAYS
               </span>
-              <span className="text-[9px] font-mono font-black px-1.5 py-0.2 rounded bg-slate-800/90 text-slate-300 border border-slate-600">
+              <span className="text-[10px] font-mono font-black px-1.5 py-0.5 rounded bg-red-600 text-white shadow">
                 BETA
               </span>
             </div>
 
             <div className="flex flex-col items-center justify-center my-3 z-10">
-              <Tv className="h-9 w-9 text-slate-400 group-hover:text-sky-400 transition mb-1" />
-              <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
+              <Tv className="h-10 w-10 text-slate-200 group-hover:text-sky-300 transition mb-1 drop-shadow" />
+              <span className="text-sm font-mono font-black text-white uppercase tracking-wider drop-shadow">
                 RADAR: 350+ VACANTES
               </span>
-              <span className="text-[10px] text-slate-400 font-mono">
+              <span className="text-[11px] text-slate-200 font-mono font-medium drop-shadow">
                 Click para desplegar telemetría
               </span>
             </div>
 
-            <div className="text-[10px] font-mono text-sky-400 flex items-center justify-between z-10 border-t border-slate-800/80 pt-2">
+            <div className="text-[11px] font-mono font-bold text-sky-300 flex items-center justify-between z-10 border-t border-slate-700 pt-2">
               <span>CANAL SEGURO</span>
               <span>LIVE FEED »</span>
             </div>
@@ -190,71 +190,71 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         <div className="md:col-span-4 space-y-4 flex flex-col justify-between">
           {/* Tile 2.1: MY RANK (Hero Card with Red Angle Fade) */}
           <div 
-            className="rounded-xl p-5 border border-red-500/70 shadow-[0_0_25px_rgba(239,68,68,0.25)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group"
+            className="rounded-xl p-5 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.35)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group"
             style={{
-              backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.92) 0%, rgba(153, 27, 27, 0.5) 30%, rgba(10, 14, 22, 0.7) 100%), url('${tacticalOperative}')`,
+              backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.6) 35%, rgba(10, 14, 22, 0.65) 100%), url('${tacticalOperative}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
           >
             <div className="flex items-center justify-between z-10">
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white drop-shadow">
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-white drop-shadow">
                 MY RANK
               </span>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-black/60 text-red-300 border border-red-500/50">
+              <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-black/70 text-white border border-red-400">
                 TIER-1 MINT
               </span>
             </div>
 
             {/* Tactical Shield Emblem & Rank Title */}
             <div className="flex flex-col items-center justify-center my-2 z-10">
-              <div className="w-14 h-14 rounded-xl bg-black/50 border-2 border-white/80 flex items-center justify-center shadow-2xl mb-1.5 group-hover:scale-105 transition">
+              <div className="w-14 h-14 rounded-xl bg-black/60 border-2 border-white flex items-center justify-center shadow-2xl mb-1.5 group-hover:scale-105 transition">
                 {/* Military Rank Chevron Shield */}
                 <svg viewBox="0 0 24 24" className="w-8 h-8 text-white drop-shadow">
-                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="2" />
-                  <path d="M8 11l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M8 8l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="2.5" />
+                  <path d="M8 11l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M8 8l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
               </div>
 
-              <h3 className="text-base font-black text-white uppercase tracking-wider font-sans drop-shadow">
+              <h3 className="text-lg font-black text-white uppercase tracking-wider font-sans drop-shadow-lg text-center">
                 ELITE FIELD SCIENTIST
               </h3>
-              <span className="text-[10px] font-mono text-red-100 font-bold uppercase tracking-widest drop-shadow">
+              <span className="text-xs font-mono text-white font-extrabold uppercase tracking-widest drop-shadow bg-black/40 px-2 py-0.5 rounded mt-0.5">
                 AUFENTHG §20 & LEY 14
               </span>
             </div>
 
-            <div className="text-[10px] font-mono font-bold text-white text-center z-10 border-t border-red-400/30 pt-1.5">
+            <div className="text-[11px] font-mono font-black text-white text-center z-10 border-t border-red-300/40 pt-1.5 drop-shadow">
               TRANSICIÓN ACTIVA A EU BLUE CARD
             </div>
           </div>
 
           {/* Tile 2.2: REPUTATION */}
-          <div className="bg-[#121927]/90 backdrop-blur-md rounded-xl p-5 border border-slate-700/80 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-slate-500 transition">
+          <div className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-slate-400 transition">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-300">
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100">
                 REPUTATION
               </span>
-              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+              <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
                 VERIFICADO
               </span>
             </div>
 
             {/* Silver Reputation Badge */}
             <div className="flex flex-col items-center justify-center my-2">
-              <div className="w-12 h-12 rounded-lg bg-slate-800/80 border border-slate-600 flex items-center justify-center shadow-lg mb-1.5">
-                <Award className="h-6 w-6 text-slate-200" />
+              <div className="w-12 h-12 rounded-lg bg-slate-800 border-2 border-slate-400 flex items-center justify-center shadow-lg mb-1.5">
+                <Award className="h-7 w-7 text-white" />
               </div>
-              <h4 className="text-sm font-black text-white uppercase tracking-wider">
+              <h4 className="text-base font-black text-white uppercase tracking-wider">
                 RESPECTABLE
               </h4>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-xs font-mono font-bold text-slate-200">
                 100% Postulación Asistida por Ti
               </span>
             </div>
 
-            <div className="text-[10px] font-mono text-slate-400 text-center border-t border-slate-800/80 pt-1.5">
+            <div className="text-[11px] font-mono font-bold text-slate-200 text-center border-t border-slate-700 pt-1.5">
               CERO BOTS • AUDITORÍA LIMPIA
             </div>
           </div>
@@ -263,90 +263,90 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         {/* =========================================================
          * COLUMN 3 (RIGHT, 5 COLS): FULL-HEIGHT STATISTICS CARD
          * ========================================================= */}
-        <div className="md:col-span-5 bg-[#121927]/90 backdrop-blur-md rounded-xl p-6 border border-slate-700/80 shadow-2xl flex flex-col justify-between space-y-4">
+        <div className="md:col-span-5 bg-[#121927]/95 backdrop-blur-md rounded-xl p-6 border border-slate-600 shadow-2xl flex flex-col justify-between space-y-4">
           {/* Header */}
-          <div className="border-b border-slate-800 pb-2">
-            <h3 className="text-sm font-mono font-black text-white uppercase tracking-wider">
+          <div className="border-b border-slate-700 pb-2">
+            <h3 className="text-sm font-mono font-black text-white uppercase tracking-wider drop-shadow">
               STATISTICS
             </h3>
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+            <span className="text-[10px] font-mono text-slate-300 font-bold uppercase tracking-widest">
               ACCOUNT BASED STATISTICS
             </span>
           </div>
 
           {/* Row 1: Big 3 Numbers */}
-          <div className="grid grid-cols-3 gap-2 border-b border-slate-800 pb-4">
+          <div className="grid grid-cols-3 gap-2 border-b border-slate-700 pb-4">
             <div>
-              <div className="text-[10px] font-mono text-slate-400">Targets Found</div>
-              <div className="text-2xl font-black text-white font-sans">{offers.length}</div>
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">Targets Found</div>
+              <div className="text-2xl font-black text-white font-sans drop-shadow">{offers.length}</div>
             </div>
 
             <div>
-              <div className="text-[10px] font-mono text-slate-400">Centros I+D</div>
-              <div className="text-2xl font-black text-white font-sans">{companies.length}</div>
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">Centros I+D</div>
+              <div className="text-2xl font-black text-white font-sans drop-shadow">{companies.length}</div>
             </div>
 
             <div>
-              <div className="text-[10px] font-mono text-slate-400">Alta Afinidad</div>
-              <div className="text-2xl font-black text-emerald-400 font-sans">{highMatchOffers.length}</div>
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">Alta Afinidad</div>
+              <div className="text-2xl font-black text-emerald-400 font-sans drop-shadow">{highMatchOffers.length}</div>
             </div>
           </div>
 
           {/* Row 2: Most Played Specialists (Rounds) */}
-          <div className="space-y-1.5 border-b border-slate-800 pb-4">
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+          <div className="space-y-1.5 border-b border-slate-700 pb-4">
+            <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
               Most Targeted Sectors (Dossiers)
             </div>
 
             <div className="grid grid-cols-3 gap-2 font-mono text-xs">
-              <div className="p-2 rounded bg-slate-900/90 border border-slate-800">
-                <div className="text-[10px] text-slate-400 truncate">I+D+i Euskadi</div>
-                <div className="font-bold text-white text-sm">6</div>
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700">
+                <div className="text-[11px] text-slate-300 font-medium truncate">I+D+i Euskadi</div>
+                <div className="font-bold text-white text-base">6</div>
               </div>
 
-              <div className="p-2 rounded bg-slate-900/90 border border-slate-800">
-                <div className="text-[10px] text-slate-400 truncate">Consultoría</div>
-                <div className="font-bold text-white text-sm">5</div>
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700">
+                <div className="text-[11px] text-slate-300 font-medium truncate">Consultoría</div>
+                <div className="font-bold text-white text-base">5</div>
               </div>
 
-              <div className="p-2 rounded bg-slate-900/90 border border-slate-800">
-                <div className="text-[10px] text-slate-400 truncate">Gobernanza</div>
-                <div className="font-bold text-white text-sm">7</div>
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700">
+                <div className="text-[11px] text-slate-300 font-medium truncate">Gobernanza</div>
+                <div className="font-bold text-white text-base">7</div>
               </div>
             </div>
           </div>
 
           {/* Row 3: Ranked, Unranked & Quick Match (Operator Cards) */}
           <div className="space-y-2">
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
               Specialist Profile Configurations
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               {/* Operator 1: Geofísica & Modelación */}
-              <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center space-x-3">
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700 flex items-center space-x-3">
                 <img 
                   src={operatorIana} 
                   alt="Iana Spec" 
-                  className="w-10 h-10 rounded-full object-cover border border-slate-600 shrink-0" 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-500 shrink-0" 
                 />
                 <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-white truncate">GEOFÍSICA</div>
-                  <div className="text-[10px] font-mono text-slate-400">U. de Chile</div>
+                  <div className="text-xs font-bold text-white truncate drop-shadow">GEOFÍSICA</div>
+                  <div className="text-[10px] font-mono text-slate-300 font-semibold">U. de Chile</div>
                   <div className="text-[10px] font-mono text-emerald-400 font-bold">73.8% Win Rate</div>
                 </div>
               </div>
 
               {/* Operator 2: Biofísica & CAU Kiel */}
-              <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center space-x-3">
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700 flex items-center space-x-3">
                 <img 
                   src={operatorEla} 
                   alt="Ela Spec" 
-                  className="w-10 h-10 rounded-full object-cover border border-slate-600 shrink-0" 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-500 shrink-0" 
                 />
                 <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-white truncate">BIOFÍSICA</div>
-                  <div className="text-[10px] font-mono text-slate-400">CAU Kiel / Poznań</div>
+                  <div className="text-xs font-bold text-white truncate drop-shadow">BIOFÍSICA</div>
+                  <div className="text-[10px] font-mono text-slate-300 font-semibold">CAU Kiel / Poznań</div>
                   <div className="text-[10px] font-mono text-sky-400 font-bold">81.0% Win Rate</div>
                 </div>
               </div>
@@ -361,62 +361,62 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       <div className="relative z-10 mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <button
           onClick={onLaunchRadar}
-          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-red-500 transition text-left flex items-center justify-between group cursor-pointer"
+          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-red-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
             <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-red-400 transition">
               PLAY RANKED // ALEMANIA
             </div>
-            <div className="text-[10px] text-slate-400 font-mono">
+            <div className="text-[11px] text-slate-300 font-mono font-medium">
               Euraxess • §20 AufenthG
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-red-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-red-400 group-hover:translate-x-1 transition" />
         </button>
 
         <button
           onClick={() => onSelectStation('market_radar', 'companies')}
-          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer"
+          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
             <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-emerald-400 transition">
               PLAY STANDARD // EUSKADI
             </div>
-            <div className="text-[10px] text-slate-400 font-mono">
+            <div className="text-[11px] text-slate-300 font-mono font-medium">
               BC3 • Tecnalia • IDOM
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
         </button>
 
         <button
           onClick={() => onSelectStation('agent_dossier', 'cvs')}
-          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left flex items-center justify-between group cursor-pointer"
+          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
             <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-amber-400 transition">
               OPERATORS // ARMERÍA CV
             </div>
-            <div className="text-[10px] text-slate-400 font-mono">
+            <div className="text-[11px] text-slate-300 font-mono font-medium">
               ES • EN • Lebenslauf
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-1 transition" />
         </button>
 
         <button
           onClick={() => onSelectStation('mission_control', 'applications')}
-          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left flex items-center justify-between group cursor-pointer"
+          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
         >
           <div>
             <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-sky-400 transition">
               LOCKER // MISIÓN KANBAN
             </div>
-            <div className="text-[10px] text-slate-400 font-mono">
+            <div className="text-[11px] text-slate-300 font-mono font-medium">
               {activeApplications.length} Postulaciones en Curso
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition" />
         </button>
       </div>
     </div>

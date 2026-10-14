@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/layout/Navbar';
-import { Sidebar } from './components/layout/Sidebar';
 import { ContextualHelpModal } from './components/layout/ContextualHelpModal';
 import { GuidedTourOverlay } from './components/layout/GuidedTourOverlay';
 import { ProtocolModal } from './components/offers/ProtocolModal';
@@ -116,7 +115,7 @@ export function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white theme-${theme}`} data-theme={theme}>
+    <div className={`min-h-screen w-full bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white theme-${theme}`} data-theme={theme}>
       <Navbar
         currentTab={activeTab}
         currentTheme={theme}
@@ -128,13 +127,8 @@ export function App() {
         onSelectStation={(id) => handleNavigate(id)}
       />
 
-      <div className="flex-1 flex overflow-hidden">
-        <Sidebar
-          activeTab={activeTab}
-          onSelectTab={(tabId) => handleNavigate(tabId)}
-        />
-
-        <main key={dataRefreshKey} className="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+      <div className="flex-1 flex overflow-hidden w-full">
+        <main key={dataRefreshKey} className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto w-full max-w-none">
           {activeTab === 'dashboard' && (
             <WarRoomTab
               onSelectStation={(station, subTab) => handleNavigate(station, subTab)}
