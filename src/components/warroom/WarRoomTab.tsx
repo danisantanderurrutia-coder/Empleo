@@ -1,14 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-  Crosshair, 
-  ShieldCheck, 
-  FileText, 
-  Radio, 
   Award, 
   ChevronRight, 
-  Building2, 
-  Target,
-  Globe2
+  Globe2,
+  Tv,
+  Sparkles
 } from 'lucide-react';
 import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
 import { TacticalGlobeHUD } from './TacticalGlobeHUD';
@@ -24,347 +20,404 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
   const applications = getStoredApplications();
   const companies = getStoredCompanies();
 
+  const [showPlanetaryHUD, setShowPlanetaryHUD] = useState(false);
+
   const highMatchOffers = offers.filter(o => o.matchScore?.totalScore >= 70);
   const activeApplications = applications.filter(a => a.status !== 'Desestimada');
 
+  // Photographic Assets from Unsplash for realistic tactical atmosphere
+  const backgroundWall = 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1920&q=80';
+  const tacticalOperative = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80';
+  const droneScreen = 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
+  const operatorIana = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80';
+  const operatorEla = 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80';
+
   return (
-    <div className="space-y-6 text-slate-100 font-mono animate-fadeIn select-none">
-      {/* -------------------------------------------------------------
-       * TIER 0: R6 SIEGE STYLE SUB-NAV / CAREER BANNER (IMAGE 4 & 6)
-       * ------------------------------------------------------------- */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-3 gap-3">
+    <div 
+      className="relative min-h-[calc(100vh-100px)] rounded-3xl overflow-hidden p-6 text-slate-100 font-sans select-none border border-slate-800 shadow-2xl"
+      style={{
+        backgroundImage: `linear-gradient(to bottom, rgba(12, 17, 26, 0.88), rgba(9, 13, 20, 0.94)), url('${backgroundWall}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      {/* Cinematic Fog & Scanline Vignette */}
+      <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-40 mix-blend-overlay" />
+
+      {/* Screen Title: CAREER (Exact Rainbow Six Siege style) */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-700/60 pb-3 mb-6 gap-3">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-xs font-bold text-red-500 uppercase tracking-widest font-mono flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
-              OPERATOR INTELLIGENCE
-            </span>
-            <span className="text-slate-600">//</span>
-            <span className="text-xs text-slate-400">SCHENGEN JOB-SEEKING DIRECTIVE</span>
+          <div className="flex items-center space-x-2 text-[11px] font-mono tracking-wider uppercase text-red-500 font-bold mb-1">
+            <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+            <span>OPERATIVE RECORD // {profile.fullName || 'DANIEL SANTANDER'}</span>
           </div>
-          <h1 className="text-3xl font-black text-white uppercase tracking-tight font-sans mt-0.5 flex flex-wrap items-center gap-2">
-            <span>CAREER:</span>
-            <span className="text-emerald-400">{profile.fullName || 'DANIEL SANTANDER'}</span>
+          <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter font-sans drop-shadow-md">
+            CAREER
           </h1>
         </div>
 
-        {/* Top-Right Resource / Currency Counters (R6 Siege Wind Bastion style) */}
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2 shadow-inner">
-            <Target className="h-4 w-4 text-emerald-400" />
-            <span className="text-slate-400 font-medium">TARGETS:</span>
-            <span className="font-bold text-white">{offers.length}</span>
-          </div>
+        {/* Tactical Planetary Toggle & Mode Switcher */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setShowPlanetaryHUD(!showPlanetaryHUD)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 border transition cursor-pointer ${
+              showPlanetaryHUD 
+                ? 'bg-sky-600 text-white border-sky-400 shadow-lg' 
+                : 'bg-slate-900/80 text-slate-300 border-slate-700 hover:border-slate-500'
+            }`}
+          >
+            <Globe2 className="h-4 w-4 text-sky-400" />
+            <span>{showPlanetaryHUD ? 'Ocultar Visor Planetario' : '🛰️ Visor IMF / Globo'}</span>
+          </button>
 
-          <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2 shadow-inner">
-            <Building2 className="h-4 w-4 text-sky-400" />
-            <span className="text-slate-400 font-medium">INSTITUTOS:</span>
-            <span className="font-bold text-white">{companies.length}</span>
-          </div>
-
-          <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2 shadow-inner">
-            <ShieldCheck className="h-4 w-4 text-amber-400" />
-            <span className="text-slate-400 font-medium">VISA:</span>
-            <span className="font-bold text-amber-300">§20 / LEY 14</span>
-          </div>
-        </div>
-      </div>
-
-      {/* -------------------------------------------------------------
-       * TIER 1: RAINBOW SIX SIEGE 4-BLOCK CAREER GRID (IMAGE 4)
-       * ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Block 1: CLEARANCE LEVEL */}
-        <div className="glass-panel p-5 rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#10192e] to-[#0a1122] flex flex-col justify-between space-y-4 shadow-xl relative overflow-hidden">
-          <div className="flex justify-between items-start">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              CLEARANCE LEVEL
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">
-              TIER 1
-            </span>
-          </div>
-
-          <div className="flex flex-col items-center justify-center my-1 space-y-1">
-            {/* Tactical Laurel Wreath Badge */}
-            <div className="relative flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full border-2 border-dashed border-emerald-500/60 flex items-center justify-center bg-slate-950/80 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                <span className="text-2xl font-black text-white font-sans">50</span>
-              </div>
-              <div className="absolute -inset-1 rounded-full border border-emerald-400/30 pointer-events-none" />
-            </div>
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-              MAX OPERATIONAL
-            </span>
-          </div>
-
-          {/* XP Progress Bar */}
-          <div className="space-y-1">
-            <div className="flex justify-between text-[10px] text-slate-400">
-              <span>EXP TRANSICIÓN</span>
-              <span className="text-slate-200 font-bold">1000 / 1000 XP</span>
-            </div>
-            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-full" />
-            </div>
-          </div>
-        </div>
-
-        {/* Block 2: MY RANK (with dramatic R6 red gradient and operator badge) */}
-        <div className="glass-panel p-5 rounded-2xl border border-red-500/40 bg-gradient-to-b from-[#181116] via-[#1f1018] to-[#12080d] flex flex-col justify-between space-y-3 shadow-xl relative overflow-hidden group">
-          {/* Angular red ambient background */}
-          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-red-600/15 rounded-full blur-2xl pointer-events-none" />
-
-          <div className="flex justify-between items-start z-10">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-red-400">
-              MY OPERATIVE RANK
-            </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800/80">
-              TOP 1%
-            </span>
-          </div>
-
-          <div className="flex flex-col items-center justify-center space-y-1 z-10 py-1">
-            <div className="w-14 h-14 rounded-xl bg-red-950/80 border border-red-500/60 flex items-center justify-center shadow-lg group-hover:scale-105 transition">
-              <Crosshair className="h-7 w-7 text-red-400" />
-            </div>
-            <h3 className="text-xs font-black text-white uppercase text-center mt-1">
-              ELITE FIELD SCIENTIST
-            </h3>
-            <span className="text-[10px] text-red-300 font-sans font-medium text-center">
-              Geofísica & M.Sc. Kiel/Poznań
-            </span>
-          </div>
-
-          {/* Red angular bottom banner */}
-          <div className="z-10 py-1 px-2 rounded bg-gradient-to-r from-red-600 to-rose-700 text-white text-[10px] font-bold text-center uppercase tracking-wider shadow">
-            MINT-QUALIFIED EU BLUE CARD
-          </div>
-        </div>
-
-        {/* Block 3: REPUTATION */}
-        <div className="glass-panel p-5 rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#101b22] to-[#081217] flex flex-col justify-between space-y-3 shadow-xl relative overflow-hidden">
-          <div className="flex justify-between items-start">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              INTELLIGENCE REPUTATION
-            </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-              VERIFIED
-            </span>
-          </div>
-
-          <div className="flex flex-col items-center justify-center space-y-1 py-1">
-            <div className="w-14 h-14 rounded-xl bg-emerald-950/70 border border-emerald-500/40 flex items-center justify-center shadow">
-              <Award className="h-7 w-7 text-emerald-400" />
-            </div>
-            <h3 className="text-xs font-black text-white uppercase mt-1">
-              RESPECTABLE & VERIFIED
-            </h3>
-            <span className="text-[10px] text-emerald-400/90 text-center">
-              100% Human-in-the-Loop
-            </span>
-          </div>
-
-          <div className="py-1 px-2 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[10px] text-center">
-            0% BOTS SIMULADOS • AUDITORÍA LIMPIA
-          </div>
-        </div>
-
-        {/* Block 4: STATISTICS (Account Based Intelligence) */}
-        <div className="glass-panel p-5 rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#121829] to-[#0a0f1d] flex flex-col justify-between space-y-2 shadow-xl">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              STATISTICS
-            </span>
-            <span className="text-[10px] text-amber-400 font-bold">TELEMETRÍA REAL</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 text-xs py-1">
-            <div className="p-2 rounded bg-slate-950/70 border border-slate-800">
-              <div className="text-[9px] text-slate-400 uppercase">ALTA AFINIDAD</div>
-              <div className="text-sm font-black text-emerald-400">{highMatchOffers.length} VACANTES</div>
-              <div className="text-[9px] text-slate-500">&gt; 70% Match Fit</div>
-            </div>
-
-            <div className="p-2 rounded bg-slate-950/70 border border-slate-800">
-              <div className="text-[9px] text-slate-400 uppercase">EN VUELO</div>
-              <div className="text-sm font-black text-sky-400">{activeApplications.length} APPS</div>
-              <div className="text-[9px] text-slate-500">Misiones</div>
-            </div>
-
-            <div className="p-2 rounded bg-slate-950/70 border border-slate-800">
-              <div className="text-[9px] text-slate-400 uppercase">ALEMANIA §20</div>
-              <div className="text-sm font-black text-amber-400">18 MESES</div>
-              <div className="text-[9px] text-slate-500">Búsqueda</div>
-            </div>
-
-            <div className="p-2 rounded bg-slate-950/70 border border-slate-800">
-              <div className="text-[9px] text-slate-400 uppercase">ESPAÑA LEY 14</div>
-              <div className="text-sm font-black text-rose-400">2 AÑOS</div>
-              <div className="text-[9px] text-slate-500">Nacionalidad</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* -------------------------------------------------------------
-       * TIER 2: INTERACTIVE IMF PLANETARY HUD + DAILY MISSION HUD
-       * ------------------------------------------------------------- */}
-      <div className="space-y-4">
-        {/* Interactive Tactical Vector Globe HUD (Image 1 & 3) */}
-        <TacticalGlobeHUD 
-          onDeploySector={(sector) => {
-            if (sector === 'kiel') onSelectStation('market_radar', 'sources');
-            else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
-            else onSelectStation('market_radar', 'offers');
-          }}
-        />
-
-        {/* Daily Field Directives Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Directive 1 */}
-          <div className="p-4 rounded-xl border border-sky-500/30 bg-gradient-to-br from-[#0c162a] to-[#070e1c] space-y-2 relative group hover:border-sky-400 transition shadow-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800">
-                DIRECTIVA 01 // ALEMANIA
-              </span>
-              <span className="text-xs text-sky-400 font-bold">§20 AufenthG</span>
-            </div>
-            <h4 className="font-bold text-white text-xs">
-              Euraxess Germany & Thünen / Helmholtz
-            </h4>
-            <p className="text-[11px] text-slate-300 leading-snug">
-              Tu doble máster en CAU Kiel otorga visado legal de búsqueda de 18 meses a tiempo completo y pase a EU Blue Card MINT.
-            </p>
-            <button
-              onClick={() => onSelectStation('market_radar', 'sources')}
-              className="mt-2 text-xs font-bold text-sky-400 group-hover:text-sky-300 flex items-center gap-1 transition"
-            >
-              <span>Abrir Cuadrante Alpha</span>
-              <ChevronRight className="h-3 w-3" />
-            </button>
-          </div>
-
-          {/* Directive 2 */}
-          <div className="p-4 rounded-xl border border-emerald-500/30 bg-gradient-to-br from-[#0c1f1a] to-[#071310] space-y-2 relative group hover:border-emerald-400 transition shadow-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
-                DIRECTIVA 02 // EUSKADI
-              </span>
-              <span className="text-xs text-emerald-400 font-bold">Ley 14/2013 UGE</span>
-            </div>
-            <h4 className="font-bold text-white text-xs">
-              BC3, Tecnalia, Neiker & IDOM Bilbao
-            </h4>
-            <p className="text-[11px] text-slate-300 leading-snug">
-              Pasaporte chileno reduce a 2 años de residencia para nacionalidad española. Centros de I+D y multinacionales gestionan visado de profesional altamente cualificado.
-            </p>
-            <button
-              onClick={() => onSelectStation('market_radar', 'companies')}
-              className="mt-2 text-xs font-bold text-emerald-400 group-hover:text-emerald-300 flex items-center gap-1 transition"
-            >
-              <span>Ver Fichas de Empresa</span>
-              <ChevronRight className="h-3 w-3" />
-            </button>
-          </div>
-
-          {/* Directive 3 */}
-          <div className="p-4 rounded-xl border border-amber-500/30 bg-gradient-to-br from-[#1c180e] to-[#0f0c05] space-y-2 relative group hover:border-amber-400 transition shadow-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800">
-                DIRECTIVA 03 // GLOBAL & REMOTO
-              </span>
-              <span className="text-xs text-amber-400 font-bold">ONGs / Think Tanks</span>
-            </div>
-            <h4 className="font-bold text-white text-xs">
-              EPN, Global Forest Coalition & ECODES
-            </h4>
-            <p className="text-[11px] text-slate-300 leading-snug">
-              Investigación en gobernanza ambiental, auditoría de biomasa y contabilidad de carbono en organizaciones de incidencia internacional.
-            </p>
-            <button
-              onClick={() => onSelectStation('agent_dossier', 'cvs')}
-              className="mt-2 text-xs font-bold text-amber-400 group-hover:text-amber-300 flex items-center gap-1 transition"
-            >
-              <span>Adaptar CV Académico/ONG</span>
-              <ChevronRight className="h-3 w-3" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* -------------------------------------------------------------
-       * TIER 3: R6 SIEGE TACTICAL MODE SELECTION BAR (IMAGE 5)
-       * ------------------------------------------------------------- */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            DESPLIEGUE TÁCTICO INMEDIATO // SELECT OPERATIVE MODE
-          </span>
-          <span className="text-[10px] text-emerald-400">STATUS: SISTEMA LISTO</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Action 1 */}
           <button
             onClick={onLaunchRadar}
-            className="p-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-between shadow-xl transition border border-emerald-400/40 group cursor-pointer"
+            className="px-4 py-1.5 rounded-lg text-xs font-mono font-extrabold bg-red-600 hover:bg-red-500 text-white shadow-lg transition flex items-center gap-1.5 cursor-pointer"
           >
-            <div className="flex items-center gap-2.5">
-              <Radio className="h-5 w-5" />
-              <div className="text-left">
-                <div>RADAR DE VACANTES</div>
-                <div className="text-[10px] font-normal text-emerald-200">350+ Ofertas Reales</div>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition" />
-          </button>
-
-          {/* Action 2 */}
-          <button
-            onClick={() => onSelectStation('market_radar', 'sources')}
-            className="p-4 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-between shadow-xl transition border border-sky-400/40 group cursor-pointer"
-          >
-            <div className="flex items-center gap-2.5">
-              <Globe2 className="h-5 w-5" />
-              <div className="text-left">
-                <div>CUADRANTES DE VISADO</div>
-                <div className="text-[10px] font-normal text-sky-200">Alpha • Beta • Gamma</div>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition" />
-          </button>
-
-          {/* Action 3 */}
-          <button
-            onClick={() => onSelectStation('market_radar', 'companies')}
-            className="p-4 rounded-xl bg-gradient-to-r from-teal-700 to-slate-800 hover:from-teal-600 hover:to-slate-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-between shadow-xl transition border border-teal-500/40 group cursor-pointer"
-          >
-            <div className="flex items-center gap-2.5">
-              <Building2 className="h-5 w-5" />
-              <div className="text-left">
-                <div>EMPRESAS & CENTROS</div>
-                <div className="text-[10px] font-normal text-teal-200">18 Fichas Verificadas</div>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition" />
-          </button>
-
-          {/* Action 4 */}
-          <button
-            onClick={() => onSelectStation('agent_dossier', 'cvs')}
-            className="p-4 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-500 hover:to-orange-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-between shadow-xl transition border border-amber-400/40 group cursor-pointer"
-          >
-            <div className="flex items-center gap-2.5">
-              <FileText className="h-5 w-5" />
-              <div className="text-left">
-                <div>ARMERÍA DE CVS</div>
-                <div className="text-[10px] font-normal text-amber-200">ES • EN • Lebenslauf</div>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition" />
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>DESPLEGAR RADAR (350+)</span>
           </button>
         </div>
+      </div>
+
+      {/* Optional Top Tier: IMF Planetary Holographic Vector Globe (if toggled) */}
+      {showPlanetaryHUD && (
+        <div className="relative z-10 mb-6 animate-fadeIn">
+          <TacticalGlobeHUD 
+            onDeploySector={(sector) => {
+              if (sector === 'kiel') onSelectStation('market_radar', 'sources');
+              else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
+              else onSelectStation('market_radar', 'offers');
+            }}
+          />
+        </div>
+      )}
+
+      {/* -------------------------------------------------------------
+       * EXACT RAINBOW SIX SIEGE 3-COLUMN CAREER GRID (IMAGE 4)
+       * ------------------------------------------------------------- */}
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-5">
+        {/* =========================================================
+         * COLUMN 1 (LEFT, 3 COLS): CLEARANCE LEVEL + REPLAYS
+         * ========================================================= */}
+        <div className="md:col-span-3 space-y-4 flex flex-col justify-between">
+          {/* Tile 1.1: CLEARANCE LEVEL */}
+          <div className="bg-[#121927]/90 backdrop-blur-md rounded-xl p-5 border border-slate-700/80 shadow-2xl flex flex-col justify-between min-h-[195px] relative overflow-hidden group hover:border-slate-500 transition">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-300">
+                CLEARANCE LEVEL
+              </span>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                MAX ACCESO
+              </span>
+            </div>
+
+            {/* Silver Laurel Wreath with 50 */}
+            <div className="flex flex-col items-center justify-center my-2">
+              <div className="relative flex items-center justify-center">
+                {/* SVG Tactical Laurel Wreath */}
+                <svg viewBox="0 0 100 100" className="w-20 h-20 text-slate-300 drop-shadow-lg">
+                  <path 
+                    d="M 28 65 C 22 55, 22 35, 35 25 C 40 22, 45 20, 50 20 C 55 20, 60 22, 65 25 C 78 35, 78 55, 72 65" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeDasharray="4 2"
+                  />
+                  <path 
+                    d="M 20 60 Q 25 45 35 38 M 80 60 Q 75 45 65 38" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                  />
+                </svg>
+                <span className="absolute text-2xl font-black text-white font-sans tracking-tight">
+                  50
+                </span>
+              </div>
+            </div>
+
+            {/* XP Progress Bar */}
+            <div className="space-y-1">
+              <div className="h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+                <div className="h-full bg-slate-300 w-full" />
+              </div>
+              <div className="text-[10px] font-mono text-slate-400 text-left">
+                0/1000
+              </div>
+            </div>
+          </div>
+
+          {/* Tile 1.2: REPLAYS [BETA] */}
+          <div 
+            onClick={onLaunchRadar}
+            className="rounded-xl p-5 border border-slate-700/80 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-sky-500/80 transition"
+            style={{
+              backgroundImage: `linear-gradient(to top, rgba(10, 16, 26, 0.95), rgba(10, 16, 26, 0.6)), url('${droneScreen}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="flex items-center space-x-1.5 z-10">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
+                REPLAYS
+              </span>
+              <span className="text-[9px] font-mono font-black px-1.5 py-0.2 rounded bg-slate-800/90 text-slate-300 border border-slate-600">
+                BETA
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center justify-center my-3 z-10">
+              <Tv className="h-9 w-9 text-slate-400 group-hover:text-sky-400 transition mb-1" />
+              <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
+                RADAR: 350+ VACANTES
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono">
+                Click para desplegar telemetría
+              </span>
+            </div>
+
+            <div className="text-[10px] font-mono text-sky-400 flex items-center justify-between z-10 border-t border-slate-800/80 pt-2">
+              <span>CANAL SEGURO</span>
+              <span>LIVE FEED »</span>
+            </div>
+          </div>
+        </div>
+
+        {/* =========================================================
+         * COLUMN 2 (CENTER, 4 COLS): MY RANK + REPUTATION
+         * ========================================================= */}
+        <div className="md:col-span-4 space-y-4 flex flex-col justify-between">
+          {/* Tile 2.1: MY RANK (Hero Card with Red Angle Fade) */}
+          <div 
+            className="rounded-xl p-5 border border-red-500/70 shadow-[0_0_25px_rgba(239,68,68,0.25)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group"
+            style={{
+              backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.92) 0%, rgba(153, 27, 27, 0.5) 30%, rgba(10, 14, 22, 0.7) 100%), url('${tacticalOperative}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="flex items-center justify-between z-10">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white drop-shadow">
+                MY RANK
+              </span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-black/60 text-red-300 border border-red-500/50">
+                TIER-1 MINT
+              </span>
+            </div>
+
+            {/* Tactical Shield Emblem & Rank Title */}
+            <div className="flex flex-col items-center justify-center my-2 z-10">
+              <div className="w-14 h-14 rounded-xl bg-black/50 border-2 border-white/80 flex items-center justify-center shadow-2xl mb-1.5 group-hover:scale-105 transition">
+                {/* Military Rank Chevron Shield */}
+                <svg viewBox="0 0 24 24" className="w-8 h-8 text-white drop-shadow">
+                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="2" />
+                  <path d="M8 11l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M8 8l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              <h3 className="text-base font-black text-white uppercase tracking-wider font-sans drop-shadow">
+                ELITE FIELD SCIENTIST
+              </h3>
+              <span className="text-[10px] font-mono text-red-100 font-bold uppercase tracking-widest drop-shadow">
+                AUFENTHG §20 & LEY 14
+              </span>
+            </div>
+
+            <div className="text-[10px] font-mono font-bold text-white text-center z-10 border-t border-red-400/30 pt-1.5">
+              TRANSICIÓN ACTIVA A EU BLUE CARD
+            </div>
+          </div>
+
+          {/* Tile 2.2: REPUTATION */}
+          <div className="bg-[#121927]/90 backdrop-blur-md rounded-xl p-5 border border-slate-700/80 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-slate-500 transition">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-300">
+                REPUTATION
+              </span>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                VERIFICADO
+              </span>
+            </div>
+
+            {/* Silver Reputation Badge */}
+            <div className="flex flex-col items-center justify-center my-2">
+              <div className="w-12 h-12 rounded-lg bg-slate-800/80 border border-slate-600 flex items-center justify-center shadow-lg mb-1.5">
+                <Award className="h-6 w-6 text-slate-200" />
+              </div>
+              <h4 className="text-sm font-black text-white uppercase tracking-wider">
+                RESPECTABLE
+              </h4>
+              <span className="text-[10px] font-mono text-slate-400">
+                100% Postulación Asistida por Ti
+              </span>
+            </div>
+
+            <div className="text-[10px] font-mono text-slate-400 text-center border-t border-slate-800/80 pt-1.5">
+              CERO BOTS • AUDITORÍA LIMPIA
+            </div>
+          </div>
+        </div>
+
+        {/* =========================================================
+         * COLUMN 3 (RIGHT, 5 COLS): FULL-HEIGHT STATISTICS CARD
+         * ========================================================= */}
+        <div className="md:col-span-5 bg-[#121927]/90 backdrop-blur-md rounded-xl p-6 border border-slate-700/80 shadow-2xl flex flex-col justify-between space-y-4">
+          {/* Header */}
+          <div className="border-b border-slate-800 pb-2">
+            <h3 className="text-sm font-mono font-black text-white uppercase tracking-wider">
+              STATISTICS
+            </h3>
+            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+              ACCOUNT BASED STATISTICS
+            </span>
+          </div>
+
+          {/* Row 1: Big 3 Numbers */}
+          <div className="grid grid-cols-3 gap-2 border-b border-slate-800 pb-4">
+            <div>
+              <div className="text-[10px] font-mono text-slate-400">Targets Found</div>
+              <div className="text-2xl font-black text-white font-sans">{offers.length}</div>
+            </div>
+
+            <div>
+              <div className="text-[10px] font-mono text-slate-400">Centros I+D</div>
+              <div className="text-2xl font-black text-white font-sans">{companies.length}</div>
+            </div>
+
+            <div>
+              <div className="text-[10px] font-mono text-slate-400">Alta Afinidad</div>
+              <div className="text-2xl font-black text-emerald-400 font-sans">{highMatchOffers.length}</div>
+            </div>
+          </div>
+
+          {/* Row 2: Most Played Specialists (Rounds) */}
+          <div className="space-y-1.5 border-b border-slate-800 pb-4">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+              Most Targeted Sectors (Dossiers)
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 font-mono text-xs">
+              <div className="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <div className="text-[10px] text-slate-400 truncate">I+D+i Euskadi</div>
+                <div className="font-bold text-white text-sm">6</div>
+              </div>
+
+              <div className="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <div className="text-[10px] text-slate-400 truncate">Consultoría</div>
+                <div className="font-bold text-white text-sm">5</div>
+              </div>
+
+              <div className="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <div className="text-[10px] text-slate-400 truncate">Gobernanza</div>
+                <div className="font-bold text-white text-sm">7</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: Ranked, Unranked & Quick Match (Operator Cards) */}
+          <div className="space-y-2">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+              Specialist Profile Configurations
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {/* Operator 1: Geofísica & Modelación */}
+              <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center space-x-3">
+                <img 
+                  src={operatorIana} 
+                  alt="Iana Spec" 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-600 shrink-0" 
+                />
+                <div className="overflow-hidden">
+                  <div className="text-xs font-bold text-white truncate">GEOFÍSICA</div>
+                  <div className="text-[10px] font-mono text-slate-400">U. de Chile</div>
+                  <div className="text-[10px] font-mono text-emerald-400 font-bold">73.8% Win Rate</div>
+                </div>
+              </div>
+
+              {/* Operator 2: Biofísica & CAU Kiel */}
+              <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center space-x-3">
+                <img 
+                  src={operatorEla} 
+                  alt="Ela Spec" 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-600 shrink-0" 
+                />
+                <div className="overflow-hidden">
+                  <div className="text-xs font-bold text-white truncate">BIOFÍSICA</div>
+                  <div className="text-[10px] font-mono text-slate-400">CAU Kiel / Poznań</div>
+                  <div className="text-[10px] font-mono text-sky-400 font-bold">81.0% Win Rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* -------------------------------------------------------------
+       * TACTICAL MODE LAUNCH CARDS (RAINBOW SIX SIEGE STYLE)
+       * ------------------------------------------------------------- */}
+      <div className="relative z-10 mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <button
+          onClick={onLaunchRadar}
+          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-red-500 transition text-left flex items-center justify-between group cursor-pointer"
+        >
+          <div>
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-red-400 transition">
+              PLAY RANKED // ALEMANIA
+            </div>
+            <div className="text-[10px] text-slate-400 font-mono">
+              Euraxess • §20 AufenthG
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-red-400 group-hover:translate-x-1 transition" />
+        </button>
+
+        <button
+          onClick={() => onSelectStation('market_radar', 'companies')}
+          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer"
+        >
+          <div>
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-emerald-400 transition">
+              PLAY STANDARD // EUSKADI
+            </div>
+            <div className="text-[10px] text-slate-400 font-mono">
+              BC3 • Tecnalia • IDOM
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
+        </button>
+
+        <button
+          onClick={() => onSelectStation('agent_dossier', 'cvs')}
+          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left flex items-center justify-between group cursor-pointer"
+        >
+          <div>
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-amber-400 transition">
+              OPERATORS // ARMERÍA CV
+            </div>
+            <div className="text-[10px] text-slate-400 font-mono">
+              ES • EN • Lebenslauf
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition" />
+        </button>
+
+        <button
+          onClick={() => onSelectStation('mission_control', 'applications')}
+          className="p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left flex items-center justify-between group cursor-pointer"
+        >
+          <div>
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-sky-400 transition">
+              LOCKER // MISIÓN KANBAN
+            </div>
+            <div className="text-[10px] text-slate-400 font-mono">
+              {activeApplications.length} Postulaciones en Curso
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition" />
+        </button>
       </div>
     </div>
   );

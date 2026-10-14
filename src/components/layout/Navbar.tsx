@@ -3,9 +3,6 @@ import {
   Crosshair, 
   HelpCircle, 
   ShieldCheck, 
-  Radio, 
-  UserCheck, 
-  Send, 
   Compass,
   Sun,
   Zap,
@@ -55,54 +52,61 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Center Tactical Quick Switcher */}
-      <div className="hidden lg:flex items-center space-x-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800/80 text-xs">
-        <button
-          onClick={() => onSelectStation && onSelectStation('dashboard')}
-          className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
-            currentTab === 'dashboard' 
-              ? 'bg-emerald-600 text-white shadow-sm' 
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <Crosshair className="h-3.5 w-3.5" />
-          <span>War Room</span>
-        </button>
-
+      {/* Center Tactical Rainbow Six Siege Navigation Bar */}
+      <div className="hidden lg:flex items-center space-x-6 text-xs uppercase tracking-wider font-mono font-bold">
         <button
           onClick={() => onSelectStation && onSelectStation('market_radar')}
-          className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
             ['market_radar', 'offers', 'sources', 'companies'].includes(currentTab)
-              ? 'bg-emerald-600 text-white shadow-sm' 
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'text-white border-b-2 border-red-600 font-black' 
+              : 'text-slate-400 hover:text-white'
           }`}
         >
-          <Radio className="h-3.5 w-3.5" />
-          <span>Radar</span>
+          <span>PLAY</span>
         </button>
 
         <button
           onClick={() => onSelectStation && onSelectStation('agent_dossier')}
-          className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
             ['agent_dossier', 'profile', 'cvs'].includes(currentTab)
-              ? 'bg-sky-600 text-white shadow-sm' 
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'text-white border-b-2 border-red-600 font-black' 
+              : 'text-slate-400 hover:text-white'
           }`}
         >
-          <UserCheck className="h-3.5 w-3.5" />
-          <span>Dossier</span>
+          <span>OPERATORS</span>
+        </button>
+
+        <button
+          onClick={() => onSelectStation && onSelectStation('dashboard')}
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
+            currentTab === 'dashboard' 
+              ? 'text-white border-b-2 border-red-600 font-black' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <span>CAREER</span>
         </button>
 
         <button
           onClick={() => onSelectStation && onSelectStation('mission_control')}
-          className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
             ['mission_control', 'applications', 'batch_applications', 'intelligence'].includes(currentTab)
-              ? 'bg-amber-600 text-white shadow-sm' 
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'text-white border-b-2 border-red-600 font-black' 
+              : 'text-slate-400 hover:text-white'
           }`}
         >
-          <Send className="h-3.5 w-3.5" />
-          <span>Misiones</span>
+          <span>LOCKER</span>
+        </button>
+
+        <button
+          onClick={() => onSelectStation && onSelectStation('settings')}
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
+            currentTab === 'settings'
+              ? 'text-white border-b-2 border-red-600 font-black' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <span>HQ</span>
         </button>
       </div>
 
