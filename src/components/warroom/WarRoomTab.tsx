@@ -102,9 +102,13 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
          * ========================================================= */}
         <div className="md:col-span-3 space-y-4 flex flex-col justify-between">
           {/* Tile 1.1: CLEARANCE LEVEL */}
-          <div className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl flex flex-col justify-between min-h-[195px] relative overflow-hidden group hover:border-slate-400 transition">
+          <div 
+            onClick={() => onSelectStation('agent_dossier', 'showcase')}
+            className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl flex flex-col justify-between min-h-[195px] relative overflow-hidden group hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.25)] transition cursor-pointer"
+            title="Click para ver el Expediente del Operador"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100">
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100 group-hover:text-sky-300 transition">
                 CLEARANCE LEVEL
               </span>
               <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
@@ -114,7 +118,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
             {/* Silver Laurel Wreath with 50 */}
             <div className="flex flex-col items-center justify-center my-2">
-              <div className="relative flex items-center justify-center">
+              <div className="relative flex items-center justify-center group-hover:scale-105 transition">
                 {/* SVG Tactical Laurel Wreath */}
                 <svg viewBox="0 0 100 100" className="w-20 h-20 text-slate-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
                   <path 
@@ -142,8 +146,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
                 <div className="h-full bg-slate-100 w-full" />
               </div>
-              <div className="text-[11px] font-mono font-bold text-slate-200 text-left">
-                1000 / 1000 XP
+              <div className="text-[11px] font-mono font-bold text-slate-200 flex items-center justify-between">
+                <span>1000 / 1000 XP</span>
+                <span className="text-sky-300 font-mono text-[10px]">VER SKIN »</span>
               </div>
             </div>
           </div>
@@ -190,7 +195,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         <div className="md:col-span-4 space-y-4 flex flex-col justify-between">
           {/* Tile 2.1: MY RANK (Hero Card with Red Angle Fade) */}
           <div 
-            className="rounded-xl p-5 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.35)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group"
+            onClick={() => onSelectStation('agent_dossier', 'showcase')}
+            className="rounded-xl p-5 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.35)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-white hover:scale-[1.01] transition"
+            title="Click para ver el Operador Daniel Santander y sus Atributos"
             style={{
               backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.6) 35%, rgba(10, 14, 22, 0.65) 100%), url('${tacticalOperative}')`,
               backgroundSize: 'cover',
@@ -208,7 +215,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
             {/* Tactical Shield Emblem & Rank Title */}
             <div className="flex flex-col items-center justify-center my-2 z-10">
-              <div className="w-14 h-14 rounded-xl bg-black/60 border-2 border-white flex items-center justify-center shadow-2xl mb-1.5 group-hover:scale-105 transition">
+              <div className="w-14 h-14 rounded-xl bg-black/60 border-2 border-white flex items-center justify-center shadow-2xl mb-1.5 group-hover:scale-110 transition">
                 {/* Military Rank Chevron Shield */}
                 <svg viewBox="0 0 24 24" className="w-8 h-8 text-white drop-shadow">
                   <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="2.5" />
@@ -225,15 +232,20 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               </span>
             </div>
 
-            <div className="text-[11px] font-mono font-black text-white text-center z-10 border-t border-red-300/40 pt-1.5 drop-shadow">
-              TRANSICIÓN ACTIVA A EU BLUE CARD
+            <div className="text-[11px] font-mono font-black text-white text-center z-10 border-t border-red-300/40 pt-1.5 drop-shadow flex items-center justify-between">
+              <span>TRANSICIÓN ACTIVA A EU BLUE CARD</span>
+              <span>EXPEDIENTE »</span>
             </div>
           </div>
 
           {/* Tile 2.2: REPUTATION */}
-          <div className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-slate-400 transition">
+          <div 
+            onClick={() => onSelectStation('settings')}
+            className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)] transition cursor-pointer"
+            title="Click para ver Cuartel General & Auditoría de Fuentes"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100">
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100 group-hover:text-emerald-300 transition">
                 REPUTATION
               </span>
               <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
@@ -243,7 +255,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
             {/* Silver Reputation Badge */}
             <div className="flex flex-col items-center justify-center my-2">
-              <div className="w-12 h-12 rounded-lg bg-slate-800 border-2 border-slate-400 flex items-center justify-center shadow-lg mb-1.5">
+              <div className="w-12 h-12 rounded-lg bg-slate-800 border-2 border-slate-400 flex items-center justify-center shadow-lg mb-1.5 group-hover:scale-105 transition">
                 <Award className="h-7 w-7 text-white" />
               </div>
               <h4 className="text-base font-black text-white uppercase tracking-wider">
@@ -254,8 +266,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               </span>
             </div>
 
-            <div className="text-[11px] font-mono font-bold text-slate-200 text-center border-t border-slate-700 pt-1.5">
-              CERO BOTS • AUDITORÍA LIMPIA
+            <div className="text-[11px] font-mono font-bold text-slate-200 text-center border-t border-slate-700 pt-1.5 flex items-center justify-between">
+              <span>CERO BOTS • AUDITORÍA LIMPIA</span>
+              <span className="text-emerald-400 font-mono text-[10px]">HQ »</span>
             </div>
           </div>
         </div>
@@ -276,20 +289,32 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
           {/* Row 1: Big 3 Numbers */}
           <div className="grid grid-cols-3 gap-2 border-b border-slate-700 pb-4">
-            <div>
-              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">Targets Found</div>
+            <button 
+              onClick={() => onSelectStation('market_radar', 'offers', 'ALL')}
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-red-500 transition text-left cursor-pointer group"
+              title="Click para ver todas las 350+ vacantes en el Radar"
+            >
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider group-hover:text-red-400 transition">Targets Found</div>
               <div className="text-2xl font-black text-white font-sans drop-shadow">{offers.length}</div>
-            </div>
+            </button>
 
-            <div>
-              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">Centros I+D</div>
+            <button 
+              onClick={() => onSelectStation('market_radar', 'companies')}
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-emerald-500 transition text-left cursor-pointer group"
+              title="Click para ver los Centros I+D e Institutos"
+            >
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider group-hover:text-emerald-400 transition">Centros I+D</div>
               <div className="text-2xl font-black text-white font-sans drop-shadow">{companies.length}</div>
-            </div>
+            </button>
 
-            <div>
-              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">Alta Afinidad</div>
+            <button 
+              onClick={() => onSelectStation('market_radar', 'offers', 'HIGH_MATCH')}
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-emerald-400 transition text-left cursor-pointer group"
+              title="Click para ver vacantes con >70% de afinidad"
+            >
+              <div className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider group-hover:text-emerald-300 transition">Alta Afinidad</div>
               <div className="text-2xl font-black text-emerald-400 font-sans drop-shadow">{highMatchOffers.length}</div>
-            </div>
+            </button>
           </div>
 
           {/* Row 2: Most Played Specialists (Rounds) */}
@@ -299,20 +324,32 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             </div>
 
             <div className="grid grid-cols-3 gap-2 font-mono text-xs">
-              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700">
-                <div className="text-[11px] text-slate-300 font-medium truncate">I+D+i Euskadi</div>
-                <div className="font-bold text-white text-base">6</div>
-              </div>
+              <button 
+                onClick={() => onSelectStation('market_radar', 'companies', 'BILBAO')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left cursor-pointer group"
+                title="Filtrar por I+D+i Euskadi (BC3, Tecnalia, Neiker)"
+              >
+                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-emerald-300">I+D+i Euskadi</div>
+                <div className="font-bold text-white text-base">6 centros</div>
+              </button>
 
-              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700">
-                <div className="text-[11px] text-slate-300 font-medium truncate">Consultoría</div>
-                <div className="font-bold text-white text-base">5</div>
-              </div>
+              <button 
+                onClick={() => onSelectStation('market_radar', 'companies')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left cursor-pointer group"
+                title="Filtrar por Consultoría Ambiental (IDOM, etc.)"
+              >
+                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-sky-300">Consultoría</div>
+                <div className="font-bold text-white text-base">5 centros</div>
+              </button>
 
-              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700">
-                <div className="text-[11px] text-slate-300 font-medium truncate">Gobernanza</div>
-                <div className="font-bold text-white text-base">7</div>
-              </div>
+              <button 
+                onClick={() => onSelectStation('market_radar', 'sources')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left cursor-pointer group"
+                title="Ver fuentes de Gobernanza y Redes Globales"
+              >
+                <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-amber-300">Gobernanza</div>
+                <div className="font-bold text-white text-base">7 fuentes</div>
+              </button>
             </div>
           </div>
 
@@ -324,32 +361,40 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
             <div className="grid grid-cols-2 gap-3">
               {/* Operator 1: Geofísica & Modelación */}
-              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700 flex items-center space-x-3">
+              <button 
+                onClick={() => onSelectStation('agent_dossier', 'cvs')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition flex items-center space-x-3 text-left cursor-pointer group"
+                title="Click para ver CV de Geofísica & Modelación"
+              >
                 <img 
                   src={operatorIana} 
                   alt="Iana Spec" 
-                  className="w-10 h-10 rounded-full object-cover border border-slate-500 shrink-0" 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-500 group-hover:border-sky-400 shrink-0" 
                 />
                 <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-white truncate drop-shadow">GEOFÍSICA</div>
+                  <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-sky-300">GEOFÍSICA</div>
                   <div className="text-[10px] font-mono text-slate-300 font-semibold">U. de Chile</div>
-                  <div className="text-[10px] font-mono text-emerald-400 font-bold">73.8% Win Rate</div>
+                  <div className="text-[10px] font-mono text-emerald-400 font-bold">73.8% Match Rate</div>
                 </div>
-              </div>
+              </button>
 
               {/* Operator 2: Biofísica & CAU Kiel */}
-              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700 flex items-center space-x-3">
+              <button 
+                onClick={() => onSelectStation('agent_dossier', 'cvs')}
+                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition flex items-center space-x-3 text-left cursor-pointer group"
+                title="Click para ver CV y Lebenslauf de CAU Kiel"
+              >
                 <img 
                   src={operatorEla} 
                   alt="Ela Spec" 
-                  className="w-10 h-10 rounded-full object-cover border border-slate-500 shrink-0" 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-500 group-hover:border-emerald-400 shrink-0" 
                 />
                 <div className="overflow-hidden">
-                  <div className="text-xs font-bold text-white truncate drop-shadow">BIOFÍSICA</div>
+                  <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-emerald-300">BIOFÍSICA</div>
                   <div className="text-[10px] font-mono text-slate-300 font-semibold">CAU Kiel / Poznań</div>
-                  <div className="text-[10px] font-mono text-sky-400 font-bold">81.0% Win Rate</div>
+                  <div className="text-[10px] font-mono text-sky-400 font-bold">81.0% Match Rate</div>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>

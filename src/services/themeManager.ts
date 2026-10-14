@@ -6,12 +6,17 @@ export const getStoredTheme = (): AppTheme => {
   try {
     localStorage.removeItem('job_search_os_theme');
     localStorage.removeItem('job_search_os_theme_v2');
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'luminous') {
+      // Migrate luminous to cyber so the user gets the true full-width tactical dark UI
+      localStorage.setItem(THEME_KEY, 'cyber');
+      return 'cyber';
+    }
+    if (saved === 'cyber' || saved === 'dark') {
+      return saved;
+    }
   } catch {
     // ignore
-  }
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved === 'cyber' || saved === 'luminous' || saved === 'dark') {
-    return saved;
   }
   return 'cyber'; // Default to the AAA Tactical High-Contrast Console
 };

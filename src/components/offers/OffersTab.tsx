@@ -27,6 +27,7 @@ import { ProtocolModal } from './ProtocolModal';
 
 import { checkUrlLiveness } from '../../services/liveWebScraper';
 import { ShieldCheck } from 'lucide-react';
+import { TacticalSonarRadarHUD, type TacticalSector } from '../radar/TacticalSonarRadarHUD';
 
 interface OffersTabProps {
   initialLocationFilter?: string;
@@ -154,13 +155,34 @@ export const OffersTab: React.FC<OffersTabProps> = ({
     setTimeout(() => setSearchResultSummary(null), 7000);
   };
 
-  const [selectedLocationFilter, setSelectedLocationFilter] = useState<string>(initialLocationFilter);
+  const [selectedLocationFilter, setSelectedLocationFilter] = useState<string>(initialLocationFilter === 'HIGH_MATCH' ? 'ALL' : initialLocationFilter);
 
   useEffect(() => {
-    if (initialLocationFilter) {
+    if (initialLocationFilter === 'HIGH_MATCH') {
+      setMinScoreFilter(70);
+      setSelectedLocationFilter('ALL');
+    } else if (initialLocationFilter) {
       setSelectedLocationFilter(initialLocationFilter);
+      setMinScoreFilter(0);
     }
   }, [initialLocationFilter]);
+
+  const activeRadarSector: TacticalSector = 
+    minScoreFilter >= 70 ? 'HIGH_MATCH' :
+    selectedLocationFilter === 'GERMANY' ? 'GERMANY' :
+    selectedLocationFilter === 'BILBAO' ? 'BILBAO' :
+    selectedLocationFilter === 'EUSKADI' ? 'EUSKADI' :
+    selectedLocationFilter === 'REMOTE_ONLY' ? 'REMOTE_ONLY' : 'ALL';
+
+  const handleSelectRadarSector = (sector: TacticalSector) => {
+    if (sector === 'HIGH_MATCH') {
+      setMinScoreFilter(70);
+      setSelectedLocationFilter('ALL');
+    } else {
+      setMinScoreFilter(0);
+      setSelectedLocationFilter(sector);
+    }
+  };
 
   const [includeRemote, setIncludeRemote] = useState<boolean>(true);
 
@@ -347,15 +369,23 @@ export const OffersTab: React.FC<OffersTabProps> = ({
 
   return (
     <div className="space-y-6 text-slate-100">
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between glass-panel p-6 rounded-2xl border border-slate-800 bg-[#131c2e] shadow-lg gap-4">
+      {/* 360° Tactical Holographic Sonar Radar Sweep HUD */}
+      <TacticalSonarRadarHUD
+        activeSector={activeRadarSector}
+        onSelectSector={handleSelectRadarSector}
+        offersCount={offers.length}
+        highMatchCount={offers.filter(o => o.matchScore?.totalScore >= 70).length}
+      />
+
+      {/* Action Controls & Real-Time Sync Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-slate-700/80 bg-[#0c1220]/95 shadow-xl gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2.5 tracking-tight">
-            <Sparkles className="h-6 w-6 text-emerald-400" />
-            <span>Radar & Buscador de Ofertas de Empleo</span>
+          <h2 className="text-sm font-mono font-black text-white flex items-center gap-2 uppercase tracking-wide">
+            <Sparkles className="h-4 w-4 text-red-500" />
+            <span>CONSOLA DE BARRIDO & INTERCEPCIÓN EN VIVO</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Filtra y ejecuta el Pipeline Maestro de 5 Pasos en las vacantes que hayas añadido.
+          <p className="text-[11px] text-slate-300 font-sans mt-0.5">
+            Fase 1: Reconocimiento manual sin bots invasivos • Telemetría §20 AufenthG y Ley 14.
           </p>
         </div>
 
@@ -370,37 +400,37 @@ export const OffersTab: React.FC<OffersTabProps> = ({
               setTimeout(() => setSearchResultSummary(null), 8000);
             }}
             disabled={isSearchingAi}
-            className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow-md transition flex items-center space-x-1.5 disabled:opacity-50"
+            className="px-3.5 py-2 bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs rounded-xl shadow transition flex items-center space-x-1.5 disabled:opacity-50 cursor-pointer"
           >
             <Cpu className={`h-4 w-4 text-white ${isSearchingAi ? 'animate-spin' : ''}`} />
-            <span>{isSearchingAi ? 'Rastreando Portales...' : '⚡ Rastrear Todos los Portales en Vivo'}</span>
+            <span>{isSearchingAi ? 'Rastreando Portales...' : '⚡ Rastrear Portales en Vivo'}</span>
           </button>
 
           <button
             onClick={handlePurgeDeadLinks}
             disabled={isPurgingLinks}
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs rounded-xl border border-slate-700 shadow-md transition flex items-center space-x-1.5 disabled:opacity-50"
-            title="Comprueba cada URL (solo en modo desarrollo) de las vacantes e elimina automáticamente las que retornen error 404/caducadas"
+            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs rounded-xl border border-slate-700 shadow transition flex items-center space-x-1.5 disabled:opacity-50 cursor-pointer"
+            title="Comprueba cada URL de las vacantes e elimina automáticamente las que retornen error 404/caducadas"
           >
             <ShieldCheck className={`h-4 w-4 text-emerald-400 ${isPurgingLinks ? 'animate-spin' : ''}`} />
-            <span>{isPurgingLinks ? 'Verificando URLs...' : '🛡️ Depurar Enlaces Caducados'}</span>
+            <span>{isPurgingLinks ? 'Verificando URLs...' : '🛡️ Depurar Caducados'}</span>
           </button>
 
           <button
             onClick={() => setIsProtocolModalOpen(true)}
-            className="px-4 py-2.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 font-semibold text-xs rounded-xl border border-emerald-500/40 shadow-md transition flex items-center space-x-1.5"
-            title="Ver el Protocolo Maestro de Búsqueda Amplia y Filtrado de Alta Precisión"
+            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs rounded-xl border border-slate-700 shadow transition flex items-center space-x-1.5 cursor-pointer"
+            title="Ver el Protocolo Maestro de Búsqueda y Filtrado Táctico"
           >
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>🛡️ Protocolo Búsqueda</span>
+            <ShieldCheck className="h-4 w-4 text-sky-400" />
+            <span>Protocolo</span>
           </button>
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs rounded-xl border border-slate-700 shadow-md transition flex items-center space-x-1.5"
+            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs rounded-xl border border-slate-700 shadow transition flex items-center space-x-1.5 cursor-pointer"
           >
             <PlusCircle className="h-4 w-4 text-slate-400" />
-            <span>Agregar Oferta Manual</span>
+            <span>+ Manual</span>
           </button>
         </div>
       </div>
@@ -754,58 +784,85 @@ export const OffersTab: React.FC<OffersTabProps> = ({
         ) : (
           filteredOffers.map((offer) => {
             const score = offer.matchScore.totalScore;
-            const scoreColor = score >= 80 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
-                               score >= 60 ? 'text-amber-400 bg-amber-500/10 border-amber-500/30' :
-                               'text-slate-400 bg-slate-800/40 border-slate-700';
+            const scoreColor = score >= 80 ? 'text-emerald-400 bg-emerald-950/80 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.2)]' :
+                               score >= 60 ? 'text-amber-400 bg-amber-950/80 border-amber-500/60' :
+                               'text-slate-300 bg-slate-900 border-slate-700';
+
+            const isGermanyOffer = (offer.location || '').toLowerCase().includes('alemania') || 
+                                   (offer.location || '').toLowerCase().includes('germany') || 
+                                   (offer.location || '').toLowerCase().includes('kiel') ||
+                                   (offer.location || '').toLowerCase().includes('berlin');
 
             return (
               <div
                 key={offer.id}
-                className="glass-card p-6 rounded-2xl border border-slate-800 bg-[#131c2e] hover:border-slate-700 transition space-y-4 shadow-md text-slate-100"
+                className="p-5 rounded-2xl border border-slate-700/80 bg-[#0c1220]/95 hover:border-slate-500 transition space-y-3.5 shadow-xl text-slate-100 relative overflow-hidden group"
               >
+                {/* Tactical Intercept Signal Header */}
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 text-[11px] font-mono">
+                  <div className="flex items-center space-x-2">
+                    <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="font-black text-red-400 uppercase tracking-wider">
+                      SIGNAL INTERCEPTED // TARGET-{offer.id.slice(-6).toUpperCase()}
+                    </span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                      FASE 1: VERIFICADA
+                    </span>
+                  </div>
+
+                  <div className="text-slate-400 font-medium">
+                    PORTAL: <strong className="text-white">{offer.sourceName}</strong>
+                  </div>
+                </div>
+
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center space-x-2 flex-wrap">
-                      <span className="text-lg">🇪🇸</span>
-                      <h3 className="font-bold text-lg text-white">{offer.title}</h3>
+                      <span className="text-base">{isGermanyOffer ? '🇩🇪' : offer.isBilbaoLocation ? '🇪🇸' : '🌍'}</span>
+                      <h3 className="font-black text-lg text-white font-sans tracking-tight drop-shadow">
+                        {offer.title}
+                      </h3>
                       {offer.isBilbaoLocation && (
-                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                          📍 Bilbao / Euskadi
+                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
+                          📍 BILBAO // LEY 14 UGE
+                        </span>
+                      )}
+                      {isGermanyOffer && (
+                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-600">
+                          🇩🇪 DACH // §20 AUFENTHG
                         </span>
                       )}
                       {offer.isRemote && (
-                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">
-                          🌐 Remoto
+                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600">
+                          🌐 100% REMOTO UE
                         </span>
                       )}
                     </div>
 
-                    <div className="text-xs text-slate-400 font-medium flex flex-wrap items-center gap-3 pt-0.5">
-                      <span className="flex items-center gap-1 text-slate-200 font-semibold">
+                    <div className="text-xs text-slate-300 font-medium flex flex-wrap items-center gap-3 pt-0.5">
+                      <span className="flex items-center gap-1 text-white font-bold">
                         <Building2 className="h-4 w-4 text-emerald-400" />
                         {offer.company}
                       </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4 text-slate-500" />
+                      <span className="text-slate-600">•</span>
+                      <span className="flex items-center gap-1 text-slate-200">
+                        <MapPin className="h-4 w-4 text-red-400" />
                         {offer.location}
                       </span>
-                      <span>•</span>
-                      <span>Fuente: <strong className="text-slate-300">{offer.sourceName}</strong></span>
                     </div>
                   </div>
 
-                  {/* Score & Action Controls */}
+                  {/* Tactical Score & Action Controls */}
                   <div className="flex items-center space-x-3 shrink-0">
-                    <div className={`px-4 py-2.5 rounded-xl border text-center min-w-[80px] shadow-sm ${scoreColor}`}>
-                      <div className="font-bold text-xl font-mono leading-none">{score}%</div>
-                      <div className="text-[9px] uppercase font-semibold tracking-wider mt-1">Match</div>
+                    <div className={`px-4 py-2 rounded-xl border text-center min-w-[85px] shadow ${scoreColor}`}>
+                      <div className="font-black text-2xl font-mono leading-none">{score}%</div>
+                      <div className="text-[9px] uppercase font-mono font-bold tracking-wider mt-1">AFINIDAD</div>
                     </div>
 
                     <div className="flex flex-col space-y-1.5">
                       <button
                         onClick={() => setSelectedOfferForPipeline(offer)}
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-1.5"
+                        className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-mono font-black text-xs rounded-xl shadow-lg hover:shadow-red-500/30 transition flex items-center justify-center space-x-1.5 cursor-pointer"
                       >
                         <Sparkles className="h-3.5 w-3.5 text-white" />
                         <span>⚡ Preparar Candidatura (Fase 3)</span>
@@ -814,7 +871,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => setSelectedOfferForRationale(offer)}
-                          className="flex-1 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg border border-slate-700 transition"
+                          className="flex-1 px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-mono font-bold rounded-lg border border-slate-700 transition cursor-pointer"
                         >
                           Justificación
                         </button>
@@ -822,10 +879,11 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                         {offer.url && (
                           <button
                             onClick={() => setSelectedOfferForPreview(offer)}
-                            className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg border border-slate-700 transition"
+                            className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-sky-300 text-xs font-mono font-bold rounded-lg border border-slate-700 transition cursor-pointer flex items-center gap-1"
                             title="Ver en Web Real"
                           >
-                            <Eye className="h-3.5 w-3.5 text-slate-300" />
+                            <Eye className="h-3.5 w-3.5 text-sky-400" />
+                            <span>Web</span>
                           </button>
                         )}
 
@@ -835,7 +893,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                               handleDeleteOffer(offer.id);
                             }
                           }}
-                          className="p-1 bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 rounded-lg border border-slate-700 transition"
+                          className="p-1 bg-slate-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 rounded-lg border border-slate-700 transition cursor-pointer"
                           title="Eliminar vacante"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -845,14 +903,14 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+                <p className="text-xs text-slate-200 leading-relaxed border-t border-slate-800 pt-3 font-sans">
                   {offer.rawDescription}
                 </p>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-slate-300">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-slate-300 font-mono">
                   <div className="flex flex-wrap gap-1.5">
                     {offer.requirements.map((req, i) => (
-                      <span key={i} className="px-2.5 py-1 rounded-lg bg-slate-900 text-slate-300 border border-slate-800 text-[11px]">
+                      <span key={i} className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800 text-[10px]">
                         {req}
                       </span>
                     ))}
