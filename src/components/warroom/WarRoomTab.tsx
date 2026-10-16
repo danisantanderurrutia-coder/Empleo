@@ -508,23 +508,23 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           {/* FASE 2 */}
           <div 
             onClick={() => onSelectStation('agent_dossier', 'gunsmith')}
-            className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-amber-500 transition cursor-pointer group flex flex-col justify-between shadow-md"
+            className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 hover:border-sky-500 transition cursor-pointer group flex flex-col justify-between shadow-md"
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono font-black text-white uppercase tracking-wider group-hover:text-amber-400 transition">
-                  FASE 2: EL ARMERO // GUNSMITH
+                <span className="text-xs font-mono font-black text-white uppercase tracking-wider group-hover:text-sky-400 transition">
+                  FASE 2: ARQUITECTURA DE CV
                 </span>
-                <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">
+                <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">
                   ALIANZA PORTAFOLIO
                 </span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed font-sans mb-3">
-                Forja de CVs modulares de 1 página: Chasis por teatro (Euskadi / Alemania / UE) y attachments de evidencia de tu Portafolio.
+                Calibración de CV modular en 1 página: selección de perfil de especialización y acoplamiento de evidencias STAR auditadas del Portafolio.
               </p>
             </div>
-            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-amber-400 font-bold flex items-center justify-between">
-              <span>FORJAR LOADOUT CON EVIDENCIA</span>
+            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-sky-400 font-bold flex items-center justify-between">
+              <span>CONFIGURAR CV & EVIDENCIAS</span>
               <span className="group-hover:translate-x-1 transition">»</span>
             </div>
           </div>

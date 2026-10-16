@@ -9,9 +9,7 @@ import {
   Printer,
   ShieldCheck,
   CheckCircle2,
-  FileText,
-  Crosshair,
-  Zap
+  FileText
 } from 'lucide-react';
 import { MasterProfileTab } from '../profile/MasterProfileTab';
 import { CVManagementTab } from '../cvs/CVManagementTab';
@@ -68,14 +66,14 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
-                OPERATORS // DOSSIER DE ESPECIALISTA & ARMERÍA
+                PERFIL PROFESIONAL // DOSSIER & ARQUITECTURA DE CV
               </h1>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-extrabold hidden sm:inline-block">
-                FASE 2 ACTIVA
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-extrabold hidden sm:inline-block">
+                PERFIL ACTIVO
               </span>
             </div>
             <p className="text-[11px] text-slate-300 font-sans">
-              Operador Daniel Santander: Doble M.Sc. CAU Kiel • Geofísica U. de Chile • Armería Curricular.
+              Daniel Santander: Doble M.Sc. CAU Kiel • Geofísica U. de Chile • Calibración Curricular Modular.
             </p>
           </div>
         </div>
@@ -83,15 +81,15 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         {/* 3-Stage Pipeline Indicator */}
         <div className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800">
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            1. RECONOCIMIENTO & FUENTES
+            1. MERCADO & FUENTES
           </span>
           <span className="text-slate-600 font-black">➔</span>
-          <span className="px-2 py-0.5 rounded bg-amber-600/20 text-amber-400 border border-amber-500/40">
-            2. SELECCIÓN & ARMERÍA
+          <span className="px-2 py-0.5 rounded bg-sky-600/20 text-sky-400 border border-sky-500/40">
+            2. ARQUITECTURA DE CV
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            3. PREPARACIÓN & DESPACHO
+            3. GESTIÓN & DESPACHO
           </span>
         </div>
 
@@ -101,24 +99,24 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             onClick={() => setActiveSubTab('showcase')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'showcase'
-                ? 'bg-amber-600 text-white shadow font-black'
+                ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>SHOWCASE</span>
+            <span>RESUMEN</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('gunsmith')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'gunsmith'
-                ? 'bg-amber-600 text-white shadow font-black'
+                ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
-            <Crosshair className="h-3.5 w-3.5 text-amber-400" />
-            <span>EL ARMERO // GUNSMITH</span>
+            <FileText className="h-3.5 w-3.5 text-sky-400" />
+            <span>ESTUDIO DE CV</span>
           </button>
 
           <button
@@ -129,15 +127,15 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 : 'text-slate-300 hover:text-white'
             }`}
           >
-            <Zap className="h-3.5 w-3.5 text-emerald-400" />
-            <span>ÁRBOL DE HABILIDADES</span>
+            <Award className="h-3.5 w-3.5 text-emerald-400" />
+            <span>GRAFO DE COMPETENCIAS</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('profile')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'profile'
-                ? 'bg-amber-600 text-white shadow font-black'
+                ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
@@ -149,7 +147,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             onClick={() => setActiveSubTab('cvs')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'cvs'
-                ? 'bg-amber-600 text-white shadow font-black'
+                ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
