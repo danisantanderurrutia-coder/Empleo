@@ -1,24 +1,17 @@
-export type AppTheme = 'cyber' | 'luminous' | 'dark';
+export type AppTheme = 'arctic' | 'cyber' | 'dark' | 'luminous';
 
-const THEME_KEY = 'job_search_os_theme_v3';
+const THEME_KEY = 'job_search_os_theme_v4';
 
 export const getStoredTheme = (): AppTheme => {
   try {
-    localStorage.removeItem('job_search_os_theme');
-    localStorage.removeItem('job_search_os_theme_v2');
-    const saved = localStorage.getItem(THEME_KEY);
-    if (saved === 'luminous') {
-      // Migrate luminous to cyber so the user gets the true full-width tactical dark UI
-      localStorage.setItem(THEME_KEY, 'cyber');
-      return 'cyber';
-    }
-    if (saved === 'cyber' || saved === 'dark') {
+    const saved = localStorage.getItem(THEME_KEY) as AppTheme | null;
+    if (saved && ['arctic', 'cyber', 'dark', 'luminous'].includes(saved)) {
       return saved;
     }
   } catch {
     // ignore
   }
-  return 'cyber'; // Default to the AAA Tactical High-Contrast Console
+  return 'arctic'; // Default to the Tactical Arctic / Nieve Táctica high-visibility theme
 };
 
 export const saveStoredTheme = (theme: AppTheme): void => {
@@ -28,7 +21,7 @@ export const saveStoredTheme = (theme: AppTheme): void => {
 
 export const applyThemeToDOM = (theme: AppTheme): void => {
   const root = document.documentElement;
-  root.classList.remove('theme-luminous', 'theme-cyber', 'theme-dark');
+  root.classList.remove('theme-luminous', 'theme-cyber', 'theme-dark', 'theme-arctic');
   root.classList.add(`theme-${theme}`);
   root.setAttribute('data-theme', theme);
 };
