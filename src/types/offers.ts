@@ -47,6 +47,7 @@ export interface BaseJobOffer {
   rawDescription: string;
   requirements: string[];
   responsibilities: string[];
+  isFavorite?: boolean;
 }
 
 /**

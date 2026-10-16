@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Sparkles, 
   MapPin, 
@@ -8,9 +8,13 @@ import {
   Eye,
   Trash2,
   Cpu,
-  CheckCircle2,
   Globe2,
-  X
+  Star,
+  ExternalLink,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+  Layers
 } from 'lucide-react';
 import { getStoredOffers, saveStoredOffers } from '../../services/db';
 import type { JobOffer } from '../../types/offers';
@@ -19,15 +23,10 @@ import { AddOfferModal } from './AddOfferModal';
 import { WebsitePreviewModal } from '../common/WebsitePreviewModal';
 import { AntigravityExploreModal } from '../common/AntigravityExploreModal';
 import { runAutonomousGlobalSearch } from '../../services/antigravitySearchEngine';
-import { runDailyPipelineEuskadi } from '../../services/dailyPipelineEngine';
 import { searchRealPublicJobs } from '../../services/publicJobApis';
-
 import { FiveStepPipelineModal } from './FiveStepPipelineModal';
 import { TacticalHelpAndProtocolModal } from '../common/TacticalHelpAndProtocolModal';
-
 import { checkUrlLiveness } from '../../services/liveWebScraper';
-import { ShieldCheck } from 'lucide-react';
-import { TacticalSonarRadarHUD, type TacticalSector } from '../radar/TacticalSonarRadarHUD';
 
 interface OffersTabProps {
   initialLocationFilter?: string;
@@ -39,14 +38,23 @@ export const OffersTab: React.FC<OffersTabProps> = ({
   onStartApplication 
 }) => {
   const [offers, setOffers] = useState<JobOffer[]>(getStoredOffers());
+  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
+
   const [selectedOfferForRationale, setSelectedOfferForRationale] = useState<JobOffer | null>(null);
   const [selectedOfferForPipeline, setSelectedOfferForPipeline] = useState<JobOffer | null>(null);
   const [selectedOfferForPreview, setSelectedOfferForPreview] = useState<JobOffer | null>(null);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isExploreModalOpen, setIsExploreModalOpen] = useState(false);
   const [isProtocolModalOpen, setIsProtocolModalOpen] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [minScoreFilter, setMinScoreFilter] = useState<number>(0);
+  const [selectedLocationFilter, setSelectedLocationFilter] = useState<string>(
+    initialLocationFilter === 'HIGH_MATCH' ? 'ALL' : initialLocationFilter
+  );
+  const [includeRemote, setIncludeRemote] = useState<boolean>(true);
+
   const [isSearchingAi, setIsSearchingAi] = useState(false);
   const [isPurgingLinks, setIsPurgingLinks] = useState(false);
   const [searchResultSummary, setSearchResultSummary] = useState<string | null>(null);
@@ -65,81 +73,46 @@ export const OffersTab: React.FC<OffersTabProps> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (initialLocationFilter === 'HIGH_MATCH') {
+      setMinScoreFilter(70);
+      setSelectedLocationFilter('ALL');
+    } else if (initialLocationFilter) {
+      setSelectedLocationFilter(initialLocationFilter);
+      setMinScoreFilter(0);
+    }
+  }, [initialLocationFilter]);
+
   const refreshOffers = () => {
     setOffers(getStoredOffers());
   };
 
   const handleOfferAdded = (newOffer: JobOffer) => {
-    setOffers([newOffer, ...offers]);
+    const updated = [newOffer, ...offers];
+    setOffers(updated);
+    saveStoredOffers(updated);
+    setSelectedOfferId(newOffer.id);
   };
 
   const handleDeleteOffer = (id: string) => {
     const updated = offers.filter(o => o.id !== id);
     setOffers(updated);
     saveStoredOffers(updated);
+    if (selectedOfferId === id) {
+      setSelectedOfferId(updated[0]?.id || null);
+    }
   };
 
-  const handlePurgeDeadLinks = async () => {
-    setIsPurgingLinks(true);
-    setSearchResultSummary('🛡️ Verificando estado de enlaces y filtrando basuras de navegación...');
-
-    const JUNK_TITLES_SET = new Set([
-      'inicio', 'home', 'registro', 'registrarse', 'register', 'login', 'acceso', 'acceso candidatos',
-      'contacto', 'contact', 'contactar', 'sobre nosotros', 'about us', 'quiénes somos', 'servicios',
-      'aviso legal', 'legal notice', 'privacidad', 'privacy policy', 'cookies', 'mapa web', 'sitemap',
-      'ver más', 'saber más', 'read more', 'click aquí', 'haz clic', 'buscar', 'search', 'menú', 'menu',
-      'volver', 'atrás', 'back', 'top', 'arriba', 'compartir', 'share', 'facebook', 'twitter', 'linkedin',
-      'instagram', 'youtube', 'rss', 'canal rss', 'blog', 'noticias', 'news', 'prensa', 'press', 'empleo',
-      'ofertas', 'ofertas de empleo', 'trabaja con nosotros', 'carreras', 'careers', 'join us', 'únete'
-    ]);
-
-    const UNRELATED_JUNK_WORDS = [
-      'sales manager', 'sales director', 'saas', '401k', 'austin', 'tx', 'texas', 'account executive',
-      'customer success', 'accountant', 'nurse', 'real estate', 'crypto', 'casino', 'barista', 'insurance',
-      'why_remote', '/why_remote', '/wizard', '/about', '/faq', '/pricing', '/benefits', '/guide',
-      'ecuador', 'colombia', 'peru', 'perú', 'chile', 'argentina', 'mexico', 'méxico', 'venezuela',
-      'bolivia', 'paraguay', 'uruguay', 'guatemala', 'honduras', 'el salvador', 'nicaragua', 'costa rica',
-      'panama', 'panamá', 'cuba', 'dominicana', 'haiti', 'haití', 'pakistan', 'pakistán', 'india',
-      'bangladesh', 'nigeria', 'kenya', 'uganda', 'philippines', 'vietnam', 'thailand', 'indonesia',
-      'brazil', 'brasil', 'united states', 'usa', 'eeuu', 'crimen organizado', 'justicia penal', 'unv volunteer'
-    ];
-
-    const currentStored = getStoredOffers();
-    const validOffers: JobOffer[] = [];
-    let deadCount = 0;
-
-    for (const offer of currentStored) {
-      const cleanTitle = (offer.title || '').toLowerCase().trim();
-      const cleanLoc = (offer.location || '').toLowerCase().trim();
-      const cleanUrl = (offer.url || '').toLowerCase();
-      const fullOfferStr = `${cleanTitle} ${cleanLoc} ${cleanUrl}`;
-      const isUnrelatedJunk = UNRELATED_JUNK_WORDS.some(w => fullOfferStr.includes(w));
-
-      const EXPIRED_KEYWORDS = [
-        'plazo finalizado', 'convocatoria cerrada', 'plazo vencido', 'inscripción cerrada',
-        'solicitudes cerradas', 'application closed', 'deadline passed', 'expired'
-      ];
-      const isExpiredByKeyword = EXPIRED_KEYWORDS.some(k => fullOfferStr.includes(k));
-      const isExpiredStatus = offer.verificationStatus === 'Expirada';
-
-      if (isExpiredStatus || isExpiredByKeyword || !offer.url || offer.url.includes('invalid') || offer.url.includes('404') || JUNK_TITLES_SET.has(cleanTitle) || cleanTitle.length < 8 || isUnrelatedJunk) {
-        deadCount++;
-        continue;
+  const handleToggleFavorite = (id: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const updated = offers.map(o => {
+      if (o.id === id) {
+        return { ...o, isFavorite: !o.isFavorite };
       }
-
-      const isAlive = await checkUrlLiveness(offer.url);
-      if (isAlive) {
-        validOffers.push(offer);
-      } else {
-        deadCount++;
-      }
-    }
-
-    setOffers(validOffers);
-    saveStoredOffers(validOffers);
-    setIsPurgingLinks(false);
-    setSearchResultSummary(`🛡️ Depuración completada: Se han purgado ${deadCount} enlaces de navegación basura/muertos y se mantienen ${validOffers.length} vacantes de empleo reales y 100% activas.`);
-    setTimeout(() => setSearchResultSummary(null), 8000);
+      return o;
+    });
+    setOffers(updated);
+    saveStoredOffers(updated);
   };
 
   const handleRunAutonomousSearch = async (query?: string) => {
@@ -155,777 +128,621 @@ export const OffersTab: React.FC<OffersTabProps> = ({
     setTimeout(() => setSearchResultSummary(null), 7000);
   };
 
-  const [selectedLocationFilter, setSelectedLocationFilter] = useState<string>(initialLocationFilter === 'HIGH_MATCH' ? 'ALL' : initialLocationFilter);
+  const handlePurgeDeadLinks = async () => {
+    setIsPurgingLinks(true);
+    setSearchResultSummary('🛡️ Verificando enlaces y depurando vacantes no disponibles...');
 
-  useEffect(() => {
-    if (initialLocationFilter === 'HIGH_MATCH') {
-      setMinScoreFilter(70);
-      setSelectedLocationFilter('ALL');
-    } else if (initialLocationFilter) {
-      setSelectedLocationFilter(initialLocationFilter);
-      setMinScoreFilter(0);
-    }
-  }, [initialLocationFilter]);
+    const currentStored = getStoredOffers();
+    const validOffers: JobOffer[] = [];
+    let deadCount = 0;
 
-  const activeRadarSector: TacticalSector = 
-    minScoreFilter >= 70 ? 'HIGH_MATCH' :
-    selectedLocationFilter === 'GERMANY' ? 'GERMANY' :
-    selectedLocationFilter === 'BILBAO' ? 'BILBAO' :
-    selectedLocationFilter === 'EUSKADI' ? 'EUSKADI' :
-    selectedLocationFilter === 'REMOTE_ONLY' ? 'REMOTE_ONLY' : 'ALL';
-
-  const handleSelectRadarSector = (sector: TacticalSector) => {
-    if (sector === 'HIGH_MATCH') {
-      setMinScoreFilter(70);
-      setSelectedLocationFilter('ALL');
-    } else {
-      setMinScoreFilter(0);
-      setSelectedLocationFilter(sector);
-    }
-  };
-
-  const [includeRemote, setIncludeRemote] = useState<boolean>(true);
-
-  const [matchOperator, setMatchOperator] = useState<'OR' | 'AND'>('OR');
-  const [customKeywords, setCustomKeywords] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('job_search_os_custom_keywords_v1');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [newKeywordInput, setNewKeywordInput] = useState('');
-  const [selectedActiveKeywords, setSelectedActiveKeywords] = useState<string[]>([]);
-
-  // Associated Terms Map (Semantic Expansion)
-  const ASSOCIATED_TERMS_MAP: Record<string, string[]> = {
-    'suelos & biogeoquímica': ['suelo', 'suelos', 'biogeoquímica', 'carbono', 'edafología', 'soil', 'soils', 'land use', 'restauración'],
-    'gobernanza ambiental': ['gobernanza', 'políticas públicas', 'participación', 'facilitación', 'governance', 'policy', 'mediación', 'derechos'],
-    'cambio climático': ['clima', 'cambio climático', 'climate', 'resiliencia', 'adaptación', 'descarbonización', 'transición'],
-    'r & gis / modelación': ['gis', 'r', 'python', 'qgis', 'arcgis', 'earth engine', 'modelación', 'spatial', 'geofísica', 'swat', 'modflow'],
-    'servicios ecosistémicos': ['servicios ecosistémicos', 'ecosystem services', 'capital natural', 'aries', 'biodiversidad'],
-    'facilitación multi-actor': ['facilitación', 'multi-actor', 'diálogo', 'participación comunitaria', 'mediación'],
-    'geofísica': ['geofísica', 'geophysics', 'geofísico', 'geofísica aplicada'],
-    'bilbao / bizkaia': ['bilbao', 'bizkaia', 'euskadi', 'basque'],
-    'soil biogeochemistry': ['soil', 'biogeochemistry', 'carbon', 'soils', 'wetlands'],
-    'climate policy & governance': ['climate', 'policy', 'governance', 'resilience', 'transition'],
-    'spatial modeling (r/gis)': ['spatial', 'modeling', 'gis', 'r', 'qgis', 'python', 'geospatial'],
-    'ecosystem services': ['ecosystem services', 'ecosystem', 'biodiversity'],
-    'geophysics': ['geophysics', 'geophysicist'],
-    'multi-stakeholder facilitation': ['facilitation', 'stakeholder', 'dialogue', 'community']
-  };
-
-  const saveCustomKeywords = (keywords: string[]) => {
-    setCustomKeywords(keywords);
-    try {
-      localStorage.setItem('job_search_os_custom_keywords_v1', JSON.stringify(keywords));
-    } catch (e) {
-      console.warn('Could not save custom keywords:', e);
-    }
-  };
-
-  const handleAddCustomKeyword = () => {
-    const trimmed = newKeywordInput.trim();
-    if (trimmed && !customKeywords.includes(trimmed)) {
-      const updated = [...customKeywords, trimmed];
-      saveCustomKeywords(updated);
-      setSelectedActiveKeywords(prev => [...prev, trimmed]);
-      setNewKeywordInput('');
-    }
-  };
-
-  const handleRemoveCustomKeyword = (kwToRemove: string) => {
-    const updated = customKeywords.filter(k => k !== kwToRemove);
-    saveCustomKeywords(updated);
-    setSelectedActiveKeywords(prev => prev.filter(k => k !== kwToRemove));
-  };
-
-  const toggleSelectKeyword = (kw: string) => {
-    if (selectedActiveKeywords.includes(kw)) {
-      setSelectedActiveKeywords(selectedActiveKeywords.filter(k => k !== kw));
-    } else {
-      setSelectedActiveKeywords([...selectedActiveKeywords, kw]);
-    }
-  };
-
-  // Helper to check if text matches keyword or associated terms
-  const doesOfferMatchKeywordGroup = (offerText: string, kw: string): boolean => {
-    const textLower = offerText.toLowerCase();
-    const kwLower = kw.toLowerCase();
-
-    // Check direct match
-    if (textLower.includes(kwLower)) return true;
-
-    // Check associated terms
-    const associated = ASSOCIATED_TERMS_MAP[kwLower] || kwLower.split(/[\s&/]+/);
-    return associated.some(term => term.length > 2 && textLower.includes(term.toLowerCase()));
-  };
-
-  // Non-Target Countries & Non-Target Continents Blacklist (Ecuador, Pakistan, US local, etc.)
-  const NON_SPAIN_LOCATIONS = [
-    'ecuador', 'colombia', 'peru', 'perú', 'chile', 'argentina', 'mexico', 'méxico', 'venezuela',
-    'bolivia', 'paraguay', 'uruguay', 'guatemala', 'honduras', 'el salvador', 'nicaragua', 'costa rica',
-    'panama', 'panamá', 'cuba', 'dominicana', 'haiti', 'haití', 'pakistan', 'pakistán', 'india',
-    'bangladesh', 'nigeria', 'kenya', 'uganda', 'philippines', 'vietnam', 'thailand', 'indonesia',
-    'brazil', 'brasil', 'united states', 'usa', 'eeuu', 'texas', 'austin', 'new york', 'california',
-    'turkey', 'egypt', 'morocco', 'marruecos', 'tunisia',
-    'senegal', 'ghana', 'ethiopia', 'etiópica', 'somalia', 'sudan', 'syria', 'iraq', 'afghanistan',
-    'afganistán', 'ukraine', 'russia', 'china', 'japan', 'australia'
-  ];
-
-  // Unrelated Disciplines Blacklist (Crime, Penal Justice, UNV Field Volunteers, SaaS Sales)
-  const UNRELATED_DISCIPLINE_KEYWORDS = [
-    'crimen organizado', 'justicia penal', 'derecho penal', 'criminal justice', 'organized crime',
-    'voluntario unv', 'unv volunteer', 'sales manager', 'sales director', 'saas', '401k',
-    'account executive', 'customer success', 'nurse', 'enfermero', 'enfermera', 'barista', 'casino'
-  ];
-
-  // Strict Location & Logic (OR / AND) Filtering
-  const filteredOffers = offers.filter(offer => {
-    const locLower = (offer.location || '').toLowerCase();
-    const titleLower = (offer.title || '').toLowerCase();
-    const isRemoteOffer = offer.isRemote || locLower.includes('remoto') || locLower.includes('remote');
-    const offerFullText = `${offer.title} ${offer.company} ${offer.location} ${offer.rawDescription} ${offer.requirements.join(' ')}`.toLowerCase();
-
-    // 0. Discard Generic Landing Page URLs (e.g. /job-offers/, /careers/, /empleo/, /jobs/)
-    const GENERIC_LANDING_REGEX = /\/(job-offers|job_offers|careers|jobs|vacancies|trabaja-con-nosotros|work-with-us|join-us|unete-a-idom)\/?$/i;
-    if (GENERIC_LANDING_REGEX.test(offer.url || '')) {
-      return false; // Discard generic portal landing pages automatically!
-    }
-
-    // 1. Strict Unrelated Discipline Discard (e.g. Crimen Organizado, Justicia Penal, UNV Volunteer)
-    const isUnrelatedDiscipline = UNRELATED_DISCIPLINE_KEYWORDS.some(k => offerFullText.includes(k));
-    if (isUnrelatedDiscipline) {
-      return false; // Discard completely
-    }
-
-    // 2. Strict Foreign Country Discard (e.g. Ecuador, Pakistan, USA)
-    const isForeignLocation = NON_SPAIN_LOCATIONS.some(ctry => locLower.includes(ctry) || titleLower.includes(ctry));
-    if (isForeignLocation) {
-      return false; // Discard any non-Spain location completely
-    }
-
-    // 3. Strict Selected Location Enforcement
-    let matchesLocation = true;
-    if (selectedLocationFilter === 'GERMANY') {
-      const isGermanyLoc = locLower.includes('alemania') || locLower.includes('germany') || locLower.includes('deutschland') || locLower.includes('berlin') || locLower.includes('munich') || locLower.includes('münchen') || locLower.includes('kiel') || locLower.includes('hamburg') || locLower.includes('frankfurt') || locLower.includes('cologne') || locLower.includes('köln') || locLower.includes('euraxess') || (offer.sourceName || '').toLowerCase().includes('euraxess');
-      matchesLocation = isGermanyLoc || isRemoteOffer;
-    } else if (selectedLocationFilter === 'BILBAO') {
-      const isBilbaoLoc = locLower.includes('bilbao') || locLower.includes('bizkaia') || locLower.includes('erandio') || locLower.includes('leioa') || locLower.includes('barakaldo') || locLower.includes('zamudio') || locLower.includes('getxo');
-      matchesLocation = isBilbaoLoc || (includeRemote && isRemoteOffer && !isForeignLocation);
-    } else if (selectedLocationFilter === 'DONOSTIA') {
-      const isDonostiaLoc = locLower.includes('donostia') || locLower.includes('san sebastián') || locLower.includes('san sebastian') || locLower.includes('gipuzkoa');
-      matchesLocation = isDonostiaLoc || (includeRemote && isRemoteOffer && !isForeignLocation);
-    } else if (selectedLocationFilter === 'EUSKADI') {
-      const isEuskadiLoc = locLower.includes('bilbao') || locLower.includes('bizkaia') || locLower.includes('donostia') || locLower.includes('vitoria') || locLower.includes('gasteiz') || locLower.includes('euskadi') || locLower.includes('país vasco') || locLower.includes('basque');
-      matchesLocation = isEuskadiLoc || (includeRemote && isRemoteOffer && !isForeignLocation);
-    } else if (selectedLocationFilter === 'ESPAÑA') {
-      const isSpainLoc = locLower.includes('españa') || locLower.includes('spain') || locLower.includes('madrid') || locLower.includes('barcelona') || locLower.includes('valencia') || locLower.includes('sevilla') || locLower.includes('bilbao') || locLower.includes('euskadi');
-      matchesLocation = isSpainLoc || (includeRemote && isRemoteOffer && !isForeignLocation);
-    } else if (selectedLocationFilter === 'REMOTE_ONLY') {
-      matchesLocation = isRemoteOffer && !isForeignLocation;
-    }
-
-    // Text search bar query filter
-    const matchesSearchQuery = searchQuery === '' || offerFullText.includes(searchQuery.toLowerCase());
-
-    // Keywords OR / AND Logic Filter
-    let matchesKeywordsLogic = true;
-    if (selectedActiveKeywords.length > 0) {
-      if (matchOperator === 'OR') {
-        matchesKeywordsLogic = selectedActiveKeywords.some(kw => doesOfferMatchKeywordGroup(offerFullText, kw));
+    for (const offer of currentStored) {
+      if (!offer.url || offer.url.includes('invalid') || offer.url.includes('404')) {
+        deadCount++;
+        continue;
+      }
+      const isAlive = await checkUrlLiveness(offer.url);
+      if (isAlive) {
+        validOffers.push(offer);
       } else {
-        // AND mode: offer must match ALL selected keyword groups
-        matchesKeywordsLogic = selectedActiveKeywords.every(kw => doesOfferMatchKeywordGroup(offerFullText, kw));
+        deadCount++;
       }
     }
 
-    const matchesScore = offer.matchScore.totalScore >= minScoreFilter;
+    setOffers(validOffers);
+    saveStoredOffers(validOffers);
+    setIsPurgingLinks(false);
+    setSearchResultSummary(`🛡️ Depuración completada: ${deadCount} enlaces descartados, ${validOffers.length} vacantes vigentes confirmadas.`);
+    setTimeout(() => setSearchResultSummary(null), 8000);
+  };
 
-    return matchesLocation && matchesSearchQuery && matchesKeywordsLogic && matchesScore;
-  });
+  // Filtered offers computation
+  const filteredOffers = useMemo(() => {
+    return offers.filter(offer => {
+      const locLower = (offer.location || '').toLowerCase();
+      const titleLower = (offer.title || '').toLowerCase();
+      const companyLower = (offer.company || '').toLowerCase();
+      const isRemoteOffer = offer.isRemote || locLower.includes('remoto') || locLower.includes('remote');
 
-  // Profile-based Smart Keywords Extractor (ES 🇪🇸 & EN 🇬🇧)
-  const spanishProfileKeywords = [
-    'Suelos & Biogeoquímica',
-    'Gobernanza Ambiental',
-    'Cambio Climático',
-    'R & GIS / Modelación',
-    'Servicios Ecosistémicos',
-    'Facilitación Multi-Actor',
-    'Geofísica',
-    'Bilbao / Bizkaia'
-  ];
+      // 1. Text Query Filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesQuery = 
+          titleLower.includes(q) || 
+          companyLower.includes(q) || 
+          locLower.includes(q) || 
+          offer.requirements.some(r => r.toLowerCase().includes(q));
+        if (!matchesQuery) return false;
+      }
 
-  const englishProfileKeywords = [
-    'Soil Biogeochemistry',
-    'Climate Policy & Governance',
-    'Spatial Modeling (R/GIS)',
-    'Ecosystem Services',
-    'Geophysics',
-    'Multi-stakeholder Facilitation'
-  ];
+      // 2. Score Filter
+      const score = offer.matchScore?.totalScore || 0;
+      if (score < minScoreFilter) return false;
+
+      // 3. Location / Favorite Category Filters
+      if (selectedLocationFilter === 'FAVORITES') {
+        return !!offer.isFavorite;
+      }
+
+      if (selectedLocationFilter === 'GERMANY') {
+        const isGermany = locLower.includes('alemania') || locLower.includes('germany') || locLower.includes('kiel') || locLower.includes('potsdam') || locLower.includes('berlin');
+        return isGermany || (includeRemote && isRemoteOffer);
+      }
+
+      if (selectedLocationFilter === 'BILBAO') {
+        const isBilbao = locLower.includes('bilbao') || locLower.includes('bizkaia') || offer.isBilbaoLocation;
+        return isBilbao || (includeRemote && isRemoteOffer);
+      }
+
+      if (selectedLocationFilter === 'EUSKADI') {
+        const isEuskadi = locLower.includes('bilbao') || locLower.includes('bizkaia') || locLower.includes('donostia') || locLower.includes('gasteiz') || locLower.includes('euskadi');
+        return isEuskadi || (includeRemote && isRemoteOffer);
+      }
+
+      if (selectedLocationFilter === 'REMOTE_ONLY') {
+        return isRemoteOffer;
+      }
+
+      return true;
+    }).sort((a, b) => {
+      // Favorites first, then match score descending
+      if (a.isFavorite && !b.isFavorite) return -1;
+      if (!a.isFavorite && b.isFavorite) return 1;
+      return (b.matchScore?.totalScore || 0) - (a.matchScore?.totalScore || 0);
+    });
+  }, [offers, searchQuery, minScoreFilter, selectedLocationFilter, includeRemote]);
+
+  // Keep a selected offer
+  useEffect(() => {
+    if (filteredOffers.length > 0) {
+      if (!selectedOfferId || !filteredOffers.some(o => o.id === selectedOfferId)) {
+        setSelectedOfferId(filteredOffers[0].id);
+      }
+    } else {
+      setSelectedOfferId(null);
+    }
+  }, [filteredOffers, selectedOfferId]);
+
+  const activeSelectedOffer = useMemo(() => {
+    return filteredOffers.find(o => o.id === selectedOfferId) || filteredOffers[0] || null;
+  }, [filteredOffers, selectedOfferId]);
+
+  // Category counts
+  const favCount = useMemo(() => offers.filter(o => o.isFavorite).length, [offers]);
+  const germanyCount = useMemo(() => offers.filter(o => {
+    const l = (o.location || '').toLowerCase();
+    return l.includes('alemania') || l.includes('germany') || l.includes('kiel') || l.includes('berlin');
+  }).length, [offers]);
+  const euskadiCount = useMemo(() => offers.filter(o => {
+    const l = (o.location || '').toLowerCase();
+    return l.includes('bilbao') || l.includes('bizkaia') || l.includes('donostia') || l.includes('euskadi');
+  }).length, [offers]);
+  const remoteCount = useMemo(() => offers.filter(o => o.isRemote || (o.location || '').toLowerCase().includes('remoto')).length, [offers]);
 
   return (
-    <div className="space-y-6 text-slate-100">
-      {/* 360° Tactical Holographic Sonar Radar Sweep HUD */}
-      <TacticalSonarRadarHUD
-        activeSector={activeRadarSector}
-        onSelectSector={handleSelectRadarSector}
-        offersCount={offers.length}
-        highMatchCount={offers.filter(o => o.matchScore?.totalScore >= 70).length}
-      />
+    <div className="space-y-4 text-[var(--text-primary)] font-sans animate-fadeIn">
 
-      {/* Action Controls & Real-Time Sync Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-slate-700/80 bg-[#0c1220]/95 shadow-xl gap-4">
-        <div>
-          <h2 className="text-sm font-mono font-black text-white flex items-center gap-2 uppercase tracking-wide">
-            <Sparkles className="h-4 w-4 text-red-500" />
-            <span>CONSOLA DE BARRIDO & INTERCEPCIÓN EN VIVO</span>
-          </h2>
-          <p className="text-[11px] text-slate-300 font-sans mt-0.5">
-            Fase 1: Reconocimiento manual sin bots invasivos • Telemetría §20 AufenthG y Ley 14.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={async () => {
-              setIsSearchingAi(true);
-              const res = await runDailyPipelineEuskadi(searchQuery);
-              setOffers(res.scoutedOffers);
-              setIsSearchingAi(false);
-              setSearchResultSummary(res.summary);
-              setTimeout(() => setSearchResultSummary(null), 8000);
-            }}
-            disabled={isSearchingAi}
-            className="px-3.5 py-2 bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs rounded-xl shadow transition flex items-center space-x-1.5 disabled:opacity-50 cursor-pointer"
-          >
-            <Cpu className={`h-4 w-4 text-white ${isSearchingAi ? 'animate-spin' : ''}`} />
-            <span>{isSearchingAi ? 'Rastreando Portales...' : '⚡ Rastrear Portales en Vivo'}</span>
-          </button>
-
-          <button
-            onClick={handlePurgeDeadLinks}
-            disabled={isPurgingLinks}
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs rounded-xl border border-slate-700 shadow transition flex items-center space-x-1.5 disabled:opacity-50 cursor-pointer"
-            title="Comprueba cada URL de las vacantes e elimina automáticamente las que retornen error 404/caducadas"
-          >
-            <ShieldCheck className={`h-4 w-4 text-emerald-400 ${isPurgingLinks ? 'animate-spin' : ''}`} />
-            <span>{isPurgingLinks ? 'Verificando URLs...' : '🛡️ Depurar Caducados'}</span>
-          </button>
-
-          <button
-            onClick={() => setIsProtocolModalOpen(true)}
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs rounded-xl border border-slate-700 shadow transition flex items-center space-x-1.5 cursor-pointer"
-            title="Ver el Protocolo Maestro de Búsqueda y Filtrado Táctico"
-          >
-            <ShieldCheck className="h-4 w-4 text-sky-400" />
-            <span>Protocolo</span>
-          </button>
-
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs rounded-xl border border-slate-700 shadow transition flex items-center space-x-1.5 cursor-pointer"
-          >
-            <PlusCircle className="h-4 w-4 text-slate-400" />
-            <span>+ Manual</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Module 1: Áreas de Trabajo & Especialidades */}
-      <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-[#131c2e] shadow-md space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-          <div className="flex items-center space-x-2">
-            <Sparkles className="h-4 w-4 text-emerald-400" />
-            <span className="font-bold text-white text-xs uppercase tracking-wider">
-              🎯 Áreas de Trabajo / Especialidades (Master Profile)
-            </span>
-          </div>
-
-          {/* Interactive OR / AND Operator Selector */}
-          <div className="flex items-center space-x-2 bg-slate-900 p-1 rounded-xl border border-slate-800 shrink-0">
-            <span className="text-[11px] font-semibold text-slate-400 pl-2">Lógica:</span>
-            <button
-              onClick={() => setMatchOperator('OR')}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
-                matchOperator === 'OR'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title="Modo O (OR): Muestra vacantes que contengan AL MENOS UNA de las especialidades seleccionadas"
-            >
-              O (OR) — Amplia
-            </button>
-            <button
-              onClick={() => setMatchOperator('AND')}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
-                matchOperator === 'AND'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title="Modo Y (AND): Muestra solo vacantes que contengan TODAS las especialidades seleccionadas"
-            >
-              Y (AND) — Estricta
-            </button>
-          </div>
-        </div>
-
-        {/* Add Custom Keyword Input */}
-        <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={newKeywordInput}
-            onChange={e => setNewKeywordInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleAddCustomKeyword()}
-            placeholder="+ Añade una especialidad personalizada (ej: Edafología, Agroforestería, GIS)..."
-            className="flex-1 px-3.5 py-1.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 text-xs font-medium focus:outline-none focus:border-emerald-500"
-          />
-          <button
-            onClick={handleAddCustomKeyword}
-            className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow transition"
-          >
-            + Añadir
-          </button>
-        </div>
-
-        {/* Custom Keywords Row (if any) */}
-        {customKeywords.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="text-xs font-bold text-amber-400 shrink-0">📌 Personalizadas:</span>
-            {customKeywords.map((kw) => {
-              const isSelected = selectedActiveKeywords.includes(kw);
-              return (
-                <div key={kw} className="flex items-center space-x-1">
-                  <button
-                    onClick={() => toggleSelectKeyword(kw)}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition flex items-center space-x-1 ${
-                      isSelected
-                        ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                        : 'bg-slate-900/80 text-slate-300 border-slate-700/80 hover:border-emerald-500/50 hover:bg-slate-800'
-                    }`}
-                  >
-                    <span>{kw}</span>
-                    <span className="text-[10px] opacity-75">{isSelected ? '✓' : '+'}</span>
-                  </button>
-                  <button
-                    onClick={() => handleRemoveCustomKeyword(kw)}
-                    className="p-1 text-slate-500 hover:text-rose-400"
-                    title="Eliminar palabra clave"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* ES 🇪🇸 Keywords */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="text-xs font-bold text-emerald-400 shrink-0">🇪🇸 Especialidades:</span>
-          {spanishProfileKeywords.filter(k => !k.includes('Bilbao')).map((kw) => {
-            const isSelected = selectedActiveKeywords.includes(kw);
-            return (
-              <button
-                key={kw}
-                onClick={() => toggleSelectKeyword(kw)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold border transition flex items-center space-x-1 ${
-                  isSelected
-                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                    : 'bg-slate-900/80 text-slate-300 border-slate-700/80 hover:border-emerald-500/50 hover:bg-slate-800'
-                }`}
-              >
-                <span>{kw}</span>
-                <span className="text-[10px] opacity-75">{isSelected ? '✓' : '+'}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* EN 🇬🇧 Keywords */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/60">
-          <span className="text-xs font-bold text-emerald-400 shrink-0">🇬🇧 English:</span>
-          {englishProfileKeywords.map((kw) => {
-            const isSelected = selectedActiveKeywords.includes(kw);
-            return (
-              <button
-                key={kw}
-                onClick={() => toggleSelectKeyword(kw)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold border transition flex items-center space-x-1 ${
-                  isSelected
-                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                    : 'bg-slate-900/80 text-slate-300 border-slate-700/80 hover:border-emerald-500/50 hover:bg-slate-800'
-                }`}
-              >
-                <span>{kw}</span>
-                <span className="text-[10px] opacity-75">{isSelected ? '✓' : '+'}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Module 2: Lugares & Ubicaciones Preferentes */}
-      <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-[#131c2e] shadow-md space-y-3">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-          <div className="flex items-center space-x-2">
-            <MapPin className="h-4 w-4 text-emerald-400" />
-            <span className="font-bold text-white text-xs uppercase tracking-wider">
-              📍 Filtro de Lugares & Ubicaciones (Foco Bilbao / Euskadi / España)
-            </span>
-          </div>
-          <span className="text-[11px] text-emerald-400 font-semibold">
-            🛡️ Escudo Geográfico: Se descartan ofertas fuera de España salvo 100% Remoto
-          </span>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <button
-            onClick={() => setSelectedLocationFilter('ALL')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-              selectedLocationFilter === 'ALL'
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow'
-                : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
-            }`}
-          >
-            <Globe2 className="h-3.5 w-3.5" />
-            <span>🌍 Todas las Ubicaciones Válidas (España + Remoto)</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedLocationFilter('BILBAO')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-              selectedLocationFilter === 'BILBAO'
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow'
-                : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
-            }`}
-          >
-            <MapPin className="h-3.5 w-3.5 text-emerald-400" />
-            <span>📍 Bilbao / Bizkaia (Prioridad Alta +25 pts)</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedLocationFilter('EUSKADI')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-              selectedLocationFilter === 'EUSKADI'
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow'
-                : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
-            }`}
-          >
-            <MapPin className="h-3.5 w-3.5 text-lime-400" />
-            <span>📍 Euskadi / País Vasco (Bilbao, Donostia, Vitoria)</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedLocationFilter('ESPAÑA')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-              selectedLocationFilter === 'ESPAÑA'
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow'
-                : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
-            }`}
-          >
-            <span>🇪🇸 España (Nacional: Madrid, BCN, Bilbao, etc.)</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedLocationFilter('REMOTE_ONLY')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-              selectedLocationFilter === 'REMOTE_ONLY'
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow'
-                : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
-            }`}
-          >
-            <Globe2 className="h-3.5 w-3.5 text-sky-400" />
-            <span>🌐 Remoto (100% Teletrabajo)</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Autonomous Search Input Console */}
-      <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-[#131c2e] shadow-md space-y-4">
-        <div className="flex flex-col md:flex-row items-center gap-3">
-          <div className="relative flex-1 w-full">
-            <Search className="h-4 w-4 text-slate-500 absolute left-3.5 top-3.5" />
+      {/* =========================================================================
+       * 1. TOOLBAR SUPERIOR COMPACTO: BÚSQUEDA, FILTROS RÁPIDOS & ACCIONES
+       * ========================================================================= */}
+      <div className="p-4 rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] shadow-sm backdrop-blur-md space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          
+          {/* Search Input */}
+          <div className="relative flex-1">
+            <Search className="h-4 w-4 text-[var(--text-muted)] absolute left-3.5 top-3" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleRunAutonomousSearch()}
-              placeholder="Buscar en APIs públicas (ej: data, remote, engineer) o filtrar vacantes añadidas..."
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 text-xs font-medium focus:outline-none focus:border-emerald-500"
+              placeholder="Buscar por puesto, empresa o tecnología (ej. Carbon, R, Python, Geofísica)..."
+              className="w-full pl-10 pr-4 py-2 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] font-medium focus:outline-none focus:border-sky-500 shadow-sm"
             />
           </div>
 
-          <button
-            onClick={() => handleRunAutonomousSearch()}
-            disabled={isSearchingAi}
-            className="w-full md:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-2 shrink-0 disabled:opacity-50"
-          >
-            {isSearchingAi ? (
-              <>
-                <Cpu className="h-4 w-4 animate-spin text-white" />
-                <span>Consultando APIs Públicas...</span>
-              </>
-            ) : (
-              <>
-                <Globe2 className="h-4 w-4 text-white" />
-                <span>Buscar en APIs Públicas</span>
-              </>
-            )}
-          </button>
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-2 shrink-0">
+            <button
+              onClick={() => handleRunAutonomousSearch()}
+              disabled={isSearchingAi}
+              className="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white font-mono font-bold text-xs rounded-xl shadow-sm transition flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+              title="Consultar APIs públicas de empleo en tiempo real"
+            >
+              {isSearchingAi ? <Cpu className="h-3.5 w-3.5 animate-spin" /> : <Globe2 className="h-3.5 w-3.5" />}
+              <span>{isSearchingAi ? 'Buscando...' : 'Buscar en APIs'}</span>
+            </button>
+
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="px-3 py-2 bg-[var(--card-bg)] hover:bg-[var(--panel-bg)] border border-[var(--panel-border)] hover:border-sky-500 text-[var(--text-primary)] font-mono font-bold text-xs rounded-xl transition flex items-center space-x-1.5 cursor-pointer shadow-sm"
+              title="Añadir vacante manualmente"
+            >
+              <PlusCircle className="h-3.5 w-3.5 text-sky-600" />
+              <span className="hidden sm:inline">Añadir</span>
+            </button>
+
+            <button
+              onClick={handlePurgeDeadLinks}
+              disabled={isPurgingLinks}
+              className="p-2 bg-[var(--card-bg)] hover:bg-rose-500/10 border border-[var(--panel-border)] hover:border-rose-500 text-[var(--text-muted)] hover:text-rose-500 rounded-xl transition cursor-pointer shadow-sm"
+              title="Verificar y purgar enlaces caídos"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
-        {/* Location & Score Filter Console */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-800 text-xs">
+        {/* Filter Pills Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[var(--panel-border)] text-xs">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-slate-400 font-semibold text-xs">Filtro Ubicación:</span>
             <button
               onClick={() => setSelectedLocationFilter('ALL')}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
                 selectedLocationFilter === 'ALL'
-                  ? 'bg-slate-800 text-white border border-slate-700 font-bold'
-                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
+                  ? 'bg-sky-600 text-white shadow-sm'
+                  : 'bg-[var(--card-bg)] text-[var(--text-secondary)] border border-[var(--card-border)] hover:border-sky-500'
               }`}
             >
               Todas ({offers.length})
             </button>
+
+            <button
+              onClick={() => setSelectedLocationFilter('FAVORITES')}
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer ${
+                selectedLocationFilter === 'FAVORITES'
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : 'bg-[var(--card-bg)] text-amber-500 border border-[var(--card-border)] hover:border-amber-500'
+              }`}
+            >
+              <Star className="h-3 w-3 fill-amber-500" />
+              <span>Favoritas ({favCount})</span>
+            </button>
+
             <button
               onClick={() => setSelectedLocationFilter('GERMANY')}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer ${
                 selectedLocationFilter === 'GERMANY'
-                  ? 'bg-red-500/20 text-red-300 border border-red-500/40 font-bold'
-                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
+                  ? 'bg-sky-600 text-white shadow-sm'
+                  : 'bg-[var(--card-bg)] text-[var(--text-secondary)] border border-[var(--card-border)] hover:border-sky-500'
               }`}
             >
-              🇩🇪 Alemania / DACH (§20)
+              <span>🇩🇪 DACH (§20)</span>
+              <span className="opacity-80">({germanyCount})</span>
             </button>
+
             <button
               onClick={() => setSelectedLocationFilter('BILBAO')}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer ${
                 selectedLocationFilter === 'BILBAO'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-[var(--card-bg)] text-[var(--text-secondary)] border border-[var(--card-border)] hover:border-emerald-500'
               }`}
             >
-              📍 Bilbao / Bizkaia
+              <span>📍 Euskadi (Ley 14)</span>
+              <span className="opacity-80">({euskadiCount})</span>
             </button>
+
             <button
-              onClick={() => setSelectedLocationFilter('DONOSTIA')}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-                selectedLocationFilter === 'DONOSTIA'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
+              onClick={() => setSelectedLocationFilter('REMOTE_ONLY')}
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer ${
+                selectedLocationFilter === 'REMOTE_ONLY'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-[var(--card-bg)] text-[var(--text-secondary)] border border-[var(--card-border)] hover:border-emerald-500'
               }`}
             >
-              📍 Donostia / San Sebastián
-            </button>
-            <button
-              onClick={() => setSelectedLocationFilter('EUSKADI')}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-                selectedLocationFilter === 'EUSKADI'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800'
-              }`}
-            >
-              🏞️ Todo Euskadi
+              <span>🌐 Remoto</span>
+              <span className="opacity-80">({remoteCount})</span>
             </button>
           </div>
 
+          {/* Minimum Score Selector & Include Remote */}
           <div className="flex items-center space-x-3">
-            <label className="flex items-center space-x-1.5 cursor-pointer text-xs text-slate-300 font-medium">
+            <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-mono text-[var(--text-muted)] font-medium">
               <input
                 type="checkbox"
                 checked={includeRemote}
                 onChange={e => setIncludeRemote(e.target.checked)}
-                className="rounded border-slate-700 text-emerald-500 focus:ring-emerald-500 h-4 w-4 bg-slate-900"
+                className="rounded border-[var(--card-border)] text-sky-600 focus:ring-sky-500 h-3.5 w-3.5"
               />
-              <span>🌐 Incluir 100% Remoto</span>
+              <span className="hidden sm:inline">Incluir Remoto</span>
             </label>
 
-            <div className="flex items-center space-x-1 text-xs font-semibold">
-              <span className="text-slate-400">Score Mín:</span>
+            <div className="flex items-center space-x-1.5">
+              <span className="text-[11px] font-mono text-[var(--text-muted)] font-bold">Afinidad:</span>
               <select
                 value={minScoreFilter}
                 onChange={e => setMinScoreFilter(Number(e.target.value))}
-                className="px-2 py-1 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs"
+                aria-label="Filtrar por afinidad mínima"
+                className="px-2.5 py-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg text-xs font-mono font-bold text-[var(--text-primary)] focus:outline-none focus:border-sky-500 shadow-sm"
               >
-                <option value={0}>0%+</option>
-                <option value={60}>60%+</option>
-                <option value={80}>80%+</option>
+                <option value={0}>Todas</option>
+                <option value={50}>&gt;= 50%</option>
+                <option value={70}>&gt;= 70%</option>
+                <option value={85}>&gt;= 85%</option>
               </select>
             </div>
           </div>
         </div>
-      </div>
 
-      {searchResultSummary && (
-        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2 shadow-sm">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400" />
-          <span className="font-semibold">{searchResultSummary}</span>
-        </div>
-      )}
-
-      {/* Result Count Header */}
-      <div className="flex items-center justify-between text-xs text-slate-400 font-medium px-1">
-        <span>Mostrando {filteredOffers.length} de {offers.length} vacantes verificadas</span>
-        <span>Ordenado por Coincidencia (Match Score)</span>
-      </div>
-
-      {/* Offers List */}
-      <div className="space-y-4">
-        {filteredOffers.length === 0 ? (
-          <div className="glass-panel p-10 rounded-2xl border border-slate-800 text-center space-y-2 bg-[#131c2e]">
-            <p className="text-base text-white font-bold">No se encontraron vacantes activas en este momento.</p>
-            <p className="text-xs text-slate-400">Haz clic en "⚡ Rastrear Todos los Portales en Vivo" o selecciona un portal en el lanzador superior.</p>
+        {searchResultSummary && (
+          <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-xs font-mono text-sky-600 flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 shrink-0" />
+            <span>{searchResultSummary}</span>
           </div>
-        ) : (
-          filteredOffers.map((offer) => {
-            const score = offer.matchScore.totalScore;
-            const scoreColor = score >= 80 ? 'text-emerald-400 bg-emerald-950/80 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.2)]' :
-                               score >= 60 ? 'text-amber-400 bg-amber-950/80 border-amber-500/60' :
-                               'text-slate-300 bg-slate-900 border-slate-700';
+        )}
+      </div>
 
-            const isGermanyOffer = (offer.location || '').toLowerCase().includes('alemania') || 
-                                   (offer.location || '').toLowerCase().includes('germany') || 
-                                   (offer.location || '').toLowerCase().includes('kiel') ||
-                                   (offer.location || '').toLowerCase().includes('berlin');
+      {/* =========================================================================
+       * 2. CONSOLA DIVIDIDA (MASTER-DETAIL): LISTA TÁCTICA (40%) + INSPECCIÓN (60%)
+       * ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 min-h-[calc(100vh-250px)]">
+        
+        {/* COLUMNA IZQUIERDA: LISTA COMPACTA DE VACANTES (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col h-[calc(100vh-260px)] overflow-hidden rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] p-3 shadow-sm backdrop-blur-md">
+          <div className="flex items-center justify-between px-2 pb-2.5 border-b border-[var(--panel-border)] text-xs font-mono font-bold text-[var(--text-muted)]">
+            <span>VACANTES DISPONIBLES ({filteredOffers.length})</span>
+            <span className="text-[10px]">ORDEN: AFINIDAD</span>
+          </div>
 
-            return (
-              <div
-                key={offer.id}
-                className="p-5 rounded-2xl border border-slate-700/80 bg-[#0c1220]/95 hover:border-slate-500 transition space-y-3.5 shadow-xl text-slate-100 relative overflow-hidden group"
-              >
-                {/* Tactical Intercept Signal Header */}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 text-[11px] font-mono">
-                  <div className="flex items-center space-x-2">
-                    <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                    <span className="font-black text-red-400 uppercase tracking-wider">
-                      SIGNAL INTERCEPTED // TARGET-{offer.id.slice(-6).toUpperCase()}
-                    </span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                      FASE 1: VERIFICADA
-                    </span>
-                  </div>
+          <div className="flex-1 overflow-y-auto space-y-2 py-2 pr-1">
+            {filteredOffers.length === 0 ? (
+              <div className="p-8 text-center text-xs text-[var(--text-muted)] space-y-2">
+                <Search className="h-8 w-8 mx-auto opacity-40" />
+                <p>No se encontraron vacantes con los filtros actuales.</p>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setMinScoreFilter(0);
+                    setSelectedLocationFilter('ALL');
+                  }}
+                  className="px-3 py-1 bg-sky-600 text-white rounded-lg font-mono text-xs cursor-pointer"
+                >
+                  Restablecer Filtros
+                </button>
+              </div>
+            ) : (
+              filteredOffers.map(offer => {
+                const isSelected = activeSelectedOffer?.id === offer.id;
+                const score = offer.matchScore?.totalScore || 0;
+                const isGermany = (offer.location || '').toLowerCase().includes('alemania') || (offer.location || '').toLowerCase().includes('kiel');
+                const isBilbao = (offer.location || '').toLowerCase().includes('bilbao') || (offer.location || '').toLowerCase().includes('euskadi');
+                const isRemote = offer.isRemote || (offer.location || '').toLowerCase().includes('remoto');
 
-                  <div className="text-slate-400 font-medium">
-                    PORTAL: <strong className="text-white">{offer.sourceName}</strong>
-                  </div>
-                </div>
+                const scoreBadgeColor = 
+                  score >= 75 ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30' :
+                  score >= 50 ? 'bg-sky-500/10 text-sky-600 border-sky-500/30' :
+                  'bg-slate-500/10 text-[var(--text-muted)] border-slate-500/30';
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex items-center space-x-2 flex-wrap">
-                      <span className="text-base">{isGermanyOffer ? '🇩🇪' : offer.isBilbaoLocation ? '🇪🇸' : '🌍'}</span>
-                      <h3 className="font-black text-lg text-white font-sans tracking-tight drop-shadow">
-                        {offer.title}
-                      </h3>
-                      {offer.isBilbaoLocation && (
-                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
-                          📍 BILBAO // LEY 14 UGE
-                        </span>
-                      )}
-                      {isGermanyOffer && (
-                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-600">
-                          🇩🇪 DACH // §20 AUFENTHG
-                        </span>
-                      )}
-                      {offer.isRemote && (
-                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600">
-                          🌐 100% REMOTO UE
-                        </span>
-                      )}
+                return (
+                  <div
+                    key={offer.id}
+                    onClick={() => setSelectedOfferId(offer.id)}
+                    className={`p-3 rounded-xl border transition cursor-pointer relative group flex items-start justify-between gap-3 ${
+                      isSelected 
+                        ? 'bg-[var(--card-bg)] border-sky-500 shadow-sm ring-1 ring-sky-500/30' 
+                        : 'bg-[var(--card-bg)] border-[var(--card-border)] hover:border-sky-400/60'
+                    }`}
+                  >
+                    {/* Score Indicator */}
+                    <div className={`h-10 w-10 rounded-xl border flex flex-col items-center justify-center shrink-0 font-mono font-black ${scoreBadgeColor}`}>
+                      <span className="text-xs leading-none">{score}%</span>
+                      <span className="text-[7px] uppercase font-bold tracking-tighter">Match</span>
                     </div>
 
-                    <div className="text-xs text-slate-300 font-medium flex flex-wrap items-center gap-3 pt-0.5">
-                      <span className="flex items-center gap-1 text-white font-bold">
-                        <Building2 className="h-4 w-4 text-emerald-400" />
-                        {offer.company}
-                      </span>
-                      <span className="text-slate-600">•</span>
-                      <span className="flex items-center gap-1 text-slate-200">
-                        <MapPin className="h-4 w-4 text-red-400" />
-                        {offer.location}
-                      </span>
-                    </div>
-                  </div>
+                    {/* Title & Metadata */}
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-xs">{isGermany ? '🇩🇪' : isBilbao ? '🇪🇸' : isRemote ? '🌐' : '🌍'}</span>
+                        <h4 className="text-xs font-bold text-[var(--text-primary)] truncate group-hover:text-sky-600 transition">
+                          {offer.title}
+                        </h4>
+                      </div>
 
-                  {/* Tactical Score & Action Controls */}
-                  <div className="flex items-center space-x-3 shrink-0">
-                    <div className={`px-4 py-2 rounded-xl border text-center min-w-[85px] shadow ${scoreColor}`}>
-                      <div className="font-black text-2xl font-mono leading-none">{score}%</div>
-                      <div className="text-[9px] uppercase font-mono font-bold tracking-wider mt-1">AFINIDAD</div>
-                    </div>
+                      <div className="flex items-center gap-2 text-[11px] text-[var(--text-muted)]">
+                        <span className="font-semibold text-[var(--text-secondary)] truncate flex items-center gap-1">
+                          <Building2 className="h-3 w-3 text-sky-600" />
+                          {offer.company}
+                        </span>
+                        <span>•</span>
+                        <span className="truncate flex items-center gap-1">
+                          <MapPin className="h-3 w-3 text-emerald-500" />
+                          {offer.location}
+                        </span>
+                      </div>
 
-                    <div className="flex flex-col space-y-1.5">
-                      <button
-                        onClick={() => setSelectedOfferForPipeline(offer)}
-                        className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-mono font-black text-xs rounded-xl shadow-lg hover:shadow-red-500/30 transition flex items-center justify-center space-x-1.5 cursor-pointer"
-                      >
-                        <Sparkles className="h-3.5 w-3.5 text-white" />
-                        <span>⚡ Preparar Candidatura (Fase 3)</span>
-                      </button>
-
-                      <div className="flex items-center space-x-1">
-                        <button
-                          onClick={() => setSelectedOfferForRationale(offer)}
-                          className="flex-1 px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-mono font-bold rounded-lg border border-slate-700 transition cursor-pointer"
-                        >
-                          Justificación
-                        </button>
-
-                        {offer.url && (
-                          <button
-                            onClick={() => setSelectedOfferForPreview(offer)}
-                            className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-sky-300 text-xs font-mono font-bold rounded-lg border border-slate-700 transition cursor-pointer flex items-center gap-1"
-                            title="Ver en Web Real"
-                          >
-                            <Eye className="h-3.5 w-3.5 text-sky-400" />
-                            <span>Web</span>
-                          </button>
+                      {/* Small Chips */}
+                      <div className="flex flex-wrap gap-1 pt-0.5">
+                        {isGermany && (
+                          <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-600 border border-sky-500/20">
+                            DACH §20
+                          </span>
                         )}
-
-                        <button
-                          onClick={() => {
-                            if (window.confirm(`¿Deseas eliminar "${offer.title}"?`)) {
-                              handleDeleteOffer(offer.id);
-                            }
-                          }}
-                          className="p-1 bg-slate-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 rounded-lg border border-slate-700 transition cursor-pointer"
-                          title="Eliminar vacante"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {isBilbao && (
+                          <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                            Ley 14
+                          </span>
+                        )}
+                        {isRemote && (
+                          <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                            Remoto
+                          </span>
+                        )}
                       </div>
                     </div>
+
+                    {/* Star Button */}
+                    <button
+                      onClick={(e) => handleToggleFavorite(offer.id, e)}
+                      className="p-1 rounded-lg text-slate-400 hover:text-amber-500 transition cursor-pointer shrink-0"
+                      title={offer.isFavorite ? 'Quitar de favoritas' : 'Marcar como favorita (⭐)'}
+                    >
+                      <Star className={`h-4 w-4 ${offer.isFavorite ? 'fill-amber-500 text-amber-500' : 'text-slate-400'}`} />
+                    </button>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* COLUMNA DERECHA: PANEL DE INSPECCIÓN TÉCNICA (7 cols) */}
+        <div className="lg:col-span-7 h-[calc(100vh-260px)] overflow-y-auto rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] p-6 shadow-sm backdrop-blur-md flex flex-col justify-between space-y-5">
+          {activeSelectedOffer ? (
+            <div className="space-y-5">
+              
+              {/* Header de la Vacante Inspeccionada */}
+              <div className="border-b border-[var(--panel-border)] pb-4 space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 border border-sky-500/20 font-bold uppercase">
+                      Portal: {activeSelectedOffer.sourceName}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-bold">
+                      Vigente y Verificada
+                    </span>
+                  </div>
+
+                  <div className="flex items-center space-x-1.5">
+                    <button
+                      onClick={() => handleToggleFavorite(activeSelectedOffer.id)}
+                      className={`p-1.5 rounded-lg border border-[var(--panel-border)] transition cursor-pointer ${
+                        activeSelectedOffer.isFavorite 
+                          ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' 
+                          : 'bg-[var(--card-bg)] text-slate-400 hover:text-amber-500'
+                      }`}
+                      title="Marcar como favorita"
+                    >
+                      <Star className={`h-4 w-4 ${activeSelectedOffer.isFavorite ? 'fill-amber-500' : ''}`} />
+                    </button>
+
+                    {activeSelectedOffer.url && (
+                      <button
+                        onClick={() => setSelectedOfferForPreview(activeSelectedOffer)}
+                        className="p-1.5 rounded-lg border border-[var(--panel-border)] bg-[var(--card-bg)] text-sky-600 hover:bg-sky-500/10 transition cursor-pointer"
+                        title="Ver en vista previa web"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`¿Deseas eliminar "${activeSelectedOffer.title}"?`)) {
+                          handleDeleteOffer(activeSelectedOffer.id);
+                        }
+                      }}
+                      className="p-1.5 rounded-lg border border-[var(--panel-border)] bg-[var(--card-bg)] text-slate-400 hover:text-rose-500 transition cursor-pointer"
+                      title="Eliminar vacante"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-200 leading-relaxed border-t border-slate-800 pt-3 font-sans">
-                  {offer.rawDescription}
-                </p>
+                <h2 className="text-xl font-black text-[var(--text-primary)] font-sans">
+                  {activeSelectedOffer.title}
+                </h2>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-slate-300 font-mono">
+                <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--text-secondary)] font-medium">
+                  <span className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
+                    <Building2 className="h-4 w-4 text-sky-600" />
+                    {activeSelectedOffer.company}
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="h-4 w-4 text-emerald-500" />
+                    {activeSelectedOffer.location}
+                  </span>
+                  {activeSelectedOffer.publishedDate && (
+                    <>
+                      <span>•</span>
+                      <span className="flex items-center gap-1.5 text-[var(--text-muted)] font-mono">
+                        <Clock className="h-3.5 w-3.5" />
+                        {activeSelectedOffer.publishedDate}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Telemetría de Afinidad & Desglose Explicable */}
+              <div className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] shadow-sm space-y-3">
+                <div className="flex items-center justify-between border-b border-[var(--card-border)] pb-2">
+                  <span className="text-xs font-mono font-black uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-1.5">
+                    <Sparkles className="h-4 w-4 text-emerald-500" />
+                    <span>RADIOGRAFÍA DE AFINIDAD TÉCNICA</span>
+                  </span>
+                  <span className="text-sm font-mono font-black text-emerald-600">
+                    {activeSelectedOffer.matchScore?.totalScore || 0}% TOTAL
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+                  <div className="p-2.5 rounded-lg bg-[var(--panel-bg)] border border-[var(--card-border)]">
+                    <div className="text-[10px] text-[var(--text-muted)] uppercase">Habilidades Fit</div>
+                    <div className="text-sm font-bold text-sky-600 font-mono mt-0.5">
+                      {activeSelectedOffer.matchScore?.skillFitScore || 0} / 35 pts
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[var(--panel-bg)] border border-[var(--card-border)]">
+                    <div className="text-[10px] text-[var(--text-muted)] uppercase">Ubicación / Ley</div>
+                    <div className="text-sm font-bold text-emerald-600 font-mono mt-0.5">
+                      {activeSelectedOffer.matchScore?.locationScore || 0} / 25 pts
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[var(--panel-bg)] border border-[var(--card-border)]">
+                    <div className="text-[10px] text-[var(--text-muted)] uppercase">Salario / Rango</div>
+                    <div className="text-sm font-bold text-purple-600 font-mono mt-0.5">
+                      {activeSelectedOffer.matchScore?.salaryScore || 0} / 15 pts
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coincidencias de Competencias */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="text-[11px] font-mono text-[var(--text-muted)] font-bold">
+                    Competencias Identificadas en tu Perfil:
+                  </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {offer.requirements.map((req, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800 text-[10px]">
+                    {(activeSelectedOffer.matchScore?.matchingSkills || []).length > 0 ? (
+                      activeSelectedOffer.matchScore?.matchingSkills.map((s, i) => (
+                        <span key={i} className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 border border-emerald-500/30 text-[10px] font-mono font-bold flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3" />
+                          <span>{s}</span>
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-[11px] text-[var(--text-muted)] font-sans italic">
+                        Sin coincidencia directa en texto. Revisa la adaptación curricular.
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Marco Legal & Viabilidad de Contratación */}
+              <div className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] shadow-sm space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono font-bold">
+                  <span className="text-sky-600 uppercase flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4" />
+                    <span>MARCO LEGAL & VÍA DE CONTRATACIÓN</span>
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-sky-500/10 text-sky-600 font-bold">
+                    DOBLE M.SC. COMPATIBLE
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-sans">
+                  {(activeSelectedOffer.location || '').toLowerCase().includes('alemania') || (activeSelectedOffer.location || '').toLowerCase().includes('kiel')
+                    ? 'Alemania (§20 AufenthG - Investigación y Ciencia): Tu Doble M.Sc. en CAU Kiel otorga elegibilidad directa para contratos de investigación sin cuotas restrictivas y con vía expedita a EU Blue Card.'
+                    : (activeSelectedOffer.location || '').toLowerCase().includes('bilbao') || (activeSelectedOffer.location || '').toLowerCase().includes('euskadi')
+                    ? 'España (Ley 14/2013 - UGE): Profesionales altamente cualificados en centros I+D+i vascos (BC3, Tecnalia, Neiker) con resolución administrativa en plazo legal de 20 días hábiles.'
+                    : 'Modalidad Remota Europea: Contrato de servicios técnicos o nómina internacional bajo directivas de teletrabajo de la Unión Europea.'}
+                </p>
+              </div>
+
+              {/* Requisitos y Tecnologías Clave */}
+              {activeSelectedOffer.requirements && activeSelectedOffer.requirements.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                    Requisitos Extraídos de la Oferta:
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeSelectedOffer.requirements.map((req, i) => (
+                      <span key={i} className="px-2.5 py-1 rounded-lg bg-[var(--card-bg)] border border-[var(--card-border)] text-xs text-[var(--text-secondary)]">
                         {req}
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
 
-                  <span className="font-mono text-emerald-400 font-semibold text-xs">
-                    {offer.salaryMin ? `${offer.salaryMin.toLocaleString()} - ${offer.salaryMax?.toLocaleString()} ${offer.salaryCurrency || '€'}` : 'Salario a convenir'}
-                  </span>
+              {/* Descripción de la Vacante */}
+              <div className="space-y-2">
+                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                  Descripción Oficial del Puesto:
+                </h3>
+                <div className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] text-xs text-[var(--text-secondary)] leading-relaxed font-sans max-h-48 overflow-y-auto whitespace-pre-line shadow-inner">
+                  {activeSelectedOffer.rawDescription || 'No se incluye descripción detallada en la ficha pública.'}
                 </div>
               </div>
-            );
-          })
-        )}
+
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 text-[var(--text-muted)] space-y-3">
+              <Layers className="h-12 w-12 opacity-30" />
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">
+                Selecciona una vacante para inspeccionar
+              </h3>
+              <p className="text-xs max-w-sm leading-relaxed">
+                Haz clic en cualquier oferta de la lista izquierda para desplegar su radiografía técnica, desglose de afinidad y marco de visado sin abrir popups.
+              </p>
+            </div>
+          )}
+
+          {/* Sticky Bottom Action Bar */}
+          {activeSelectedOffer && (
+            <div className="pt-4 border-t border-[var(--panel-border)] flex flex-col sm:flex-row items-center justify-between gap-3 bg-[var(--panel-bg)] sticky bottom-0">
+              <div className="flex items-center space-x-2 w-full sm:w-auto">
+                <button
+                  onClick={() => setSelectedOfferForRationale(activeSelectedOffer)}
+                  className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-[var(--card-bg)] hover:bg-[var(--panel-bg)] border border-[var(--panel-border)] hover:border-sky-500 text-xs font-mono font-bold transition cursor-pointer text-[var(--text-primary)]"
+                >
+                  Ver Justificación
+                </button>
+
+                {activeSelectedOffer.url && (
+                  <a
+                    href={activeSelectedOffer.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-[var(--card-bg)] hover:bg-[var(--panel-bg)] border border-[var(--panel-border)] hover:border-sky-500 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 text-sky-600"
+                  >
+                    <span>Web Oficial</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
+
+              <button
+                onClick={() => {
+                  onStartApplication(activeSelectedOffer.id);
+                  setSelectedOfferForPipeline(activeSelectedOffer);
+                }}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-mono font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              >
+                <Sparkles className="h-4 w-4 text-white" />
+                <span>⚡ Iniciar Postulación (Calibrar CV)</span>
+              </button>
+            </div>
+          )}
+        </div>
+
       </div>
 
+      {/* Modals preservados */}
       <FiveStepPipelineModal
         offer={selectedOfferForPipeline}
         isOpen={!!selectedOfferForPipeline}
