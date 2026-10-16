@@ -106,7 +106,7 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
             }`}
           >
             <LineChart className="h-3.5 w-3.5" />
-            <span>EMBUDO & MÉTRICAS</span>
+            <span>TELEMETRÍA // DEBRIEFING & INTELIGENCIA</span>
           </button>
         </div>
       </div>

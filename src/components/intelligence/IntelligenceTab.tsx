@@ -25,14 +25,19 @@ export const IntelligenceTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-gradient-to-r from-[#0d1627] via-[#091322] to-[#0d1627] border border-slate-700 shadow-xl gap-3">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <LineChart className="h-5 w-5 text-indigo-400" />
-            <span>Inteligencia de Datos & Análisis de Rendimiento</span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800 text-[10px] font-mono font-bold uppercase tracking-wider">
+              PILAR 6 // TELEMETRÍA & DEBRIEFING TÁCTICO
+            </span>
+          </div>
+          <h2 className="text-xl font-bold text-white flex items-center gap-2 font-mono uppercase tracking-tight">
+            <LineChart className="h-5 w-5 text-sky-400" />
+            <span>INTELIGENCIA DE RENDIMIENTO & POST-MORTEM</span>
           </h2>
-          <p className="text-xs text-slate-400">
-            Estadísticas reales sobre tus candidaturas guardadas, embudo de conversión y fuentes activas en tu navegador.
+          <p className="text-xs text-slate-300 font-sans mt-0.5">
+            Telemetría real de tus candidaturas: embudo de conversión, análisis de respuesta frente al ghosting y calibración de estrategia con IA.
           </p>
         </div>
       </div>
