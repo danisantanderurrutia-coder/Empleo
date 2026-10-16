@@ -37,9 +37,9 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   const cvEn = cvList.find(c => c.language === 'en') || cvList[1] || cvList[0];
   const cvDe = cvList.find(c => c.language === 'de') || cvList[2] || cvList[0];
 
-  // Tactical operative images from Unsplash
+  // Professional operative and research laboratory images from Unsplash
   const backgroundWall = 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1920&q=80';
-  const tacticalOperative = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80';
+  const tacticalOperative = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80';
 
   return (
     <div className="space-y-5 text-slate-100 animate-fadeIn">

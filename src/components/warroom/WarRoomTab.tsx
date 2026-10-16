@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Award, 
   ChevronRight, 
-  Globe2,
-  Tv,
-  Sparkles,
+  Tv, 
   KanbanSquare
 } from 'lucide-react';
 import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
@@ -20,8 +18,6 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
   const offers = getStoredOffers();
   const applications = getStoredApplications();
   const companies = getStoredCompanies();
-
-  const [showPlanetaryHUD, setShowPlanetaryHUD] = useState(false);
 
   // Compute live data metrics
   const highMatchOffers = offers.filter(o => (o.matchScore?.totalScore || 0) >= 70);
@@ -45,12 +41,15 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
   const colInterviews = applications.filter(a => a.currentStage === 8 || a.status === 'Entrevista');
   const activeApplications = applications.filter(a => a.status !== 'Desestimada');
 
-  // Photographic Assets from Unsplash for realistic tactical atmosphere (Preserved 100%)
+  // Photographic Assets from Unsplash for realistic tactical work & science environments
   const backgroundWall = 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1920&q=80';
-  const tacticalOperative = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80';
+  const professionalResearcher = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80';
   const droneScreen = 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
-  const operatorIana = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80';
-  const operatorEla = 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80';
+  const earthObservation = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80';
+  const biogeoLab = 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80';
+  const germanyTech = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
+  const euskadiTech = 'https://images.unsplash.com/photo-1498084393753-b411b2d26b34?auto=format&fit=crop&w=800&q=80';
+  const missionControlScreen = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
 
   return (
     <div 
@@ -76,51 +75,15 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           </h1>
         </div>
 
-        {/* Tactical Planetary Toggle, Radar & Locker Quick Action */}
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setShowPlanetaryHUD(!showPlanetaryHUD)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 border transition cursor-pointer ${
-              showPlanetaryHUD 
-                ? 'bg-sky-600 text-white border-sky-400 shadow-lg' 
-                : 'bg-slate-900/80 text-slate-300 border-slate-700 hover:border-slate-500'
-            }`}
-          >
-            <Globe2 className="h-4 w-4 text-sky-400" />
-            <span>{showPlanetaryHUD ? 'Ocultar Visor Planetario' : '🛰️ Visor IMF / Globo'}</span>
-          </button>
-
-          <button
-            onClick={() => onSelectStation('mission_control', 'applications')}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900/90 hover:bg-slate-800 text-sky-300 border border-slate-700 hover:border-sky-500 shadow transition flex items-center gap-1.5 cursor-pointer"
-            title="Abrir el Tablero Kanban y Despacho Asistido en Locker"
-          >
-            <KanbanSquare className="h-3.5 w-3.5 text-sky-400" />
-            <span>LOCKER ({activeApplications.length})</span>
-          </button>
-
-          <button
-            onClick={onLaunchRadar}
-            className="px-4 py-1.5 rounded-lg text-xs font-mono font-extrabold bg-red-600 hover:bg-red-500 text-white shadow-lg transition flex items-center gap-1.5 cursor-pointer"
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>DESPLEGAR RADAR ({offers.length}+)</span>
-          </button>
+        {/* Live Status Indicator (Uncluttered, redundant header buttons removed) */}
+        <div className="flex items-center space-x-2 text-[11px] font-mono">
+          <div className="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-300 flex items-center gap-2 shadow">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="text-emerald-400 font-bold">IMF HQ:</span>
+            <span>RECONOCIMIENTO & DESPACHO ACTIVO</span>
+          </div>
         </div>
       </div>
-
-      {/* Optional Top Tier: IMF Planetary Holographic Vector Globe (if toggled) */}
-      {showPlanetaryHUD && (
-        <div className="relative z-10 mb-6 animate-fadeIn">
-          <TacticalGlobeHUD 
-            onDeploySector={(sector) => {
-              if (sector === 'kiel') onSelectStation('market_radar', 'sources');
-              else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
-              else onSelectStation('market_radar', 'offers');
-            }}
-          />
-        </div>
-      )}
 
       {/* -------------------------------------------------------------
        * EXACT RAINBOW SIX SIEGE 3-COLUMN CAREER GRID (IMAGE 4)
@@ -228,7 +191,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             className="rounded-xl p-5 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.35)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-white hover:scale-[1.01] transition"
             title="Click para ver el Operador Daniel Santander y sus Atributos"
             style={{
-              backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.6) 35%, rgba(10, 14, 22, 0.65) 100%), url('${tacticalOperative}')`,
+              backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.6) 35%, rgba(10, 14, 22, 0.65) 100%), url('${professionalResearcher}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
@@ -409,7 +372,12 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             <div className="grid grid-cols-3 gap-2 font-mono text-xs">
               <button 
                 onClick={() => onSelectStation('market_radar', 'offers', 'BILBAO')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left cursor-pointer group"
+                className="p-2.5 rounded-lg border border-slate-700 hover:border-emerald-500 transition text-left cursor-pointer group relative overflow-hidden shadow"
+                style={{
+                  backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.72) 100%), url('${euskadiTech}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
                 title="Filtrar por I+D+i Euskadi (BC3, Tecnalia, Neiker)"
               >
                 <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-emerald-300">📍 Euskadi Ley 14</div>
@@ -418,7 +386,12 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
               <button 
                 onClick={() => onSelectStation('market_radar', 'offers', 'GERMANY')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left cursor-pointer group"
+                className="p-2.5 rounded-lg border border-slate-700 hover:border-sky-500 transition text-left cursor-pointer group relative overflow-hidden shadow"
+                style={{
+                  backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.72) 100%), url('${germanyTech}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
                 title="Filtrar por Alemania / DACH (§20 AufenthG)"
               >
                 <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-sky-300">🇩🇪 DACH §20</div>
@@ -427,7 +400,12 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
               <button 
                 onClick={() => onSelectStation('market_radar', 'offers', 'REMOTE')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left cursor-pointer group"
+                className="p-2.5 rounded-lg border border-slate-700 hover:border-amber-500 transition text-left cursor-pointer group relative overflow-hidden shadow"
+                style={{
+                  backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.72) 100%), url('${earthObservation}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
                 title="Filtrar por 100% Remoto UE"
               >
                 <div className="text-[11px] text-slate-300 font-medium truncate group-hover:text-amber-300">🌐 Remoto UE</div>
@@ -446,13 +424,13 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               {/* Operator 1: Geofísica & Modelación */}
               <button 
                 onClick={() => onSelectStation('agent_dossier', 'showcase')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition flex items-center space-x-3 text-left cursor-pointer group"
+                className="p-2.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition flex items-center space-x-3 text-left cursor-pointer group shadow"
                 title="Click para ver Showcase del Operador"
               >
                 <img 
-                  src={operatorIana} 
-                  alt="Iana Spec" 
-                  className="w-10 h-10 rounded-full object-cover border border-slate-500 group-hover:border-sky-400 shrink-0" 
+                  src={earthObservation} 
+                  alt="Geofísica Spec" 
+                  className="w-10 h-10 rounded-lg object-cover border border-slate-500 group-hover:border-sky-400 shrink-0" 
                 />
                 <div className="overflow-hidden">
                   <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-sky-300">GEOFÍSICA & GIS</div>
@@ -464,13 +442,13 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               {/* Operator 2: Biofísica & CAU Kiel */}
               <button 
                 onClick={() => onSelectStation('agent_dossier', 'showcase')}
-                className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition flex items-center space-x-3 text-left cursor-pointer group"
+                className="p-2.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition flex items-center space-x-3 text-left cursor-pointer group shadow"
                 title="Click para ver Showcase del Operador"
               >
                 <img 
-                  src={operatorEla} 
-                  alt="Ela Spec" 
-                  className="w-10 h-10 rounded-full object-cover border border-slate-500 group-hover:border-emerald-400 shrink-0" 
+                  src={biogeoLab} 
+                  alt="Gestión Ambiental Spec" 
+                  className="w-10 h-10 rounded-lg object-cover border border-slate-500 group-hover:border-emerald-400 shrink-0" 
                 />
                 <div className="overflow-hidden">
                   <div className="text-xs font-bold text-white truncate drop-shadow group-hover:text-emerald-300">GESTIÓN AMBIENTAL</div>
@@ -583,63 +561,96 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       <div className="relative z-10 mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <button
           onClick={() => onSelectStation('market_radar', 'offers', 'GERMANY')}
-          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-red-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
+          className="p-4 rounded-xl border border-slate-700 hover:border-red-500 transition text-left flex items-center justify-between group cursor-pointer shadow-xl relative overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.94) 0%, rgba(15, 23, 42, 0.65) 100%), url('${germanyTech}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div>
-            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-red-400 transition">
+          <div className="z-10">
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-red-400 transition drop-shadow">
               PLAY RANKED // ALEMANIA
             </div>
-            <div className="text-[11px] text-slate-300 font-mono font-medium">
+            <div className="text-[11px] text-slate-200 font-mono font-medium drop-shadow mt-0.5">
               {germanyOffers.length} Vacantes §20 AufenthG • DACH
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-red-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-red-400 group-hover:translate-x-1 transition z-10" />
         </button>
 
         <button
           onClick={() => onSelectStation('market_radar', 'offers', 'BILBAO')}
-          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
+          className="p-4 rounded-xl border border-slate-700 hover:border-emerald-500 transition text-left flex items-center justify-between group cursor-pointer shadow-xl relative overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.94) 0%, rgba(15, 23, 42, 0.65) 100%), url('${euskadiTech}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div>
-            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-emerald-400 transition">
+          <div className="z-10">
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-emerald-400 transition drop-shadow">
               PLAY STANDARD // EUSKADI
             </div>
-            <div className="text-[11px] text-slate-300 font-mono font-medium">
+            <div className="text-[11px] text-slate-200 font-mono font-medium drop-shadow mt-0.5">
               {euskadiOffers.length} Vacantes Ley 14 • Centros I+D
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-emerald-400 group-hover:translate-x-1 transition z-10" />
         </button>
 
         <button
           onClick={() => onSelectStation('agent_dossier', 'showcase')}
-          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
+          className="p-4 rounded-xl border border-slate-700 hover:border-amber-500 transition text-left flex items-center justify-between group cursor-pointer shadow-xl relative overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.94) 0%, rgba(15, 23, 42, 0.65) 100%), url('${earthObservation}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div>
-            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-amber-400 transition">
+          <div className="z-10">
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-amber-400 transition drop-shadow">
               OPERATORS // SHOWCASE
             </div>
-            <div className="text-[11px] text-slate-300 font-mono font-medium">
+            <div className="text-[11px] text-slate-200 font-mono font-medium drop-shadow mt-0.5">
               Daniel Santander • Clearance 50
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-amber-400 group-hover:translate-x-1 transition z-10" />
         </button>
 
         <button
           onClick={() => onSelectStation('mission_control', 'applications')}
-          className="p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800 border border-slate-700 hover:border-sky-500 transition text-left flex items-center justify-between group cursor-pointer shadow-lg"
+          className="p-4 rounded-xl border border-slate-700 hover:border-sky-500 transition text-left flex items-center justify-between group cursor-pointer shadow-xl relative overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.94) 0%, rgba(15, 23, 42, 0.65) 100%), url('${missionControlScreen}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div>
-            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-sky-400 transition">
+          <div className="z-10">
+            <div className="text-xs font-mono font-bold text-white uppercase group-hover:text-sky-400 transition drop-shadow">
               LOCKER // MISIÓN KANBAN
             </div>
-            <div className="text-[11px] text-slate-300 font-mono font-medium">
+            <div className="text-[11px] text-slate-200 font-mono font-medium drop-shadow mt-0.5">
               {activeApplications.length} Candidaturas en Seguimiento
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition" />
+          <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-sky-400 group-hover:translate-x-1 transition z-10" />
         </button>
+      </div>
+
+      {/* -------------------------------------------------------------
+       * TACTICAL GLOBE HUD (IMF / GLOBO PLANETARIO PERMANENTE)
+       * ------------------------------------------------------------- */}
+      <div className="relative z-10 mt-6">
+        <TacticalGlobeHUD 
+          onDeploySector={(sector) => {
+            if (sector === 'kiel') onSelectStation('market_radar', 'offers', 'GERMANY');
+            else if (sector === 'bilbao') onSelectStation('market_radar', 'offers', 'BILBAO');
+            else onSelectStation('market_radar', 'offers', 'ALL');
+          }}
+        />
       </div>
     </div>
   );

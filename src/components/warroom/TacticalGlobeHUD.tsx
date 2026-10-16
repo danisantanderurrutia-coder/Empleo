@@ -100,18 +100,115 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
               </linearGradient>
             </defs>
 
+            {/* Clip Path to ensure all landmasses stay within the sphere */}
+            <clipPath id="globeSphereClip">
+              <circle cx="160" cy="140" r="110" />
+            </clipPath>
+
             {/* Globe Sphere Base */}
             <circle cx="160" cy="140" r="110" fill="url(#globeAtmosphere)" stroke="#1e293b" strokeWidth="1.5" />
 
+            {/* CONTINENT VECTOR LANDMASSES (Holographic IMF World Map) */}
+            <g clipPath="url(#globeSphereClip)" className="opacity-90">
+              {/* Tactical Continent Fill Pattern & Atmosphere */}
+              <g 
+                fill="#047857" 
+                fillOpacity="0.28" 
+                stroke="#10b981" 
+                strokeWidth="0.9" 
+                strokeOpacity="0.8" 
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              >
+                {/* 1. SOUTH AMERICA (Encompassing Santiago node at 110, 220) */}
+                <path 
+                  d="M 97 162 C 105 158, 122 159, 134 165 C 144 172, 152 184, 149 198 C 145 212, 132 226, 126 235 C 120 243, 116 248, 113 245 C 110 236, 107 222, 105 208 C 101 195, 95 182, 96 172 Z" 
+                />
+
+                {/* 2. NORTH AMERICA & CENTRAL AMERICA */}
+                <path 
+                  d="M 97 162 C 90 155, 76 142, 65 130 C 58 118, 55 100, 60 85 C 52 75, 58 60, 72 58 C 85 52, 105 50, 118 62 C 112 70, 105 72, 110 80 C 120 75, 128 85, 124 94 C 118 106, 112 118, 106 126 C 104 132, 100 138, 97 136 C 92 138, 85 142, 90 152 C 94 156, 96 160, 97 162 Z" 
+                />
+
+                {/* GREENLAND */}
+                <path 
+                  d="M 130 50 C 136 44, 148 46, 150 54 C 151 62, 142 68, 134 66 C 128 62, 126 55, 130 50 Z" 
+                />
+
+                {/* 3. EUROPE & SCANDINAVIA (Encompassing Bilbao at 175, 135 and Kiel at 195, 110) */}
+                {/* Iberian Peninsula, France & Central Europe */}
+                <path 
+                  d="M 170 144 C 166 140, 165 134, 168 129 C 172 131, 178 133, 180 128 C 178 122, 176 115, 180 114 C 185 115, 192 113, 195 110 C 196 104, 199 102, 197 108 C 202 112, 212 114, 218 116 C 216 124, 214 132, 210 136 C 204 138, 198 135, 194 132 C 188 136, 182 140, 178 143 C 174 145, 171 146, 170 144 Z" 
+                />
+                {/* Scandinavia (Norway & Sweden) */}
+                <path 
+                  d="M 194 95 C 190 85, 193 70, 202 62 C 208 65, 215 75, 212 90 C 206 95, 198 96, 194 95 Z" 
+                />
+                {/* British Isles */}
+                <path 
+                  d="M 164 108 C 168 104, 173 108, 172 118 C 170 123, 166 122, 164 116 Z" 
+                />
+                <path 
+                  d="M 158 112 C 161 110, 163 114, 162 119 C 159 121, 157 117, 158 112 Z" 
+                />
+                {/* Italy Peninsula */}
+                <path 
+                  d="M 194 132 C 197 136, 201 142, 200 146 C 197 146, 195 140, 192 134 Z" 
+                />
+                {/* Greece & Aegean */}
+                <path 
+                  d="M 204 134 C 209 135, 213 140, 211 145 C 207 144, 205 139, 204 134 Z" 
+                />
+
+                {/* 4. AFRICA */}
+                <path 
+                  d="M 172 147 C 185 148, 205 149, 222 152 C 225 156, 228 168, 232 182 C 236 186, 234 195, 228 202 C 224 212, 218 226, 210 238 C 205 246, 198 248, 194 242 C 188 232, 185 215, 182 200 C 175 195, 158 196, 152 185 C 148 175, 155 162, 164 154 C 168 150, 170 148, 172 147 Z" 
+                />
+                {/* Madagascar */}
+                <path 
+                  d="M 233 222 C 236 218, 239 224, 237 232 C 234 235, 231 230, 233 222 Z" 
+                />
+
+                {/* 5. EURASIA (Eastern Europe, Russia, Middle East & Asia) */}
+                {/* Arabian Peninsula */}
+                <path 
+                  d="M 224 155 C 230 156, 236 162, 234 172 C 230 176, 225 170, 224 162 Z" 
+                />
+                {/* Russia / Siberia / Northern Asia */}
+                <path 
+                  d="M 215 65 C 230 62, 250 68, 265 78 C 266 95, 255 105, 242 108 C 230 102, 218 90, 215 65 Z" 
+                />
+                {/* Central & Eastern Asia */}
+                <path 
+                  d="M 218 116 C 230 112, 245 110, 260 114 C 265 125, 262 145, 250 155 C 240 158, 232 154, 225 148 C 220 140, 216 128, 218 116 Z" 
+                />
+              </g>
+
+              {/* Tactical Topographic Dots / Coordinates on Continents */}
+              <g fill="#34d399" opacity="0.6">
+                <circle cx="108" cy="215" r="1" />
+                <circle cx="125" cy="195" r="1" />
+                <circle cx="135" cy="180" r="1" />
+                <circle cx="85" cy="115" r="1" />
+                <circle cx="102" cy="95" r="1" />
+                <circle cx="178" cy="125" r="1" />
+                <circle cx="190" cy="118" r="1" />
+                <circle cx="205" cy="85" r="1" />
+                <circle cx="190" cy="180" r="1" />
+                <circle cx="210" cy="210" r="1" />
+                <circle cx="240" cy="100" r="1" />
+              </g>
+            </g>
+
             {/* Latitude Parallels */}
-            <ellipse cx="160" cy="140" rx="110" ry="25" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="3 3" />
-            <ellipse cx="160" cy="95" rx="98" ry="18" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="2 3" />
-            <ellipse cx="160" cy="185" rx="98" ry="18" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="2 3" />
+            <ellipse cx="160" cy="140" rx="110" ry="25" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="3 3" opacity="0.7" />
+            <ellipse cx="160" cy="95" rx="98" ry="18" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="2 3" opacity="0.6" />
+            <ellipse cx="160" cy="185" rx="98" ry="18" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="2 3" opacity="0.6" />
 
             {/* Longitude Meridians */}
-            <ellipse cx="160" cy="140" rx="40" ry="110" fill="none" stroke="#334155" strokeWidth="0.75" />
-            <ellipse cx="160" cy="140" rx="80" ry="110" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="3 3" />
-            <line x1="160" y1="30" x2="160" y2="250" stroke="#334155" strokeWidth="1" strokeDasharray="4 2" />
+            <ellipse cx="160" cy="140" rx="40" ry="110" fill="none" stroke="#334155" strokeWidth="0.75" opacity="0.7" />
+            <ellipse cx="160" cy="140" rx="80" ry="110" fill="none" stroke="#334155" strokeWidth="0.75" strokeDasharray="3 3" opacity="0.6" />
+            <line x1="160" y1="30" x2="160" y2="250" stroke="#334155" strokeWidth="1" strokeDasharray="4 2" opacity="0.7" />
 
             {/* Orbit Satellite Ring */}
             <ellipse 
