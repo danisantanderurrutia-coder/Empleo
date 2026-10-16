@@ -9,16 +9,20 @@ import {
   Printer,
   ShieldCheck,
   CheckCircle2,
-  FileText
+  FileText,
+  Crosshair,
+  Zap
 } from 'lucide-react';
 import { MasterProfileTab } from '../profile/MasterProfileTab';
 import { CVManagementTab } from '../cvs/CVManagementTab';
 import { CVPreviewModal } from '../cvs/CVPreviewModal';
+import { CVGunsmithTab } from './CVGunsmithTab';
+import { SkillTreeTab } from './SkillTreeTab';
 import { getStoredProfile, getStoredCVs } from '../../services/db';
 import type { CVVersion } from '../../types/cv';
 
 interface AgentDossierTabProps {
-  initialSubTab?: 'showcase' | 'profile' | 'cvs';
+  initialSubTab?: 'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs';
   onReturnToHub?: () => void;
 }
 
@@ -26,7 +30,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   initialSubTab = 'showcase',
   onReturnToHub
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'profile' | 'cvs'>(initialSubTab);
+  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs'>(initialSubTab);
   const [previewingCv, setPreviewingCv] = useState<CVVersion | null>(null);
 
   const profile = getStoredProfile();
@@ -92,7 +96,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         </div>
 
         {/* Game Mode Sub-Tabs Switcher */}
-        <div className="flex items-center p-1 bg-slate-950 rounded-xl border border-slate-800 shrink-0">
+        <div className="flex flex-wrap items-center p-1 bg-slate-950 rounded-xl border border-slate-800 gap-1 shrink-0">
           <button
             onClick={() => setActiveSubTab('showcase')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
@@ -102,7 +106,31 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             }`}
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>SHOWCASE OPERADOR</span>
+            <span>SHOWCASE</span>
+          </button>
+
+          <button
+            onClick={() => setActiveSubTab('gunsmith')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              activeSubTab === 'gunsmith'
+                ? 'bg-amber-600 text-white shadow font-black'
+                : 'text-slate-300 hover:text-white'
+            }`}
+          >
+            <Crosshair className="h-3.5 w-3.5 text-amber-400" />
+            <span>EL ARMERO // GUNSMITH</span>
+          </button>
+
+          <button
+            onClick={() => setActiveSubTab('skills')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              activeSubTab === 'skills'
+                ? 'bg-emerald-600 text-white shadow font-black'
+                : 'text-slate-300 hover:text-white'
+            }`}
+          >
+            <Zap className="h-3.5 w-3.5 text-emerald-400" />
+            <span>ÁRBOL DE HABILIDADES</span>
           </button>
 
           <button
@@ -114,7 +142,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             }`}
           >
             <GraduationCap className="h-3.5 w-3.5" />
-            <span>EXPEDIENTE DETALLADO</span>
+            <span>EXPEDIENTE</span>
           </button>
 
           <button
@@ -126,7 +154,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             }`}
           >
             <FileCheck2 className="h-3.5 w-3.5" />
-            <span>FORJA & PLANTILLAS</span>
+            <span>PLANTILLAS</span>
           </button>
         </div>
       </div>
@@ -461,14 +489,24 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         </div>
       )}
 
-      {/* SUB-PANEL 2: MASTER PROFILE DETAILED FORM */}
+      {/* SUB-PANEL 2: THE GUNSMITH (MODULAR CV LOADOUTS & PORTFOLIO ALLIANCE) */}
+      {activeSubTab === 'gunsmith' && (
+        <CVGunsmithTab />
+      )}
+
+      {/* SUB-PANEL 3: SKILL TREE & TRAINING BOUNTIES */}
+      {activeSubTab === 'skills' && (
+        <SkillTreeTab />
+      )}
+
+      {/* SUB-PANEL 4: MASTER PROFILE DETAILED FORM */}
       {activeSubTab === 'profile' && (
         <div className="space-y-4">
           <MasterProfileTab />
         </div>
       )}
 
-      {/* SUB-PANEL 3: CV MANAGEMENT & TEMPLATE COMPILER */}
+      {/* SUB-PANEL 5: CV MANAGEMENT & TEMPLATE COMPILER */}
       {activeSubTab === 'cvs' && (
         <div className="space-y-4">
           <CVManagementTab />
