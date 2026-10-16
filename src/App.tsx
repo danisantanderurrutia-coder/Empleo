@@ -6,6 +6,7 @@ import { WarRoomTab } from './components/warroom/WarRoomTab';
 import { MarketRadarTab } from './components/radar/MarketRadarTab';
 import { AgentDossierTab } from './components/dossier/AgentDossierTab';
 import { MissionControlTab } from './components/control/MissionControlTab';
+import { FundingTab } from './components/funding/FundingTab';
 import { SettingsTab } from './components/settings/SettingsTab';
 
 import { getStoredOffers, saveStoredOffers, getStoredProfile, getStoredApplications, saveStoredApplications } from './services/db';
@@ -152,6 +153,38 @@ export function App() {
     handleNavigate('mission_control', 'applications');
   };
 
+  const handleStartApplicationFromFunding = (fundingTitle: string, org: string) => {
+    const currentApps = getStoredApplications();
+    const existing = currentApps.find(a => a.offerTitle === fundingTitle && a.companyName === org);
+    if (!existing) {
+      const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
+      const newApp = {
+        id: `CAND-FUND-${Date.now().toString().slice(-6)}`,
+        offerId: `fund-${Date.now()}`,
+        offerTitle: fundingTitle,
+        companyName: org,
+        location: 'Convocatoria I+D (UE / DACH / Euskadi)',
+        currentStage: 1 as const,
+        status: 'En Progreso' as const,
+        createdDate: timestamp.split(' ')[0],
+        updatedDate: timestamp.split(' ')[0],
+        humanApprovalGranted: false,
+        adaptedCvSummary: ['Convocatoria I+D / Beca de Excelencia'],
+        history: [
+          {
+            id: `h-${Date.now()}`,
+            timestamp,
+            stage: 1 as const,
+            title: `Convocatoria registrada para postulación (${fundingTitle})`,
+            actor: 'Usuario' as const
+          }
+        ]
+      };
+      saveStoredApplications([newApp, ...currentApps]);
+    }
+    handleNavigate('mission_control', 'applications');
+  };
+
   return (
     <div className={`min-h-screen w-full bg-[var(--bg-app)] text-[var(--text-primary)] flex flex-col font-sans selection:bg-sky-500 selection:text-white theme-${theme} transition-colors duration-300`} data-theme={theme}>
       <Navbar
@@ -176,6 +209,13 @@ export function App() {
               initialSubTab={radarSubTab}
               initialFilter={radarLocationFilter}
               onStartApplication={handleStartApplicationFromOffer}
+              onReturnToHub={() => handleNavigate('dashboard')}
+            />
+          )}
+
+          {(activeTab === 'funding' || activeTab === 'convocatorias') && (
+            <FundingTab
+              onStartApplication={handleStartApplicationFromFunding}
               onReturnToHub={() => handleNavigate('dashboard')}
             />
           )}

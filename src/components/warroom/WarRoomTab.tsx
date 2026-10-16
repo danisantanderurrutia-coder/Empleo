@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   ChevronRight, 
   Radio,
@@ -12,6 +11,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
+import { FUNDING_CATALOG } from '../../data/fundingCatalog';
 import { TacticalGlobeHUD } from './TacticalGlobeHUD';
 
 interface WarRoomTabProps {
@@ -103,14 +103,14 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-3 mb-4">
           <span className="text-xs font-mono font-black uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-sky-600" />
-            <span>FLUJO OPERATIVO INTEGRADO // 3 ESTACIONES DE TRABAJO</span>
+            <span>FLUJO OPERATIVO INTEGRADO // 4 ESTACIONES DE CARRERA</span>
           </span>
           <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/30">
             SISTEMA LOCAL 100% PRIVADO
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Estación 01: Mercado */}
           <button
             onClick={() => onSelectStation('market_radar', 'offers', 'ALL')}
@@ -119,93 +119,125 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-mono font-black text-sky-600 uppercase tracking-wider">
-                  01 // MERCADO & RADAR
+                  01 // MERCADO
                 </span>
                 <span className="text-xs font-mono font-extrabold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 border border-sky-500/20">
                   {offers.length} Vacantes
                 </span>
               </div>
-              <div className="flex flex-wrap gap-1.5 my-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+              <div className="flex flex-wrap gap-1 my-2">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
                   🇩🇪 {germanyOffers.length} DACH
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
                   🇪🇸 {euskadiOffers.length} Euskadi
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
                   🌐 {remoteOffers.length} Remoto
                 </span>
               </div>
             </div>
             <div className="pt-2 border-t border-[var(--card-border)] text-[11px] font-mono font-bold text-sky-600 flex items-center justify-between group-hover:text-sky-500">
-              <span>Explorar Ofertas & Filtros</span>
+              <span>Explorar Radar</span>
               <span className="group-hover:translate-x-1 transition">»</span>
             </div>
           </button>
 
-          {/* Estación 02: Perfil & CV Modular */}
+          {/* Estación 02: Fondos I+D & Premios */}
           <button
-            onClick={() => onSelectStation('agent_dossier', 'gunsmith')}
-            className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-sky-500 hover:shadow-md transition text-left cursor-pointer group flex flex-col justify-between"
+            onClick={() => onSelectStation('funding')}
+            className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-amber-500 hover:shadow-md transition text-left cursor-pointer group flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono font-black text-sky-600 uppercase tracking-wider">
-                  02 // TALLER DE CV MODULAR
+                <span className="text-xs font-mono font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+                  02 // FONDOS I+D
                 </span>
-                <span className="text-xs font-mono font-extrabold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                  Puzzle Listo
+                <span className="text-xs font-mono font-extrabold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                  {FUNDING_CATALOG.length} Convocatorias
                 </span>
               </div>
-              <div className="flex flex-wrap gap-1.5 my-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
-                  Suelos & Carbono
+              <div className="flex flex-wrap gap-1 my-2">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  DAAD / DFG
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
-                  Geofísica & GIS
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  Horizonte UE
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  Ikerbasque
+                </span>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-[var(--card-border)] text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400 flex items-center justify-between group-hover:text-amber-500">
+              <span>Ver Becas & Premios</span>
+              <span className="group-hover:translate-x-1 transition">»</span>
+            </div>
+          </button>
+
+          {/* Estación 03: Perfil & CV Modular */}
+          <button
+            onClick={() => onSelectStation('agent_dossier', 'gunsmith')}
+            className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-emerald-500 hover:shadow-md transition text-left cursor-pointer group flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                  03 // CV (PUZZLE)
+                </span>
+                <span className="text-xs font-mono font-extrabold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                  1 Página A4
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1 my-2">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  Suelos / Carbono
+                </span>
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  Geofísica / GIS
+                </span>
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
                   Políticas UE
                 </span>
               </div>
             </div>
-            <div className="pt-2 border-t border-[var(--card-border)] text-[11px] font-mono font-bold text-sky-600 flex items-center justify-between group-hover:text-sky-500">
-              <span>Calibrar CV en 1 Página</span>
+            <div className="pt-2 border-t border-[var(--card-border)] text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-between group-hover:text-emerald-500">
+              <span>Calibrar CV & Evidencias</span>
               <span className="group-hover:translate-x-1 transition">»</span>
             </div>
           </button>
 
-          {/* Estación 03: Seguimiento & Candidaturas */}
+          {/* Estación 04: Seguimiento & Candidaturas */}
           <button
             onClick={() => onSelectStation('mission_control', 'applications')}
-            className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-sky-500 hover:shadow-md transition text-left cursor-pointer group flex flex-col justify-between"
+            className="p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-purple-500 hover:shadow-md transition text-left cursor-pointer group flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono font-black text-sky-600 uppercase tracking-wider">
-                  03 // CANDIDATURAS & KANBAN
+                <span className="text-xs font-mono font-black text-purple-600 dark:text-purple-400 uppercase tracking-wider">
+                  04 // CANDIDATURAS
                 </span>
                 <span className="text-xs font-mono font-extrabold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-600 border border-purple-500/20">
                   {activeApplications.length} Activas
                 </span>
               </div>
-              <div className="flex flex-wrap gap-1.5 my-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
-                  {colRadar.length} En Radar
+              <div className="flex flex-wrap gap-1 my-2">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  {colRadar.length} Radar
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
-                  {colPrep.length} En Prep
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                  {colPrep.length} Prep
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] font-bold">
                   {colSent.length} Enviadas
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 font-bold">
+                <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-600 font-bold">
                   {colInterviews.length} Entrevistas
                 </span>
               </div>
             </div>
-            <div className="pt-2 border-t border-[var(--card-border)] text-[11px] font-mono font-bold text-sky-600 flex items-center justify-between group-hover:text-sky-500">
-              <span>Ver Tablero de Procesos</span>
+            <div className="pt-2 border-t border-[var(--card-border)] text-[11px] font-mono font-bold text-purple-600 dark:text-purple-400 flex items-center justify-between group-hover:text-purple-500">
+              <span>Ver Kanban & Alertas</span>
               <span className="group-hover:translate-x-1 transition">»</span>
             </div>
           </button>

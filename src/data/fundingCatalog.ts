@@ -1,0 +1,243 @@
+import type { FundingOpportunity } from '../types/funding';
+
+export const FUNDING_CATALOG: FundingOpportunity[] = [
+  // -------------------------------------------------------------
+  // ALEMANIA (DACH) - PROGRAMAS DE INVESTIGACIÓN Y POSTDOC
+  // -------------------------------------------------------------
+  {
+    id: 'f-daad-research',
+    title: 'DAAD Research Grants - One-Year & Short-Term Grants',
+    organization: 'DAAD (Deutscher Akademischer Austauschdienst)',
+    category: 'grant',
+    region: 'germany',
+    amount: '1.300 € / mes + Seguro médico + Subsidio de viaje',
+    deadline: '2026-11-15',
+    deadlineDays: 45,
+    status: 'open',
+    eligibility: ['Título de Máster (M.Sc.) concluido', 'Propuesta de investigación vinculada a universidad alemana', 'Alemán B1/B2 o Inglés C1'],
+    targetDisciplines: ['Ciencias Ambientales', 'Biogeoquímica', 'Geociencias', 'Gestión de Cuencas'],
+    officialUrl: 'https://www.daad.de/en/study-and-research-in-germany/scholarships/',
+    description: 'Financiamiento individual para estancias de investigación y desarrollo doctoral en centros universitarios y de investigación federales en Alemania.',
+    strategicFit: 'Alta prioridad para vincular con CAU Kiel o centros Helmholtz (GFZ Potsdam, UFZ Leipzig).'
+  },
+  {
+    id: 'f-dfg-walter-benjamin',
+    title: 'DFG Walter Benjamin Programme - Individual Research Funding',
+    organization: 'DFG (Deutsche Forschungsgemeinschaft)',
+    category: 'fellowship',
+    region: 'germany',
+    amount: 'Contrato TV-L E13 (~4.200 € / mes bruto) + Fondos de proyecto',
+    deadline: 'Convocatoria Abierta Continua',
+    deadlineDays: -1,
+    status: 'rolling',
+    eligibility: ['Investigadores post-máster / postdoc', 'Carta de acogida de institución anfitriona en Alemania'],
+    targetDisciplines: ['Geofísica', 'Ciclos Biogeoquímicos', 'Modelación Climática', 'Sensoramiento Remoto'],
+    officialUrl: 'https://www.dfg.de/en/research-funding/funding-programmes/individual-grants/walter-benjamin-programme',
+    description: 'Permite a investigadores jóvenes ejecutar un proyecto de investigación independiente en una institución alemana elegida libremente.',
+    strategicFit: 'Excelente para proyectos de modelación de balances de carbono en turberas templadas alemanas.'
+  },
+  {
+    id: 'f-humboldt-postdoc',
+    title: 'Humboldt Research Fellowship for Postdoctoral Researchers',
+    organization: 'Alexander von Humboldt Foundation',
+    category: 'fellowship',
+    region: 'germany',
+    amount: '2.670 € / mes neto + Asignaciones de investigación y familia',
+    deadline: '2026-11-01',
+    deadlineDays: 30,
+    status: 'open',
+    eligibility: ['Investigación de alto nivel académico', 'Publicaciones científicas revisadas por pares', 'Acuerdo con anfitrión académico'],
+    targetDisciplines: ['Geofísica', 'Ecología Cuantitativa', 'Geoquímica Ambiental'],
+    officialUrl: 'https://www.humboldt-foundation.de/en/apply/sponsorship-programmes/humboldt-research-fellowship',
+    description: 'Red de excelencia científica de máximo prestigio global para proyectos de investigación de 6 a 24 meses en Alemania.',
+    strategicFit: 'Posicionamiento internacional de primer nivel para carrera científica en Europa central.'
+  },
+  {
+    id: 'f-helmholtz-postdoc',
+    title: 'Helmholtz Association Postdoctoral Programme',
+    organization: 'Helmholtz-Gemeinschaft Deutscher Forschungszentren',
+    category: 'grant',
+    region: 'germany',
+    amount: 'Hasta 300.000 € (Contrato completo + presupuesto de laboratorio)',
+    deadline: '2026-12-01',
+    deadlineDays: 60,
+    status: 'open',
+    eligibility: ['Investigación orientada a grandes desafíos de la Tierra y el Clima', 'Interés en centros GFZ, UFZ, AWI o DLR'],
+    targetDisciplines: ['Observación de la Tierra', 'Geodinámica', 'Sistemas de Suelos', 'Modelos Satelitales'],
+    officialUrl: 'https://www.helmholtz.de/en/career/jobs-at-helmholtz/',
+    description: 'Programa para atraer a talentos científicos a los mayores centros nacionales de investigación de Alemania.',
+    strategicFit: 'Alineación directa con experiencia en Google Earth Engine, teledetección multiespectral y dinámica de cuencas.'
+  },
+
+  // -------------------------------------------------------------
+  // UNIÓN EUROPEA (HORIZON EUROPE / LIFE / ERC)
+  // -------------------------------------------------------------
+  {
+    id: 'f-msca-postdoc',
+    title: 'Marie Skłodowska-Curie Actions (MSCA) Postdoctoral Fellowships',
+    organization: 'European Commission (Horizon Europe)',
+    category: 'fellowship',
+    region: 'europe',
+    amount: '5.080 € / mes (sujeto a corrección de país) + 600 € movilidad + 1.000 € I+D',
+    deadline: '2026-09-10',
+    deadlineDays: 90,
+    status: 'upcoming',
+    eligibility: ['Movilidad transnacional UE', 'Doctorado o experiencia investigadora equivalente (4+ años)', 'Sin restricción de nacionalidad'],
+    targetDisciplines: ['Restauración de Ecosistemas', 'Geofísica Ambiental', 'Políticas Climáticas Europeas'],
+    officialUrl: 'https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships',
+    description: 'El buque insignia europeo para la movilidad internacional y formación de investigadores de élite.',
+    strategicFit: 'Ideal para proyectos colaborativos bilaterales Alemania-Euskadi (ej. CAU Kiel y BC3 Bilbao).'
+  },
+  {
+    id: 'f-horizon-cluster6',
+    title: 'Horizon Europe Cluster 6: Biodiversity, Circular Economy & Water Resources',
+    organization: 'European Research Executive Agency (REA)',
+    category: 'project',
+    region: 'europe',
+    amount: 'Consorcios de 3M € a 8M € (Subvención 100% costes directos)',
+    deadline: '2026-10-30',
+    deadlineDays: 40,
+    status: 'open',
+    eligibility: ['Consorcios europeos de mínimo 3 entidades de países miembros o asociados', 'Participación de centros I+D, universidades o pymes'],
+    targetDisciplines: ['EU Soil Mission', 'Humedales & Turberas', 'Directiva Marco del Agua', 'Transición Ecológica'],
+    officialUrl: 'https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-europe/cluster-6-food-bioeconomy-natural-resources-agriculture-and-environment_en',
+    description: 'Grandes proyectos de investigación aplicada e innovación en protección de suelos y balance biogeoquímico.',
+    strategicFit: 'Capacidad para integrarse como modelador geoespacial de referencia en propuestas de consorcios UE.'
+  },
+  {
+    id: 'f-life-climate',
+    title: 'LIFE Programme: Nature, Biodiversity & Climate Change Mitigation',
+    organization: 'European Climate, Infrastructure and Environment Executive Agency (CINEA)',
+    category: 'project',
+    region: 'europe',
+    amount: 'Cofinanciación del 60% al 75% (Presupuestos de 1M € a 5M €)',
+    deadline: '2026-11-20',
+    deadlineDays: 50,
+    status: 'open',
+    eligibility: ['Entidades públicas, privadas, institutos de investigación y ONG europeas'],
+    targetDisciplines: ['Rewilding', 'Restauración de Humedales', 'Captura de Carbono Basada en la Naturaleza'],
+    officialUrl: 'https://cinea.ec.europa.eu/programmes/life_en',
+    description: 'El instrumento de financiación de la UE dedicado exclusivamente a objetivos medioambientales y climáticos.',
+    strategicFit: 'Respaldo directo con la experiencia del portafolio en Aljezur (Portugal) y cuencas templadas.'
+  },
+
+  // -------------------------------------------------------------
+  // EUSKADI & ESPAÑA (IKERBASQUE, FUNDACIÓN BIODIVERSIDAD, CSIC)
+  // -------------------------------------------------------------
+  {
+    id: 'f-ikerbasque-fellowship',
+    title: 'Ikerbasque Research Fellowships - Basque Science Foundation',
+    organization: 'Ikerbasque / Gobierno Vasco',
+    category: 'fellowship',
+    region: 'euskadi',
+    amount: 'Contrato de 5 años con opción a permanencia (Track a investigador principal)',
+    deadline: '2026-12-15',
+    deadlineDays: 75,
+    status: 'open',
+    eligibility: ['Investigadores con trayectoria internacional prometedora', 'Incorporación en centros BERC (BC3, DIPC), CICs o UPV/EHU'],
+    targetDisciplines: ['Ciencias del Cambio Climático', 'Modelación de Recursos Hídricos', 'Geofísica'],
+    officialUrl: 'https://www.ikerbasque.net/es/convocatorias/research-fellows',
+    description: 'Atracción de investigadores prometedores al ecosistema científico del País Vasco.',
+    strategicFit: 'Máxima afinidad geográfica para radicación en Bilbao / Donostia vinculado a BC3 o Tecnalia.'
+  },
+  {
+    id: 'f-fundacion-biodiversidad',
+    title: 'Convocatoria de Transición Ecológica & Renaturalización Fluvial (PRTR)',
+    organization: 'Fundación Biodiversidad (MITECO / NextGenerationEU)',
+    category: 'project',
+    region: 'euskadi',
+    amount: 'Subvenciones de 500.000 € a 4.000.000 € por proyecto',
+    deadline: '2026-11-05',
+    deadlineDays: 35,
+    status: 'open',
+    eligibility: ['Ayuntamientos, consorcios de aguas, centros tecnológicos y entidades ambientales'],
+    targetDisciplines: ['Restauración de Cuencas', 'Infraestructura Verde', 'Prevención de Inundaciones', 'GIS'],
+    officialUrl: 'https://fundacion-biodiversidad.es/convocatorias/',
+    description: 'Fondo de recuperación para transformación y adaptación climática de tramos urbanos y cuencas hidrográficas.',
+    strategicFit: 'Alineado con el marco de la Directiva de Inundaciones y la experiencia legislativa parlamentaria.'
+  },
+  {
+    id: 'f-hazitek-elkartek',
+    title: 'Programa Elkartek: Ayudas a la I+D Colaborativa en Tecnologías Verdes',
+    organization: 'SPRI / Departamento de Desarrollo Económico del Gobierno Vasco',
+    category: 'project',
+    region: 'euskadi',
+    amount: 'Financiación de proyectos de I+D fundamental y orientada en consorcio',
+    deadline: '2026-12-20',
+    deadlineDays: 80,
+    status: 'open',
+    eligibility: ['Agentes de la Red Vasca de Ciencia, Tecnología e Innovación (RVCTI)'],
+    targetDisciplines: ['Tecnologías Ambientales', 'Gemelos Digitales de Cuencas', 'Monitoreo Satelital'],
+    officialUrl: 'https://www.spri.eus/es/ayudas/elkartek/',
+    description: 'Impulsa proyectos de investigación en tecnologías estratégicas alineadas con el Basque Green Deal.',
+    strategicFit: 'Vía directa para participar en proyectos público-privados con centros como Tecnalia y Azti.'
+  },
+  {
+    id: 'f-juan-cierva',
+    title: 'Ayudas Juan de la Cierva - Formación e Incorporación',
+    organization: 'Agencia Estatal de Investigación (AEI / Ministerio de Ciencia)',
+    category: 'fellowship',
+    region: 'euskadi',
+    amount: 'Contrato de 2 a 3 años (~30.000 € a 36.000 € brutos/año)',
+    deadline: '2026-11-25',
+    deadlineDays: 55,
+    status: 'open',
+    eligibility: ['Investigadores que hayan defendido su tesis o méritos acreditados en centros españoles'],
+    targetDisciplines: ['Geociencias', 'Recursos Naturales', 'Cambio Global'],
+    officialUrl: 'https://www.aei.gob.es/convocatorias/buscador-convocatorias',
+    description: 'Fomenta la incorporación de jóvenes investigadores en centros de I+D españoles de excelencia.',
+    strategicFit: 'Opción sólida para vincularse a institutos del CSIC o departamentos de Geodinámica de la UPV/EHU.'
+  },
+
+  // -------------------------------------------------------------
+  // PREMIOS, COMPETENCIAS & DESAFÍOS CIENTÍFICOS ABIERTOS
+  // -------------------------------------------------------------
+  {
+    id: 'f-copernicus-masters',
+    title: 'Copernicus Masters: The Earth Observation Innovation Challenge',
+    organization: 'Agencia Espacial Europea (ESA) & Comisión Europea',
+    category: 'prize',
+    region: 'international',
+    amount: '10.000 € premio en efectivo + Soporte de incubación satelital valorado en 50.000 €',
+    deadline: '2026-10-31',
+    deadlineDays: 25,
+    status: 'open',
+    eligibility: ['Científicos, ingenieros y equipos con propuestas innovadoras de uso de datos Sentinel/Copernicus'],
+    targetDisciplines: ['Observación Satelital', 'Monitoreo de Suelos', 'GEE', 'Machine Learning Ambiental'],
+    officialUrl: 'https://copernicus-masters.com/',
+    description: 'La principal competencia internacional que premia aplicaciones punteras en teledetección para la Tierra.',
+    strategicFit: 'Ideal para postular el pipeline de teledetección de turberas o balances hídricos desarrollado con GEE.'
+  },
+  {
+    id: 'f-climate-kic-awards',
+    title: 'EIT Climate-KIC Venture & Innovation Awards',
+    organization: 'European Institute of Innovation and Technology (EIT)',
+    category: 'prize',
+    region: 'europe',
+    amount: 'Hasta 20.000 € + Acceso a la red de inversores climáticos europeos',
+    deadline: '2026-11-10',
+    deadlineDays: 40,
+    status: 'open',
+    eligibility: ['Proyectos de impacto en mitigación del cambio climático y monitoreo de emisiones'],
+    targetDisciplines: ['Mercados de Carbono', 'Suelos Regenerativos', 'Directivas Climáticas UE'],
+    officialUrl: 'https://www.climate-kic.org/',
+    description: 'Premia innovaciones con capacidad de acelerar la descarbonización de regiones e industrias europeas.',
+    strategicFit: 'Alineado con el marco de políticas climáticas y contabilización de sumideros naturales de carbono.'
+  },
+  {
+    id: 'f-egu-young-scientist',
+    title: 'EGU Outstanding Early Career Scientist Award (Geosciences)',
+    organization: 'European Geosciences Union (EGU)',
+    category: 'prize',
+    region: 'international',
+    amount: 'Reconocimiento internacional + Conferencia magistral invitada en la Asamblea General EGU (Viena)',
+    deadline: '2026-12-05',
+    deadlineDays: 65,
+    status: 'open',
+    eligibility: ['Científicos en etapas iniciales (hasta 7 años post-grado) con investigación sobresaliente'],
+    targetDisciplines: ['Geofísica', 'Hidrología', 'Biogeociencias', 'Suelo'],
+    officialUrl: 'https://www.egu.eu/awards-medals/division-outstanding-ecs-award/',
+    description: 'La máxima distinción de la comunidad europea de geociencias para investigadores noveles destacados.',
+    strategicFit: 'Complemento curricular de alto prestigio para postulaciones a institutos de investigación DACH.'
+  }
+];

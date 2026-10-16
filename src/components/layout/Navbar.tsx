@@ -73,6 +73,17 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         <button
+          onClick={() => onSelectStation && onSelectStation('funding')}
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
+            ['funding', 'convocatorias'].includes(currentTab)
+              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
+              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+          }`}
+        >
+          <span>FONDOS I+D</span>
+        </button>
+
+        <button
           onClick={() => onSelectStation && onSelectStation('agent_dossier', 'showcase')}
           className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
             ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'].includes(currentTab)
