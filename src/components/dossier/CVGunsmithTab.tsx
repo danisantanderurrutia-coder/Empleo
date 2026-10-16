@@ -109,260 +109,132 @@ export const CVGunsmithTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 text-slate-100 font-mono animate-fadeIn select-none">
+    <div className="space-y-4 text-slate-100 font-mono animate-fadeIn select-none">
       
       {/* =========================================================================
-       * 1. THE GUNSMITH HERO HUD: WEAPON BENCH IDENTIFIER & STATS
+       * 1. THE GUNSMITH HERO HUD: COMPACT WEAPON BENCH IDENTIFIER & STATS
        * ========================================================================= */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-700 bg-gradient-to-br from-[#070d18] via-[#091322] to-[#040811] p-6 shadow-2xl">
-        {/* Subtle Blueprint Grid Pattern */}
+      <div className="relative overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-br from-[#060c18] via-[#091424] to-[#040811] p-4 shadow-xl">
+        {/* Subtle Precision Grid Pattern */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-10" 
           style={{
             backgroundImage: `linear-gradient(to right, #38bdf8 1px, transparent 1px), linear-gradient(to bottom, #38bdf8 1px, transparent 1px)`,
-            backgroundSize: '32px 32px'
+            backgroundSize: '24px 24px'
           }}
         />
 
-        <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/40 text-amber-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+        {/* Tech Corner Crosshairs */}
+        <div className="absolute top-2 left-2 text-[9px] text-sky-500/40 font-mono select-none pointer-events-none">┌ [SYS-ARM-01]</div>
+        <div className="absolute top-2 right-2 text-[9px] text-sky-500/40 font-mono select-none pointer-events-none">[CAL: 1-PAGE] ┐</div>
+        <div className="absolute bottom-2 left-2 text-[9px] text-sky-500/40 font-mono select-none pointer-events-none">└ 43°15'N 02°55'W</div>
+        <div className="absolute bottom-2 right-2 text-[9px] text-sky-500/40 font-mono select-none pointer-events-none">D-SANTANDER ┘</div>
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/40 text-amber-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
                 <Crosshair className="h-3 w-3 text-amber-400 animate-spin" />
-                <span>GUNSMITH BENCH // MODULAR WEAPON WORKSTATION</span>
+                <span>GUNSMITH BENCH // ARMAS & BALÍSTICA CURRICULAR</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
-                SCHEMATIC: CV-1PAGE-MINT-v4
+              <span className="text-[10px] text-slate-400 font-mono">
+                SCHEMATIC: <strong className="text-sky-400">CV-1PAGE-MINT-v4</strong>
+              </span>
+              <span className="px-1.5 py-0.2 rounded bg-slate-800/80 text-[9px] text-emerald-400 font-mono border border-slate-700">
+                ● LIVE BENCH
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-white font-sans uppercase tracking-tight flex items-center gap-3">
+            <h1 className="text-xl sm:text-2xl font-black text-white font-sans uppercase tracking-tight flex items-center gap-2">
               <span>{currentChassis.name}</span>
             </h1>
-            <p className="text-xs text-slate-300 font-sans mt-1 max-w-2xl">
-              Configura tu currículum como una pieza de ingeniería balística: Chasis calibrado por teatro, munición de impacto con evidencia real del Portafolio y cero dispersión.
+            <p className="text-[11px] text-slate-300 font-sans max-w-2xl leading-relaxed">
+              Configura tu currículum como una pieza de precisión balística: Chasis calibrado al teatro europeo, munición Star de alto impacto probada en tu Portafolio y dispersión cero.
             </p>
           </div>
 
-          {/* Weapon Performance Stats HUD (R6 Style) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-950/90 p-3.5 rounded-2xl border border-slate-800 shrink-0">
-            <div>
-              <div className="text-[9px] text-slate-400 uppercase font-bold">ALCANCE ATS</div>
-              <div className="text-base font-black text-emerald-400 font-mono">{currentChassis.stats.range}%</div>
-              <div className="h-1 w-full bg-slate-800 rounded-full mt-1 overflow-hidden">
+          {/* Compact Weapon Performance HUD (R6 Siege Style) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800/90 shrink-0">
+            <div className="min-w-[85px]">
+              <div className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">ALCANCE ATS</div>
+              <div className="text-sm font-black text-emerald-400 font-mono">{currentChassis.stats.range}%</div>
+              <div className="h-1 w-full bg-slate-800 rounded-full mt-0.5 overflow-hidden">
                 <div className="h-full bg-emerald-400" style={{ width: `${currentChassis.stats.range}%` }} />
               </div>
             </div>
 
-            <div>
-              <div className="text-[9px] text-slate-400 uppercase font-bold">DENSIDAD SEÑAL</div>
-              <div className="text-base font-black text-amber-400 font-mono">1 PÁG</div>
-              <div className="h-1 w-full bg-slate-800 rounded-full mt-1 overflow-hidden">
+            <div className="min-w-[85px]">
+              <div className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">DENSIDAD</div>
+              <div className="text-sm font-black text-amber-400 font-mono">1 PÁG</div>
+              <div className="h-1 w-full bg-slate-800 rounded-full mt-0.5 overflow-hidden">
                 <div className="h-full bg-amber-400" style={{ width: `100%` }} />
               </div>
             </div>
 
-            <div>
-              <div className="text-[9px] text-slate-400 uppercase font-bold">CARGADOR STAR</div>
-              <div className="text-base font-black text-sky-400 font-mono">{equippedIds.length} / 4 RNDS</div>
-              <div className="h-1 w-full bg-slate-800 rounded-full mt-1 overflow-hidden">
+            <div className="min-w-[85px]">
+              <div className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">CARGADOR</div>
+              <div className="text-sm font-black text-sky-400 font-mono">{equippedIds.length} / 4 RNDS</div>
+              <div className="h-1 w-full bg-slate-800 rounded-full mt-0.5 overflow-hidden">
                 <div className="h-full bg-sky-400" style={{ width: `${(equippedIds.length / 4) * 100}%` }} />
               </div>
             </div>
 
-            <div>
-              <div className="text-[9px] text-slate-400 uppercase font-bold">DATALINK PORT.</div>
-              <div className="text-base font-black text-purple-400 font-mono">VERIFICADO</div>
-              <div className="h-1 w-full bg-slate-800 rounded-full mt-1 overflow-hidden">
+            <div className="min-w-[85px]">
+              <div className="text-[8px] text-slate-400 uppercase font-bold tracking-wider">DATALINK</div>
+              <div className="text-sm font-black text-purple-400 font-mono">ONLINE</div>
+              <div className="h-1 w-full bg-slate-800 rounded-full mt-0.5 overflow-hidden">
                 <div className="h-full bg-purple-400" style={{ width: `100%` }} />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Tactical Language Selector Switcher */}
-        <div className="relative z-10 flex items-center justify-between mt-5 pt-4 border-t border-slate-800/80">
+        {/* Tactical Language & Caliber Switcher */}
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 mt-3 pt-2.5 border-t border-slate-800/80">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-slate-400 uppercase font-bold">CALIBRE DE IDIOMA:</span>
-            <div className="flex items-center p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs">
+            <span className="text-[9px] text-slate-400 uppercase font-bold">CALIBRE DE IDIOMA:</span>
+            <div className="flex items-center p-0.5 bg-slate-950 rounded-lg border border-slate-800 text-[11px]">
               {(['es', 'en', 'de'] as const).map(l => (
                 <button
                   key={l}
                   onClick={() => setLang(l)}
-                  className={`px-3 py-1 rounded-lg font-bold uppercase transition cursor-pointer ${
+                  className={`px-2.5 py-0.5 rounded font-bold uppercase transition cursor-pointer ${
                     lang === l
-                      ? 'bg-amber-600 text-slate-950 shadow font-black'
+                      ? 'bg-amber-500 text-slate-950 shadow font-black'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  {l === 'es' ? '🇪🇸 CASTELLANO' : l === 'en' ? '🇬🇧 ENGLISH' : '🇩🇪 DEUTSCH'}
+                  {l === 'es' ? '🇪🇸 ES' : l === 'en' ? '🇬🇧 EN' : '🇩🇪 DE'}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="text-[11px] text-slate-400 font-mono hidden md:flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>NORMA DE IMPACTO: DENSIDAD CIENTÍFICA MÁXIMA EN 1 CARILLA</span>
+          <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <span>ESTÁNDAR: CONCISIÓN MILIMÉTRICA Y RESPALDO AUDITABLE</span>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-       * 2. VISUAL BLUEPRINT BENCH: TECHNICAL WEAPON SCHEMATIC WIREFRAME
+       * 2. VISUAL BLUEPRINT BENCH: COMPACT HIGH-TECH WEAPON SCHEMATIC WIREFRAME
        * ========================================================================= */}
-      <div className="p-5 rounded-3xl bg-[#09111e]/95 border border-slate-700/80 shadow-2xl relative overflow-hidden">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+      <div className="p-3.5 rounded-2xl bg-[#070d18]/95 border border-slate-700/80 shadow-2xl relative overflow-hidden">
+        
+        {/* Bench Top Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2 mb-2.5">
           <div className="flex items-center gap-2">
-            <Cpu className="h-4 w-4 text-sky-400" />
-            <span className="text-xs font-black uppercase text-white tracking-wider">
-              ESQUEMA BLUEPRINT // BANCO DE ENSAMBLAJE DE PRECISIÓN
+            <Cpu className="h-3.5 w-3.5 text-sky-400" />
+            <span className="text-[11px] font-black uppercase text-white tracking-wider">
+              BANCO DE PRECISIÓN // BLUEPRINT MODULAR
+            </span>
+            <span className="px-1.5 py-0.2 rounded bg-sky-950/80 text-[8px] text-sky-300 font-mono border border-sky-800">
+              SOCKET ACTIVO: [{activeSocket.toUpperCase()}]
             </span>
           </div>
-          <span className="text-[10px] text-slate-400 font-mono">
-            INTERACTIVE SLOTS // HAZ CLIC EN CUALQUIER SOCKET PARA INSPECCIONAR
-          </span>
-        </div>
-
-        {/* Interactive Schematic Visual Wireframe (SVG Diagram with Leader Lines) */}
-        <div className="relative w-full overflow-x-auto py-2">
-          <svg 
-            viewBox="0 0 860 210" 
-            className="w-full min-w-[700px] h-auto select-none"
-          >
-            <defs>
-              <linearGradient id="chassisBeam" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-
-            {/* Background Grid Accent Lines */}
-            <line x1="40" y1="105" x2="820" y2="105" stroke="#1e293b" strokeWidth="1" strokeDasharray="4 4" />
-            <line x1="280" y1="20" x2="280" y2="190" stroke="#1e293b" strokeWidth="1" strokeDasharray="4 4" />
-            <line x1="580" y1="20" x2="580" y2="190" stroke="#1e293b" strokeWidth="1" strokeDasharray="4 4" />
-
-            {/* Central 1-Page Document Blueprint Chassis Box */}
-            <rect 
-              x="300" 
-              y="25" 
-              width="260" 
-              height="160" 
-              rx="12" 
-              fill="#060c18" 
-              stroke="#38bdf8" 
-              strokeWidth="1.5" 
-              strokeDasharray="6 3" 
-            />
-
-            {/* Document Internal Wireframe Lines */}
-            <rect x="320" y="42" width="220" height="24" rx="4" fill="#0f172a" stroke="#f59e0b" strokeWidth="1" />
-            <text x="330" y="58" fill="#f59e0b" fontSize="8" fontWeight="bold" fontFamily="monospace">
-              [SOCKET 1: HEADER & CHASIS ACTIVO]
-            </text>
-
-            <rect x="320" y="74" width="220" height="22" rx="4" fill="#0f172a" stroke="#10b981" strokeWidth="1" />
-            <text x="330" y="89" fill="#34d399" fontSize="8" fontWeight="bold" fontFamily="monospace">
-              [SOCKET 2: RESUMEN CUANTITATIVO]
-            </text>
-
-            {/* 4 Bullet Magazine Chambers */}
-            <g>
-              <rect x="320" y="104" width="220" height="42" rx="4" fill="#0f172a" stroke="#38bdf8" strokeWidth="1" />
-              <text x="330" y="117" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace">
-                [SOCKET 3: CARGADOR // 4 BALAS STAR]
-              </text>
-              {/* 4 Ammo Shells representation */}
-              <g transform="translate(330, 124)">
-                {Array.from({ length: 4 }).map((_, i) => {
-                  const isLoaded = i < equippedIds.length;
-                  return (
-                    <g key={i} transform={`translate(${i * 52}, 0)`}>
-                      <rect 
-                        x="0" 
-                        y="0" 
-                        width="46" 
-                        height="14" 
-                        rx="3" 
-                        fill={isLoaded ? '#f59e0b' : '#1e293b'} 
-                        fillOpacity={isLoaded ? 0.3 : 0.4} 
-                        stroke={isLoaded ? '#f59e0b' : '#334155'} 
-                        strokeWidth="1" 
-                      />
-                      <text x="5" y="10" fill={isLoaded ? '#ffffff' : '#64748b'} fontSize="7" fontWeight="bold" fontFamily="monospace">
-                        {isLoaded ? `RND 0${i + 1}` : 'EMPTY'}
-                      </text>
-                    </g>
-                  );
-                })}
-              </g>
-            </g>
-
-            {/* Footer Datalink Port */}
-            <rect x="320" y="154" width="220" height="20" rx="4" fill="#0f172a" stroke="#a855f7" strokeWidth="1" />
-            <text x="330" y="168" fill="#c084fc" fontSize="8" fontWeight="bold" fontFamily="monospace">
-              [SOCKET 4: DATALINK PORTAFOLIO VERIFICADO]
-            </text>
-
-            {/* CALLOUT LEADER LINES TO SOCKET CONTROLS */}
-            
-            {/* Leader 1: Left to Socket 1 (Chassis) */}
-            <path d="M 190 55 L 260 55 L 300 55" fill="none" stroke="#f59e0b" strokeWidth="1.5" markerEnd="url(#arrow)" />
-            <circle cx="190" cy="55" r="4" fill="#f59e0b" className="animate-ping" />
-            <circle cx="190" cy="55" r="3" fill="#f59e0b" />
-            <g 
-              className="cursor-pointer group" 
-              onClick={() => setActiveSocket('chassis')}
-            >
-              <rect x="50" y="40" width="130" height="30" rx="6" fill="#0f172a" stroke="#f59e0b" strokeWidth="1" />
-              <text x="60" y="54" fill="#f59e0b" fontSize="8" fontWeight="bold" fontFamily="monospace">CHASIS SELECCIONADO</text>
-              <text x="60" y="65" fill="#f8fafc" fontSize="8" fontWeight="bold" fontFamily="monospace">» {currentChassis.code}</text>
-            </g>
-
-            {/* Leader 2: Left to Socket 3 (Ammo Magazine) */}
-            <path d="M 190 125 L 260 125 L 300 125" fill="none" stroke="#38bdf8" strokeWidth="1.5" />
-            <circle cx="190" cy="125" r="3" fill="#38bdf8" />
-            <g 
-              className="cursor-pointer group" 
-              onClick={() => setActiveSocket('ammo')}
-            >
-              <rect x="50" y="110" width="130" height="30" rx="6" fill="#0f172a" stroke="#38bdf8" strokeWidth="1" />
-              <text x="60" y="124" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace">CAPACIDAD DE DISPARO</text>
-              <text x="60" y="135" fill="#f8fafc" fontSize="8" fontWeight="bold" fontFamily="monospace">» {equippedIds.length}/4 BALAS STAR</text>
-            </g>
-
-            {/* Leader 3: Right to Optics (ATS Targeting) */}
-            <path d="M 670 70 L 600 70 L 560 70" fill="none" stroke="#10b981" strokeWidth="1.5" />
-            <circle cx="670" cy="70" r="3" fill="#10b981" />
-            <g 
-              className="cursor-pointer group" 
-              onClick={() => setActiveSocket('optics')}
-            >
-              <rect x="680" y="55" width="140" height="30" rx="6" fill="#0f172a" stroke="#10b981" strokeWidth="1" />
-              <text x="690" y="69" fill="#10b981" fontSize="8" fontWeight="bold" fontFamily="monospace">CALIBRACIÓN ÓPTICA ATS</text>
-              <text x="690" y="80" fill="#f8fafc" fontSize="8" fontWeight="bold" fontFamily="monospace">» 96% BLINDAJE LÉXICO</text>
-            </g>
-
-            {/* Leader 4: Right to Datalink (Portafolio Alliance) */}
-            <path d="M 670 145 L 600 145 L 560 145" fill="none" stroke="#a855f7" strokeWidth="1.5" />
-            <circle cx="670" cy="145" r="3" fill="#a855f7" />
-            <g 
-              className="cursor-pointer group" 
-              onClick={() => setActiveSocket('datalink')}
-            >
-              <rect x="680" y="130" width="140" height="30" rx="6" fill="#0f172a" stroke="#a855f7" strokeWidth="1" />
-              <text x="690" y="144" fill="#c084fc" fontSize="8" fontWeight="bold" fontFamily="monospace">DATALINK PORTAFOLIO</text>
-              <text x="690" y="155" fill="#f8fafc" fontSize="8" fontWeight="bold" fontFamily="monospace">» PRUEBAS CONGRESO & KIEL</text>
-            </g>
-          </svg>
-        </div>
-
-        {/* Chassis Selector Buttons on Workbench */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-800 text-[10px]">
-          <span className="text-slate-400 uppercase font-bold">
-            SOCKET ACTIVO: <strong className="text-amber-400 uppercase">{activeSocket}</strong> • MONTAR CHASIS EN BANCO:
-          </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 text-[9px] text-slate-400 font-mono">
+            <span>CHASIS:</span>
             {(['science', 'geophysics', 'policy'] as const).map(cKey => (
               <button
                 key={cKey}
@@ -370,16 +242,315 @@ export const CVGunsmithTab: React.FC = () => {
                   setActiveChassis(cKey);
                   setActiveSocket('chassis');
                 }}
-                className={`px-3 py-1 rounded-lg font-bold uppercase transition cursor-pointer ${
+                className={`px-2 py-0.5 rounded font-bold uppercase transition cursor-pointer text-[9px] ${
                   activeChassis === cKey
-                    ? 'bg-amber-500 text-slate-950 shadow font-black'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow'
                     : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                 }`}
               >
-                {cKey === 'science' ? '🌿 Suelos/Kiel' : cKey === 'geophysics' ? '🛰️ Geofísica/GIS' : '🏛️ Gobernanza UE'}
+                {cKey === 'science' ? '🌿 Suelos' : cKey === 'geophysics' ? '🛰️ Geo-GIS' : '🏛️ UE Policy'}
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Compact SVG Blueprint Bench */}
+        <div className="relative w-full overflow-x-auto py-1">
+          <svg 
+            viewBox="0 0 740 145" 
+            className="w-full min-w-[660px] h-auto select-none"
+          >
+            <defs>
+              <filter id="neonGlowSky" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="neonGlowAmber" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <linearGradient id="railGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.8" />
+                <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.8" />
+                <stop offset="70%" stopColor="#10b981" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#a855f7" stopOpacity="0.8" />
+              </linearGradient>
+              <pattern id="gridPattern" width="12" height="12" patternUnits="userSpaceOnUse">
+                <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#1e293b" strokeWidth="0.5" strokeOpacity="0.4" />
+              </pattern>
+            </defs>
+
+            {/* Background Technical Grid */}
+            <rect x="0" y="0" width="740" height="145" fill="url(#gridPattern)" />
+
+            {/* Central Precision Calibration Rail Axis */}
+            <line x1="20" y1="72" x2="720" y2="72" stroke="url(#railGrad)" strokeWidth="1.5" strokeDasharray="6 3" />
+            
+            {/* Precision Measurement Ticks on Main Rail */}
+            {Array.from({ length: 36 }).map((_, i) => (
+              <line 
+                key={i} 
+                x1={20 + i * 20} 
+                y1={i % 5 === 0 ? "66" : "69"} 
+                x2={20 + i * 20} 
+                y2={i % 5 === 0 ? "78" : "75"} 
+                stroke={i % 5 === 0 ? "#38bdf8" : "#334155"} 
+                strokeWidth={i % 5 === 0 ? "1" : "0.5"} 
+              />
+            ))}
+
+            {/* Technical Crosshairs and Watermarks */}
+            <text x="25" y="15" fill="#475569" fontSize="7" fontFamily="monospace">COORD: 43.26°N 02.93°W</text>
+            <text x="370" y="15" fill="#475569" fontSize="7" fontFamily="monospace" textAnchor="middle">SCHEMATIC: STAR-CV // RIGOR 1-PAGE</text>
+            <text x="715" y="15" fill="#475569" fontSize="7" fontFamily="monospace" textAnchor="end">TOLERANCE: 0.00mm</text>
+
+            {/* -------------------------------------------------------------
+             * SOCKET 1: CHASSIS RECEIVER (X: 18 - 180, Y: 22 - 128)
+             * ------------------------------------------------------------- */}
+            <g 
+              className="cursor-pointer group"
+              onClick={() => setActiveSocket('chassis')}
+            >
+              <rect 
+                x="18" 
+                y="24" 
+                width="165" 
+                height="100" 
+                rx="8" 
+                fill="#0b1322" 
+                stroke={activeSocket === 'chassis' ? '#f59e0b' : '#334155'} 
+                strokeWidth={activeSocket === 'chassis' ? '2' : '1'} 
+                filter={activeSocket === 'chassis' ? 'url(#neonGlowAmber)' : undefined}
+                className="transition-all"
+              />
+              {/* Corner brackets */}
+              <path d="M 23 32 L 23 27 L 28 27" fill="none" stroke="#f59e0b" strokeWidth="1" />
+              <path d="M 178 32 L 178 27 L 173 27" fill="none" stroke="#f59e0b" strokeWidth="1" />
+              <path d="M 23 116 L 23 121 L 28 121" fill="none" stroke="#f59e0b" strokeWidth="1" />
+              <path d="M 178 116 L 178 121 L 173 121" fill="none" stroke="#f59e0b" strokeWidth="1" />
+
+              <text x="28" y="42" fill="#f59e0b" fontSize="8" fontWeight="bold" fontFamily="monospace">
+                [SKT-01 // CHASIS ACTIVO]
+              </text>
+              <text x="28" y="56" fill="#ffffff" fontSize="9" fontWeight="bold" fontFamily="sans-serif">
+                {currentChassis.code}
+              </text>
+              <text x="28" y="70" fill="#94a3b8" fontSize="7.5" fontFamily="monospace">
+                CALIBRE: {currentChassis.caliber}
+              </text>
+
+              {/* Chassis Mini Spec Indicator Bars */}
+              <g transform="translate(28, 80)">
+                <text x="0" y="8" fill="#64748b" fontSize="7" fontFamily="monospace">PENETRACIÓN</text>
+                <rect x="75" y="2" width="65" height="6" rx="2" fill="#1e293b" />
+                <rect x="75" y="2" width={`${(currentChassis.stats.penetration / 100) * 65}`} height="6" rx="2" fill="#f59e0b" />
+                
+                <text x="0" y="22" fill="#64748b" fontSize="7" fontFamily="monospace">MOVILIDAD ATS</text>
+                <rect x="75" y="16" width="65" height="6" rx="2" fill="#1e293b" />
+                <rect x="75" y="16" width={`${(currentChassis.stats.mobility / 100) * 65}`} height="6" rx="2" fill="#10b981" />
+              </g>
+
+              <circle cx="170" cy="35" r="3" fill={activeSocket === 'chassis' ? '#f59e0b' : '#334155'} />
+            </g>
+
+            {/* Inter-socket Bus Connector 1 */}
+            <path d="M 183 72 L 198 72" stroke="#38bdf8" strokeWidth="1.5" />
+            <circle cx="190" cy="72" r="2" fill="#38bdf8" />
+
+            {/* -------------------------------------------------------------
+             * SOCKET 2: AMMO MAGAZINE WELL (X: 198 - 368, Y: 24 - 124)
+             * ------------------------------------------------------------- */}
+            <g 
+              className="cursor-pointer group"
+              onClick={() => setActiveSocket('ammo')}
+            >
+              <rect 
+                x="198" 
+                y="24" 
+                width="172" 
+                height="100" 
+                rx="8" 
+                fill="#0b1322" 
+                stroke={activeSocket === 'ammo' ? '#38bdf8' : '#334155'} 
+                strokeWidth={activeSocket === 'ammo' ? '2' : '1'} 
+                filter={activeSocket === 'ammo' ? 'url(#neonGlowSky)' : undefined}
+                className="transition-all"
+              />
+              <path d="M 203 32 L 203 27 L 208 27" fill="none" stroke="#38bdf8" strokeWidth="1" />
+              <path d="M 365 32 L 365 27 L 360 27" fill="none" stroke="#38bdf8" strokeWidth="1" />
+              <path d="M 203 116 L 203 121 L 208 121" fill="none" stroke="#38bdf8" strokeWidth="1" />
+              <path d="M 365 116 L 365 121 L 360 121" fill="none" stroke="#38bdf8" strokeWidth="1" />
+
+              <text x="208" y="42" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace">
+                [SKT-02 // CARGADOR STAR]
+              </text>
+              <text x="360" y="42" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace" textAnchor="end">
+                {equippedIds.length}/4 RNDS
+              </text>
+
+              {/* 4 Precision Cartridge Cells with Glowing Tips */}
+              <g transform="translate(208, 52)">
+                {Array.from({ length: 4 }).map((_, i) => {
+                  const isLoaded = i < equippedIds.length;
+                  return (
+                    <g key={i} transform={`translate(${i * 38}, 0)`}>
+                      {/* Cartridge Outer Shell */}
+                      <rect 
+                        x="0" 
+                        y="0" 
+                        width="32" 
+                        height="55" 
+                        rx="4" 
+                        fill={isLoaded ? '#0f1f38' : '#080d16'} 
+                        stroke={isLoaded ? '#38bdf8' : '#1e293b'} 
+                        strokeWidth={isLoaded ? '1.5' : '1'} 
+                      />
+                      {/* Bullet Primer Cap */}
+                      <rect 
+                        x="8" 
+                        y="4" 
+                        width="16" 
+                        height="6" 
+                        rx="1" 
+                        fill={isLoaded ? '#f59e0b' : '#334155'} 
+                      />
+                      {/* Charge Level Segment */}
+                      <rect 
+                        x="6" 
+                        y="14" 
+                        width="20" 
+                        height="18" 
+                        rx="2" 
+                        fill={isLoaded ? '#38bdf8' : '#1e293b'} 
+                        fillOpacity={isLoaded ? 0.3 : 0.2}
+                        stroke={isLoaded ? '#38bdf8' : '#334155'}
+                        strokeWidth="0.5"
+                      />
+                      {/* LED State Pip */}
+                      <circle 
+                        cx="16" 
+                        cy="42" 
+                        r={isLoaded ? "3.5" : "2"} 
+                        fill={isLoaded ? '#10b981' : '#475569'} 
+                      />
+                      <text x="16" y="51" fill={isLoaded ? '#38bdf8' : '#64748b'} fontSize="6" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                        {isLoaded ? `0${i + 1}` : 'EMP'}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
+
+              <circle cx="358" cy="35" r="3" fill={activeSocket === 'ammo' ? '#38bdf8' : '#334155'} />
+            </g>
+
+            {/* Inter-socket Bus Connector 2 */}
+            <path d="M 370 72 L 385 72" stroke="#10b981" strokeWidth="1.5" />
+            <circle cx="378" cy="72" r="2" fill="#10b981" />
+
+            {/* -------------------------------------------------------------
+             * SOCKET 3: OPTICS ATS TARGETING (X: 385 - 545, Y: 24 - 124)
+             * ------------------------------------------------------------- */}
+            <g 
+              className="cursor-pointer group"
+              onClick={() => setActiveSocket('optics')}
+            >
+              <rect 
+                x="385" 
+                y="24" 
+                width="160" 
+                height="100" 
+                rx="8" 
+                fill="#0b1322" 
+                stroke={activeSocket === 'optics' ? '#10b981' : '#334155'} 
+                strokeWidth={activeSocket === 'optics' ? '2' : '1'} 
+                className="transition-all"
+              />
+              <path d="M 390 32 L 390 27 L 395 27" fill="none" stroke="#10b981" strokeWidth="1" />
+              <path d="M 540 32 L 540 27 L 535 27" fill="none" stroke="#10b981" strokeWidth="1" />
+              <path d="M 390 116 L 390 121 L 395 121" fill="none" stroke="#10b981" strokeWidth="1" />
+              <path d="M 540 116 L 540 121 L 535 121" fill="none" stroke="#10b981" strokeWidth="1" />
+
+              <text x="395" y="42" fill="#10b981" fontSize="8" fontWeight="bold" fontFamily="monospace">
+                [SKT-03 // ÓPTICA ATS]
+              </text>
+              <text x="395" y="56" fill="#ffffff" fontSize="9" fontWeight="bold" fontFamily="sans-serif">
+                COLIMADOR LÉXICO
+              </text>
+
+              {/* Collimator Reticle Graphic */}
+              <g transform="translate(465, 80)">
+                <circle cx="0" cy="0" r="24" fill="#06121e" stroke="#10b981" strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="0" cy="0" r="14" fill="none" stroke="#34d399" strokeWidth="1" />
+                <circle cx="0" cy="0" r="3" fill="#10b981" />
+                <line x1="-28" y1="0" x2="-18" y2="0" stroke="#10b981" strokeWidth="1" />
+                <line x1="18" y1="0" x2="28" y2="0" stroke="#10b981" strokeWidth="1" />
+                <line x1="0" y1="-28" x2="0" y2="-18" stroke="#10b981" strokeWidth="1" />
+                <line x1="0" y1="18" x2="0" y2="28" stroke="#10b981" strokeWidth="1" />
+              </g>
+
+              <text x="395" y="115" fill="#94a3b8" fontSize="7" fontFamily="monospace">
+                PRECISIÓN: 98% MATCH ATS
+              </text>
+
+              <circle cx="535" cy="35" r="3" fill={activeSocket === 'optics' ? '#10b981' : '#334155'} />
+            </g>
+
+            {/* Inter-socket Bus Connector 3 */}
+            <path d="M 545 72 L 560 72" stroke="#a855f7" strokeWidth="1.5" />
+            <circle cx="552" cy="72" r="2" fill="#a855f7" />
+
+            {/* -------------------------------------------------------------
+             * SOCKET 4: DATALINK PORTAFOLIO ALLIANCE (X: 560 - 722, Y: 24 - 124)
+             * ------------------------------------------------------------- */}
+            <g 
+              className="cursor-pointer group"
+              onClick={() => setActiveSocket('datalink')}
+            >
+              <rect 
+                x="560" 
+                y="24" 
+                width="162" 
+                height="100" 
+                rx="8" 
+                fill="#0b1322" 
+                stroke={activeSocket === 'datalink' ? '#a855f7' : '#334155'} 
+                strokeWidth={activeSocket === 'datalink' ? '2' : '1'} 
+                className="transition-all"
+              />
+              <path d="M 565 32 L 565 27 L 570 27" fill="none" stroke="#a855f7" strokeWidth="1" />
+              <path d="M 717 32 L 717 27 L 712 27" fill="none" stroke="#a855f7" strokeWidth="1" />
+              <path d="M 565 116 L 565 121 L 570 121" fill="none" stroke="#a855f7" strokeWidth="1" />
+              <path d="M 717 116 L 717 121 L 712 121" fill="none" stroke="#a855f7" strokeWidth="1" />
+
+              <text x="570" y="42" fill="#c084fc" fontSize="8" fontWeight="bold" fontFamily="monospace">
+                [SKT-04 // DATALINK ALLIANCE]
+              </text>
+              <text x="570" y="56" fill="#ffffff" fontSize="9" fontWeight="bold" fontFamily="sans-serif">
+                PORTAFOLIO LIVE
+              </text>
+
+              {/* Data Frequency Pulse Antenna Graphic */}
+              <g transform="translate(640, 78)">
+                <path d="M -25 8 Q 0 -18 25 8" fill="none" stroke="#a855f7" strokeWidth="1.2" strokeDasharray="3 2" />
+                <path d="M -16 5 Q 0 -10 16 5" fill="none" stroke="#c084fc" strokeWidth="1.5" />
+                <path d="M -8 2 Q 0 -4 8 2" fill="none" stroke="#e9d5ff" strokeWidth="2" />
+                <circle cx="0" cy="12" r="3" fill="#a855f7" />
+              </g>
+
+              <text x="570" y="115" fill="#94a3b8" fontSize="7" fontFamily="monospace">
+                ENLACE: KIEL • POLONIA • CONGRESO
+              </text>
+
+              <circle cx="712" cy="35" r="3" fill={activeSocket === 'datalink' ? '#a855f7' : '#334155'} />
+            </g>
+          </svg>
         </div>
       </div>
 
