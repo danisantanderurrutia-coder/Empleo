@@ -14,7 +14,7 @@ interface CapabilityNode {
   shortName: string;
   level: number; // 1 to 5
   maxLevel: 5;
-  status: 'MASTERED' | 'ACTIVE' | 'IN_TRAINING';
+  status: 'MASTERED' | 'ACTIVE' | 'IN_TRAINING' | 'MARKET_GAP';
   branch: 'geophysics' | 'biogeo' | 'policy' | 'languages';
   xp: number;
   cx: number;
@@ -22,10 +22,17 @@ interface CapabilityNode {
   description: string;
   evidenceTitle: string;
   evidenceAnchor: string;
+  isMarketGap?: boolean;
+  gapDemand?: string;
+  gapImpact?: string;
+  gapRoadmap?: string[];
 }
 
 export const SkillTreeTab: React.FC = () => {
   const offers = getStoredOffers();
+
+  // Selected filter mode
+  const [filterMode, setFilterMode] = useState<'all' | 'mastered' | 'training' | 'gaps'>('all');
 
   // Selected node for technical inspector
   const [selectedNodeId, setSelectedNodeId] = useState<string>('n1-gee');
@@ -345,26 +352,127 @@ export const SkillTreeTab: React.FC = () => {
       description: 'Participación en cumbres internacionales de justicia climática y articulación intercontinental Europa-Latinoamérica.',
       evidenceTitle: 'Lámina 005: Foros de Oslo, Bonn y Bogotá',
       evidenceAnchor: '#conferencias-internacionales'
+    },
+
+    // =============================================================
+    // VACÍOS DE MERCADO DETECTADOS (SKILL GAPS ESTRATÉGICOS)
+    // =============================================================
+    {
+      id: 'gap-swat',
+      name: 'Modelación Hidrológica SWAT / Iber',
+      shortName: 'SWAT/Iber',
+      level: 2,
+      maxLevel: 5,
+      status: 'MARKET_GAP',
+      branch: 'biogeo',
+      xp: 400,
+      cx: 600,
+      cy: 160,
+      description: 'Brecha detectada en consultoras hidrológicas y agencias de cuencas en Alemania (LUBW, BfG) y Euskadi (URA).',
+      evidenceTitle: 'Extensión Metodológica a Modelos de Transporte Fluvial',
+      evidenceAnchor: '#investigacion-cuantitativa',
+      isMarketGap: true,
+      gapDemand: '42% vacantes de modelación hidrológica en DACH y Euskadi',
+      gapImpact: '+18% coincidencia en vacantes de modelador de cuencas',
+      gapRoadmap: [
+        'Calibrar cuenca piloto en QSWAT+ usando datos de Sentinel-2',
+        'Validar balances hídricos frente a series de caudal existentes',
+        'Publicar mini-estudio de caso en Portafolio'
+      ]
+    },
+    {
+      id: 'gap-docker-gis',
+      name: 'Docker & MLOps Geoespacial',
+      shortName: 'Docker Geo',
+      level: 2,
+      maxLevel: 5,
+      status: 'MARKET_GAP',
+      branch: 'geophysics',
+      xp: 450,
+      cx: 140,
+      cy: 35,
+      description: 'Contenedorización de scripts Python/GEE e inferencia automática de imágenes satelitales en la nube.',
+      evidenceTitle: 'Modernización DevOps para Teledetección',
+      evidenceAnchor: '#capacidades-computacionales',
+      isMarketGap: true,
+      gapDemand: '38% vacantes de geoinformática y centros tecnológicos (Tecnalia, DLR)',
+      gapImpact: '+22% atractivo en roles de especialista geoespacial',
+      gapRoadmap: [
+        'Contenedorizar pipeline GEE Python en Dockerfile ligero',
+        'Automatizar descarga y procesamiento de teledetección con GitHub Actions',
+        'Integrar API FastAPI para servir capas ráster GeoTIFF'
+      ]
+    },
+    {
+      id: 'gap-csrd-audit',
+      name: 'Auditoría de Carbono Corporativo & CSRD',
+      shortName: 'CSRD Audit',
+      level: 3,
+      maxLevel: 5,
+      status: 'MARKET_GAP',
+      branch: 'policy',
+      xp: 550,
+      cx: 150,
+      cy: 320,
+      description: 'Directiva de Sostenibilidad Corporativa UE: huella de carbono Scope 1, 2 y 3 bajo GHG Protocol.',
+      evidenceTitle: 'Transición de Huella Científica a Auditoría Corporativa',
+      evidenceAnchor: '#publicaciones-tecnicas',
+      isMarketGap: true,
+      gapDemand: '50% ofertas de consultoría de sostenibilidad empresarial',
+      gapImpact: '+25% rango salarial en consultoría de transición climática',
+      gapRoadmap: [
+        'Completar análisis comparativo de métricas ESRS E1 (Clima)',
+        'Estructurar plantilla Python/Excel para cálculo de Scope 1-3',
+        'Redactar artículo de análisis de impacto de CSRD en pymes industriales'
+      ]
+    },
+    {
+      id: 'gap-de-c1',
+      name: 'Alemán C1 (Licitaciones Públicas / DACH)',
+      shortName: 'Deutsch C1',
+      level: 3,
+      maxLevel: 5,
+      status: 'MARKET_GAP',
+      branch: 'languages',
+      xp: 620,
+      cx: 600,
+      cy: 330,
+      description: 'Comprensión y redacción de pliegos técnicos de proyectos ambientales en Alemania (§20 AufenthG).',
+      evidenceTitle: 'Consolidación Lingüística para Plazas Permanentes (§20 AufenthG)',
+      evidenceAnchor: '#titulaciones-academicas',
+      isMarketGap: true,
+      gapDemand: '60% plazas permanentes en institutos federales y estatales alemanes',
+      gapImpact: '+35% probabilidad de contratación directa en sector público DACH',
+      gapRoadmap: [
+        'Estudio de vocabulario técnico de pliegos públicos (VOL/VOB)',
+        'Simulaciones de entrevistas técnicas en alemán con colegas de Kiel',
+        'Certificación Goethe/Telc C1 Beruf'
+      ]
     }
   ];
 
   const selectedNode = nodes.find(n => n.id === selectedNodeId) || nodes[0];
 
   const branchStyles = {
-    geophysics: { color: '#10b981', label: 'GEOFÍSICA & SENSORES REMOTOS', bg: 'bg-emerald-950/30', border: 'border-emerald-600/60' },
-    biogeo: { color: '#0ea5e9', label: 'BIOGEOQUÍMICA & AGUA', bg: 'bg-sky-950/30', border: 'border-sky-600/60' },
-    policy: { color: '#f59e0b', label: 'POLÍTICAS UE & GOBERNANZA', bg: 'bg-amber-950/30', border: 'border-amber-600/60' },
-    languages: { color: '#a855f7', label: 'IDIOMAS & DIPLOMACIA', bg: 'bg-purple-950/30', border: 'border-purple-600/60' }
+    geophysics: { color: '#10b981', label: 'GEOFÍSICA & SENSORES REMOTOS', bg: 'bg-emerald-500/10', border: 'border-emerald-500/40' },
+    biogeo: { color: '#0ea5e9', label: 'BIOGEOQUÍMICA & AGUA', bg: 'bg-sky-500/10', border: 'border-sky-500/40' },
+    policy: { color: '#f59e0b', label: 'POLÍTICAS UE & GOBERNANZA', bg: 'bg-amber-500/10', border: 'border-amber-500/40' },
+    languages: { color: '#a855f7', label: 'IDIOMAS & DIPLOMACIA', bg: 'bg-purple-500/10', border: 'border-purple-500/40' }
   };
 
   const currentBranchStyle = branchStyles[selectedNode.branch];
+
+  // Counts for filter pills
+  const totalCount = nodes.length;
+  const masteredCount = nodes.filter(n => n.status === 'MASTERED').length;
+  const trainingCount = nodes.filter(n => n.status === 'ACTIVE' || n.status === 'IN_TRAINING').length;
+  const gapsCount = nodes.filter(n => n.isMarketGap).length;
 
   // Strategic R&D Focus Areas (Replacing bounties)
   const rdFocusAreas = [
     {
       id: 'rd-1',
       title: 'Modelación GEE en Python para Balance Hídrico',
-      branch: 'geophysics',
       demand: '+18% Coincidencia en DACH & Euskadi',
       focus: 'Tecnalia, BC3 & Helmholtz',
       status: 'En Desarrollo Activo'
@@ -372,15 +480,13 @@ export const SkillTreeTab: React.FC = () => {
     {
       id: 'rd-2',
       title: 'Módulo EU Soil Health Directive & Auditoría de Carbono',
-      branch: 'policy',
       demand: '+22% Coincidencia en Consultoría UE',
       focus: 'Basque Green Deal & Horizonte Europa',
       status: 'Prioridad Estratégica'
     },
     {
       id: 'rd-3',
-      title: 'Certificación Alemán B2 Fachsprache Geodaten',
-      branch: 'languages',
+      title: 'Certificación Alemán B2/C1 Fachsprache Geodaten',
       demand: '+25% Plazas Permanentes en Alemania',
       focus: 'Institutos Públicos DACH (§20 AufenthG)',
       status: 'En Preparación'
@@ -388,43 +494,112 @@ export const SkillTreeTab: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-5 text-slate-100 font-sans animate-fadeIn select-none">
+    <div className="space-y-5 text-[var(--text-primary)] font-sans animate-fadeIn select-none">
       
       {/* =========================================================================
-       * 1. HEADER: GRAFO DE CAPACIDADES CIENTÍFICAS (KNOWLEDGE GRAPH)
+       * 1. HEADER: GRAFO DE CAPACIDADES CIENTÍFICAS (KNOWLEDGE GRAPH & GAPS)
        * ========================================================================= */}
-      <div className="p-5 rounded-2xl bg-[#0f172a]/95 border border-slate-800 shadow-xl relative overflow-hidden">
+      <div 
+        className="p-5 rounded-2xl border shadow-xl relative overflow-hidden transition-colors"
+        style={{ 
+          backgroundColor: 'var(--card-bg)', 
+          borderColor: 'var(--card-border)' 
+        }}
+      >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Network className="h-3.5 w-3.5 text-emerald-400" />
-                <span>KNOWLEDGE GRAPH // RED CIENTÍFICA INTERDISCIPLINARIA</span>
+              <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <Network className="h-3.5 w-3.5" />
+                <span>KNOWLEDGE GRAPH // RED CIENTÍFICA & RADAR DE VACÍOS</span>
               </span>
-              <span className="text-[11px] text-slate-400 font-mono">
-                20 CAPACIDADES VERIFICADAS • DOMINIO SENIOR (4.8/5.0)
+              <span className="text-[11px] text-[var(--text-muted)] font-mono">
+                {nodes.length} NODOS ACTIVOS • 4 BRECHAS DE MERCADO IDENTIFICADAS
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
-              Grafo de Competencias & Sinergias Metodológicas
+            <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] uppercase tracking-tight">
+              Árbol de Aptitudes & Detección de Vacíos de Mercado
             </h1>
-            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-              Mapeo de alta fidelidad que demuestra la convergencia real entre Geofísica, Biogeoquímica de Suelos y Políticas Ambientales Europeas. Haz clic en cualquier nodo para consultar su respaldo en el Portafolio.
+            <p className="text-xs text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+              Mapeo de convergencia entre Geofísica, Biogeoquímica de Suelos y Políticas Europeas. Incluye radar de vacíos formativos para maximizar afinidad con institutos y consultoras en Alemania y Euskadi.
             </p>
           </div>
 
           {/* Academic Rank Emblem */}
-          <div className="flex items-center gap-3 bg-slate-950/80 px-3.5 py-2 rounded-xl border border-slate-800 shrink-0">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+          <div 
+            className="flex items-center gap-3 px-3.5 py-2 rounded-xl border shrink-0"
+            style={{ 
+              backgroundColor: 'var(--panel-bg)', 
+              borderColor: 'var(--panel-border)' 
+            }}
+          >
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
               <GraduationCap className="h-5 w-5" />
             </div>
             <div>
-              <div className="text-[9px] text-slate-400 font-mono font-bold uppercase">PERFIL ACADÉMICO</div>
-              <div className="text-xs font-bold text-white">DOBLE M.SC. & LIC. GEOFÍSICA</div>
-              <div className="text-[9px] text-emerald-400 font-mono">CAU Kiel • AMU Poznań • U. de Chile</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono font-bold uppercase">PERFIL ACADÉMICO</div>
+              <div className="text-xs font-bold text-[var(--text-primary)]">DOBLE M.SC. & LIC. GEOFÍSICA</div>
+              <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-mono">CAU Kiel • AMU Poznań • U. de Chile</div>
             </div>
           </div>
+        </div>
+
+        {/* Filter Pills Bar */}
+        <div className="flex flex-wrap items-center gap-1.5 mt-4 pt-3.5 border-t border-[var(--panel-border)]">
+          <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold mr-1">
+            FILTRAR GRAFO:
+          </span>
+          <button
+            onClick={() => setFilterMode('all')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              filterMode === 'all'
+                ? 'bg-sky-600 text-white shadow'
+                : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+            }`}
+          >
+            <span>Todas</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/20">{totalCount}</span>
+          </button>
+
+          <button
+            onClick={() => setFilterMode('mastered')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              filterMode === 'mastered'
+                ? 'bg-emerald-600 text-white shadow'
+                : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+            }`}
+          >
+            <span>Dominadas (Senior)</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/20">{masteredCount}</span>
+          </button>
+
+          <button
+            onClick={() => setFilterMode('training')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              filterMode === 'training'
+                ? 'bg-amber-600 text-white shadow'
+                : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+            }`}
+          >
+            <span>En Desarrollo</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/20">{trainingCount}</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setFilterMode('gaps');
+              setSelectedNodeId('gap-swat');
+            }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              filterMode === 'gaps'
+                ? 'bg-rose-600 text-white shadow ring-2 ring-rose-500/40'
+                : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 border border-rose-500/30'
+            }`}
+          >
+            <span>⚡ Vacíos de Mercado (Skill Gaps)</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] bg-rose-600 text-white font-extrabold">{gapsCount}</span>
+          </button>
         </div>
       </div>
 
@@ -434,27 +609,36 @@ export const SkillTreeTab: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         {/* LEFT COLUMN: THE KNOWLEDGE GRAPH CANVAS (8 COLS) */}
-        <div className="lg:col-span-8 p-4 rounded-2xl bg-[#0f172a]/95 border border-slate-800 shadow-xl relative overflow-hidden">
-          
+        <div 
+          className="lg:col-span-8 p-4 rounded-2xl border shadow-xl relative overflow-hidden transition-colors"
+          style={{ 
+            backgroundColor: 'var(--card-bg)', 
+            borderColor: 'var(--card-border)' 
+          }}
+        >
           {/* Discipline Legend Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5 mb-2.5 text-[10px] font-mono">
-            <span className="text-slate-400 font-bold uppercase">4 DOMINIOS CIENTÍFICOS:</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--panel-border)] pb-2.5 mb-2.5 text-[10px] font-mono">
+            <span className="text-[var(--text-muted)] font-bold uppercase">4 DOMINIOS + BRECHAS DE MERCADO:</span>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                <span>Geofísica & GIS</span>
+              <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <span>Geofísica</span>
               </span>
-              <span className="flex items-center gap-1.5 text-sky-400 font-medium">
-                <span className="h-2 w-2 rounded-full bg-sky-400" />
-                <span>Biogeoquímica & Agua</span>
+              <span className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 font-medium">
+                <span className="h-2 w-2 rounded-full bg-sky-500" />
+                <span>Biogeoquímica</span>
               </span>
-              <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                <span className="h-2 w-2 rounded-full bg-amber-400" />
+              <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-medium">
+                <span className="h-2 w-2 rounded-full bg-amber-500" />
                 <span>Políticas UE</span>
               </span>
-              <span className="flex items-center gap-1.5 text-purple-400 font-medium">
-                <span className="h-2 w-2 rounded-full bg-purple-400" />
-                <span>Idiomas & Medios</span>
+              <span className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-medium">
+                <span className="h-2 w-2 rounded-full bg-purple-500" />
+                <span>Idiomas</span>
+              </span>
+              <span className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold">
+                <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                <span>⚡ Brecha (Gap)</span>
               </span>
             </div>
           </div>
@@ -462,91 +646,90 @@ export const SkillTreeTab: React.FC = () => {
           {/* SVG Scientific Knowledge Graph */}
           <div className="relative w-full overflow-x-auto">
             <svg 
-              viewBox="0 0 740 340" 
+              viewBox="0 0 740 370" 
               className="w-full min-w-[650px] h-auto select-none"
             >
               <defs>
                 <radialGradient id="centerAura" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.25" />
-                  <stop offset="60%" stopColor="#0ea5e9" stopOpacity="0.08" />
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.20" />
+                  <stop offset="60%" stopColor="#0ea5e9" stopOpacity="0.05" />
                   <stop offset="100%" stopColor="#000000" stopOpacity="0" />
                 </radialGradient>
                 <pattern id="cleanGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.5" strokeOpacity="0.5" />
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.12" />
                 </pattern>
               </defs>
 
               {/* Clean Background Grid */}
-              <rect x="0" y="0" width="740" height="340" fill="url(#cleanGrid)" />
+              <rect x="0" y="0" width="740" height="370" fill="url(#cleanGrid)" className="text-slate-400 dark:text-slate-700" />
 
               {/* Central Core Ambient Glow */}
-              <circle cx="370" cy="175" r="70" fill="url(#centerAura)" />
+              <circle cx="370" cy="185" r="70" fill="url(#centerAura)" />
 
-              {/* Subtle Concentric Alignment Rings */}
-              <circle cx="370" cy="175" r="80" fill="none" stroke="#1e293b" strokeWidth="1" strokeDasharray="4 4" opacity="0.6" />
-              <circle cx="370" cy="175" r="160" fill="none" stroke="#1e293b" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
-              <circle cx="370" cy="175" r="240" fill="none" stroke="#1e293b" strokeWidth="1" strokeDasharray="3 6" opacity="0.3" />
+              {/* Concentric Alignment Rings */}
+              <circle cx="370" cy="185" r="80" fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="4 4" opacity="0.3" />
+              <circle cx="370" cy="185" r="160" fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
+              <circle cx="370" cy="185" r="240" fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="3 6" opacity="0.15" />
 
-              {/* -------------------------------------------------------------
-               * CROSS-DOMAIN SYNERGY LINES (GENUINE INTERDISCIPLINARY BRIDGES)
-               * ------------------------------------------------------------- */}
-              {/* Synergy 1: Satellite Observation (Geophys) -> Carbon Modeling (Biogeo) */}
-              <path d="M 115 75 Q 280 40 450 130" fill="none" stroke="#38bdf8" strokeWidth="1" strokeDasharray="4 3" opacity="0.35" />
-              
-              {/* Synergy 2: GHG Emission Fluxes (Biogeo) -> EU Soil Directive (Policy) */}
-              <path d="M 555 85 Q 400 200 115 275" fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4 3" opacity="0.35" />
+              {/* Cross-Domain Synergy Bridges */}
+              <path d="M 115 75 Q 280 40 450 130" fill="none" stroke="#38bdf8" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
+              <path d="M 555 85 Q 400 200 115 275" fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
+              <path d="M 555 265 Q 420 280 290 220" fill="none" stroke="#a855f7" strokeWidth="1" strokeDasharray="4 3" opacity="0.4" />
 
-              {/* Synergy 3: English C1 (Languages) -> Bonn/Oslo Conferences (Policy) */}
-              <path d="M 555 265 Q 420 280 290 220" fill="none" stroke="#a855f7" strokeWidth="1" strokeDasharray="4 3" opacity="0.35" />
+              {/* Gap Connections */}
+              <path d="M 525 140 L 600 160" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
+              <path d="M 115 75 L 140 35" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
+              <path d="M 185 265 L 150 320" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
+              <path d="M 625 275 L 600 330" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
 
-              {/* -------------------------------------------------------------
-               * MAIN DOMAIN HUB TRUNKS (FROM CORE TO HUBS)
-               * ------------------------------------------------------------- */}
-              {/* Branch 1 to Top-Left: Geophysics (Emerald) */}
-              <path d="M 370 175 Q 320 145 290 130" fill="none" stroke="#10b981" strokeWidth="2" opacity="0.75" />
-              <path d="M 290 130 L 215 140 L 185 85 L 115 75 L 65 40" fill="none" stroke="#10b981" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.7" />
+              {/* Main Domain Hub Trunks */}
+              <path d="M 370 185 Q 320 155 290 130" fill="none" stroke="#10b981" strokeWidth="2" opacity="0.75" />
+              <path d="M 290 130 L 215 140 L 185 85 L 115 75 L 65 40" fill="none" stroke="#10b981" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
 
-              {/* Branch 2 to Top-Right: Biogeochemistry (Cyan) */}
-              <path d="M 370 175 Q 420 145 450 130" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.75" />
-              <path d="M 450 130 L 525 140 L 555 85 L 625 75 L 675 40" fill="none" stroke="#0ea5e9" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.7" />
+              <path d="M 370 185 Q 420 155 450 130" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.75" />
+              <path d="M 450 130 L 525 140 L 555 85 L 625 75 L 675 40" fill="none" stroke="#0ea5e9" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
 
-              {/* Branch 3 to Bottom-Left: Policy (Amber) */}
-              <path d="M 370 175 Q 320 205 290 220" fill="none" stroke="#f59e0b" strokeWidth="2" opacity="0.75" />
-              <path d="M 290 220 L 215 210 L 185 265 L 115 275 L 65 310" fill="none" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.7" />
+              <path d="M 370 185 Q 320 215 290 220" fill="none" stroke="#f59e0b" strokeWidth="2" opacity="0.75" />
+              <path d="M 290 220 L 215 210 L 185 265 L 115 275 L 65 310" fill="none" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
 
-              {/* Branch 4 to Bottom-Right: Languages (Purple) */}
-              <path d="M 370 175 Q 420 205 450 220" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.75" />
-              <path d="M 450 220 L 525 210 L 555 265 L 625 275 L 675 310" fill="none" stroke="#a855f7" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.7" />
+              <path d="M 370 185 Q 420 215 450 220" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.75" />
+              <path d="M 450 220 L 525 210 L 555 265 L 625 275 L 675 310" fill="none" stroke="#a855f7" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
 
-              {/* -------------------------------------------------------------
-               * CENTER TRUNK HUB: DANIEL SANTANDER // SCIENTIFIC CORE
-               * ------------------------------------------------------------- */}
+              {/* Center Trunk Hub: Daniel Santander */}
               <g className="cursor-pointer group" onClick={() => setSelectedNodeId('n1-gee')}>
-                <circle cx="370" cy="175" r="26" fill="#091322" stroke="#38bdf8" strokeWidth="2" />
-                <circle cx="370" cy="175" r="31" fill="none" stroke="#64748b" strokeWidth="0.8" strokeDasharray="3 3" />
-                <circle cx="370" cy="175" r="3.5" fill="#38bdf8" />
-                <text x="370" y="172" fill="#ffffff" fontSize="7.5" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">
+                <circle cx="370" cy="185" r="26" fill="#091322" stroke="#38bdf8" strokeWidth="2" />
+                <circle cx="370" cy="185" r="31" fill="none" stroke="#64748b" strokeWidth="0.8" strokeDasharray="3 3" />
+                <circle cx="370" cy="185" r="3.5" fill="#38bdf8" />
+                <text x="370" y="182" fill="#ffffff" fontSize="7.5" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">
                   D. SANTANDER
                 </text>
-                <text x="370" y="183" fill="#94a3b8" fontSize="6" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                <text x="370" y="193" fill="#94a3b8" fontSize="6" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
                   SCIENTIFIC CORE
                 </text>
               </g>
 
-              {/* -------------------------------------------------------------
-               * KNOWLEDGE GRAPH NODES RENDERING
-               * ------------------------------------------------------------- */}
+              {/* Nodes Rendering */}
               {nodes.map(node => {
                 const isSelected = selectedNodeId === node.id;
-                const strokeColor = 
-                  node.branch === 'geophysics' ? '#10b981' :
-                  node.branch === 'biogeo' ? '#0ea5e9' :
-                  node.branch === 'policy' ? '#f59e0b' : '#a855f7';
+                
+                // Dim nodes that don't match active filter
+                const matchesFilter = 
+                  filterMode === 'all' ||
+                  (filterMode === 'mastered' && node.status === 'MASTERED') ||
+                  (filterMode === 'training' && (node.status === 'ACTIVE' || node.status === 'IN_TRAINING')) ||
+                  (filterMode === 'gaps' && node.isMarketGap);
+
+                const strokeColor = node.isMarketGap 
+                  ? '#ef4444' 
+                  : node.branch === 'geophysics' ? '#10b981' 
+                  : node.branch === 'biogeo' ? '#0ea5e9' 
+                  : node.branch === 'policy' ? '#f59e0b' : '#a855f7';
 
                 return (
                   <g 
                     key={node.id} 
-                    className="cursor-pointer group"
+                    className="cursor-pointer group transition-opacity"
+                    style={{ opacity: matchesFilter ? 1 : 0.2 }}
                     onClick={() => setSelectedNodeId(node.id)}
                   >
                     {/* Selected Halo Ring */}
@@ -554,12 +737,12 @@ export const SkillTreeTab: React.FC = () => {
                       <circle 
                         cx={node.cx} 
                         cy={node.cy} 
-                        r="16" 
+                        r="18" 
                         fill={strokeColor} 
-                        fillOpacity="0.15" 
+                        fillOpacity="0.2" 
                         stroke={strokeColor}
-                        strokeWidth="1"
-                        strokeDasharray="2 2"
+                        strokeWidth="1.5"
+                        strokeDasharray={node.isMarketGap ? "3 3" : undefined}
                       />
                     )}
 
@@ -567,10 +750,11 @@ export const SkillTreeTab: React.FC = () => {
                     <circle 
                       cx={node.cx} 
                       cy={node.cy} 
-                      r={isSelected ? "11" : "9"} 
+                      r={isSelected ? "12" : "9.5"} 
                       fill="#0b1329" 
                       stroke={strokeColor} 
-                      strokeWidth={isSelected ? "2" : "1.2"} 
+                      strokeWidth={isSelected ? "2.5" : "1.5"} 
+                      strokeDasharray={node.isMarketGap ? "2 2" : undefined}
                       className="transition-all"
                     />
 
@@ -578,33 +762,33 @@ export const SkillTreeTab: React.FC = () => {
                     <circle 
                       cx={node.cx} 
                       cy={node.cy} 
-                      r={node.status === 'MASTERED' ? "3.5" : "2.5"} 
+                      r={node.isMarketGap ? "3" : node.status === 'MASTERED' ? "3.5" : "2.5"} 
                       fill={strokeColor} 
                     />
 
                     {/* Floating Node Label */}
                     <text 
                       x={node.cx} 
-                      y={node.cy + (node.cy > 175 ? 17 : -12)} 
-                      fill={isSelected ? '#ffffff' : '#cbd5e1'} 
+                      y={node.cy + (node.cy > 185 ? 18 : -13)} 
+                      fill={isSelected ? '#ffffff' : '#94a3b8'} 
                       fontSize="7" 
                       fontWeight="bold" 
                       fontFamily="sans-serif" 
                       textAnchor="middle"
-                      className="group-hover:fill-white transition"
+                      className="group-hover:fill-sky-400 transition"
                     >
                       {node.shortName}
                     </text>
                     <text 
                       x={node.cx} 
-                      y={node.cy + (node.cy > 175 ? 24 : -5)} 
+                      y={node.cy + (node.cy > 185 ? 25 : -6)} 
                       fill={strokeColor} 
                       fontSize="6" 
                       fontFamily="monospace" 
                       textAnchor="middle"
                       fontWeight="bold"
                     >
-                      Nvl {node.level}/5
+                      {node.isMarketGap ? '⚡ GAP' : `Nvl ${node.level}/5`}
                     </text>
                   </g>
                 );
@@ -613,102 +797,196 @@ export const SkillTreeTab: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: TECHNICAL CAPABILITY INSPECTOR (4 COLS) */}
+        {/* RIGHT COLUMN: TECHNICAL CAPABILITY & GAP INSPECTOR (4 COLS) */}
         <div className="lg:col-span-4 space-y-3.5">
           
           {/* Main Selected Capability Inspector Card */}
-          <div className={`p-4 rounded-2xl border shadow-xl relative ${currentBranchStyle.bg} ${currentBranchStyle.border}`}>
-            <div className="flex items-center justify-between border-b border-slate-700/80 pb-2 mb-2.5">
-              <span className="text-[9.5px] font-mono font-bold uppercase tracking-wider text-slate-300">
-                FICHA TÉCNICA DE COMPETENCIA
+          <div 
+            className={`p-4 rounded-2xl border shadow-xl relative transition-colors ${
+              selectedNode.isMarketGap 
+                ? 'bg-rose-500/10 border-rose-500/50' 
+                : `${currentBranchStyle.bg} ${currentBranchStyle.border}`
+            }`}
+          >
+            <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2 mb-2.5">
+              <span className="text-[9.5px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1">
+                {selectedNode.isMarketGap ? (
+                  <>
+                    <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+                    <span className="text-rose-600 dark:text-rose-400 font-extrabold">RADAR DE VACÍO DE MERCADO</span>
+                  </>
+                ) : (
+                  <span>FICHA TÉCNICA DE COMPETENCIA</span>
+                )}
               </span>
-              <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-slate-900 text-white border border-slate-700">
-                ID: {selectedNode.id}
+              <span className={`text-[9px] font-mono px-2 py-0.5 rounded border font-bold ${
+                selectedNode.isMarketGap 
+                  ? 'bg-rose-600 text-white border-rose-500' 
+                  : 'bg-[var(--panel-bg)] text-[var(--text-primary)] border-[var(--card-border)]'
+              }`}>
+                {selectedNode.isMarketGap ? '⚡ VACÍO DETECTADO' : `ID: ${selectedNode.id}`}
               </span>
             </div>
 
             <div className="space-y-2.5">
               <div>
-                <div className="text-[8.5px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                <div className="text-[8.5px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)]">
                   {currentBranchStyle.label}
                 </div>
-                <h3 className="text-sm font-bold text-white tracking-tight mt-0.5">
+                <h3 className="text-sm font-bold text-[var(--text-primary)] tracking-tight mt-0.5">
                   {selectedNode.name}
                 </h3>
               </div>
 
-              {/* Proficiency Gauge */}
-              <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400 font-mono">Nivel de Dominio:</span>
-                  <span className="text-emerald-400 font-mono font-bold">{selectedNode.level} de {selectedNode.maxLevel} (Avanzado)</span>
-                </div>
-                {/* 5 Pip Progress Bar */}
-                <div className="grid grid-cols-5 gap-1.5 h-1.5 w-full bg-slate-900 rounded-full p-0.5 border border-slate-800">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`h-full rounded-full ${
-                        i < selectedNode.level 
-                          ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.4)]' 
-                          : 'bg-slate-800'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <div className="flex justify-between items-center text-[9px] text-slate-400 font-mono pt-0.5">
-                  <span>Horas de Vuelo & Respaldo:</span>
-                  <span className="text-white font-medium">{selectedNode.xp} XP</span>
-                </div>
-              </div>
-
-              {/* Technical Description */}
-              <div className="text-[11px] text-slate-300 leading-relaxed font-sans">
-                {selectedNode.description}
-              </div>
-
-              {/* Evidence Link to Portafolio App */}
-              <div className="pt-2 border-t border-slate-700/80 space-y-1.5">
-                <div className="text-[9.5px] font-mono font-bold text-slate-300 uppercase flex items-center gap-1.5">
-                  <Award className="h-3.5 w-3.5 text-sky-400" />
-                  <span>RESPALDO AUDITADO EN PORTAFOLIO</span>
-                </div>
-                <div className="p-2 rounded-xl bg-slate-950/90 border border-slate-800 flex items-center justify-between group">
-                  <div className="overflow-hidden">
-                    <div className="text-[11px] font-bold text-white truncate">
-                      {selectedNode.evidenceTitle}
+              {/* If it's a Market Gap: Show Actionable Impact & Roadmap */}
+              {selectedNode.isMarketGap ? (
+                <div className="space-y-2.5">
+                  <div 
+                    className="p-3 rounded-xl border space-y-1.5"
+                    style={{ 
+                      backgroundColor: 'var(--panel-bg)', 
+                      borderColor: 'var(--panel-border)' 
+                    }}
+                  >
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[var(--text-muted)] font-mono">Demanda en Ofertas:</span>
+                      <span className="text-rose-600 dark:text-rose-400 font-mono font-bold text-[10px]">
+                        {selectedNode.gapDemand}
+                      </span>
                     </div>
-                    <div className="text-[9px] text-slate-400 font-mono">
-                      Prueba documental verificada
+                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-[var(--panel-border)]">
+                      <span className="text-[var(--text-muted)] font-mono">Impacto en Match:</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
+                        {selectedNode.gapImpact}
+                      </span>
                     </div>
                   </div>
-                  <a
-                    href={`https://danisantanderurrutia-coder.github.io/Portafolio/${selectedNode.evidenceAnchor}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white transition shrink-0 ml-2 shadow"
-                    title="Abrir evidencia en la app Portafolio"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
+
+                  <div className="text-[11px] text-[var(--text-secondary)] leading-relaxed font-sans">
+                    {selectedNode.description}
+                  </div>
+
+                  {/* Immediate Action Roadmap */}
+                  {selectedNode.gapRoadmap && (
+                    <div className="pt-2 border-t border-[var(--panel-border)] space-y-1.5">
+                      <div className="text-[9.5px] font-mono font-bold text-[var(--text-primary)] uppercase flex items-center gap-1.5">
+                        <TrendingUp className="h-3.5 w-3.5 text-rose-500" />
+                        <span>HOJA DE RUTA PARA CERRAR LA BRECHA</span>
+                      </div>
+                      <div className="space-y-1">
+                        {selectedNode.gapRoadmap.map((step, idx) => (
+                          <div 
+                            key={idx} 
+                            className="p-2 rounded-xl border text-[10.5px] flex items-start gap-2"
+                            style={{ 
+                              backgroundColor: 'var(--panel-bg)', 
+                              borderColor: 'var(--card-border)' 
+                            }}
+                          >
+                            <span className="h-4 w-4 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 font-mono text-[9px] font-bold flex items-center justify-center shrink-0">
+                              {idx + 1}
+                            </span>
+                            <span className="text-[var(--text-secondary)] leading-snug">{step}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
+              ) : (
+                /* Regular Mastered/Active Node Inspector */
+                <div className="space-y-2.5">
+                  <div 
+                    className="p-2.5 rounded-xl border space-y-1.5"
+                    style={{ 
+                      backgroundColor: 'var(--panel-bg)', 
+                      borderColor: 'var(--panel-border)' 
+                    }}
+                  >
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[var(--text-muted)] font-mono">Nivel de Dominio:</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold">{selectedNode.level} de {selectedNode.maxLevel} (Avanzado)</span>
+                    </div>
+                    {/* 5 Pip Progress Bar */}
+                    <div className="grid grid-cols-5 gap-1.5 h-1.5 w-full bg-slate-300 dark:bg-slate-900 rounded-full p-0.5 border border-slate-200 dark:border-slate-800">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`h-full rounded-full ${
+                            i < selectedNode.level 
+                              ? 'bg-emerald-500 shadow-[0_0_6px_rgba(52,211,153,0.4)]' 
+                              : 'bg-transparent'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex justify-between items-center text-[9px] text-[var(--text-muted)] font-mono pt-0.5">
+                      <span>Horas de Vuelo & Respaldo:</span>
+                      <span className="text-[var(--text-primary)] font-medium">{selectedNode.xp} XP</span>
+                    </div>
+                  </div>
+
+                  {/* Technical Description */}
+                  <div className="text-[11px] text-[var(--text-secondary)] leading-relaxed font-sans">
+                    {selectedNode.description}
+                  </div>
+
+                  {/* Evidence Link to Portafolio App */}
+                  <div className="pt-2 border-t border-[var(--panel-border)] space-y-1.5">
+                    <div className="text-[9.5px] font-mono font-bold text-[var(--text-primary)] uppercase flex items-center gap-1.5">
+                      <Award className="h-3.5 w-3.5 text-sky-500" />
+                      <span>RESPALDO AUDITADO EN PORTAFOLIO</span>
+                    </div>
+                    <div 
+                      className="p-2 rounded-xl border flex items-center justify-between group"
+                      style={{ 
+                        backgroundColor: 'var(--panel-bg)', 
+                        borderColor: 'var(--card-border)' 
+                      }}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="text-[11px] font-bold text-[var(--text-primary)] truncate">
+                          {selectedNode.evidenceTitle}
+                        </div>
+                        <div className="text-[9px] text-[var(--text-muted)] font-mono">
+                          Prueba documental verificada
+                        </div>
+                      </div>
+                      <a
+                        href={`https://danisantanderurrutia-coder.github.io/Portafolio/${selectedNode.evidenceAnchor}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white transition shrink-0 ml-2 shadow"
+                        title="Abrir evidencia en la app Portafolio"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Strategic R&D Focus Areas Card */}
-          <div className="p-3.5 rounded-2xl bg-[#0f172a]/95 border border-slate-800 shadow-xl space-y-2">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-              <span className="text-[11px] font-bold uppercase text-slate-200 flex items-center gap-1.5">
-                <TrendingUp className="h-3.5 w-3.5 text-sky-400" />
+          <div 
+            className="p-3.5 rounded-2xl border shadow-xl space-y-2 transition-colors"
+            style={{ 
+              backgroundColor: 'var(--card-bg)', 
+              borderColor: 'var(--card-border)' 
+            }}
+          >
+            <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-1.5">
+              <span className="text-[11px] font-bold uppercase text-[var(--text-primary)] flex items-center gap-1.5">
+                <TrendingUp className="h-3.5 w-3.5 text-sky-500" />
                 <span>DEMANDA EN CENTROS I+D (DACH & EUSKADI)</span>
               </span>
-              <span className="text-[9px] font-mono text-emerald-400 font-bold">
+              <span className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                 {offers.length} OFERTAS ACTIVAS
               </span>
             </div>
 
-            <p className="text-[10px] text-slate-400 leading-snug">
+            <p className="text-[10px] text-[var(--text-muted)] leading-snug">
               Líneas de investigación y tecnologías prioritarias identificadas en el mercado:
             </p>
 
@@ -716,14 +994,18 @@ export const SkillTreeTab: React.FC = () => {
               {rdFocusAreas.map(item => (
                 <div 
                   key={item.id} 
-                  className="p-2 rounded-xl bg-slate-950/90 border border-slate-800 hover:border-slate-700 transition space-y-0.5"
+                  className="p-2 rounded-xl border transition space-y-0.5"
+                  style={{ 
+                    backgroundColor: 'var(--panel-bg)', 
+                    borderColor: 'var(--card-border)' 
+                  }}
                 >
                   <div className="flex items-center justify-between text-[9px]">
-                    <span className="text-sky-400 font-medium">{item.focus}</span>
-                    <span className="text-emerald-400 font-mono font-bold">{item.demand}</span>
+                    <span className="text-sky-600 dark:text-sky-400 font-medium">{item.focus}</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold">{item.demand}</span>
                   </div>
-                  <div className="text-[11px] font-semibold text-white line-clamp-1">{item.title}</div>
-                  <div className="text-[8.5px] text-slate-400 font-mono">{item.status}</div>
+                  <div className="text-[11px] font-semibold text-[var(--text-primary)] line-clamp-1">{item.title}</div>
+                  <div className="text-[8.5px] text-[var(--text-muted)] font-mono">{item.status}</div>
                 </div>
               ))}
             </div>
@@ -733,3 +1015,4 @@ export const SkillTreeTab: React.FC = () => {
     </div>
   );
 };
+

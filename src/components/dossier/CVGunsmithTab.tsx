@@ -115,69 +115,130 @@ export const CVGunsmithTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 text-slate-100 font-sans animate-fadeIn select-none">
+    <div className="space-y-5 text-[var(--text-primary)] font-sans animate-fadeIn select-none">
       
       {/* =========================================================================
-       * 1. HEADER: ESTUDIO DE INGENIERÍA CURRICULAR (LINEAR / STRIPE STYLE)
+       * 1. HEADER: ESTUDIO DE INGENIERÍA CURRICULAR (MODULAR PUZZLE BUILDER)
        * ========================================================================= */}
-      <div className="p-5 rounded-2xl bg-[#0f172a]/95 border border-slate-800 shadow-xl relative overflow-hidden">
+      <div 
+        className="p-5 rounded-2xl border shadow-xl relative overflow-hidden transition-colors"
+        style={{ 
+          backgroundColor: 'var(--card-bg)', 
+          borderColor: 'var(--card-border)' 
+        }}
+      >
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-2 py-0.5 rounded-md bg-sky-500/10 border border-sky-500/30 text-sky-400 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Briefcase className="h-3.5 w-3.5 text-sky-400" />
-                <span>ESTUDIO DE INGENIERÍA CURRICULAR</span>
+              <span className="px-2.5 py-0.5 rounded-md bg-sky-500/15 border border-sky-500/30 text-sky-600 dark:text-sky-400 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <Briefcase className="h-3.5 w-3.5" />
+                <span>TALLER DE CV MODULAR // PUZZLE DE EVIDENCIAS</span>
               </span>
-              <span className="text-[11px] text-slate-400 font-mono">
-                FORMATO: <strong className="text-white">1 PÁGINA EJECUTIVA A4</strong>
+              <span className="text-[11px] text-[var(--text-muted)] font-mono">
+                FORMATO: <strong className="text-[var(--text-primary)]">1 CARILLA EJECUTIVA A4</strong>
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] uppercase tracking-tight">
               Calibración Modular de CV & Evidencia Verificada
             </h1>
-            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-              Configura tu expediente profesional seleccionando el perfil de especialización según la institución de destino y acoplando los módulos de impacto con respaldo directo en tu Portafolio.
+            <p className="text-xs text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+              Configura tu expediente profesional como un puzzle de 4 ranuras de impacto. Intercambia las piezas según la vacante e institución de destino, con respaldo verificable en tu Portafolio.
             </p>
           </div>
 
-          {/* KPI Dashboard Strip (Linear Style) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-950/80 p-3 rounded-xl border border-slate-800 shrink-0">
+          {/* KPI Dashboard Strip (Tactical Snow & Dark Adaptive) */}
+          <div 
+            className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-xl border shrink-0"
+            style={{ 
+              backgroundColor: 'var(--panel-bg)', 
+              borderColor: 'var(--panel-border)' 
+            }}
+          >
             <div className="min-w-[85px]">
-              <div className="text-[9px] text-slate-400 font-mono uppercase font-bold">ALINEACIÓN ATS</div>
-              <div className="text-base font-black text-emerald-400 font-mono">{currentProfile.atsMatch}%</div>
-              <div className="text-[9px] text-slate-500 font-mono">Alta afinidad</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono uppercase font-bold">ALINEACIÓN ATS</div>
+              <div className="text-base font-black text-emerald-600 dark:text-emerald-400 font-mono">{currentProfile.atsMatch}%</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono">Alta afinidad</div>
             </div>
 
             <div className="min-w-[85px]">
-              <div className="text-[9px] text-slate-400 font-mono uppercase font-bold">DENSIDAD</div>
-              <div className="text-base font-black text-amber-400 font-mono">1 CARILLA</div>
-              <div className="text-[9px] text-slate-500 font-mono">Sin relleno</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono uppercase font-bold">DENSIDAD</div>
+              <div className="text-base font-black text-amber-600 dark:text-amber-400 font-mono">1 CARILLA</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono">Sin relleno</div>
             </div>
 
             <div className="min-w-[85px]">
-              <div className="text-[9px] text-slate-400 font-mono uppercase font-bold">MÓDULOS STAR</div>
-              <div className="text-base font-black text-sky-400 font-mono">{equippedIds.length} / 4</div>
-              <div className="text-[9px] text-slate-500 font-mono">Capacidad máx.</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono uppercase font-bold">RANURAS PUZZLE</div>
+              <div className="text-base font-black text-sky-600 dark:text-sky-400 font-mono">{equippedIds.length} / 4</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono">Piezas acopladas</div>
             </div>
 
             <div className="min-w-[85px]">
-              <div className="text-[9px] text-slate-400 font-mono uppercase font-bold">PORTAFOLIO</div>
-              <div className="text-base font-black text-purple-400 font-mono flex items-center gap-1">
-                <CheckCircle2 className="h-3.5 w-3.5 text-purple-400" />
+              <div className="text-[9px] text-[var(--text-muted)] font-mono uppercase font-bold">PORTAFOLIO</div>
+              <div className="text-base font-black text-purple-600 dark:text-purple-400 font-mono flex items-center gap-1">
+                <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>ONLINE</span>
               </div>
-              <div className="text-[9px] text-slate-500 font-mono">Láminas auditadas</div>
+              <div className="text-[9px] text-[var(--text-muted)] font-mono">Auditado en GitHub</div>
             </div>
           </div>
         </div>
 
+        {/* Puzzle Visual Slots Bar */}
+        <div className="mt-4 pt-3.5 border-t border-[var(--panel-border)]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <Layers className="h-3.5 w-3.5 text-sky-500" />
+              <span>RANURAS DE IMPACTO EN EL CV (PUZZLE DE 4 PIEZAS)</span>
+            </span>
+            <span className="text-[10px] font-mono text-[var(--text-muted)]">
+              {4 - equippedIds.length === 0 ? '✨ Puzzle Completo (Densidad Óptima A4)' : `⚠️ Faltan ${4 - equippedIds.length} pieza(s) para completar la carilla`}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {[0, 1, 2, 3].map(slotIdx => {
+              const item = equippedItems[slotIdx];
+              return (
+                <div 
+                  key={slotIdx}
+                  className={`p-2.5 rounded-xl border text-xs font-mono transition flex flex-col justify-between min-h-[64px] ${
+                    item 
+                      ? 'bg-sky-500/10 border-sky-500/40 text-[var(--text-primary)]' 
+                      : 'border-dashed border-[var(--card-border)] bg-[var(--panel-bg)]/60 text-[var(--text-muted)]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[9px]">
+                    <span className="font-bold uppercase tracking-tight text-sky-600 dark:text-sky-400">
+                      PIEZA #{slotIdx + 1}
+                    </span>
+                    {item && (
+                      <span className="text-[8.5px] font-bold px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-600 dark:text-sky-300">
+                        ACOPLADA
+                      </span>
+                    )}
+                  </div>
+                  {item ? (
+                    <div className="text-[10px] font-sans font-bold truncate mt-1 text-[var(--text-primary)]">
+                      {item.title}
+                    </div>
+                  ) : (
+                    <div className="text-[9.5px] italic text-[var(--text-muted)] mt-1">
+                      Ranura disponible...
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Specialization Profile Tabs & Language Selector */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3.5 border-t border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3.5 border-t border-[var(--panel-border)]">
           
           {/* Profile Selector */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-            <span className="text-[10px] font-mono text-slate-400 uppercase font-bold mr-1">
+            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold mr-1">
               PERFIL:
             </span>
             {(['science', 'geophysics', 'policy'] as const).map(pKey => {
@@ -190,7 +251,7 @@ export const CVGunsmithTab: React.FC = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
                     isSelected
                       ? 'bg-sky-600 text-white font-bold shadow-md'
-                      : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800'
+                      : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)] hover:border-sky-500/50'
                   }`}
                 >
                   <span>{pKey === 'science' ? '🌱' : pKey === 'geophysics' ? '🛰️' : '🏛️'}</span>
@@ -201,15 +262,21 @@ export const CVGunsmithTab: React.FC = () => {
           </div>
 
           {/* Language Toggle */}
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs font-mono">
+          <div 
+            className="flex items-center gap-1 p-1 rounded-lg border text-xs font-mono"
+            style={{ 
+              backgroundColor: 'var(--panel-bg)', 
+              borderColor: 'var(--panel-border)' 
+            }}
+          >
             {(['es', 'en', 'de'] as const).map(l => (
               <button
                 key={l}
                 onClick={() => setLang(l)}
                 className={`px-2.5 py-1 rounded font-bold uppercase transition cursor-pointer ${
                   lang === l
-                    ? 'bg-slate-800 text-white shadow'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-sky-600 text-white shadow'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 {l === 'es' ? '🇪🇸 Español' : l === 'en' ? '🇬🇧 English' : '🇩🇪 Deutsch'}
@@ -226,18 +293,24 @@ export const CVGunsmithTab: React.FC = () => {
         
         {/* LEFT COLUMN: MODULAR EVIDENCE CATALOG (7 COLS) */}
         <div className="lg:col-span-7 space-y-3.5">
-          <div className="p-4 rounded-2xl bg-[#0f172a]/95 border border-slate-800 shadow-lg space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span className="text-xs font-bold uppercase text-slate-200 flex items-center gap-1.5">
-                <Layers className="h-4 w-4 text-sky-400" />
-                <span>MÓDULOS DE IMPACTO STAR (SELECCIONA HASTA 4)</span>
+          <div 
+            className="p-4 rounded-2xl border shadow-lg space-y-3 transition-colors"
+            style={{ 
+              backgroundColor: 'var(--card-bg)', 
+              borderColor: 'var(--card-border)' 
+            }}
+          >
+            <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2">
+              <span className="text-xs font-bold uppercase text-[var(--text-primary)] flex items-center gap-1.5">
+                <Layers className="h-4 w-4 text-sky-500" />
+                <span>CATÁLOGO DE MÓDULOS STAR (PIEZAS DEL PUZZLE)</span>
               </span>
-              <span className="text-xs font-mono font-bold text-sky-400">
-                {equippedIds.length} / 4 MÓDULOS ACTIVOS
+              <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400">
+                {equippedIds.length} / 4 ACTIVOS
               </span>
             </div>
 
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
               Cada módulo resume un hito cuantitativo validado con hipervínculo directo al proyecto correspondiente en la app <strong>Portafolio</strong>.
             </p>
 
@@ -245,37 +318,42 @@ export const CVGunsmithTab: React.FC = () => {
             <div className="space-y-2.5">
               {PORTFOLIO_EVIDENCE_CATALOG.map(item => {
                 const isEquipped = equippedIds.includes(item.id);
+                const slotIndex = equippedIds.indexOf(item.id);
                 return (
                   <div
                     key={item.id}
-                    className={`p-3.5 rounded-xl border transition relative overflow-hidden ${
+                    className={`p-3.5 rounded-xl border transition-all relative overflow-hidden ${
                       isEquipped
-                        ? 'bg-slate-900/90 border-sky-500/60 shadow-md'
-                        : 'bg-slate-950/60 border-slate-800/80 opacity-70 hover:opacity-100'
+                        ? 'bg-sky-500/10 border-sky-500/60 shadow-md ring-1 ring-sky-500/30'
+                        : 'border-[var(--card-border)] opacity-80 hover:opacity-100'
                     }`}
+                    style={!isEquipped ? { backgroundColor: 'var(--panel-bg)' } : undefined}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center gap-2">
                           <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border uppercase ${
                             isEquipped 
-                              ? 'bg-sky-950 text-sky-300 border-sky-800' 
-                              : 'bg-slate-900 text-slate-400 border-slate-800'
+                              ? 'bg-sky-500/20 text-sky-700 dark:text-sky-300 border-sky-500/40' 
+                              : 'bg-slate-200 dark:bg-slate-800 text-[var(--text-muted)] border-[var(--panel-border)]'
                           }`}>
-                            LÁMINA {item.sectionId}
+                            {isEquipped ? `PUZZLE PIEZA #${slotIndex + 1}` : `LÁMINA ${item.sectionId}`}
                           </span>
-                          <span className="text-xs font-bold text-white font-sans">
+                          <span className="text-xs font-bold text-[var(--text-primary)] font-sans">
                             {item.title}
                           </span>
                         </div>
 
-                        <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+                        <p className="text-[11px] text-[var(--text-secondary)] font-sans leading-relaxed">
                           "{item.attachmentsForCV[lang === 'es' ? 'bulletEs' : lang === 'en' ? 'bulletEn' : 'bulletDe']}"
                         </p>
 
                         <div className="flex flex-wrap items-center gap-1 pt-1 text-[9px] font-mono">
                           {item.keyKeywords.map(k => (
-                            <span key={k} className="px-1.5 py-0.2 rounded bg-slate-800/80 text-emerald-400 border border-slate-700/60">
+                            <span 
+                              key={k} 
+                              className="px-1.5 py-0.2 rounded bg-slate-200/60 dark:bg-slate-800/80 text-emerald-600 dark:text-emerald-400 border border-slate-300 dark:border-slate-700/60"
+                            >
                               #{k}
                             </span>
                           ))}
@@ -289,16 +367,16 @@ export const CVGunsmithTab: React.FC = () => {
                           className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition cursor-pointer flex items-center gap-1 ${
                             isEquipped
                               ? 'bg-sky-600 hover:bg-sky-500 text-white font-bold shadow'
-                              : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                              : 'bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-[var(--text-primary)]'
                           }`}
                         >
                           {isEquipped ? (
                             <>
                               <Check className="h-3 w-3" />
-                              <span>Activo en CV</span>
+                              <span>Acoplada</span>
                             </>
                           ) : (
-                            <span>+ Incluir</span>
+                            <span>+ Encajar</span>
                           )}
                         </button>
 
@@ -306,7 +384,7 @@ export const CVGunsmithTab: React.FC = () => {
                           href={`https://danisantanderurrutia-coder.github.io/Portafolio/${item.portfolioUrlAnchor}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 transition"
+                          className="text-[10px] text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 transition"
                           title="Abrir evidencia en la app Portafolio"
                         >
                           <span>Ver Evidencia</span>
@@ -323,34 +401,40 @@ export const CVGunsmithTab: React.FC = () => {
 
         {/* RIGHT COLUMN: LIVE EXECUTIVE DOCUMENT PREVIEW (5 COLS) */}
         <div className="lg:col-span-5 sticky top-4 space-y-3.5">
-          <div className="p-4 rounded-2xl bg-[#0f172a]/95 border border-slate-800 shadow-xl space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span className="text-xs font-bold uppercase text-white flex items-center gap-1.5">
-                <FileText className="h-4 w-4 text-emerald-400" />
-                <span>VISTA PREVIA // FICHA EJECUTIVA (A4)</span>
+          <div 
+            className="p-4 rounded-2xl border shadow-xl space-y-3 transition-colors"
+            style={{ 
+              backgroundColor: 'var(--card-bg)', 
+              borderColor: 'var(--card-border)' 
+            }}
+          >
+            <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2">
+              <span className="text-xs font-bold uppercase text-[var(--text-primary)] flex items-center gap-1.5">
+                <FileText className="h-4 w-4 text-emerald-500" />
+                <span>VISTA PREVIA // HOJA EJECUTIVA (A4)</span>
               </span>
-              <span className="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5" />
                 <span>ESTÁNDAR EUROPEO</span>
               </span>
             </div>
 
-            {/* Document Sheet Simulation */}
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-[10px] space-y-3 shadow-inner min-h-[460px]">
+            {/* Document Sheet Simulation (Real A4 Paper Look) */}
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 text-[10px] space-y-3 shadow-md min-h-[460px]">
               
               {/* Document Header */}
-              <div className="border-b border-slate-800 pb-2.5 text-center space-y-0.5">
-                <h3 className="text-sm font-black text-white uppercase font-sans tracking-tight">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-2.5 text-center space-y-0.5">
+                <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase font-sans tracking-tight">
                   {profile.fullName || 'DANIEL SANTANDER URRUTIA'}
                 </h3>
-                <div className="text-[10.5px] font-bold text-sky-400">
+                <div className="text-[10.5px] font-bold text-sky-600 dark:text-sky-400">
                   {currentProfile[lang === 'es' ? 'headlineEs' : lang === 'en' ? 'headlineEn' : 'headlineDe']}
                 </div>
-                <div className="text-[9px] text-slate-400 font-mono">
+                <div className="text-[9px] text-slate-500 dark:text-slate-400 font-mono">
                   {profile.email || 'danisantander.urrutia@gmail.com'} • {profile.phone || '+49 176...'} • Bilbao / Kiel
                 </div>
-                <div className="text-[9px] text-emerald-400 font-mono pt-0.5 flex items-center justify-center gap-1">
-                  <Globe2 className="h-3 w-3 text-emerald-400" />
+                <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-mono pt-0.5 flex items-center justify-center gap-1">
+                  <Globe2 className="h-3 w-3" />
                   <span>Portafolio Verificado: danisantanderurrutia-coder.github.io/Portafolio</span>
                 </div>
               </div>
@@ -360,7 +444,7 @@ export const CVGunsmithTab: React.FC = () => {
                 <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-1">
                   RESUMEN PROFESIONAL ({currentProfile.name})
                 </div>
-                <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                <p className="text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
                   {lang === 'es'
                     ? 'Doble M.Sc. en Gestión y Protección Ambiental (CAU Kiel, Alemania / AMU Poznań, Polonia) y Licenciado en Geofísica por la Universidad de Chile (Distinción Máxima). Especialista en modelación cuantitativa de carbono, balances hidrológicos y gobernanza socio-ecológica.'
                     : lang === 'en'
@@ -377,11 +461,11 @@ export const CVGunsmithTab: React.FC = () => {
                 </div>
                 <div className="space-y-1.5 font-sans">
                   {equippedItems.map(item => (
-                    <div key={item.id} className="text-[9.5px] text-slate-200 leading-snug flex items-start gap-1.5">
-                      <span className="text-sky-400 font-bold shrink-0">•</span>
+                    <div key={item.id} className="text-[9.5px] text-slate-700 dark:text-slate-200 leading-snug flex items-start gap-1.5">
+                      <span className="text-sky-500 font-bold shrink-0">•</span>
                       <span>
                         {item.attachmentsForCV[lang === 'es' ? 'bulletEs' : lang === 'en' ? 'bulletEn' : 'bulletDe']}
-                        <span className="text-[8.5px] font-mono text-slate-400 ml-1">
+                        <span className="text-[8.5px] font-mono text-slate-400 dark:text-slate-500 ml-1">
                           [Ref: {item.institution}]
                         </span>
                       </span>
@@ -391,18 +475,18 @@ export const CVGunsmithTab: React.FC = () => {
               </div>
 
               {/* Academic Background */}
-              <div className="border-t border-slate-800/80 pt-2">
+              <div className="border-t border-slate-200 dark:border-slate-800/80 pt-2">
                 <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-1">
                   FORMACIÓN ACADÉMICA
                 </div>
-                <div className="text-[9.5px] text-slate-300 space-y-0.5">
+                <div className="text-[9.5px] text-slate-600 dark:text-slate-300 space-y-0.5">
                   <div>• <strong>CAU Kiel & AMU Poznań</strong>: Doble M.Sc. Gestión & Protección Ambiental (2024)</div>
                   <div>• <strong>Universidad de Chile (FCFM)</strong>: Licenciado en Geofísica (Distinción Máxima)</div>
                 </div>
               </div>
 
               {/* Compliance Seal */}
-              <div className="pt-2 text-center text-[9px] font-mono text-emerald-400 flex items-center justify-center gap-1 border-t border-slate-800/80">
+              <div className="pt-2 text-center text-[9px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1 border-t border-slate-200 dark:border-slate-800/80">
                 <Check className="h-3 w-3" />
                 <span>1 PÁGINA ESTRICTA // MÁXIMA DENSIDAD EJECUTIVA</span>
               </div>
@@ -420,7 +504,7 @@ export const CVGunsmithTab: React.FC = () => {
 
               <button
                 onClick={() => window.print()}
-                className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs font-mono transition flex items-center justify-center gap-1 cursor-pointer border border-slate-700"
+                className="py-2 px-3 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-[var(--text-primary)] font-medium text-xs font-mono transition flex items-center justify-center gap-1 cursor-pointer border border-[var(--card-border)]"
                 title="Imprimir o Exportar PDF"
               >
                 <Printer className="h-3.5 w-3.5" />
