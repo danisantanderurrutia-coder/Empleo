@@ -66,7 +66,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
-                PERFIL PROFESIONAL // DOSSIER & ARQUITECTURA DE CV
+                MI PERFIL // DOSSIER PROFESIONAL & CVs
               </h1>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-extrabold hidden sm:inline-block">
                 PERFIL ACTIVO
@@ -81,15 +81,15 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         {/* 3-Stage Pipeline Indicator */}
         <div className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800">
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            1. MERCADO & FUENTES
+            1. MERCADO & VACANTES
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-sky-600/20 text-sky-400 border border-sky-500/40">
-            2. ARQUITECTURA DE CV
+            2. PERFIL & ADAPTACIÓN DE CV
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            3. GESTIÓN & DESPACHO
+            3. CANDIDATURAS & SEGUIMIENTO
           </span>
         </div>
 
@@ -342,7 +342,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 <div className="border-b border-slate-800 pb-2 flex items-center justify-between">
                   <div>
                     <h3 className="text-xs font-mono font-black text-white uppercase tracking-wider">
-                      ARMERÍA CV // LOADOUTS TÁCTICOS
+                      VERSIONES DE CV // FORMATOS POR REGIÓN
                     </h3>
                     <span className="text-[10px] font-mono text-slate-300">
                       DOCUMENTACIÓN COMPILADA & VERIFICADA
@@ -356,7 +356,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                   <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/80 transition group">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-white group-hover:text-amber-400 transition">
-                        🇪🇸 LOADOUT 1: CASTELLANO (EUSKADI & ESPAÑA)
+                        🇪🇸 VERSIÓN 1: ESPAÑOL (EUSKADI & ESPAÑA)
                       </span>
                       <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
                         LISTO
@@ -391,7 +391,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                   <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/80 transition group">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-white group-hover:text-amber-400 transition">
-                        🇬🇧 LOADOUT 2: ENGLISH (INTERNATIONAL POLICY)
+                        🇬🇧 VERSIÓN 2: INGLÉS (POLÍTICA INTERNACIONAL & I+D)
                       </span>
                       <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
                         LISTO
@@ -426,7 +426,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                   <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/80 transition group">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-white group-hover:text-amber-400 transition">
-                        🇩🇪 LOADOUT 3: DEUTSCH (§20 AUFENTHG / DACH)
+                        🇩🇪 VERSIÓN 3: ALEMÁN (§20 AUFENTHG / DACH)
                       </span>
                       <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
                         LISTO

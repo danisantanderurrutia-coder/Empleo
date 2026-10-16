@@ -63,15 +63,15 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       {/* Cinematic Fog & Scanline Vignette */}
       <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-40 mix-blend-overlay" />
 
-      {/* Screen Title: CAREER (Exact Rainbow Six Siege style) */}
+      {/* Screen Title: PANEL DE CONTROL */}
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-700/60 pb-3 mb-6 gap-3">
         <div>
           <div className="flex items-center space-x-2 text-[11px] font-mono tracking-wider uppercase text-red-500 font-bold mb-1">
             <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-            <span>OPERATIVE RECORD // {profile.fullName || 'DANIEL SANTANDER'}</span>
+            <span>EXPEDIENTE PROFESIONAL // {profile.fullName || 'DANIEL SANTANDER'}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter font-sans drop-shadow-md">
-            CAREER
+            PANEL DE CONTROL
           </h1>
         </div>
 
@@ -79,32 +79,32 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         <div className="flex items-center space-x-2 text-[11px] font-mono">
           <div className="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-300 flex items-center gap-2 shadow">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-emerald-400 font-bold">IMF HQ:</span>
-            <span>RECONOCIMIENTO & DESPACHO ACTIVO</span>
+            <span className="text-emerald-400 font-bold">ESTADO OPERATIVO:</span>
+            <span>EXPLORACIÓN & SEGUIMIENTO ACTIVO</span>
           </div>
         </div>
       </div>
 
       {/* -------------------------------------------------------------
-       * EXACT RAINBOW SIX SIEGE 3-COLUMN CAREER GRID (IMAGE 4)
+       * TACTICAL 3-COLUMN CAREER GRID
        * ------------------------------------------------------------- */}
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-5">
         {/* =========================================================
-         * COLUMN 1 (LEFT, 3 COLS): CLEARANCE LEVEL + REPLAYS
+         * COLUMN 1 (LEFT, 3 COLS): NIVEL DE PERFIL + MERCADO EN VIVO
          * ========================================================= */}
         <div className="md:col-span-3 space-y-4 flex flex-col justify-between">
-          {/* Tile 1.1: CLEARANCE LEVEL */}
+          {/* Tile 1.1: NIVEL DE PERFIL */}
           <div 
             onClick={() => onSelectStation('agent_dossier', 'showcase')}
             className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl flex flex-col justify-between min-h-[195px] relative overflow-hidden group hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.25)] transition cursor-pointer"
-            title="Click para ver el Expediente del Operador"
+            title="Click para ver el Expediente Profesional"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100 group-hover:text-sky-300 transition">
-                CLEARANCE LEVEL
+                NIVEL DE PERFIL
               </span>
               <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
-                MAX ACCESO
+                100% COMPLETADO
               </span>
             </div>
 
@@ -139,13 +139,13 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                 <div className="h-full bg-slate-100 w-full" />
               </div>
               <div className="text-[11px] font-mono font-bold text-slate-200 flex items-center justify-between">
-                <span>1000 / 1000 XP</span>
-                <span className="text-sky-300 font-mono text-[10px]">VER SKIN »</span>
+                <span>DOBLE M.SC. & GEOFÍSICA</span>
+                <span className="text-sky-300 font-mono text-[10px]">VER EXPEDIENTE »</span>
               </div>
             </div>
           </div>
 
-          {/* Tile 1.2: REPLAYS [BETA] */}
+          {/* Tile 1.2: MERCADO EN VIVO */}
           <div 
             onClick={onLaunchRadar}
             className="rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-sky-400 transition"
@@ -157,10 +157,10 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           >
             <div className="flex items-center space-x-1.5 z-10">
               <span className="text-xs font-mono font-black uppercase tracking-wider text-white drop-shadow">
-                REPLAYS
+                MERCADO EN VIVO
               </span>
               <span className="text-[10px] font-mono font-black px-1.5 py-0.5 rounded bg-red-600 text-white shadow">
-                LIVE
+                FEED
               </span>
             </div>
 
@@ -175,21 +175,21 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             </div>
 
             <div className="text-[11px] font-mono font-bold text-sky-300 flex items-center justify-between z-10 border-t border-slate-700 pt-2">
-              <span>CANAL SEGURO</span>
-              <span>LIVE FEED »</span>
+              <span>EXPLORAR VACANTES</span>
+              <span>VER FEED »</span>
             </div>
           </div>
         </div>
 
         {/* =========================================================
-         * COLUMN 2 (CENTER, 4 COLS): MY RANK + REPUTATION
+         * COLUMN 2 (CENTER, 4 COLS): PERFIL DESTACADO + VERIFICACIÓN
          * ========================================================= */}
         <div className="md:col-span-4 space-y-4 flex flex-col justify-between">
-          {/* Tile 2.1: MY RANK (Hero Card with Red Angle Fade) */}
+          {/* Tile 2.1: PERFIL DESTACADO (Hero Card with Red Angle Fade) */}
           <div 
             onClick={() => onSelectStation('agent_dossier', 'showcase')}
             className="rounded-xl p-5 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.35)] min-h-[195px] flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:border-white hover:scale-[1.01] transition"
-            title="Click para ver el Operador Daniel Santander y sus Atributos"
+            title="Click para ver el Perfil Profesional y sus Competencias"
             style={{
               backgroundImage: `linear-gradient(to top, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.6) 35%, rgba(10, 14, 22, 0.65) 100%), url('${professionalResearcher}')`,
               backgroundSize: 'cover',
@@ -198,17 +198,17 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           >
             <div className="flex items-center justify-between z-10">
               <span className="text-xs font-mono font-black uppercase tracking-wider text-white drop-shadow">
-                MY RANK
+                PERFIL DESTACADO
               </span>
               <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-black/70 text-white border border-red-400">
-                TIER-1 MINT
+                TIER-1 VERIFICADO
               </span>
             </div>
 
             {/* Tactical Shield Emblem & Rank Title */}
             <div className="flex flex-col items-center justify-center my-2 z-10">
               <div className="w-14 h-14 rounded-xl bg-black/60 border-2 border-white flex items-center justify-center shadow-2xl mb-1.5 group-hover:scale-110 transition">
-                {/* Military Rank Chevron Shield */}
+                {/* Shield Emblem */}
                 <svg viewBox="0 0 24 24" className="w-8 h-8 text-white drop-shadow">
                   <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="2.5" />
                   <path d="M8 11l4 3 4-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
@@ -217,7 +217,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               </div>
 
               <h3 className="text-lg font-black text-white uppercase tracking-wider font-sans drop-shadow-lg text-center">
-                ELITE FIELD SCIENTIST
+                CIENTÍFICO AMBIENTAL & GEOFÍSICO
               </h3>
               <span className="text-xs font-mono text-white font-extrabold uppercase tracking-widest drop-shadow bg-black/40 px-2 py-0.5 rounded mt-0.5">
                 AUFENTHG §20 & LEY 14
@@ -230,18 +230,18 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             </div>
           </div>
 
-          {/* Tile 2.2: REPUTATION */}
+          {/* Tile 2.2: VERIFICACIÓN & DESPACHO */}
           <div 
             onClick={() => onSelectStation('mission_control', 'applications')}
             className="bg-[#121927]/95 backdrop-blur-md rounded-xl p-5 border border-slate-600 shadow-2xl min-h-[195px] flex flex-col justify-between relative overflow-hidden group hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)] transition cursor-pointer"
-            title="Click para ver Locker y Despacho Asistido"
+            title="Click para ver Candidaturas y Seguimiento"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-black uppercase tracking-wider text-slate-100 group-hover:text-emerald-300 transition">
-                REPUTATION
+                VERIFICACIÓN & DESPACHO
               </span>
               <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600">
-                VERIFICADO
+                AUDITADO
               </span>
             </div>
 
@@ -251,7 +251,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                 <Award className="h-7 w-7 text-white" />
               </div>
               <h4 className="text-base font-black text-white uppercase tracking-wider">
-                RESPECTABLE
+                CONFIRMADO
               </h4>
               <span className="text-xs font-mono font-bold text-slate-200">
                 {colSent.length > 0 ? `${colSent.length} Envíos Confirmados por Ti` : '100% Despacho Mediado por Ti'}
@@ -260,7 +260,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
             <div className="text-[11px] font-mono font-bold text-slate-200 text-center border-t border-slate-700 pt-1.5 flex items-center justify-between">
               <span>CERO BOTS • AUDITORÍA LIMPIA</span>
-              <span className="text-emerald-400 font-mono text-[10px]">LOCKER »</span>
+              <span className="text-emerald-400 font-mono text-[10px]">CANDIDATURAS »</span>
             </div>
           </div>
         </div>
@@ -314,7 +314,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider">
               <span className="flex items-center gap-1.5">
                 <KanbanSquare className="h-3.5 w-3.5 text-sky-400" />
-                <span>LOCKER // MISIÓN KANBAN EN VIVO</span>
+                <span>CANDIDATURAS // SEGUIMIENTO EN VIVO</span>
               </span>
               <button
                 onClick={() => onSelectStation('mission_control', 'applications')}

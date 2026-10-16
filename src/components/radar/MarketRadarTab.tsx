@@ -52,14 +52,14 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
-                PLAY // RADAR TÁCTICO DE MERCADO
+                MERCADO // EXPLORACIÓN DE VACANTES & FUENTES
               </h1>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800 font-extrabold hidden sm:inline-block">
-                FASE 1 ACTIVA
+                RADAR ACTIVO
               </span>
             </div>
             <p className="text-[11px] text-slate-300 font-sans">
-              Reconocimiento de vacantes, telemetría de visado AufenthG §20 / Ley 14 e institutos I+D.
+              Exploración de vacantes, telemetría de visado AufenthG §20 / Ley 14 e institutos I+D.
             </p>
           </div>
         </div>
@@ -67,15 +67,15 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
         {/* 3-Stage Pipeline Indicator */}
         <div className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800">
           <span className="px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/40">
-            1. RECONOCIMIENTO & FUENTES
+            1. MERCADO & VACANTES
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            2. SELECCIÓN & ARMERÍA
+            2. PERFIL & ADAPTACIÓN DE CV
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            3. PREPARACIÓN & DESPACHO
+            3. CANDIDATURAS & SEGUIMIENTO
           </span>
         </div>
 

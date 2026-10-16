@@ -44,14 +44,14 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
-                LOCKER // SALA DE MISIONES & KANBAN ASISTIDO
+                CANDIDATURAS // GESTIÓN & SEGUIMIENTO DE PROCESOS
               </h1>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-extrabold hidden sm:inline-block">
-                FASE 3 ACTIVA
+                PIPELINE ACTIVO
               </span>
             </div>
             <p className="text-[11px] text-slate-300 font-sans">
-              Despacho mediado por Daniel Santander: aprobación humana obligatoria • embudo de conversión • entrevistas.
+              Seguimiento mediado por Daniel Santander: aprobación humana obligatoria • embudo de selección • entrevistas.
             </p>
           </div>
         </div>
@@ -59,15 +59,15 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
         {/* 3-Stage Pipeline Indicator */}
         <div className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800">
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            1. RECONOCIMIENTO & FUENTES
+            1. MERCADO & VACANTES
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400">
-            2. SELECCIÓN & ARMERÍA
+            2. PERFIL & ADAPTACIÓN DE CV
           </span>
           <span className="text-slate-600 font-black">➔</span>
           <span className="px-2 py-0.5 rounded bg-sky-600/20 text-sky-400 border border-sky-500/40">
-            3. PREPARACIÓN & DESPACHO
+            3. CANDIDATURAS & SEGUIMIENTO
           </span>
         </div>
 
@@ -82,7 +82,7 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
             }`}
           >
             <KanbanSquare className="h-3.5 w-3.5" />
-            <span>KANBAN & DESPACHO ASISTIDO</span>
+            <span>TABLERO DE PROCESOS</span>
           </button>
 
           <button

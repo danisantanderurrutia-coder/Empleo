@@ -41,8 +41,19 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </button>
 
-      {/* Center Tactical Rainbow Six Siege Navigation Bar */}
-      <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-8 text-xs uppercase tracking-wider font-mono font-bold">
+      {/* Center Tactical Navigation Bar */}
+      <div className="flex items-center space-x-3 sm:space-x-5 md:space-x-7 text-xs uppercase tracking-wider font-mono font-bold">
+        <button
+          onClick={() => onSelectStation && onSelectStation('dashboard')}
+          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
+            currentTab === 'dashboard'
+              ? 'text-white border-b-2 border-red-600 font-black' 
+              : 'text-slate-300 hover:text-white'
+          }`}
+        >
+          <span>PANEL</span>
+        </button>
+
         <button
           onClick={() => onSelectStation && onSelectStation('market_radar')}
           className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
@@ -51,18 +62,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               : 'text-slate-300 hover:text-white'
           }`}
         >
-          <span>PLAY</span>
+          <span>MERCADO</span>
         </button>
 
         <button
           onClick={() => onSelectStation && onSelectStation('agent_dossier', 'showcase')}
           className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            ['agent_dossier', 'profile', 'cvs'].includes(currentTab)
+            ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'].includes(currentTab)
               ? 'text-white border-b-2 border-red-600 font-black' 
               : 'text-slate-300 hover:text-white'
           }`}
         >
-          <span>OPERATORS</span>
+          <span>MI PERFIL</span>
         </button>
 
         <button
@@ -73,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               : 'text-slate-300 hover:text-white'
           }`}
         >
-          <span>LOCKER</span>
+          <span>CANDIDATURAS</span>
         </button>
 
         <button
@@ -84,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               : 'text-slate-300 hover:text-white'
           }`}
         >
-          <span>HQ</span>
+          <span>AJUSTES</span>
         </button>
       </div>
 
