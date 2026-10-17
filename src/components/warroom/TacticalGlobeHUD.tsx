@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { Play, Pause, ChevronLeft, ChevronRight, MapPin, Building2, Globe2, ArrowRight } from 'lucide-react';
+import { Play, Pause, ChevronLeft, ChevronRight, MapPin, Building2, ArrowRight } from 'lucide-react';
 
 interface TacticalGlobeHUDProps {
   onDeploySector?: (sector: string) => void;
@@ -202,13 +202,13 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
     if (!mount) return;
 
     let animId: number;
-    const width = mount.clientWidth || 350;
-    const height = mount.clientHeight || 350;
+    const width = mount.clientWidth || 480;
+    const height = mount.clientHeight || 480;
 
     // 1. Scene & Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 5.8);
+    camera.position.set(0, 0, 5.7);
 
     // 2. WebGL Renderer
     const renderer = new THREE.WebGLRenderer({
@@ -219,6 +219,19 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     mount.appendChild(renderer.domElement);
+
+    const updateSize = () => {
+      if (!mount) return;
+      const w = mount.clientWidth;
+      const h = mount.clientHeight;
+      if (w > 0 && h > 0) {
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
 
     // 3. Earth Group
     const earthGroup = new THREE.Group();
@@ -235,7 +248,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
     const cloudsMap = textureLoader.load(resolveAsset('/earth/earth_clouds_1024.png'));
 
     // 5. Main Earth Sphere (Real Continents, Oceans & Mountain Relief Shadows)
-    const earthRadius = 1.95;
+    const earthRadius = 2.05;
     const earthGeo = new THREE.SphereGeometry(earthRadius, 64, 64);
     const earthMat = new THREE.MeshPhongMaterial({
       map: dayMap,
@@ -586,6 +599,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
 
     return () => {
       cancelAnimationFrame(animId);
+      window.removeEventListener('resize', updateSize);
       mount.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
@@ -608,47 +622,113 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0c1322] p-6 sm:p-8 shadow-xl text-slate-800 dark:text-slate-100 font-sans transition-colors">
-      
-      {/* Top Header: Clean, Executive, High-Tech */}
-      <div className="flex flex-wrap items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 gap-3">
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-800 flex items-center justify-center shadow-xs">
-            <Globe2 className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase">
-                VISOR PLANETARIO // RED GLOBAL DE EMPLEO
-              </h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold">
-                THREE.JS NASA 4K
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Globo terráqueo fotorrealista (NASA Blue Marble 4K + relieve normal map + specular oceánico + nubes dinámicas + slerp orbital).
-            </p>
-          </div>
-        </div>
+    <div 
+      className="relative overflow-hidden rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-[#0c1322]/95 p-6 sm:p-8 shadow-xl text-slate-800 dark:text-slate-100 font-sans transition-colors"
+      style={{
+        backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.90) 45%, rgba(255, 255, 255, 0.76) 100%), url('/sunset_clouds_sky.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      {/* Subtle warm atmospheric glow */}
+      <div className="absolute inset-0 bg-gradient-to-t from-white/30 via-transparent to-transparent pointer-events-none" />
 
-        {/* Current Target Location Badge */}
-        <div className="flex items-center space-x-2 text-xs font-mono bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800">
-          <MapPin className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-          <span className="font-bold text-slate-700 dark:text-slate-200">{activeOffer.city}</span>
-          <span className="text-slate-400">|</span>
-          <span className="text-slate-500">{activeOffer.coordsText}</span>
-        </div>
-      </div>
-
-      {/* Main Grid: Authentic Three.js 3D Globe + Clean Offer Dossier */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-5 items-center">
+      {/* Main Grid: Left Column (Paneles/Ofertas) + Right Column (Globo Ampliado) */}
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         
-        {/* Left Column: True Three.js 3D Earth Globe with Soft Drop Shadow */}
-        <div className="lg:col-span-6 flex flex-col items-center justify-center select-none">
-          <div className="relative cursor-grab active:cursor-grabbing flex items-center justify-center w-full max-w-[360px] aspect-square">
+        {/* Left Column (lg:col-span-6): Telemetry Offer Dossier & Destination Chips */}
+        <div className="lg:col-span-6 space-y-3.5 order-2 lg:order-1">
+          
+          {/* Quick Target Destination Chips */}
+          <div className="flex flex-wrap gap-1.5">
+            {ATTRACTIVE_OFFERS.map((target, idx) => (
+              <button
+                key={target.id}
+                onClick={() => handleSelectOffer(idx)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 cursor-pointer border ${
+                  activeOfferIndex === idx
+                    ? 'bg-emerald-600 text-white font-bold border-emerald-600 shadow-md scale-102'
+                    : 'bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-slate-700 shadow-2xs backdrop-blur-xs'
+                }`}
+                title={`Rotar hacia ${target.city}`}
+              >
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: target.color }} />
+                <span>{target.flag} {target.city}</span>
+                <span className="text-[10px] opacity-80 font-mono font-bold">({target.matchScore}%)</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Active Attractive Offer Dossier Card */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 space-y-4 shadow-sm relative backdrop-blur-sm">
+            <div className="flex items-start justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
+                  <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>{activeOffer.flag} {activeOffer.city} • {activeOffer.country}</span>
+                  <span className="text-slate-300 dark:text-slate-600">•</span>
+                  <span className="text-slate-400 font-normal">{activeOffer.coordsText}</span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-1.5 tracking-tight leading-snug">
+                  {activeOffer.role}
+                </h3>
+                <div className="text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5 mt-1">
+                  <Building2 className="h-3.5 w-3.5 shrink-0" />
+                  <span>{activeOffer.name}</span>
+                </div>
+              </div>
+
+              {/* Match Score Badge */}
+              <div className="px-3.5 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 font-black text-xs font-mono shrink-0 shadow-xs">
+                {activeOffer.matchScore}% MATCH
+              </div>
+            </div>
+
+            {/* Strategic Attributes Strip */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-0.5">
+                <span className="text-[10px] font-mono text-slate-500 uppercase font-bold block">Marco Legal & Visado</span>
+                <span className="text-xs text-emerald-700 dark:text-emerald-400 font-bold">{activeOffer.framework}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-0.5">
+                <span className="text-[10px] font-mono text-slate-500 uppercase font-bold block">Retribución Estimada</span>
+                <span className="text-xs text-amber-700 dark:text-amber-300 font-bold">{activeOffer.salary}</span>
+              </div>
+            </div>
+
+            {/* Requirements / Tags */}
+            <div className="space-y-1.5">
+              <div className="text-[10px] font-mono text-slate-500 uppercase font-bold">Competencias Demandadas:</div>
+              <div className="flex flex-wrap gap-1.5">
+                {activeOffer.requirements.map(req => (
+                  <span key={req} className="px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-2xs">
+                    {req}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Action CTA */}
+            {onDeploySector && (
+              <div className="pt-2">
+                <button
+                  onClick={() => onDeploySector(activeOffer.sectorKey)}
+                  className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition uppercase tracking-wider cursor-pointer"
+                >
+                  <span>Explorar Ofertas de este Sector</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column (lg:col-span-6): Enlarged Three.js 3D Earth Globe with Controls */}
+        <div className="lg:col-span-6 flex flex-col items-center justify-center select-none order-1 lg:order-2">
+          <div className="relative cursor-grab active:cursor-grabbing flex items-center justify-center w-full max-w-[480px] aspect-square">
             
             {/* Soft Radial Ambient Drop Shadow on White Card */}
-            <div className="absolute inset-x-8 bottom-3 h-12 bg-radial from-slate-900/35 via-slate-800/15 to-transparent rounded-full blur-md pointer-events-none transform scale-y-50" />
+            <div className="absolute inset-x-10 bottom-2 h-14 bg-radial from-slate-900/35 via-slate-800/15 to-transparent rounded-full blur-md pointer-events-none transform scale-y-50" />
 
             {/* Three.js Mount Container */}
             <div
@@ -658,10 +738,10 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
             />
 
             {/* Drag Hint Tooltip */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-md px-3 py-1 rounded-full text-[10px] font-sans text-slate-600 dark:text-slate-300 pointer-events-none backdrop-blur-xs flex items-center gap-1.5 whitespace-nowrap">
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-md px-3.5 py-1 rounded-full text-[11px] font-sans text-slate-700 dark:text-slate-200 pointer-events-none backdrop-blur-xs flex items-center gap-1.5 whitespace-nowrap">
               <span>🌍 Three.js NASA 4K</span>
               <span className="text-slate-400">•</span>
-              <span>Arrastra para girar</span>
+              <span>Arrastra para rotar</span>
             </div>
           </div>
 
@@ -672,7 +752,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
                 setActiveOfferIndex((activeOfferIndex - 1 + ATTRACTIVE_OFFERS.length) % ATTRACTIVE_OFFERS.length);
                 setIsAutoRotating(false);
               }}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer border border-slate-200 dark:border-slate-700"
+              className="p-2 rounded-xl bg-white/90 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer border border-slate-200 dark:border-slate-700 shadow-xs"
               title="Oferta anterior"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -683,7 +763,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
               className={`px-4 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer border shadow-xs ${
                 isAutoRotating
                   ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200'
+                  : 'bg-white/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
               }`}
               title="Alternar rotación automática"
             >
@@ -705,96 +785,11 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
                 setActiveOfferIndex((activeOfferIndex + 1) % ATTRACTIVE_OFFERS.length);
                 setIsAutoRotating(false);
               }}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer border border-slate-200 dark:border-slate-700"
+              className="p-2 rounded-xl bg-white/90 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer border border-slate-200 dark:border-slate-700 shadow-xs"
               title="Siguiente oferta"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
-          </div>
-        </div>
-
-        {/* Right Column: Clean Telemetry Offer Dossier (Light / Clean Card) */}
-        <div className="lg:col-span-6 space-y-3.5">
-          
-          {/* Quick Target Destination Chips */}
-          <div className="flex flex-wrap gap-1.5">
-            {ATTRACTIVE_OFFERS.map((target, idx) => (
-              <button
-                key={target.id}
-                onClick={() => handleSelectOffer(idx)}
-                className={`px-2.5 py-1 rounded-xl text-xs font-medium transition flex items-center gap-1.5 cursor-pointer border ${
-                  activeOfferIndex === idx
-                    ? 'bg-emerald-600 text-white font-bold border-emerald-600 shadow-sm'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-slate-700'
-                }`}
-                title={`Rotar hacia ${target.city}`}
-              >
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: target.color }} />
-                <span>{target.flag} {target.city}</span>
-                <span className="text-[10px] opacity-80">({target.matchScore}%)</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Active Attractive Offer Dossier Card */}
-          <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 space-y-4 shadow-sm relative">
-            <div className="flex items-start justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-              <div>
-                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
-                  <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span>{activeOffer.flag} {activeOffer.city} • {activeOffer.country}</span>
-                </div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1 tracking-tight leading-snug">
-                  {activeOffer.role}
-                </h3>
-                <div className="text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5 mt-1">
-                  <Building2 className="h-3.5 w-3.5 shrink-0" />
-                  <span>{activeOffer.name}</span>
-                </div>
-              </div>
-
-              {/* Match Score Badge */}
-              <div className="px-3 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 font-black text-xs font-mono shrink-0 shadow-xs">
-                {activeOffer.matchScore}% MATCH
-              </div>
-            </div>
-
-            {/* Strategic Attributes Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-              <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-0.5">
-                <span className="text-[10px] font-mono text-slate-500 uppercase font-bold block">Marco Legal & Visado</span>
-                <span className="text-xs text-emerald-700 dark:text-emerald-400 font-bold">{activeOffer.framework}</span>
-              </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-0.5">
-                <span className="text-[10px] font-mono text-slate-500 uppercase font-bold block">Retribución Estimada</span>
-                <span className="text-xs text-amber-700 dark:text-amber-300 font-bold">{activeOffer.salary}</span>
-              </div>
-            </div>
-
-            {/* Requirements / Tags */}
-            <div className="space-y-1.5">
-              <div className="text-[10px] font-mono text-slate-500 uppercase font-bold">Competencias Demandadas:</div>
-              <div className="flex flex-wrap gap-1.5">
-                {activeOffer.requirements.map(req => (
-                  <span key={req} className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-2xs">
-                    {req}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Action CTA */}
-            {onDeploySector && (
-              <div className="pt-2">
-                <button
-                  onClick={() => onDeploySector(activeOffer.sectorKey)}
-                  className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition uppercase tracking-wider cursor-pointer"
-                >
-                  <span>Explorar Ofertas de este Sector</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

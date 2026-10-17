@@ -56,7 +56,43 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
     <div className="space-y-6 select-none animate-fadeIn">
       
       {/* =========================================================================
-       * 1. THE AUTHENTIC CAREER DASHBOARD (RAINBOW SIX SIEGE EXACT LAYOUT)
+       * 1. TITULO PRINCIPAL DE PÁGINA (CAREER)
+       * ========================================================================= */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-200/90 dark:border-slate-800 pb-4 gap-3">
+        <div>
+          <div className="flex items-center space-x-2 text-[11px] font-mono tracking-wider uppercase text-red-500 font-bold mb-1">
+            <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+            <span>EXPEDIENTE PROFESIONAL // {profile.fullName || 'DANIEL SANTANDER'}</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tight font-sans drop-shadow-xs">
+            CAREER
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-2 text-[11px] font-mono">
+          <div className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center gap-2 shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold">RADAR ACTIVO:</span>
+            <span>DACH • EUSKADI • REMOTO</span>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+       * 2. VISOR PLANETARIO (MAPA MUNDI REALISTA THREE.JS NASA 4K)
+       * ========================================================================= */}
+      <div>
+        <TacticalGlobeHUD 
+          onDeploySector={(sector) => {
+            if (sector === 'kiel') onSelectStation('market_radar', 'sources');
+            else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
+            else onSelectStation('market_radar', 'offers');
+          }}
+        />
+      </div>
+
+      {/* =========================================================================
+       * 3. THE AUTHENTIC CAREER DASHBOARD (EXPEDIENTE PROFESIONAL)
        * ========================================================================= */}
       <div 
         className="relative rounded-3xl overflow-hidden p-6 md:p-8 text-white font-sans border border-slate-700/80 shadow-2xl"
@@ -68,27 +104,6 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       >
         {/* Subtle Vignette & Grid */}
         <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-40 mix-blend-overlay" />
-
-        {/* Screen Title: CAREER */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-700/80 pb-4 mb-6 gap-3">
-          <div>
-            <div className="flex items-center space-x-2 text-[11px] font-mono tracking-wider uppercase text-red-500 font-bold mb-1">
-              <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-              <span>EXPEDIENTE PROFESIONAL // {profile.fullName || 'DANIEL SANTANDER'}</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tight font-sans drop-shadow-md">
-              CAREER
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-2 text-[11px] font-mono">
-            <div className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-300 flex items-center gap-2 shadow">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="text-emerald-400 font-bold">RADAR ACTIVO:</span>
-              <span>DACH • EUSKADI • REMOTO</span>
-            </div>
-          </div>
-        </div>
 
         {/* -------------------------------------------------------------
          * 3-COLUMN CAREER GRID (IMAGE INSPIRATION)
@@ -435,18 +450,6 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         </div>
       </div>
 
-      {/* =========================================================================
-       * 2. VISOR PLANETARIO (MAPA MUNDI REALISTA EN FONDO CLARO)
-       * ========================================================================= */}
-      <div className="pt-2">
-        <TacticalGlobeHUD 
-          onDeploySector={(sector) => {
-            if (sector === 'kiel') onSelectStation('market_radar', 'sources');
-            else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
-            else onSelectStation('market_radar', 'offers');
-          }}
-        />
-      </div>
     </div>
   );
 };
