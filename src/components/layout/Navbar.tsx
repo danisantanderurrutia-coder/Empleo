@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { 
   Crosshair, 
-  HelpCircle,
-  Sun,
-  Moon
+  ShieldCheck, 
+  Sun, 
+  Moon,
+  Radio
 } from 'lucide-react';
 import type { AppTheme } from '../../services/themeManager';
+
+interface NavTabItem {
+  id: string;
+  label: string;
+  sub: string;
+  matches: string[];
+}
+
+const NAV_TABS: NavTabItem[] = [
+  { id: 'market_radar', label: 'PLAY', sub: 'MERCADO', matches: ['market_radar', 'offers', 'sources', 'companies'] },
+  { id: 'agent_dossier', label: 'OPERATORS', sub: 'PERFIL', matches: ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'] },
+  { id: 'dashboard', label: 'CAREER', sub: 'PANEL', matches: ['dashboard'] },
+  { id: 'mission_control', label: 'LOCKER', sub: 'CANDIDATURAS', matches: ['mission_control', 'applications', 'batch_applications', 'intelligence'] },
+  { id: 'funding', label: 'FONDOS I+D', sub: 'CONVOCATORIAS', matches: ['funding', 'convocatorias'] },
+  { id: 'settings', label: 'HQ', sub: 'AJUSTES', matches: ['settings'] }
+];
 
 interface NavbarProps {
   currentTab: string;
@@ -22,132 +39,190 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenUnifiedHelp,
   onSelectStation
 }) => {
+  // Find current active tab index
+  const activeIndex = NAV_TABS.findIndex(t => t.matches.includes(currentTab));
+
+  const handleCycleTab = useCallback((direction: -1 | 1) => {
+    if (!onSelectStation) return;
+    const nextIndex = activeIndex === -1 
+      ? 0 
+      : (activeIndex + direction + NAV_TABS.length) % NAV_TABS.length;
+    onSelectStation(NAV_TABS[nextIndex].id);
+  }, [activeIndex, onSelectStation]);
+
+  // Keyboard navigation for [Q] and [E] bumpers + [F1]
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.key === 'q' || e.key === 'Q') {
+        e.preventDefault();
+        handleCycleTab(-1);
+      } else if (e.key === 'e' || e.key === 'E') {
+        e.preventDefault();
+        handleCycleTab(1);
+      } else if (e.key === 'F1') {
+        e.preventDefault();
+        onOpenUnifiedHelp();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleCycleTab, onOpenUnifiedHelp]);
+
   return (
-    <header className="sticky top-0 z-40 w-full bg-[var(--nav-bg)] backdrop-blur-md border-b border-[var(--nav-border)] px-5 py-3 flex items-center justify-between shadow-sm text-[var(--text-primary)] font-mono transition-colors">
-      {/* Clickable Brand Header returning to Home / Panel */}
+    <header className="sticky top-0 z-40 w-full bg-[var(--nav-bg)] backdrop-blur-md border-b border-[var(--nav-border)] px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-md text-[var(--text-primary)] font-mono transition-colors">
+      
+      {/* 1. Left: Brand Header returning to Career Home */}
       <button
         onClick={() => onSelectStation && onSelectStation('dashboard')}
-        className="flex items-center space-x-3 cursor-pointer group text-left focus:outline-none"
-        title="Volver al Centro de Mando (Panel de Control)"
+        className="flex items-center space-x-3 cursor-pointer group text-left focus:outline-none shrink-0"
+        title="Volver a CAREER (Consola Central de Operaciones)"
       >
-        <div className="h-9 w-9 rounded-xl bg-sky-600/10 border border-sky-500/30 flex items-center justify-center shadow-inner shrink-0 text-sky-600 group-hover:bg-sky-600/20 group-hover:border-sky-500 transition">
-          <Crosshair className="h-5 w-5 group-hover:rotate-45 transition-transform duration-300" />
+        <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-inner shrink-0 text-emerald-600 group-hover:bg-emerald-500/20 group-hover:border-emerald-500 transition">
+          <Crosshair className="h-5 w-5 text-emerald-600 dark:text-emerald-400 group-hover:rotate-45 transition-transform duration-300" />
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <h1 className="font-black text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-sky-600 transition">
+            <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-emerald-600 transition">
               EMPLEO
             </h1>
-            <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-600 border border-sky-500/30 hidden sm:inline-block">
-              OS
+            <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 hidden sm:inline-block">
+              TACTICAL OPS
             </span>
           </div>
-          <p className="text-[11px] text-[var(--text-muted)] font-mono hidden sm:block">
-            Alemania • Euskadi • Remoto
+          <p className="text-[10px] text-[var(--text-muted)] font-mono hidden xl:block">
+            CAU Kiel • U. de Chile • 54°20&apos;N • 43°15&apos;N
           </p>
         </div>
       </button>
 
-      {/* Center Tactical Navigation Bar */}
-      <div className="flex items-center space-x-3 sm:space-x-5 md:space-x-7 text-xs uppercase tracking-wider font-mono font-bold">
+      {/* 2. Center: Authentic Rainbow Six Siege Tactical Menu Bar */}
+      <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 text-xs uppercase tracking-wider font-mono">
+        
+        {/* Left Bumper [Q] */}
         <button
-          onClick={() => onSelectStation && onSelectStation('dashboard')}
-          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            currentTab === 'dashboard'
-              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-          }`}
+          onClick={() => handleCycleTab(-1)}
+          className="hidden lg:flex items-center justify-center px-2 py-1 rounded-lg text-[10px] font-mono font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-[var(--panel-border)] cursor-pointer"
+          title="Pestaña anterior [Tecla Q]"
         >
-          <span>PANEL</span>
+          <span>[Q] ◀</span>
         </button>
 
-        <button
-          onClick={() => onSelectStation && onSelectStation('market_radar')}
-          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            ['market_radar', 'offers', 'sources', 'companies'].includes(currentTab)
-              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-          }`}
-        >
-          <span>MERCADO</span>
-        </button>
+        {/* Tab Buttons */}
+        <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-3">
+          {NAV_TABS.map((tab) => {
+            const isActive = tab.matches.includes(currentTab);
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onSelectStation && onSelectStation(tab.id)}
+                className={`relative py-1.5 px-2 sm:px-2.5 md:px-3.5 transition-all duration-150 flex flex-col items-center justify-center cursor-pointer group focus:outline-none ${
+                  isActive
+                    ? 'text-[var(--text-primary)] font-black'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] font-bold'
+                }`}
+                title={`${tab.label} — ${tab.sub}`}
+              >
+                <span className="font-mono text-xs sm:text-[13px] tracking-[0.16em] uppercase font-black transition-colors">
+                  {tab.label}
+                </span>
 
-        <button
-          onClick={() => onSelectStation && onSelectStation('funding')}
-          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            ['funding', 'convocatorias'].includes(currentTab)
-              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-          }`}
-        >
-          <span>FONDOS I+D</span>
-        </button>
+                <span className="text-[8.5px] font-mono tracking-wider opacity-60 group-hover:opacity-100 transition-opacity uppercase hidden xl:inline">
+                  // {tab.sub}
+                </span>
 
-        <button
-          onClick={() => onSelectStation && onSelectStation('agent_dossier', 'showcase')}
-          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'].includes(currentTab)
-              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-          }`}
-        >
-          <span>MI PERFIL</span>
-        </button>
+                {/* Rainbow Six Siege Iconic Red Tactical Underline & Notch */}
+                {isActive && (
+                  <>
+                    <div className="absolute -bottom-2.5 left-0 right-0 h-[3px] bg-red-600 shadow-[0_0_12px_rgba(220,38,38,0.8)]" />
+                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-red-600 rotate-45" />
+                  </>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
+        {/* Right Bumper [E] */}
         <button
-          onClick={() => onSelectStation && onSelectStation('mission_control')}
-          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            ['mission_control', 'applications', 'batch_applications', 'intelligence'].includes(currentTab)
-              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-          }`}
+          onClick={() => handleCycleTab(1)}
+          className="hidden lg:flex items-center justify-center px-2 py-1 rounded-lg text-[10px] font-mono font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-[var(--panel-border)] cursor-pointer"
+          title="Pestaña siguiente [Tecla E]"
         >
-          <span>CANDIDATURAS</span>
-        </button>
-
-        <button
-          onClick={() => onSelectStation && onSelectStation('settings')}
-          className={`py-1.5 transition flex items-center gap-1.5 relative cursor-pointer ${
-            currentTab === 'settings'
-              ? 'text-sky-600 border-b-2 border-sky-600 font-black' 
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-          }`}
-        >
-          <span>AJUSTES</span>
+          <span>▶ [E]</span>
         </button>
       </div>
 
-      {/* Right Controls: Theme Toggle & Unified Help */}
-      <div className="flex items-center space-x-2">
+      {/* 3. Right: Operator Clearance & Tactical HUD Controls */}
+      <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        
+        {/* Operator Badge (Rainbow Six Profile HUD) */}
+        <div 
+          onClick={() => onSelectStation && onSelectStation('agent_dossier', 'showcase')}
+          className="hidden 2xl:flex items-center space-x-2 px-2.5 py-1 rounded-xl border border-[var(--panel-border)] bg-[var(--card-bg)] shadow-xs cursor-pointer hover:border-emerald-500 transition"
+          title="Ver Expediente Operativo"
+        >
+          <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold font-mono text-[10px] flex items-center justify-center border border-emerald-500/40">
+            50
+          </div>
+          <div className="text-left font-mono leading-none">
+            <div className="text-[10px] font-black text-[var(--text-primary)]">
+              D. SANTANDER
+            </div>
+            <div className="text-[8px] text-emerald-600 dark:text-emerald-400 font-bold">
+              CLEARANCE: MAX
+            </div>
+          </div>
+        </div>
+
+        {/* Live Radar Ping Indicator */}
+        <div className="hidden sm:flex items-center space-x-1.5 text-[10px] font-mono px-2.5 py-1 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 font-bold">
+          <Radio className="h-3 w-3 animate-pulse text-emerald-500" />
+          <span>RADAR: 350+</span>
+        </div>
+
+        {/* Tactical Theme Toggle (Nieve / Noche) */}
         {onToggleTheme && (
           <button
             onClick={onToggleTheme}
             className="flex items-center space-x-1.5 text-xs px-2.5 py-1.5 rounded-xl border border-[var(--panel-border)] bg-[var(--card-bg)] hover:border-sky-500 transition cursor-pointer font-mono font-bold shadow-sm text-[var(--text-primary)]"
-            title={currentTheme === 'arctic' ? 'Cambiar a Noche Táctica (Oscuro)' : 'Cambiar a Nieve Táctica (Claro)'}
+            title={currentTheme === 'arctic' ? 'Cambiar a Noche Táctica (Operaciones Nocturnas)' : 'Cambiar a Nieve Táctica (Operaciones de Invierno / Alto Contraste)'}
           >
             {currentTheme === 'arctic' ? (
               <>
-                <Moon className="h-3.5 w-3.5 text-sky-600" />
-                <span className="hidden md:inline text-[11px]">Noche</span>
+                <Sun className="h-3.5 w-3.5 text-sky-600" />
+                <span className="hidden md:inline text-[11px]">❄️ Nieve</span>
               </>
             ) : (
               <>
-                <Sun className="h-3.5 w-3.5 text-amber-400" />
-                <span className="hidden md:inline text-[11px]">Nieve</span>
+                <Moon className="h-3.5 w-3.5 text-purple-400" />
+                <span className="hidden md:inline text-[11px]">🌙 Noche</span>
               </>
             )}
           </button>
         )}
 
+        {/* Protocol Button ([F1]) */}
         <button
           onClick={onOpenUnifiedHelp}
-          className="flex items-center space-x-1.5 text-xs text-[var(--text-primary)] bg-[var(--card-bg)] hover:bg-[var(--panel-bg)] px-3 py-1.5 rounded-xl border border-[var(--panel-border)] hover:border-sky-500 transition cursor-pointer font-mono font-bold shadow-sm"
-          title="Centro de Mando: Ayuda, Guía de Estaciones y Protocolo de Visados"
+          className="flex items-center space-x-1.5 text-xs text-[var(--text-primary)] bg-[var(--card-bg)] hover:bg-[var(--panel-bg)] px-3 py-1.5 rounded-xl border border-[var(--panel-border)] hover:border-emerald-500 transition cursor-pointer font-mono font-bold shadow-sm"
+          title="Ver el Protocolo Táctico Anti-Alucinaciones & Visados [Tecla F1]"
         >
-          <HelpCircle className="h-3.5 w-3.5 text-sky-600" />
-          <span className="hidden sm:inline text-[11px]">Ayuda</span>
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+          <span className="hidden md:inline text-[11px]">Protocolo</span>
         </button>
       </div>
+
     </header>
   );
 };

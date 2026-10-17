@@ -236,3 +236,77 @@ html.theme-luminous,
     box-shadow: none !important;
   }
 }
+
+/* -------------------------------------------------------------
+ * 5. TACTICAL SNOW & RAINBOW SIX HUD OVERLAYS
+ * ------------------------------------------------------------- */
+.tactical-snow-atmosphere {
+  background-image: 
+    radial-gradient(circle at 50% 12%, rgba(240, 249, 255, 0.88) 0%, rgba(224, 242, 254, 0.94) 60%, rgba(203, 213, 225, 0.98) 100%),
+    url('https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.tactical-dark-snow-atmosphere {
+  background-image: 
+    radial-gradient(circle at 50% 12%, rgba(10, 15, 29, 0.88) 0%, rgba(7, 11, 20, 0.95) 60%, rgba(4, 7, 14, 0.98) 100%),
+    url('https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.tactical-grid-overlay {
+  background-image: 
+    linear-gradient(to right, rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2, 132, 199, 0.05) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+}
+
+/* Tactical Corner Markers */
+.tactical-corner-tl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid rgba(2, 132, 199, 0.5);
+  border-left: 2px solid rgba(2, 132, 199, 0.5);
+  pointer-events: none;
+}
+
+.tactical-corner-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid rgba(2, 132, 199, 0.5);
+  border-right: 2px solid rgba(2, 132, 199, 0.5);
+  pointer-events: none;
+}
+
+.tactical-corner-bl {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid rgba(2, 132, 199, 0.5);
+  border-left: 2px solid rgba(2, 132, 199, 0.5);
+  pointer-events: none;
+}
+
+.tactical-corner-br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid rgba(2, 132, 199, 0.5);
+  border-right: 2px solid rgba(2, 132, 199, 0.5);
+  pointer-events: none;
+}
+

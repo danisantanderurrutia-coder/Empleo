@@ -186,67 +186,83 @@ export function App() {
   };
 
   return (
-    <div className={`min-h-screen w-full bg-[var(--bg-app)] text-[var(--text-primary)] flex flex-col font-sans selection:bg-sky-500 selection:text-white theme-${theme} transition-colors duration-300`} data-theme={theme}>
-      <Navbar
-        currentTab={activeTab}
-        currentTheme={theme}
-        onToggleTheme={handleToggleTheme}
-        onOpenUnifiedHelp={() => setIsUnifiedHelpOpen(true)}
-        onSelectStation={(id, subTab) => handleNavigate(id, subTab)}
+    <div 
+      className={`min-h-screen w-full bg-[var(--bg-app)] text-[var(--text-primary)] flex flex-col font-sans selection:bg-sky-500 selection:text-white theme-${theme} transition-colors duration-300 relative overflow-x-hidden`} 
+      data-theme={theme}
+    >
+      {/* Tactical Snow Atmosphere Layer (Rainbow Six Operation Black Ice / Chalet) */}
+      <div 
+        className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-700 ${
+          theme === 'arctic' ? 'tactical-snow-atmosphere opacity-90' : 'tactical-dark-snow-atmosphere opacity-95'
+        }`}
       />
 
-      <div className="flex-1 flex overflow-hidden w-full">
-        <main key={dataRefreshKey} className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto w-full max-w-none">
-          {activeTab === 'dashboard' && (
-            <WarRoomTab
-              onSelectStation={(station, subTab, filter) => handleNavigate(station, subTab, filter)}
-              onLaunchRadar={() => handleNavigate('market_radar', 'offers', 'ALL')}
-            />
-          )}
+      {/* High-tech Technical Coordinate & Compass Grid */}
+      <div className="fixed inset-0 pointer-events-none z-0 tactical-grid-overlay opacity-40" />
 
-          {activeTab === 'market_radar' && (
-            <MarketRadarTab
-              initialSubTab={radarSubTab}
-              initialFilter={radarLocationFilter}
-              onStartApplication={handleStartApplicationFromOffer}
-              onReturnToHub={() => handleNavigate('dashboard')}
-            />
-          )}
+      {/* Main Content with Relative Stacking */}
+      <div className="relative z-10 flex flex-col min-h-screen w-full">
+        <Navbar
+          currentTab={activeTab}
+          currentTheme={theme}
+          onToggleTheme={handleToggleTheme}
+          onOpenUnifiedHelp={() => setIsUnifiedHelpOpen(true)}
+          onSelectStation={(id, subTab) => handleNavigate(id, subTab)}
+        />
 
-          {(activeTab === 'funding' || activeTab === 'convocatorias') && (
-            <FundingTab
-              onStartApplication={handleStartApplicationFromFunding}
-              onReturnToHub={() => handleNavigate('dashboard')}
-            />
-          )}
+        <div className="flex-1 flex overflow-hidden w-full">
+          <main key={dataRefreshKey} className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto w-full max-w-none">
+            {activeTab === 'dashboard' && (
+              <WarRoomTab
+                onSelectStation={(station, subTab, filter) => handleNavigate(station, subTab, filter)}
+                onLaunchRadar={() => handleNavigate('market_radar', 'offers', 'ALL')}
+              />
+            )}
 
-          {activeTab === 'agent_dossier' && (
-            <AgentDossierTab
-              initialSubTab={dossierSubTab}
-              onReturnToHub={() => handleNavigate('dashboard')}
-            />
-          )}
+            {activeTab === 'market_radar' && (
+              <MarketRadarTab
+                initialSubTab={radarSubTab}
+                initialFilter={radarLocationFilter}
+                onStartApplication={handleStartApplicationFromOffer}
+                onReturnToHub={() => handleNavigate('dashboard')}
+              />
+            )}
 
-          {activeTab === 'mission_control' && (
-            <MissionControlTab
-              initialSubTab={missionSubTab}
-              onReturnToHub={() => handleNavigate('dashboard')}
-            />
-          )}
+            {(activeTab === 'funding' || activeTab === 'convocatorias') && (
+              <FundingTab
+                onStartApplication={handleStartApplicationFromFunding}
+                onReturnToHub={() => handleNavigate('dashboard')}
+              />
+            )}
 
-          {activeTab === 'settings' && (
-            <SettingsTab
-              onRefreshData={handleRefreshData}
-              onReturnToHub={() => handleNavigate('dashboard')}
-            />
-          )}
-        </main>
+            {activeTab === 'agent_dossier' && (
+              <AgentDossierTab
+                initialSubTab={dossierSubTab}
+                onReturnToHub={() => handleNavigate('dashboard')}
+              />
+            )}
+
+            {activeTab === 'mission_control' && (
+              <MissionControlTab
+                initialSubTab={missionSubTab}
+                onReturnToHub={() => handleNavigate('dashboard')}
+              />
+            )}
+
+            {activeTab === 'settings' && (
+              <SettingsTab
+                onRefreshData={handleRefreshData}
+                onReturnToHub={() => handleNavigate('dashboard')}
+              />
+            )}
+          </main>
+        </div>
+
+        <TacticalHelpAndProtocolModal
+          isOpen={isUnifiedHelpOpen}
+          onClose={() => setIsUnifiedHelpOpen(false)}
+        />
       </div>
-
-      <TacticalHelpAndProtocolModal
-        isOpen={isUnifiedHelpOpen}
-        onClose={() => setIsUnifiedHelpOpen(false)}
-      />
     </div>
   );
 }

@@ -1,16 +1,15 @@
+import React, { useState } from 'react';
 import { 
   ChevronRight, 
-  Radio,
   FileText,
   Globe2,
   Sparkles,
   MapPin,
   Building2,
   ShieldCheck,
-  Send,
   GraduationCap
 } from 'lucide-react';
-import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
+import { getStoredProfile, getStoredOffers, getStoredApplications } from '../../services/db';
 import { FUNDING_CATALOG } from '../../data/fundingCatalog';
 import { TacticalGlobeHUD } from './TacticalGlobeHUD';
 
@@ -23,7 +22,8 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
   const profile = getStoredProfile();
   const offers = getStoredOffers();
   const applications = getStoredApplications();
-  const companies = getStoredCompanies();
+
+  const [showPlanetaryHUD, setShowPlanetaryHUD] = useState(false);
 
   // Compute live data metrics
   const highMatchOffers = offers
@@ -61,45 +61,107 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
     <div className="space-y-6 text-[var(--text-primary)] font-sans select-none animate-fadeIn">
       
       {/* =========================================================================
-       * 1. HEADER HERO: CONSOLA OPERATIVA DE CARRERA (SIN TEXTO DE RELLENO)
+       * 1. HEADER HERO: CAREER // CONSOLA OPERATIVA (RAINBOW SIX SIEGE HUD STYLE)
        * ========================================================================= */}
-      <div className="p-6 rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] shadow-sm backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center space-x-2 text-xs font-mono font-bold tracking-wider uppercase text-sky-600 mb-1">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>EXPEDIENTE ACTIVO // {profile.fullName || 'DANIEL SANTANDER'}</span>
+      <div 
+        className="relative p-6 rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] shadow-md backdrop-blur-md flex flex-col lg:flex-row lg:items-center justify-between gap-5 overflow-hidden transition-colors"
+      >
+        {/* Tactical Corner Accents */}
+        <div className="tactical-corner-tl" />
+        <div className="tactical-corner-tr" />
+        <div className="tactical-corner-bl" />
+        <div className="tactical-corner-br" />
+
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+          {/* Silver Laurel Wreath with Clearance Level 50 */}
+          <div className="relative flex items-center justify-center shrink-0 w-20 h-20 rounded-2xl bg-black/5 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 shadow-inner group">
+            <svg viewBox="0 0 100 100" className="w-16 h-16 text-emerald-600 dark:text-emerald-400 drop-shadow-md">
+              <path 
+                d="M 28 65 C 22 55, 22 35, 35 25 C 40 22, 45 20, 50 20 C 55 20, 60 22, 65 25 C 78 35, 78 55, 72 65" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="3.5" 
+                strokeDasharray="4 2"
+              />
+              <path 
+                d="M 20 60 Q 25 45 35 38 M 80 60 Q 75 45 65 38" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+              />
+            </svg>
+            <div className="absolute flex flex-col items-center justify-center leading-none">
+              <span className="text-xl font-black text-[var(--text-primary)] font-mono tracking-tighter">
+                50
+              </span>
+              <span className="text-[7.5px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                MAX
+              </span>
+            </div>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-[var(--text-primary)] font-sans">
-            Consola de Operaciones Profesionales
-          </h1>
-          <p className="text-xs text-[var(--text-muted)] font-medium mt-0.5">
-            Doble M.Sc. en Gestión y Protección Ambiental (CAU Kiel) • Licenciado en Geofísica (U. de Chile)
-          </p>
+
+          <div>
+            <div className="flex items-center space-x-2 text-xs font-mono font-black tracking-wider uppercase text-red-600 dark:text-red-500 mb-1">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-600 animate-pulse" />
+              <span>OPERATIVE RECORD // {profile.fullName || 'DANIEL SANTANDER'}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[var(--text-primary)] font-sans uppercase">
+              CAREER <span className="text-xs font-mono font-bold text-[var(--text-muted)] tracking-widest lowercase hidden sm:inline">// consola de operaciones</span>
+            </h1>
+            <p className="text-xs text-[var(--text-secondary)] font-medium mt-1">
+              Doble M.Sc. en Gestión y Protección Ambiental (CAU Kiel) • Licenciado en Geofísica (U. de Chile)
+            </p>
+          </div>
         </div>
 
-        {/* Live Metrics Chips */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="px-3 py-1.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm">
-            <Radio className="h-3.5 w-3.5" />
-            <span>{offers.length} Vacantes en Radar</span>
-          </div>
+        {/* Live Actions & Controls */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <button
+            onClick={() => setShowPlanetaryHUD(!showPlanetaryHUD)}
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 border transition cursor-pointer shadow-sm ${
+              showPlanetaryHUD 
+                ? 'bg-sky-600 text-white border-sky-400 shadow-md' 
+                : 'bg-[var(--card-bg)] text-[var(--text-primary)] border-[var(--panel-border)] hover:border-sky-500'
+            }`}
+            title="Desplegar Visor Satelital 3D con nodos Bilbao, Kiel y Santiago"
+          >
+            <Globe2 className="h-4 w-4 text-sky-500" />
+            <span>{showPlanetaryHUD ? 'Ocultar Globo 3D' : '🛰️ Visor IMF / Globo'}</span>
+          </button>
 
-          <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm">
-            <Send className="h-3.5 w-3.5" />
-            <span>{activeApplications.length} Procesos Activos</span>
-          </div>
-
-          <div className="px-3 py-1.5 rounded-xl bg-slate-500/10 border border-slate-500/20 text-[var(--text-muted)] text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm">
-            <Building2 className="h-3.5 w-3.5" />
-            <span>{companies.length} Institutos I+D</span>
-          </div>
+          <button
+            onClick={() => onSelectStation('market_radar', 'offers', 'ALL')}
+            className="px-4 py-2 rounded-xl text-xs font-mono font-black bg-red-600 hover:bg-red-500 text-white shadow-md transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Desplegar Radar ({offers.length}+)</span>
+          </button>
         </div>
       </div>
 
+      {/* Planetary Holographic Globe HUD if toggled */}
+      {showPlanetaryHUD && (
+        <div className="animate-fadeIn">
+          <TacticalGlobeHUD 
+            onDeploySector={(sector) => {
+              if (sector === 'kiel') onSelectStation('market_radar', 'sources');
+              else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
+              else onSelectStation('market_radar', 'offers');
+            }}
+          />
+        </div>
+      )}
+
       {/* =========================================================================
-       * 2. STEPPER VISUAL INTERACTIVO (EL CICLO DE TRABAJO EN 3 ESTACIONES)
+       * 2. STEPPER VISUAL INTERACTIVO (EL CICLO DE TRABAJO EN 4 ESTACIONES)
        * ========================================================================= */}
-      <div className="p-5 rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] shadow-sm backdrop-blur-md">
+      <div className="relative p-5 rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)] shadow-sm backdrop-blur-md">
+        {/* Tactical Corner Accents */}
+        <div className="tactical-corner-tl" />
+        <div className="tactical-corner-tr" />
+        <div className="tactical-corner-bl" />
+        <div className="tactical-corner-br" />
+
         <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-3 mb-4">
           <span className="text-xs font-mono font-black uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-sky-600" />
