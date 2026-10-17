@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
   Tv, 
-  Globe2,
   Sparkles,
   ShieldCheck
 } from 'lucide-react';
@@ -437,18 +436,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       </div>
 
       {/* =========================================================================
-       * 2. VISOR PLANETARIO HUD (SIEMPRE DESPLEGADO EN EL FONDO)
+       * 2. VISOR PLANETARIO (MAPA MUNDI REALISTA EN FONDO CLARO)
        * ========================================================================= */}
-      <div className="pt-1">
-        <div className="flex items-center justify-between px-2 mb-2">
-          <span className="text-xs font-mono font-bold uppercase text-[var(--text-secondary)] flex items-center gap-1.5">
-            <Globe2 className="h-4 w-4 text-sky-500" />
-            <span>VISOR PLANETARIO // RED GEOGRÁFICA DE EMPLEO</span>
-          </span>
-          <span className="text-[11px] font-mono text-[var(--text-muted)]">
-            Santiago • Bilbao • Kiel
-          </span>
-        </div>
+      <div className="pt-2">
         <TacticalGlobeHUD 
           onDeploySector={(sector) => {
             if (sector === 'kiel') onSelectStation('market_radar', 'sources');

@@ -13,6 +13,8 @@ import {
 import { OffersTab } from '../offers/OffersTab';
 import { SourcesTab } from '../sources/SourcesTab';
 import { CompaniesTab } from '../companies/CompaniesTab';
+import { TacticalSonarRadarHUD, type TacticalSector } from './TacticalSonarRadarHUD';
+import { getStoredOffers } from '../../services/db';
 
 interface MarketRadarTabProps {
   initialSubTab?: 'offers' | 'sources' | 'companies';
@@ -28,6 +30,25 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
   onReturnToHub
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'offers' | 'sources' | 'companies'>(initialSubTab);
+  const [sectorFilter, setSectorFilter] = useState<TacticalSector>(
+    initialFilter === 'GERMANY' ? 'GERMANY' :
+    initialFilter === 'BILBAO' ? 'BILBAO' :
+    initialFilter === 'EUSKADI' ? 'EUSKADI' :
+    initialFilter === 'REMOTE' ? 'REMOTE_ONLY' :
+    initialFilter === 'HIGH_MATCH' ? 'HIGH_MATCH' : 'ALL'
+  );
+
+  const allOffers = getStoredOffers();
+  const highMatchCount = allOffers.filter(o => (o.matchScore?.totalScore || 0) >= 70).length;
+
+  const handleSelectSector = (sector: TacticalSector) => {
+    setSectorFilter(sector);
+  };
+
+  const getEffectiveLocationFilter = (): string => {
+    if (sectorFilter === 'REMOTE_ONLY') return 'REMOTE';
+    return sectorFilter;
+  };
 
   return (
     <div className="space-y-5 text-slate-100 animate-fadeIn">
@@ -122,9 +143,17 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
       {/* SUB-PANEL 1: OFFERS RADAR */}
       {activeSubTab === 'offers' && (
         <div className="space-y-4">
+          {/* Animated 360-degree Sonar Radar Scan HUD */}
+          <TacticalSonarRadarHUD
+            activeSector={sectorFilter}
+            onSelectSector={handleSelectSector}
+            offersCount={allOffers.length}
+            highMatchCount={highMatchCount}
+          />
+
           <OffersTab 
             onStartApplication={onStartApplication} 
-            initialLocationFilter={initialFilter}
+            initialLocationFilter={getEffectiveLocationFilter()}
           />
         </div>
       )}
