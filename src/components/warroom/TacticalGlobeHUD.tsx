@@ -137,138 +137,20 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
   }
 ];
 
-// Natural terrestrial continent boundary polygons with biome types
-interface ContinentPolygon {
-  biome: 'forest' | 'desert' | 'ice' | 'mountain';
-  coords: [number, number][];
-}
-
-const REALISTIC_CONTINENTS: ContinentPolygon[] = [
-  // Western & Central Europe (Temperate Forest)
-  {
-    biome: 'forest',
-    coords: [
-      [36, -5.5], [37, -9], [39, -9.5], [42, -8.9], [43.5, -9.3], [43.5, -2], [45, -1.2],
-      [47, -3], [48.6, -4.7], [49.5, -1.5], [51, 1.8], [52, 4.3], [53.5, 7.5], [54.3, 10.1],
-      [57.5, 10.5], [55, 13], [54.5, 18.5], [57, 24], [60, 30], [55, 30], [50, 24],
-      [45, 29], [42, 28], [40, 24], [38, 23.7], [37, 21.8], [39, 20], [42, 19],
-      [45.4, 12.3], [44, 8.5], [43.3, 5.4], [43, 3], [36.5, -3], [36, -5.5]
-    ]
-  },
-  // British Isles & Ireland (Forest)
-  {
-    biome: 'forest',
-    coords: [
-      [50.2, -5.3], [51.5, -4.5], [53, -4.3], [55, -5.5], [58.5, -5], [58.5, -3],
-      [56, -2.5], [54, -0.5], [51.5, 1.3], [50.8, -0.5], [50.2, -5.3]
-    ]
-  },
-  {
-    biome: 'forest',
-    coords: [
-      [51.5, -9.9], [53.5, -10], [55.2, -7.5], [54.5, -5.5], [52.2, -6.3], [51.5, -9.9]
-    ]
-  },
-  // Scandinavia (Forest)
-  {
-    biome: 'forest',
-    coords: [
-      [55.4, 13], [56.2, 16], [59.3, 18.1], [63.5, 20.5], [65.5, 22.5], [68, 28],
-      [71.2, 25.8], [70, 18], [68, 14], [64, 10], [60.4, 5.3], [58, 6], [59, 10.5], [55.4, 13]
-    ]
-  },
-  // Greenland (Ice Sheet)
-  {
-    biome: 'ice',
-    coords: [
-      [59.8, -43.9], [64.2, -51.7], [69, -53], [76.5, -68.7], [82, -30], [76, -18],
-      [70, -22], [65, -36], [59.8, -43.9]
-    ]
-  },
-  // North Africa (Sahara Desert)
-  {
-    biome: 'desert',
-    coords: [
-      [35.8, -5.8], [33.6, -7.6], [28, -13], [24, -15], [17, -16.5], [14, -17],
-      [14, 10], [15, 24], [22, 38], [28, 34], [31.2, 29.9], [32.9, 13.2],
-      [37, 10], [36.8, 3], [35.8, -5.8]
-    ]
-  },
-  // Sub-Saharan Africa (Tropical Forest & Savanna)
-  {
-    biome: 'forest',
-    coords: [
-      [14, -17], [10, -14], [5, -8], [4, 7], [4, 9], [0, 9], [-9, 13],
-      [-17, 12], [-22, 14.5], [-34, 18.5], [-34, 25.6], [-29.8, 31], [-19, 35],
-      [-10, 40], [-4, 39.6], [11.8, 51.2], [14, 43], [15, 24], [14, 10], [14, -17]
-    ]
-  },
-  // Madagascar (Forest)
-  {
-    biome: 'forest',
-    coords: [
-      [-12, 49.3], [-16, 49.7], [-25, 47], [-25.5, 45], [-16, 44], [-12, 49.3]
-    ]
-  },
-  // Middle East & Arabia (Desert)
-  {
-    biome: 'desert',
-    coords: [
-      [31, 34], [28, 34], [22, 38], [12.8, 45], [17, 54], [23.6, 58.5],
-      [25.3, 55.3], [30, 48], [36, 42], [37, 36], [31, 34]
-    ]
-  },
-  // Eurasia / Siberia / Asia (Forest)
-  {
-    biome: 'forest',
-    coords: [
-      [42, 29], [45, 37], [50, 45], [55, 60], [67, 70], [72, 80], [73, 120],
-      [70, 160], [65, 175], [60, 163], [53, 142], [43, 132], [37, 126], [31, 122],
-      [22, 114], [10, 105], [1, 104], [16, 96], [22, 90], [21, 70], [25, 62],
-      [30, 48], [36, 42], [42, 29]
-    ]
-  },
-  // South America (Forest & Andes)
-  {
-    biome: 'forest',
-    coords: [
-      [11, -72], [9, -77], [5, -53], [-1.4, -48.5], [-3.7, -38.5], [-8, -34.8],
-      [-13, -38.5], [-22.9, -43.2], [-23.9, -46.3], [-34.6, -58.4], [-38, -57.5],
-      [-45.8, -67.5], [-54.8, -68.3], [-55.9, -67.3], [-50, -75], [-41.5, -73],
-      [-36.8, -73.1], [-33.45, -70.7], [-23.6, -70.4], [-18.5, -70.3], [-12, -77],
-      [-2.2, -79.9], [4, -77.3], [8.5, -79], [11, -72]
-  ]
-  },
-  // North America (Forest)
-  {
-    biome: 'forest',
-    coords: [
-      [8.5, -79], [16.8, -99.9], [28, -114], [34, -118.2], [37.8, -122.4], [48, -123],
-      [60, -145], [65, -168], [70, -120], [60, -85], [48, -55], [44.6, -63.6],
-      [40.7, -74], [35.2, -75.5], [25.8, -80.2], [29.7, -95.3], [21, -89], [15, -88], [8.5, -79]
-  ]
-  },
-  // Australia (Desert center & Forest coasts)
-  {
-    biome: 'desert',
-    coords: [
-      [-12.4, 130.8], [-15, 136], [-16.9, 145.7], [-27.5, 153], [-33.8, 151.2],
-      [-37.8, 145], [-34.9, 138.6], [-31.9, 115.8], [-22, 114], [-12.4, 130.8]
-    ]
-  }
-];
-
 export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySector }) => {
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [rotationAngle, setRotationAngle] = useState(-5); // Longitude center
+  const [tiltAngle, setTiltAngle] = useState(16); // Latitude tilt in degrees
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
-  const dragStartRef = useRef<{ x: number; angle: number }>({ x: 0, angle: 0 });
+  const dragStartRef = useRef<{ x: number; y: number; angle: number; tilt: number }>({ x: 0, y: 0, angle: 0, tilt: 0 });
 
   const activeOffer = ATTRACTIVE_OFFERS[activeOfferIndex];
   const targetLon = activeOffer ? activeOffer.lon : 0;
+  const targetLat = activeOffer ? activeOffer.lat : 20;
 
   // Auto-cycle through attractive offers every 7 seconds
   useEffect(() => {
@@ -279,7 +161,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
     return () => clearInterval(interval);
   }, [isAutoRotating]);
 
-  // Smooth rotation interpolation towards active target longitude
+  // Smooth rotation interpolation towards active target longitude and latitude
   useEffect(() => {
     let active = true;
     const step = () => {
@@ -288,11 +170,20 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
           let diff = targetLon - currentAngle;
           while (diff < -180) diff += 360;
           while (diff > 180) diff -= 360;
-
           if (Math.abs(diff) > 0.08) {
-            return currentAngle + diff * 0.05;
+            return currentAngle + diff * 0.055;
           }
           return currentAngle;
+        });
+
+        setTiltAngle(currentTilt => {
+          // Keep tilt balanced between 0 and 28 deg for comfortable view
+          const idealTilt = Math.max(0, Math.min(26, targetLat * 0.4 + 8));
+          const diffTilt = idealTilt - currentTilt;
+          if (Math.abs(diffTilt) > 0.05) {
+            return currentTilt + diffTilt * 0.04;
+          }
+          return currentTilt;
         });
       }
       if (active) {
@@ -304,27 +195,251 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
       active = false;
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [targetLon]);
+  }, [targetLon, targetLat]);
 
-  // Closed-form 3D Orthographic Projection for true spherical realism
-  const projectPoint = useCallback((lat: number, lon: number, centerLon: number, cx: number, cy: number, r: number) => {
-    const phi0 = (20 * Math.PI) / 180; // 20 deg North tilt
-    const phi = (lat * Math.PI) / 180;
-    const lam = (lon * Math.PI) / 180;
-    const lam0 = (centerLon * Math.PI) / 180;
+  // 3D Mathematical Projection for true sphere
+  const projectPoint = useCallback((lat: number, lon: number, centerLon: number, tilt: number, cx: number, cy: number, r: number) => {
+    const radLat = (lat * Math.PI) / 180;
+    const radLon = (lon * Math.PI) / 180;
+    const radLon0 = (centerLon * Math.PI) / 180;
+    const radTilt = (tilt * Math.PI) / 180;
 
-    const cosC = Math.sin(phi0) * Math.sin(phi) + Math.cos(phi0) * Math.cos(phi) * Math.cos(lam - lam0);
-    const isVisible = cosC >= -0.08;
+    // Unit sphere coordinates
+    const x0 = Math.cos(radLat) * Math.sin(radLon - radLon0);
+    const y0 = Math.sin(radLat);
+    const z0 = Math.cos(radLat) * Math.cos(radLon - radLon0);
 
-    const x = cx + r * Math.cos(phi) * Math.sin(lam - lam0);
-    const y = cy - r * (Math.cos(phi0) * Math.sin(phi) - Math.sin(phi0) * Math.cos(phi) * Math.cos(lam - lam0));
+    // Tilt rotation around X axis
+    const x1 = x0;
+    const y1 = y0 * Math.cos(radTilt) - z0 * Math.sin(radTilt);
+    const z1 = y0 * Math.sin(radTilt) + z0 * Math.cos(radTilt);
 
-    return { x, y, isVisible, cosC };
+    const isVisible = z1 > -0.05;
+    const x = cx + x1 * r;
+    const y = cy - y1 * r;
+
+    return { x, y, z: z1, isVisible };
   }, []);
 
-  // Main Canvas Render: Natural Photorealistic Earth Globe
+  // WebGL Realistic Satellite Earth Renderer
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+    if (!gl) return;
+
+    // Build sphere geometry (48 rings x 48 sectors)
+    const rings = 48;
+    const sectors = 48;
+    const positions: number[] = [];
+    const texcoords: number[] = [];
+    const indices: number[] = [];
+
+    for (let r = 0; r <= rings; r++) {
+      const theta = (r * Math.PI) / rings;
+      const sinTheta = Math.sin(theta);
+      const cosTheta = Math.cos(theta);
+
+      for (let s = 0; s <= sectors; s++) {
+        const phi = (s * 2 * Math.PI) / sectors;
+        const sinPhi = Math.sin(phi);
+        const cosPhi = Math.cos(phi);
+
+        const x = cosPhi * sinTheta;
+        const y = cosTheta;
+        const z = sinPhi * sinTheta;
+
+        const u = 1 - s / sectors;
+        const v = r / rings;
+
+        positions.push(x, y, z);
+        texcoords.push(u, v);
+      }
+    }
+
+    for (let r = 0; r < rings; r++) {
+      for (let s = 0; s < sectors; s++) {
+        const first = r * (sectors + 1) + s;
+        const second = first + sectors + 1;
+        indices.push(first, second, first + 1);
+        indices.push(second, second + 1, first + 1);
+      }
+    }
+
+    // Shaders
+    const vsSource = `
+      attribute vec3 a_position;
+      attribute vec2 a_texcoord;
+      uniform mat3 u_rotation;
+      varying vec2 v_texcoord;
+      varying vec3 v_normal;
+
+      void main() {
+        vec3 rotated = u_rotation * a_position;
+        gl_Position = vec4(rotated.x, rotated.y, rotated.z * 0.5, 1.0);
+        v_texcoord = a_texcoord;
+        v_normal = rotated;
+      }
+    `;
+
+    const fsSource = `
+      precision mediump float;
+      uniform sampler2D u_satelliteTexture;
+      uniform sampler2D u_cloudsTexture;
+      uniform float u_cloudsOffset;
+      varying vec2 v_texcoord;
+      varying vec3 v_normal;
+
+      void main() {
+        vec4 satColor = texture2D(u_satelliteTexture, v_texcoord);
+        
+        // Clouds sampling with gentle offset
+        vec2 cloudCoord = vec2(fract(v_texcoord.x + u_cloudsOffset), v_texcoord.y);
+        vec4 cloudColor = texture2D(u_cloudsTexture, cloudCoord);
+
+        // Sunlight illumination from upper-left
+        vec3 lightDir = normalize(vec3(-0.45, 0.55, 0.7));
+        float diff = max(dot(v_normal, lightDir), 0.0);
+        float ambient = 0.42;
+        float light = ambient + (1.0 - ambient) * diff;
+
+        // Atmospheric rim scatter (sky blue horizon glow)
+        float rim = 1.0 - max(dot(v_normal, vec3(0.0, 0.0, 1.0)), 0.0);
+        vec3 atmoGlow = vec3(0.25, 0.65, 1.0) * pow(rim, 2.8) * 0.65;
+
+        // Blend satellite imagery + authentic clouds
+        vec3 baseColor = mix(satColor.rgb, vec3(0.96, 0.98, 1.0), cloudColor.r * 0.45);
+        vec3 finalColor = baseColor * light + atmoGlow;
+
+        gl_FragColor = vec4(finalColor, 1.0);
+      }
+    `;
+
+    const compileShader = (source: string, type: number) => {
+      const shader = gl.createShader(type);
+      if (!shader) return null;
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      return shader;
+    };
+
+    const vs = compileShader(vsSource, gl.VERTEX_SHADER);
+    const fs = compileShader(fsSource, gl.FRAGMENT_SHADER);
+    if (!vs || !fs) return;
+
+    const program = gl.createProgram();
+    if (!program) return;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    // Buffers
+    const posBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+    const texBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
+
+    const indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+
+    // Uniforms & Attributes
+    const aPos = gl.getAttribLocation(program, 'a_position');
+    const aTex = gl.getAttribLocation(program, 'a_texcoord');
+    const uRotation = gl.getUniformLocation(program, 'u_rotation');
+    const uSat = gl.getUniformLocation(program, 'u_satelliteTexture');
+    const uClouds = gl.getUniformLocation(program, 'u_cloudsTexture');
+    const uCloudsOffset = gl.getUniformLocation(program, 'u_cloudsOffset');
+
+    // Textures setup
+    const satTex = gl.createTexture();
+    const cloudsTex = gl.createTexture();
+
+    // Default 1x1 placeholder texture while loading
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, satTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([15, 55, 110, 255]));
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, cloudsTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 128]));
+
+    // Load authentic NASA Blue Marble satellite photograph
+    const satImg = new Image();
+    satImg.src = '/textures/earth-satellite.jpg';
+    satImg.onload = () => {
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, satTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, satImg);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    };
+
+    // Load authentic atmospheric clouds
+    const cloudImg = new Image();
+    cloudImg.src = '/textures/earth-clouds.png';
+    cloudImg.onload = () => {
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, cloudsTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cloudImg);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    };
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+
+    // Calculate rotation matrix (Lon around Y, Tilt around X)
+    const radY = (-rotationAngle * Math.PI) / 180;
+    const radX = (tiltAngle * Math.PI) / 180;
+
+    const cosY = Math.cos(radY);
+    const sinY = Math.sin(radY);
+    const cosX = Math.cos(radX);
+    const sinX = Math.sin(radX);
+
+    // Combined rotation matrix: R = Rx * Ry
+    // [ cosY,       0,     -sinY     ]
+    // [ sinX*sinY,  cosX,  sinX*cosY ]
+    // [ cosX*sinY, -sinX,  cosX*cosY ]
+    const rotMat = [
+      cosY, 0, -sinY,
+      sinX * sinY, cosX, sinX * cosY,
+      cosX * sinY, -sinX, cosX * cosY
+    ];
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.enableVertexAttribArray(aPos);
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+
+    gl.enableVertexAttribArray(aTex);
+    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
+    gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, 0, 0);
+
+    gl.uniformMatrix3fv(uRotation, false, new Float32Array(rotMat));
+    gl.uniform1i(uSat, 0);
+    gl.uniform1i(uClouds, 1);
+    gl.uniform1f(uCloudsOffset, (Date.now() * 0.000008) % 1.0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+  }, [rotationAngle, tiltAngle]);
+
+  // 2D Overlay Canvas Render: Atmospheric Rim, Realistic Location Pins & Flight Arcs
+  useEffect(() => {
+    const canvas = overlayCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -337,9 +452,9 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
 
     ctx.clearRect(0, 0, width, height);
 
-    // 1. Natural Physical Shadow under the Globe (resting on the light card)
+    // 1. Natural Soft Physical Drop Shadow under the Globe
     const baseShadow = ctx.createRadialGradient(cx, cy + radius * 0.98, radius * 0.2, cx, cy + radius * 0.98, radius * 1.05);
-    baseShadow.addColorStop(0, 'rgba(15, 23, 42, 0.28)');
+    baseShadow.addColorStop(0, 'rgba(15, 23, 42, 0.32)');
     baseShadow.addColorStop(0.5, 'rgba(15, 23, 42, 0.12)');
     baseShadow.addColorStop(1, 'rgba(15, 23, 42, 0)');
     ctx.fillStyle = baseShadow;
@@ -347,162 +462,50 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
     ctx.ellipse(cx, cy + radius * 0.98, radius * 0.95, radius * 0.22, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Atmospheric Sky Glow Aura
-    const atmoGlow = ctx.createRadialGradient(cx, cy, radius * 0.9, cx, cy, radius * 1.18);
-    atmoGlow.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
-    atmoGlow.addColorStop(0.6, 'rgba(14, 165, 233, 0.12)');
-    atmoGlow.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    ctx.fillStyle = atmoGlow;
+    // 2. Atmospheric Outer Blue Rim Aura
+    const rimAura = ctx.createRadialGradient(cx, cy, radius * 0.94, cx, cy, radius * 1.14);
+    rimAura.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+    rimAura.addColorStop(0.6, 'rgba(14, 165, 233, 0.15)');
+    rimAura.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = rimAura;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.18, 0, Math.PI * 2);
+    ctx.arc(cx, cy, radius * 1.14, 0, Math.PI * 2);
     ctx.fill();
 
-    // 3. Globe Sphere with Deep Ocean Texture and Natural Lighting
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.clip();
+    // 3. Flight Arcs between Key Hubs (Bilbao <-> Kiel, Bilbao <-> Santiago)
+    const bilbaoPt = projectPoint(43.33, -2.99, rotationAngle, tiltAngle, cx, cy, radius);
+    const kielPt = projectPoint(54.32, 10.12, rotationAngle, tiltAngle, cx, cy, radius);
+    const santiagoPt = projectPoint(-33.45, -70.67, rotationAngle, tiltAngle, cx, cy, radius);
 
-    // Realistic Ocean Sapphire Gradient (Sunlight reflection from upper left)
-    const oceanGrad = ctx.createRadialGradient(cx - radius * 0.38, cy - radius * 0.38, radius * 0.12, cx, cy, radius * 1.1);
-    oceanGrad.addColorStop(0, '#1d63c6'); // Sunlight on water
-    oceanGrad.addColorStop(0.35, '#164e9c');
-    oceanGrad.addColorStop(0.7, '#0f366e');
-    oceanGrad.addColorStop(0.95, '#0a2347');
-    oceanGrad.addColorStop(1, '#06162d'); // Shaded limb
-    ctx.fillStyle = oceanGrad;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    // 4. Subtle Latitude & Longitude Graticule Lines (Delicate, realistic)
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
-    ctx.lineWidth = 0.8;
-
-    [-60, -30, 0, 30, 60].forEach(lat => {
-      ctx.beginPath();
-      let started = false;
-      for (let lon = -180; lon <= 180; lon += 6) {
-        const pt = projectPoint(lat, lon, rotationAngle, cx, cy, radius);
-        if (pt.isVisible) {
-          if (!started) {
-            ctx.moveTo(pt.x, pt.y);
-            started = true;
-          } else {
-            ctx.lineTo(pt.x, pt.y);
-          }
-        } else {
-          started = false;
-        }
-      }
-      ctx.stroke();
-    });
-
-    [-120, -60, 0, 60, 120, 180].forEach(lon => {
-      ctx.beginPath();
-      let started = false;
-      for (let lat = -80; lat <= 80; lat += 6) {
-        const pt = projectPoint(lat, lon, rotationAngle, cx, cy, radius);
-        if (pt.isVisible) {
-          if (!started) {
-            ctx.moveTo(pt.x, pt.y);
-            started = true;
-          } else {
-            ctx.lineTo(pt.x, pt.y);
-          }
-        } else {
-          started = false;
-        }
-      }
-      ctx.stroke();
-    });
-
-    // 5. Realistic Continents with Coastal Shelf Halos & Biome Colors
-    REALISTIC_CONTINENTS.forEach(continent => {
-      // Step A: Coastal water shelf (turquoise shallow sea around landmass)
-      ctx.beginPath();
-      let hasVisible = false;
-      continent.coords.forEach(([lat, lon], idx) => {
-        const pt = projectPoint(lat, lon, rotationAngle, cx, cy, radius);
-        if (pt.isVisible) hasVisible = true;
-        if (idx === 0) {
-          ctx.moveTo(pt.x, pt.y);
-        } else {
-          ctx.lineTo(pt.x, pt.y);
-        }
-      });
-      ctx.closePath();
-
-      if (hasVisible) {
-        // Turquoise coastal shelf
-        ctx.strokeStyle = 'rgba(45, 212, 191, 0.35)';
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        // Biome terrestrial fills
-        if (continent.biome === 'forest') {
-          ctx.fillStyle = '#2d6a3f';
-          ctx.fill();
-          ctx.strokeStyle = '#225230';
-        } else if (continent.biome === 'desert') {
-          ctx.fillStyle = '#c59d5f';
-          ctx.fill();
-          ctx.strokeStyle = '#99743c';
-        } else if (continent.biome === 'ice') {
-          ctx.fillStyle = '#eef3f7';
-          ctx.fill();
-          ctx.strokeStyle = '#cbd5e1';
-        } else {
-          ctx.fillStyle = '#6b7280';
-          ctx.fill();
-          ctx.strokeStyle = '#4b5563';
-        }
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-    });
-
-    // 6. Natural Curved Flight Routes between Primary Research Bases
-    const bilbaoPt = projectPoint(43.33, -2.99, rotationAngle, cx, cy, radius);
-    const kielPt = projectPoint(54.32, 10.12, rotationAngle, cx, cy, radius);
-    const santiagoPt = projectPoint(-33.45, -70.67, rotationAngle, cx, cy, radius);
-
-    // Route Bilbao <-> Kiel
+    // Arc Bilbao <-> Kiel
     if (bilbaoPt.isVisible && kielPt.isVisible) {
       ctx.beginPath();
       ctx.moveTo(bilbaoPt.x, bilbaoPt.y);
-      const midX = (bilbaoPt.x + kielPt.x) / 2 - 10;
-      const midY = (bilbaoPt.y + kielPt.y) / 2 - 16;
+      const midX = (bilbaoPt.x + kielPt.x) / 2 - 8;
+      const midY = (bilbaoPt.y + kielPt.y) / 2 - 14;
       ctx.quadraticCurveTo(midX, midY, kielPt.x, kielPt.y);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.lineWidth = 2.2;
       ctx.stroke();
     }
 
-    // Route Bilbao <-> Santiago
+    // Arc Bilbao <-> Santiago
     if (santiagoPt.isVisible && bilbaoPt.isVisible) {
       ctx.beginPath();
       ctx.moveTo(santiagoPt.x, santiagoPt.y);
-      const midX = (santiagoPt.x + bilbaoPt.x) / 2 + 20;
-      const midY = (santiagoPt.y + bilbaoPt.y) / 2 - 20;
+      const midX = (santiagoPt.x + bilbaoPt.x) / 2 + 18;
+      const midY = (santiagoPt.y + bilbaoPt.y) / 2 - 18;
       ctx.quadraticCurveTo(midX, midY, bilbaoPt.x, bilbaoPt.y);
-      ctx.strokeStyle = 'rgba(251, 191, 36, 0.75)';
-      ctx.lineWidth = 1.8;
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.85)';
+      ctx.lineWidth = 2;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
       ctx.setLineDash([]);
     }
 
-    // 7. Spherical Sunlight & Diffuse Shadow Overlay
-    const sunShade = ctx.createRadialGradient(cx - radius * 0.45, cy - radius * 0.45, radius * 0.1, cx, cy, radius * 1.05);
-    sunShade.addColorStop(0, 'rgba(255, 255, 255, 0.22)'); // Sun reflection
-    sunShade.addColorStop(0.55, 'rgba(255, 255, 255, 0.02)');
-    sunShade.addColorStop(0.85, 'rgba(2, 6, 23, 0.28)'); // Diffuse horizon shadow
-    sunShade.addColorStop(1, 'rgba(2, 6, 23, 0.58)'); // Rim shadow
-    ctx.fillStyle = sunShade;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    // 8. Authentic Map Markers (Pins) on Attractive Target Cities
+    // 4. Authentic Map Markers (Pins) on Attractive Target Cities
     ATTRACTIVE_OFFERS.forEach((target, idx) => {
-      const pt = projectPoint(target.lat, target.lon, rotationAngle, cx, cy, radius);
+      const pt = projectPoint(target.lat, target.lon, rotationAngle, tiltAngle, cx, cy, radius);
       if (!pt.isVisible) return;
 
       const isCurrent = idx === activeOfferIndex;
@@ -511,23 +514,31 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
         // Expanding soft radar ripple on active target
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 16, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
         ctx.fill();
         ctx.strokeStyle = target.color;
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Realistic Location Pin (Teardrop Google Maps style)
+        // Location Pin (Google Maps teardrop style with drop shadow)
         const pinY = pt.y - 12;
+
+        // Pin shadow
         ctx.beginPath();
-        ctx.arc(pt.x, pinY, 7, 0, Math.PI * 2);
+        ctx.ellipse(pt.x, pt.y + 1, 4.5, 2, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.fill();
+
+        // Pin Head
+        ctx.beginPath();
+        ctx.arc(pt.x, pinY, 7.5, 0, Math.PI * 2);
         ctx.fillStyle = target.color;
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2.5;
         ctx.stroke();
 
-        // Inner white center
+        // Inner white dot
         ctx.beginPath();
         ctx.arc(pt.x, pinY, 2.5, 0, Math.PI * 2);
         ctx.fillStyle = '#ffffff';
@@ -535,13 +546,13 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
 
         // Pin stem
         ctx.beginPath();
-        ctx.moveTo(pt.x - 3, pinY + 5);
+        ctx.moveTo(pt.x - 3.5, pinY + 5.5);
         ctx.lineTo(pt.x, pt.y);
-        ctx.lineTo(pt.x + 3, pinY + 5);
+        ctx.lineTo(pt.x + 3.5, pinY + 5.5);
         ctx.fillStyle = target.color;
         ctx.fill();
       } else {
-        // Subtle clean city dot
+        // Subtle clean city marker
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
         ctx.fillStyle = '#ffffff';
@@ -551,28 +562,21 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
         ctx.stroke();
       }
     });
-
-    ctx.restore();
-
-    // 9. Clean Physical Rim Frame (Delicate, polished)
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.stroke();
-  }, [rotationAngle, activeOfferIndex, projectPoint]);
+  }, [rotationAngle, tiltAngle, activeOfferIndex, projectPoint]);
 
   // Drag handling to rotate the globe manually
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     isDraggingRef.current = true;
-    dragStartRef.current = { x: e.clientX, angle: rotationAngle };
+    dragStartRef.current = { x: e.clientX, y: e.clientY, angle: rotationAngle, tilt: tiltAngle };
     setIsAutoRotating(false);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDraggingRef.current) return;
     const deltaX = e.clientX - dragStartRef.current.x;
-    setRotationAngle(dragStartRef.current.angle + deltaX * 0.5);
+    const deltaY = e.clientY - dragStartRef.current.y;
+    setRotationAngle(dragStartRef.current.angle + deltaX * 0.45);
+    setTiltAngle(Math.max(-10, Math.min(35, dragStartRef.current.tilt - deltaY * 0.25)));
   };
 
   const handleMouseUp = () => {
@@ -585,7 +589,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c1322] p-5 sm:p-7 shadow-xl text-slate-800 dark:text-slate-100 font-sans transition-colors">
+    <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0c1322] p-6 sm:p-8 shadow-xl text-slate-800 dark:text-slate-100 font-sans transition-colors">
       
       {/* Top Header: Clean, Executive, Non-Tactical */}
       <div className="flex flex-wrap items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 gap-3">
@@ -599,11 +603,11 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
                 VISOR PLANETARIO // RED GLOBAL DE EMPLEO
               </h2>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold">
-                EN VIVO
+                SATELITAL REALISTA
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Rotación interactiva vinculada a vacantes científicas prioritarias (Bilbao • Kiel • Potsdam • París • Santiago).
+              Fotografía satelital Blue Marble con rotación interactiva vinculada a vacantes científicas (Bilbao • Kiel • Potsdam • París • Santiago).
             </p>
           </div>
         </div>
@@ -617,29 +621,39 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
         </div>
       </div>
 
-      {/* Main Grid: Realistic Earth Globe + Clean Offer Dossier */}
+      {/* Main Grid: Photorealistic Satellite Globe + Clean Offer Dossier */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-5 items-center">
         
-        {/* Left Column: Realistic 3D Globe Canvas */}
+        {/* Left Column: True Satellite Earth Globe */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center select-none">
-          <div className="relative cursor-grab active:cursor-grabbing p-1">
+          <div className="relative cursor-grab active:cursor-grabbing p-1 flex items-center justify-center">
+            
+            {/* WebGL Satellite Globe Canvas */}
             <canvas
               ref={canvasRef}
               width={350}
-              height={330}
+              height={350}
+              className="w-full max-w-[350px] h-auto drop-shadow-2xl rounded-full"
+            />
+
+            {/* Overlay Canvas for Atmospheric Rim & Location Pins */}
+            <canvas
+              ref={overlayCanvasRef}
+              width={350}
+              height={350}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
-              className="w-full max-w-[350px] h-auto drop-shadow-2xl transition"
+              className="absolute inset-0 w-full max-w-[350px] h-auto pointer-events-auto"
               title="Arrastra con el ratón para rotar el planeta libremente"
             />
 
             {/* Drag Hint Tooltip */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-md px-3 py-1 rounded-full text-[10px] font-sans text-slate-600 dark:text-slate-300 pointer-events-none backdrop-blur-xs flex items-center gap-1.5 whitespace-nowrap">
-              <span>🌍 Arrastra para girar la Tierra</span>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-md px-3 py-1 rounded-full text-[10px] font-sans text-slate-600 dark:text-slate-300 pointer-events-none backdrop-blur-xs flex items-center gap-1.5 whitespace-nowrap">
+              <span>🌍 Fotografía Satelital NASA</span>
               <span className="text-slate-400">•</span>
-              <span>Gira hacia ofertas</span>
+              <span>Arrastra para girar</span>
             </div>
           </div>
 
