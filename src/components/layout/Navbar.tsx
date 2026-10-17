@@ -16,9 +16,8 @@ interface NavTabItem {
 }
 
 const NAV_TABS: NavTabItem[] = [
-  { id: 'market_radar', label: 'PLAY', sub: 'MERCADO', matches: ['market_radar', 'offers', 'sources', 'companies'] },
+  { id: 'market_radar', label: 'RADAR', sub: 'MERCADO', matches: ['market_radar', 'offers', 'sources', 'companies'] },
   { id: 'agent_dossier', label: 'OPERATORS', sub: 'PERFIL', matches: ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'] },
-  { id: 'dashboard', label: 'CAREER', sub: 'PANEL', matches: ['dashboard'] },
   { id: 'mission_control', label: 'LOCKER', sub: 'CANDIDATURAS', matches: ['mission_control', 'applications', 'batch_applications', 'intelligence'] },
   { id: 'funding', label: 'FONDOS I+D', sub: 'CONVOCATORIAS', matches: ['funding', 'convocatorias'] },
   { id: 'settings', label: 'HQ', sub: 'AJUSTES', matches: ['settings'] }
@@ -85,19 +84,31 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* 1. Left: Brand Header returning to Career Home */}
       <button
         onClick={() => onSelectStation && onSelectStation('dashboard')}
-        className="flex items-center space-x-3 cursor-pointer group text-left focus:outline-none shrink-0"
-        title="Volver a CAREER (Consola Central de Operaciones)"
+        className={`flex items-center space-x-3 cursor-pointer group text-left focus:outline-none shrink-0 px-2 py-1 -ml-2 rounded-xl transition ${
+          currentTab === 'dashboard'
+            ? 'bg-emerald-500/10 border border-emerald-500/40 shadow-xs'
+            : 'hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
+        }`}
+        title="CAREER // Consola Central de Operaciones (Click para volver al inicio)"
       >
-        <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-inner shrink-0 text-emerald-600 group-hover:bg-emerald-500/20 group-hover:border-emerald-500 transition">
-          <Crosshair className="h-5 w-5 text-emerald-600 dark:text-emerald-400 group-hover:rotate-45 transition-transform duration-300" />
+        <div className={`h-9 w-9 rounded-xl flex items-center justify-center shadow-inner shrink-0 transition ${
+          currentTab === 'dashboard'
+            ? 'bg-emerald-500/20 border border-emerald-500 text-emerald-500 ring-2 ring-emerald-500/20'
+            : 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 group-hover:bg-emerald-500/20 group-hover:border-emerald-500'
+        }`}>
+          <Crosshair className="h-5 w-5 group-hover:rotate-45 transition-transform duration-300" />
         </div>
         <div>
           <div className="flex items-center space-x-2">
             <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-emerald-600 transition">
               EMPLEO
             </h1>
-            <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 hidden sm:inline-block">
-              TACTICAL OPS
+            <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded border hidden sm:inline-block ${
+              currentTab === 'dashboard'
+                ? 'bg-red-600 text-white border-red-500 shadow-xs'
+                : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
+            }`}>
+              {currentTab === 'dashboard' ? 'CAREER // HQ' : 'TACTICAL OPS'}
             </span>
           </div>
           <p className="text-[10px] text-[var(--text-muted)] font-mono hidden xl:block">

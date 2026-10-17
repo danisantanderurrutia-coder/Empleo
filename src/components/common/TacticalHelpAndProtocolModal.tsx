@@ -157,7 +157,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <Radio className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">PLAY // Radar Táctico</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">RADAR // Mercado & Vacantes</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
                     Barrido holográfico con sonar 360° para escanear 350+ vacantes indexadas, clasificar por sector (Alemania, Euskadi, Remoto) y filtrar por afinidad técnica.
                   </p>
@@ -169,9 +169,9 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <UserCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Dossier & Armería</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Perfil & Competencias</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
-                    Showcase del especialista Daniel Santander con calibración de atributos cuantitativos y armería de CVs (Castellano para Euskadi, English para política internacional y Lebenslauf para Alemania).
+                    Showcase del especialista Daniel Santander con calibración de atributos cuantitativos y versiones de CVs (Castellano para Euskadi, English para política internacional y Lebenslauf para Alemania).
                   </p>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <FileText className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">CAREER // Consola Central</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">CAREER // Consola Central (Logo EMPLEO)</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
                     Hub central que enlaza estadísticas de carrera, nivel de autorización 50, reputación y acceso directo a cada teatro de operaciones.
                   </p>

@@ -45,9 +45,9 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
 
   return (
     <div className="space-y-5 text-[var(--text-primary)] animate-fadeIn">
-      {/* Tactical Top Bar & Pipeline Indicator */}
+      {/* Tactical Top Bar */}
       <div 
-        className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl border shadow-xl backdrop-blur-md gap-4 transition-colors"
+        className="flex flex-col lg:flex-row lg:items-center justify-between p-3.5 sm:p-4 rounded-2xl border shadow-xl backdrop-blur-md gap-3 transition-colors"
         style={{ 
           backgroundColor: 'var(--card-bg)', 
           borderColor: 'var(--card-border)' 
@@ -57,7 +57,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           {onReturnToHub && (
             <button
               onClick={onReturnToHub}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow border"
+              className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer shadow border shrink-0"
               style={{ 
                 backgroundColor: 'var(--panel-bg)', 
                 borderColor: 'var(--panel-border)',
@@ -66,7 +66,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
               title="Volver a la consola central"
             >
               <ChevronLeft className="h-4 w-4 text-sky-500" />
-              <span>« PANEL CENTRAL</span>
+              <span className="hidden sm:inline">« PANEL</span>
             </button>
           )}
 
@@ -74,45 +74,24 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             <UserCheck className="h-5 w-5" />
           </div>
 
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center space-x-2">
-              <h1 className="text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight">
-                MI PERFIL // EXPEDIENTE & CURRÍCULUM MODULAR
+              <h1 className="text-sm sm:text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight truncate">
+                OPERATORS // EXPEDIENTE & COMPETENCIAS
               </h1>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/40 font-extrabold hidden sm:inline-block">
-                PERFIL ACTIVO
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/40 font-extrabold hidden md:inline-block">
+                VERIFICADO
               </span>
             </div>
-            <p className="text-[11px] text-[var(--text-secondary)] font-sans">
+            <p className="text-[11px] text-[var(--text-secondary)] font-sans truncate">
               Daniel Santander: Doble M.Sc. CAU Kiel • Geofísica U. de Chile • Calibración Curricular Modular.
             </p>
           </div>
         </div>
 
-        {/* 3-Stage Pipeline Indicator */}
+        {/* Sub-Tabs Switcher (Clean, compact, no horizontal overflow) */}
         <div 
-          className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold px-3 py-1.5 rounded-xl border"
-          style={{ 
-            backgroundColor: 'var(--panel-bg)', 
-            borderColor: 'var(--panel-border)' 
-          }}
-        >
-          <span className="px-2 py-0.5 rounded bg-black/10 dark:bg-slate-900 text-[var(--text-muted)]">
-            1. MERCADO
-          </span>
-          <span className="text-[var(--text-muted)] font-black">➔</span>
-          <span className="px-2 py-0.5 rounded bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/40">
-            2. PERFIL & CV MODULAR
-          </span>
-          <span className="text-[var(--text-muted)] font-black">➔</span>
-          <span className="px-2 py-0.5 rounded bg-black/10 dark:bg-slate-900 text-[var(--text-muted)]">
-            3. CANDIDATURAS
-          </span>
-        </div>
-
-        {/* Sub-Tabs Switcher */}
-        <div 
-          className="flex flex-wrap items-center p-1 rounded-xl border gap-1 shrink-0"
+          className="flex items-center p-1 rounded-xl border gap-1 shrink-0 overflow-x-auto max-w-full"
           style={{ 
             backgroundColor: 'var(--panel-bg)', 
             borderColor: 'var(--panel-border)' 
@@ -120,68 +99,68 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         >
           <button
             onClick={() => setActiveSubTab('showcase')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'showcase'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>RESUMEN EJECUTIVO</span>
+            <span>Resumen</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('gunsmith')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'gunsmith'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <FileText className="h-3.5 w-3.5 text-sky-500" />
-            <span>TALLER DE CV (PUZZLE)</span>
+            <span>Taller CV</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('skills')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'skills'
                 ? 'bg-emerald-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <Award className="h-3.5 w-3.5 text-emerald-500" />
-            <span>ÁRBOL DE APTITUDES & BRECHAS</span>
+            <span>Competencias</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('profile')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'profile'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <GraduationCap className="h-3.5 w-3.5" />
-            <span>EXPEDIENTE MAESTRO</span>
+            <span>Expediente</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('cvs')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'cvs'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <FileCheck2 className="h-3.5 w-3.5" />
-            <span>PLANTILLAS & VERSIONES</span>
+            <span>Plantillas</span>
           </button>
         </div>
       </div>
 
       {/* ==============================================================
-       * VISTA PRINCIPAL: OPERATOR SHOWCASE (SKIN DEL JUGADOR CON DATOS)
+       * VISTA PRINCIPAL: RESUMEN DE EXPEDIENTE PROFESIONAL
        * ============================================================== */}
       {activeSubTab === 'showcase' && (
         <div 
@@ -304,7 +283,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             </div>
 
             {/* --------------------------------------------------------
-             * COL 2 (CENTER, 4 COLS): HERO OPERATIVE SKIN SHOWCASE
+             * COL 2 (CENTER, 4 COLS): PERFIL ACTIVO DEL ESPECIALISTA
              * -------------------------------------------------------- */}
             <div className="lg:col-span-4 rounded-2xl border-2 border-amber-500/70 shadow-[0_0_35px_rgba(245,158,11,0.25)] relative overflow-hidden flex flex-col justify-between min-h-[460px] group">
               {/* Operative Background Image */}
@@ -324,7 +303,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
               {/* Top Banner inside Hero */}
               <div className="relative z-20 p-4 flex items-center justify-between">
                 <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded bg-black/70 text-amber-300 border border-amber-400">
-                  OPERATOR // SKIN ACTIVA
+                  OPERATOR // PERFIL ACTIVO
                 </span>
                 <span className="text-[10px] font-mono font-extrabold text-white drop-shadow">
                   CLEARANCE 50
