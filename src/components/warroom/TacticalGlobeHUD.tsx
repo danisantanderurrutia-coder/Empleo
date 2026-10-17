@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as THREE from 'three';
 import { Play, Pause, ChevronLeft, ChevronRight, MapPin, Building2, Globe2, ArrowRight } from 'lucide-react';
 
 interface TacticalGlobeHUDProps {
@@ -10,6 +11,7 @@ export interface AttractiveOfferTarget {
   name: string;
   role: string;
   city: string;
+  flag: string;
   country: string;
   coordsText: string;
   lat: number;
@@ -20,6 +22,7 @@ export interface AttractiveOfferTarget {
   requirements: string[];
   sectorKey: string;
   color: string;
+  colorHex: number;
 }
 
 const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
@@ -27,7 +30,8 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     id: 'off-bc3',
     name: 'BC3 Basque Centre for Climate Change',
     role: 'Investigador en Modelación de Carbono & Servicios Ecosistémicos',
-    city: 'Bilbao / Leioa',
+    city: 'Bilbao',
+    flag: '🇪🇸',
     country: 'Euskadi / España',
     coordsText: '43.33° N, 2.99° W',
     lat: 43.33,
@@ -37,13 +41,15 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: '42.000 € - 52.000 € / año',
     requirements: ['Biogeoquímica de Suelos', 'Modelación de Carbono', 'R / Python', 'GIS'],
     sectorKey: 'bilbao',
-    color: '#059669'
+    color: '#059669',
+    colorHex: 0x059669
   },
   {
     id: 'off-kiel',
     name: 'CAU Kiel / Helmholtz Ocean Research (GEOMAR)',
     role: 'Postdoctoral Researcher in Soil Carbon Fluxes & Peatlands',
-    city: 'Kiel (Schleswig-Holstein)',
+    city: 'Kiel',
+    flag: '🇩🇪',
     country: 'Alemania',
     coordsText: '54.32° N, 10.12° E',
     lat: 54.32,
@@ -53,13 +59,15 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: 'TV-L E13 (~50.400 € brutos/año)',
     requirements: ['Eddy Covariance', 'Flujos de Carbono', 'Turberas Templadas', 'CAU Kiel'],
     sectorKey: 'kiel',
-    color: '#0284c7'
+    color: '#0284c7',
+    colorHex: 0x0284c7
   },
   {
     id: 'off-gfz',
     name: 'GFZ Helmholtz German Research Centre for Geosciences',
     role: 'Scientist in Quantitative Geodesy & Satellite Earth Observation',
-    city: 'Potsdam / Berlín',
+    city: 'Potsdam',
+    flag: '🇩🇪',
     country: 'Alemania',
     coordsText: '52.38° N, 13.06° E',
     lat: 52.38,
@@ -69,13 +77,15 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: 'TVöD Bund E14 (~54.000 € / año)',
     requirements: ['Geofísica Cuantitativa', 'InSAR / Sensores Remotos', 'Python', 'Series Temporales'],
     sectorKey: 'kiel',
-    color: '#0369a1'
+    color: '#0369a1',
+    colorHex: 0x0369a1
   },
   {
     id: 'off-tecnalia',
     name: 'Tecnalia Research & Innovation',
     role: 'Especialista en Teledetección Satelital & Transición Energética',
-    city: 'Derio / Bilbao (Bizkaia)',
+    city: 'Derio',
+    flag: '🇪🇸',
     country: 'Euskadi / España',
     coordsText: '43.29° N, 2.87° W',
     lat: 43.29,
@@ -85,13 +95,15 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: '40.000 € - 50.000 € / año',
     requirements: ['QGIS / ArcGIS Pro', 'Google Earth Engine', 'Balance Hídrico', 'Automatización'],
     sectorKey: 'bilbao',
-    color: '#10b981'
+    color: '#10b981',
+    colorHex: 0x10b981
   },
   {
     id: 'off-idom',
     name: 'IDOM Consulting, Engineering & Architecture',
     role: 'Consultor Ambiental Senior en Hidrología & Salvaguardias',
-    city: 'Bilbao (Zorrotzaurre)',
+    city: 'Bilbao',
+    flag: '🇪🇸',
     country: 'Euskadi / Internacional',
     coordsText: '43.26° N, 2.93° W',
     lat: 43.26,
@@ -101,13 +113,15 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: '42.000 € - 55.000 € / año',
     requirements: ['Modelación Hidrológica', 'Salvaguardias Socioambientales', 'Inglés C1', 'Gestión Multiactor'],
     sectorKey: 'bilbao',
-    color: '#059669'
+    color: '#059669',
+    colorHex: 0x059669
   },
   {
     id: 'off-unep',
     name: 'UNEP IMEO (International Methane Emissions Observatory)',
     role: 'IMEO Methane Alert & Response Implementation Coordinator',
-    city: 'París / Remoto Europa',
+    city: 'París',
+    flag: '🌐',
     country: 'Internacional / Remoto UE',
     coordsText: '48.85° N, 2.35° E',
     lat: 48.85,
@@ -117,13 +131,15 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: 'Consultoría Especializada ONU (Escala P3)',
     requirements: ['Monitoreo Satelital MARS', 'Mitigación de Metano', 'Diplomacia Climática', 'Español / Inglés'],
     sectorKey: 'offers',
-    color: '#d97706'
+    color: '#d97706',
+    colorHex: 0xd97706
   },
   {
     id: 'off-uchile',
     name: 'Universidad de Chile (FCFM) / Red Andina',
     role: 'Cooperación Iberoamericana en Geofísica Aplicada & Riesgos',
     city: 'Santiago',
+    flag: '🇨🇱',
     country: 'Chile',
     coordsText: '33.45° S, 70.67° W',
     lat: -33.45,
@@ -133,123 +149,43 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     salary: 'Proyectos Bilaterales & Asesoría Estratégica',
     requirements: ['Geofísica FCFM', 'Mecánica de Suelos', 'Riesgos Naturales', 'Sistemas Andinos'],
     sectorKey: 'santiago',
-    color: '#ca8a04'
+    color: '#ca8a04',
+    colorHex: 0xca8a04
   }
 ];
 
-// Procedural Equirectangular Earth fallback for instant continental rendering
-function createProceduralEarthCanvas(): HTMLCanvasElement {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return canvas;
-
-  // Deep oceanic background
-  const oceanGrad = ctx.createLinearGradient(0, 0, 0, 512);
-  oceanGrad.addColorStop(0, '#091d34');
-  oceanGrad.addColorStop(0.5, '#0b294a');
-  oceanGrad.addColorStop(1, '#091d34');
-  ctx.fillStyle = oceanGrad;
-  ctx.fillRect(0, 0, 1024, 512);
-
-  const mapPt = (lon: number, lat: number): [number, number] => [
-    ((lon + 180) / 360) * 1024,
-    ((90 - lat) / 180) * 512
-  ];
-
-  const drawPoly = (pts: [number, number][], fill: string) => {
-    if (pts.length < 3) return;
-    ctx.beginPath();
-    const [x0, y0] = mapPt(pts[0][0], pts[0][1]);
-    ctx.moveTo(x0, y0);
-    for (let i = 1; i < pts.length; i++) {
-      const [x, y] = mapPt(pts[i][0], pts[i][1]);
-      ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-  };
-
-  // Eurasia (Europe + Asia)
-  drawPoly([
-    [-10, 36], [-9, 43], [-1, 46], [-5, 48], [1, 51], [8, 55], [12, 57], [25, 71],
-    [35, 68], [60, 68], [100, 75], [170, 65], [140, 45], [120, 32], [105, 20],
-    [80, 12], [70, 24], [50, 26], [35, 32], [26, 38], [15, 40], [-5, 36]
-  ], '#2a5525');
-
-  // Iberian Peninsula (Spain & Portugal)
-  drawPoly([
-    [-9.5, 36.8], [-9.1, 42.2], [-8.7, 43.6], [-2.0, 43.5], [3.2, 42.4],
-    [0.2, 38.6], [-2.2, 36.7], [-5.6, 36.0], [-7.5, 37.1]
-  ], '#827445');
-
-  // British Isles & Scandinavia
-  drawPoly([[-5, 50], [1.5, 52], [-1.8, 58], [-5.5, 56]], '#2e5f29');
-  drawPoly([[5, 58], [11, 58], [18, 60], [28, 70], [20, 68], [12, 64]], '#244e21');
-
-  // Africa
-  drawPoly([
-    [-17, 15], [-12, 28], [-5, 36], [10, 37], [32, 31], [43, 12], [51, 10],
-    [40, -10], [33, -28], [18, -34], [12, -15], [9, 4], [-15, 11]
-  ], '#8a7444');
-
-  // North America
-  drawPoly([
-    [-168, 65], [-140, 70], [-90, 73], [-60, 60], [-65, 45], [-75, 35], [-80, 25],
-    [-97, 26], [-105, 20], [-115, 32], [-124, 40], [-125, 50], [-140, 60], [-165, 60]
-  ], '#375c27');
-
-  // South America
-  drawPoly([
-    [-76, 9], [-60, 10], [-50, 0], [-35, -5], [-39, -15], [-50, -30], [-65, -55],
-    [-75, -50], [-72, -35], [-81, -5], [-77, 5]
-  ], '#295424');
-
-  // Australia
-  drawPoly([
-    [113, -22], [115, -34], [130, -32], [140, -38], [150, -37], [153, -28],
-    [143, -11], [130, -14], [120, -18]
-  ], '#9c7740');
-
-  // Antarctica & Greenland
-  ctx.fillStyle = '#ddebf6';
-  ctx.fillRect(0, ((90 - (-65)) / 180) * 512, 1024, 512);
-  drawPoly([[-50, 60], [-20, 70], [-25, 82], [-55, 82], [-60, 72]], '#eaf2f8');
-
-  return canvas;
+function resolveAsset(path: string): string {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+    return path;
+  }
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
 }
+
+const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector3 => {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  return new THREE.Vector3(
+    -radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.sin(theta)
+  );
+};
 
 export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySector }) => {
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
   const [isAutoRotating, setIsAutoRotating] = useState(true);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  // Smooth rotation & tilt coordinates stored in refs for 60fps WebGL rendering
-  const currentLonRef = useRef<number>(-3); // Default centered on Spain/Europe
-  const currentTiltRef = useRef<number>(18);
-  const targetLonRef = useRef<number>(-3);
-  const targetTiltRef = useRef<number>(18);
-
-  const isDraggingRef = useRef(false);
-  const dragStartRef = useRef<{ x: number; y: number; lon: number; tilt: number }>({ x: 0, y: 0, lon: 0, tilt: 0 });
+  const mountRef = useRef<HTMLDivElement | null>(null);
 
   const activeOffer = ATTRACTIVE_OFFERS[activeOfferIndex];
-  const activeOfferIndexRef = useRef(activeOfferIndex);
+  const activeOfferRef = useRef(activeOffer);
+  const activeIndexRef = useRef(activeOfferIndex);
 
   useEffect(() => {
-    activeOfferIndexRef.current = activeOfferIndex;
-  }, [activeOfferIndex]);
-
-  // Update target coordinates when active offer changes
-  useEffect(() => {
-    if (activeOffer) {
-      targetLonRef.current = activeOffer.lon;
-      targetTiltRef.current = Math.max(2, Math.min(26, activeOffer.lat * 0.38 + 10));
-    }
-  }, [activeOffer]);
+    activeOfferRef.current = activeOffer;
+    activeIndexRef.current = activeOfferIndex;
+  }, [activeOffer, activeOfferIndex]);
 
   // Auto-cycle through attractive offers every 8 seconds
   useEffect(() => {
@@ -260,517 +196,411 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
     return () => clearInterval(interval);
   }, [isAutoRotating]);
 
-  // 3D Mathematical Projection for unit sphere
-  const projectPoint = useCallback((lat: number, lon: number, centerLon: number, tilt: number, cx: number, cy: number, r: number) => {
-    const radLat = (lat * Math.PI) / 180;
-    const radLon = (lon * Math.PI) / 180;
-    const radLon0 = (centerLon * Math.PI) / 180;
-    const radTilt = (tilt * Math.PI) / 180;
-
-    // Unit sphere coordinates (lon0 centered)
-    const x0 = Math.cos(radLat) * Math.sin(radLon - radLon0);
-    const y0 = Math.sin(radLat);
-    const z0 = Math.cos(radLat) * Math.cos(radLon - radLon0);
-
-    // Tilt rotation around X axis
-    const x1 = x0;
-    const y1 = y0 * Math.cos(radTilt) - z0 * Math.sin(radTilt);
-    const z1 = y0 * Math.sin(radTilt) + z0 * Math.cos(radTilt);
-
-    const isVisible = z1 > -0.05;
-    const x = cx + x1 * r;
-    const y = cy - y1 * r;
-
-    return { x, y, z: z1, isVisible };
-  }, []);
-
-  // WebGL Lifecycle & Animation Engine (Mounts ONCE, renders continuously at 60fps)
+  // Three.js Photorealistic 3D Earth Globe HUD (Direct from Portfolio App)
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const overlayCanvas = overlayCanvasRef.current;
-    if (!canvas || !overlayCanvas) return;
+    const mount = mountRef.current;
+    if (!mount) return;
 
-    const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
-    if (!gl) return;
-
-    const overlayCtx = overlayCanvas.getContext('2d');
-    if (!overlayCtx) return;
-
-    // Support Retina displays (devicePixelRatio)
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const displaySize = 350;
-    canvas.width = displaySize * dpr;
-    canvas.height = displaySize * dpr;
-    overlayCanvas.width = displaySize * dpr;
-    overlayCanvas.height = displaySize * dpr;
-
-    // Build sphere geometry (64 rings x 64 sectors)
-    const rings = 64;
-    const sectors = 64;
-    const positions: number[] = [];
-    const texcoords: number[] = [];
-    const indices: number[] = [];
-
-    for (let r = 0; r <= rings; r++) {
-      const lat = Math.PI / 2 - (r * Math.PI) / rings;
-      const sinLat = Math.sin(lat);
-      const cosLat = Math.cos(lat);
-      const v = r / rings;
-
-      for (let s = 0; s <= sectors; s++) {
-        const lon = -Math.PI + (s * 2 * Math.PI) / sectors;
-        const sinLon = Math.sin(lon);
-        const cosLon = Math.cos(lon);
-        const u = s / sectors;
-
-        const x = cosLat * sinLon;
-        const y = sinLat;
-        const z = cosLat * cosLon;
-
-        positions.push(x, y, z);
-        texcoords.push(u, v);
-      }
-    }
-
-    for (let r = 0; r < rings; r++) {
-      for (let s = 0; s < sectors; s++) {
-        const p00 = r * (sectors + 1) + s;
-        const p01 = p00 + 1;
-        const p10 = (r + 1) * (sectors + 1) + s;
-        const p11 = p10 + 1;
-        indices.push(p00, p10, p01);
-        indices.push(p01, p10, p11);
-      }
-    }
-
-    // Vertex & Fragment Shaders
-    const vsSource = `
-      attribute vec3 a_position;
-      attribute vec2 a_texcoord;
-      uniform mat3 u_rotation;
-      varying vec2 v_texcoord;
-      varying vec3 v_normal;
-
-      void main() {
-        vec3 rotated = u_rotation * a_position;
-        gl_Position = vec4(rotated.x, rotated.y, rotated.z * 0.5, 1.0);
-        v_texcoord = a_texcoord;
-        v_normal = rotated;
-      }
-    `;
-
-    const fsSource = `
-      precision mediump float;
-      uniform sampler2D u_satelliteTexture;
-      uniform sampler2D u_cloudsTexture;
-      uniform float u_cloudsOffset;
-      varying vec2 v_texcoord;
-      varying vec3 v_normal;
-
-      void main() {
-        if (v_normal.z < -0.05) {
-          discard;
-        }
-
-        vec4 satColor = texture2D(u_satelliteTexture, v_texcoord);
-
-        // Saturation & Contrast Enhancement: Makes continents, forests, and deserts crystal clear!
-        float lum = dot(satColor.rgb, vec3(0.299, 0.587, 0.114));
-        vec3 vibrant = mix(vec3(lum), satColor.rgb, 1.45);
-        vibrant = clamp((vibrant - 0.40) * 1.30 + 0.40, 0.0, 1.0);
-
-        // Atmospheric clouds (delicate 18% veil so continents are NEVER obscured)
-        vec2 cloudCoord = vec2(fract(v_texcoord.x + u_cloudsOffset), v_texcoord.y);
-        vec4 cloudSample = texture2D(u_cloudsTexture, cloudCoord);
-        float cloudAlpha = cloudSample.r * 0.18;
-        vec3 baseEarth = mix(vibrant, vec3(0.96, 0.98, 1.0), cloudAlpha);
-
-        // Natural sunlight illumination (Sun from upper-left)
-        vec3 sunDir = normalize(vec3(-0.35, 0.55, 0.75));
-        float NdotL = max(dot(v_normal, sunDir), 0.0);
-        float ambient = 0.50;
-        float diffuse = ambient + (1.0 - ambient) * NdotL;
-
-        // Ocean specular glint (water reflects sunlight, land stays matte)
-        bool isWater = (satColor.b > satColor.r + 0.04) && (lum < 0.42);
-        float spec = 0.0;
-        if (isWater && NdotL > 0.0) {
-          vec3 viewDir = vec3(0.0, 0.0, 1.0);
-          vec3 halfVec = normalize(sunDir + viewDir);
-          float NdotH = max(dot(v_normal, halfVec), 0.0);
-          spec = pow(NdotH, 22.0) * 0.45;
-        }
-
-        // Earth atmospheric limb glow (sky blue outer boundary)
-        float rim = 1.0 - max(v_normal.z, 0.0);
-        vec3 atmoGlow = vec3(0.26, 0.65, 1.0) * pow(rim, 3.0) * 0.55;
-
-        vec3 finalColor = baseEarth * diffuse + vec3(spec * 0.85, spec * 0.92, spec) + atmoGlow;
-        gl_FragColor = vec4(clamp(finalColor, 0.0, 1.0), 1.0);
-      }
-    `;
-
-    const compileShader = (source: string, type: number) => {
-      const shader = gl.createShader(type);
-      if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      return shader;
-    };
-
-    const vs = compileShader(vsSource, gl.VERTEX_SHADER);
-    const fs = compileShader(fsSource, gl.FRAGMENT_SHADER);
-    if (!vs || !fs) return;
-
-    const program = gl.createProgram();
-    if (!program) return;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    // Buffers setup
-    const posBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-    const texBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
-
-    const indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-
-    // Attributes & Uniforms
-    const aPos = gl.getAttribLocation(program, 'a_position');
-    const aTex = gl.getAttribLocation(program, 'a_texcoord');
-    const uRotation = gl.getUniformLocation(program, 'u_rotation');
-    const uSat = gl.getUniformLocation(program, 'u_satelliteTexture');
-    const uClouds = gl.getUniformLocation(program, 'u_cloudsTexture');
-    const uCloudsOffset = gl.getUniformLocation(program, 'u_cloudsOffset');
-
-    gl.enableVertexAttribArray(aPos);
-    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-    gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
-
-    gl.enableVertexAttribArray(aTex);
-    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
-    gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, 0, 0);
-
-    // Create Textures
-    const satTex = gl.createTexture();
-    const cloudsTex = gl.createTexture();
-
-    // 1. Instant procedural continent fallback so continents are IMMEDIATELY visible at millisecond 0!
-    const fallbackCanvas = createProceduralEarthCanvas();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, satTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, fallbackCanvas);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-    // Default clouds fallback
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, cloudsTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 60]));
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    // 2. Load High-Resolution NASA Blue Marble Satellite Photograph
-    const satImg = new Image();
-    satImg.src = '/textures/earth-satellite.jpg';
-    satImg.onload = () => {
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, satTex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, satImg);
-      gl.generateMipmap(gl.TEXTURE_2D);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    };
-
-    // 3. Load Realistic Atmospheric Clouds
-    const cloudImg = new Image();
-    cloudImg.src = '/textures/earth-clouds.png';
-    cloudImg.onload = () => {
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, cloudsTex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cloudImg);
-      gl.generateMipmap(gl.TEXTURE_2D);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    };
-
-    gl.enable(gl.DEPTH_TEST);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-
-    // 60FPS Continuous Render Loop
     let animId: number;
-    const renderLoop = () => {
-      // 1. Smooth interpolation towards target offer coords
-      if (!isDraggingRef.current) {
-        let diffLon = targetLonRef.current - currentLonRef.current;
-        while (diffLon < -180) diffLon += 360;
-        while (diffLon > 180) diffLon -= 360;
-        if (Math.abs(diffLon) > 0.05) {
-          currentLonRef.current += diffLon * 0.055;
-        }
+    const width = mount.clientWidth || 350;
+    const height = mount.clientHeight || 350;
 
-        const diffTilt = targetTiltRef.current - currentTiltRef.current;
-        if (Math.abs(diffTilt) > 0.05) {
-          currentTiltRef.current += diffTilt * 0.045;
+    // 1. Scene & Camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 5.8);
+
+    // 2. WebGL Renderer
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    mount.appendChild(renderer.domElement);
+
+    // 3. Earth Group
+    const earthGroup = new THREE.Group();
+    scene.add(earthGroup);
+
+    // 4. Textures Loading (NASA Blue Marble 4096 + Normal Relief 2048 + Specular 2048 + Clouds 1024)
+    const textureLoader = new THREE.TextureLoader();
+    const dayMap = textureLoader.load(resolveAsset('/earth/earth_day_4096.jpg'));
+    dayMap.colorSpace = THREE.SRGBColorSpace;
+    dayMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    const normalMap = textureLoader.load(resolveAsset('/earth/earth_normal_2048.jpg'));
+    const specMap = textureLoader.load(resolveAsset('/earth/earth_specular_2048.jpg'));
+    const cloudsMap = textureLoader.load(resolveAsset('/earth/earth_clouds_1024.png'));
+
+    // 5. Main Earth Sphere (Real Continents, Oceans & Mountain Relief Shadows)
+    const earthRadius = 1.95;
+    const earthGeo = new THREE.SphereGeometry(earthRadius, 64, 64);
+    const earthMat = new THREE.MeshPhongMaterial({
+      map: dayMap,
+      normalMap: normalMap,
+      normalScale: new THREE.Vector2(1.6, 1.6), // Pronounced 3D relief on Andes, Himalayas, Alps, Pyrenees!
+      specularMap: specMap,
+      specular: new THREE.Color(0x305075), // Realistic water specularity
+      shininess: 28,
+    });
+    const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+    earthGroup.add(earthMesh);
+
+    // 6. Clouds Sphere (Drifting Atmospheric Cloud Layer)
+    const cloudsGeo = new THREE.SphereGeometry(earthRadius * 1.014, 64, 64);
+    const cloudsMat = new THREE.MeshLambertMaterial({
+      map: cloudsMap,
+      transparent: true,
+      opacity: 0.32,
+      blending: THREE.AdditiveBlending,
+    });
+    const cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+    earthGroup.add(cloudsMesh);
+
+    // 7. Atmospheric Space Halo (Glowing Blue Edge)
+    const haloGeo = new THREE.SphereGeometry(earthRadius * 1.035, 48, 48);
+    const haloMat = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
+      `,
+      fragmentShader: `
+        varying vec3 vNormal;
+        void main() {
+          float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.6);
+          gl_FragColor = vec4(0.32, 0.68, 1.0, 1.0) * intensity;
+        }
+      `,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide,
+      transparent: true,
+    });
+    const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+    earthGroup.add(haloMesh);
+
+    // 8. Cinematic Lighting
+    // Directional Sunlight (Angle creating realistic mountain relief shadows)
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.3);
+    sunLight.position.set(6, 3, 5);
+    scene.add(sunLight);
+
+    // Ambient space light for clear continent visibility
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.68);
+    scene.add(ambientLight);
+
+    // Blue rim light for orbital depth
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.85);
+    rimLight.position.set(-6, -2, -3);
+    scene.add(rimLight);
+
+    // 9. Mission 3D Pushpins & Pennants
+    const hitObjects: THREE.Object3D[] = [];
+    ATTRACTIVE_OFFERS.forEach((m, mIdx) => {
+      const pos = latLngToVector3(m.lat, m.lon, earthRadius * 1.002);
+      const norm = pos.clone().normalize();
+
+      const bGroup = new THREE.Group();
+      bGroup.position.copy(pos);
+      bGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), norm);
+
+      // 1. Base Grommet / Pinhole shadow on surface
+      const holeGeo = new THREE.RingGeometry(0.008, 0.028, 24);
+      const holeMat = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
+      const hole = new THREE.Mesh(holeGeo, holeMat);
+      hole.rotation.x = Math.PI / 2;
+      bGroup.add(hole);
+
+      // 2. Slender Metallic Steel Needle / Mast
+      const needleGeo = new THREE.CylinderGeometry(0.0035, 0.0035, 0.20, 8);
+      const needleMat = new THREE.MeshBasicMaterial({ color: 0xe2e8f0 });
+      const needle = new THREE.Mesh(needleGeo, needleMat);
+      needle.position.y = 0.10;
+      bGroup.add(needle);
+
+      // 3. Round Ball Pinhead
+      const capGeo = new THREE.SphereGeometry(0.018, 16, 16);
+      const capMat = new THREE.MeshBasicMaterial({ color: m.colorHex });
+      const cap = new THREE.Mesh(capGeo, capMat);
+      cap.position.y = 0.205;
+      bGroup.add(cap);
+
+      // 4. Map Pushpin Flag Pennant
+      const flagCanvas = document.createElement('canvas');
+      flagCanvas.width = 144;
+      flagCanvas.height = 84;
+      const fCtx = flagCanvas.getContext('2d');
+      if (fCtx) {
+        fCtx.fillStyle = m.color;
+        fCtx.fillRect(0, 0, 144, 84);
+        fCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        fCtx.fillRect(0, 0, 144, 42);
+        fCtx.lineWidth = 6;
+        fCtx.strokeStyle = '#000000';
+        fCtx.strokeRect(3, 3, 138, 78);
+        fCtx.font = '34px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        fCtx.textAlign = 'center';
+        fCtx.textBaseline = 'middle';
+        fCtx.fillText(m.flag, 42, 42);
+        fCtx.fillStyle = '#ffffff';
+        fCtx.font = 'bold 22px monospace';
+        fCtx.fillText(m.city.slice(0, 4).toUpperCase(), 102, 43);
+
+        const flagTex = new THREE.CanvasTexture(flagCanvas);
+        const flagGeo = new THREE.PlaneGeometry(0.14, 0.082);
+        const flagMat = new THREE.MeshBasicMaterial({ map: flagTex, side: THREE.DoubleSide });
+        const flagMesh = new THREE.Mesh(flagGeo, flagMat);
+        flagMesh.position.set(0.070, 0.155, 0);
+        bGroup.add(flagMesh);
       }
 
-      const lonAngle = currentLonRef.current;
-      const tiltAngle = currentTiltRef.current;
+      // Invisible Hit-Test Sphere for easy mouse/touch click detection
+      const hitGeo = new THREE.SphereGeometry(0.18, 8, 8);
+      const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+      const hitSphere = new THREE.Mesh(hitGeo, hitMat);
+      hitSphere.position.y = 0.12;
+      hitSphere.userData = { offerIndex: mIdx };
+      bGroup.add(hitSphere);
+      hitObjects.push(hitSphere);
 
-      // 2. Compute Rotation Matrix (Column-Major for WebGL)
-      const lon0 = (lonAngle * Math.PI) / 180;
-      const tilt = (tiltAngle * Math.PI) / 180;
+      earthGroup.add(bGroup);
+    });
 
-      const cy = Math.cos(-lon0);
-      const sy = Math.sin(-lon0);
-      const cx = Math.cos(tilt);
-      const sx = Math.sin(tilt);
+    // 10. Active Target Reticle (Graphic Action Burst in Comic Yellow & Black)
+    const reticleGroup = new THREE.Group();
+    const pulseRingGeo = new THREE.RingGeometry(0.045, 0.075, 32);
+    const pulseRingMat = new THREE.MeshBasicMaterial({
+      color: 0xfacc15, // Comic Yellow #facc15
+      transparent: true,
+      opacity: 0.95,
+      side: THREE.DoubleSide
+    });
+    const pulseRing = new THREE.Mesh(pulseRingGeo, pulseRingMat);
+    pulseRing.rotation.x = Math.PI / 2;
+    reticleGroup.add(pulseRing);
 
-      const rotMat = [
-        cy,          sx * sy,   -cx * sy,
-        0,           cx,         sx,
-        sy,         -sx * cy,    cx * cy
-      ];
+    const outerBlackRingGeo = new THREE.RingGeometry(0.078, 0.094, 32);
+    const outerBlackRingMat = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      side: THREE.DoubleSide
+    });
+    const outerBlackRing = new THREE.Mesh(outerBlackRingGeo, outerBlackRingMat);
+    outerBlackRing.rotation.x = Math.PI / 2;
+    reticleGroup.add(outerBlackRing);
 
-      // Draw WebGL Globe
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    earthGroup.add(reticleGroup);
 
-      gl.useProgram(program);
-      gl.uniformMatrix3fv(uRotation, false, new Float32Array(rotMat));
-      gl.uniform1i(uSat, 0);
-      gl.uniform1i(uClouds, 1);
-      gl.uniform1f(uCloudsOffset, (performance.now() * 0.000008) % 1.0);
+    // 10.5 Energy Flight Beams connecting hubs (Bilbao <-> Kiel, Bilbao <-> Paris, Bilbao <-> Santiago)
+    const flightGroup = new THREE.Group();
+    const arcPairs = [
+      { from: 0, to: 1, color: 0x10b981 }, // Bilbao <-> Kiel
+      { from: 0, to: 5, color: 0xfbbf24 }, // Bilbao <-> Paris
+      { from: 0, to: 6, color: 0x38bdf8 }, // Bilbao <-> Santiago
+    ];
 
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-      gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+    interface BeamArc {
+      curve: THREE.QuadraticBezierCurve3;
+      speed: number;
+      offset: number;
+      headCore: THREE.Mesh;
+      headGlow: THREE.Mesh;
+    }
+    const beamArcs: BeamArc[] = [];
 
-      // 3. Render 2D Overlay Canvas (Pins, Shadow, Graticule, Flight Arcs)
-      overlayCtx.save();
-      overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-      overlayCtx.scale(dpr, dpr);
+    arcPairs.forEach((pair, pIdx) => {
+      const fromM = ATTRACTIVE_OFFERS[pair.from];
+      const toM = ATTRACTIVE_OFFERS[pair.to];
+      const posA = latLngToVector3(fromM.lat, fromM.lon, earthRadius * 1.002);
+      const posB = latLngToVector3(toM.lat, toM.lon, earthRadius * 1.002);
 
-      const cxScreen = displaySize / 2;
-      const cyScreen = displaySize / 2;
-      const radius = displaySize * 0.43;
+      const mid = new THREE.Vector3().addVectors(posA, posB).multiplyScalar(0.5);
+      const dist = posA.distanceTo(posB);
+      mid.normalize().multiplyScalar(earthRadius + Math.max(0.18, dist * 0.22));
 
-      // A. Drop Shadow under the globe onto the white card
-      const baseShadow = overlayCtx.createRadialGradient(
-        cxScreen, cyScreen + radius * 0.98, radius * 0.2,
-        cxScreen, cyScreen + radius * 0.98, radius * 1.04
-      );
-      baseShadow.addColorStop(0, 'rgba(15, 23, 42, 0.35)');
-      baseShadow.addColorStop(0.5, 'rgba(15, 23, 42, 0.12)');
-      baseShadow.addColorStop(1, 'rgba(15, 23, 42, 0)');
-      overlayCtx.fillStyle = baseShadow;
-      overlayCtx.beginPath();
-      overlayCtx.ellipse(cxScreen, cyScreen + radius * 0.98, radius * 0.95, radius * 0.22, 0, 0, Math.PI * 2);
-      overlayCtx.fill();
+      const curve = new THREE.QuadraticBezierCurve3(posA, mid, posB);
 
-      // B. Subtle Planetary Graticule Lines (Equator & Greenwich Meridian for visual orientation)
-      overlayCtx.save();
-      overlayCtx.strokeStyle = 'rgba(56, 189, 248, 0.20)';
-      overlayCtx.lineWidth = 1;
-      overlayCtx.setLineDash([3, 4]);
+      // Glowing tube
+      const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.005, 6, false);
+      const tubeMat = new THREE.MeshBasicMaterial({
+        color: pair.color,
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending
+      });
+      flightGroup.add(new THREE.Mesh(tubeGeo, tubeMat));
 
-      // Equator (lat = 0)
-      overlayCtx.beginPath();
-      let started = false;
-      for (let l = -180; l <= 180; l += 5) {
-        const pt = projectPoint(0, l, lonAngle, tiltAngle, cxScreen, cyScreen, radius);
-        if (pt.isVisible) {
-          if (!started) {
-            overlayCtx.moveTo(pt.x, pt.y);
-            started = true;
-          } else {
-            overlayCtx.lineTo(pt.x, pt.y);
+      // Head core & glow
+      const headCoreGeo = new THREE.SphereGeometry(0.015, 8, 8);
+      const headCoreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, blending: THREE.AdditiveBlending });
+      const headCore = new THREE.Mesh(headCoreGeo, headCoreMat);
+      flightGroup.add(headCore);
+
+      const headGlowGeo = new THREE.SphereGeometry(0.035, 12, 12);
+      const headGlowMat = new THREE.MeshBasicMaterial({ color: pair.color, transparent: true, opacity: 0.75, blending: THREE.AdditiveBlending });
+      const headGlow = new THREE.Mesh(headGlowGeo, headGlowMat);
+      flightGroup.add(headGlow);
+
+      beamArcs.push({
+        curve,
+        speed: 0.12 + pIdx * 0.02,
+        offset: pIdx * 0.33,
+        headCore,
+        headGlow
+      });
+    });
+    earthGroup.add(flightGroup);
+
+    // Initial Globe Orientation (Focus on current target)
+    const initVec = latLngToVector3(activeOfferRef.current.lat, activeOfferRef.current.lon, 1).normalize();
+    const currentQuat = new THREE.Quaternion().setFromUnitVectors(initVec, new THREE.Vector3(0, 0, 1));
+    const targetQuat = currentQuat.clone();
+    earthGroup.quaternion.copy(currentQuat);
+
+    // Interaction State: Drag to Rotate + Inertia Momentum + Click to Select
+    let isDragging = false;
+    let prevX = 0;
+    let prevY = 0;
+    let totalDrag = 0;
+    let velX = 0;
+    let velY = 0;
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+      isDragging = true;
+      prevX = e.clientX;
+      prevY = e.clientY;
+      totalDrag = 0;
+      velX = 0;
+      velY = 0;
+      setIsAutoRotating(false);
+      try {
+        mount.setPointerCapture(e.pointerId);
+      } catch {}
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      const dx = e.clientX - prevX;
+      const dy = e.clientY - prevY;
+      totalDrag += Math.abs(dx) + Math.abs(dy);
+      prevX = e.clientX;
+      prevY = e.clientY;
+
+      velX = dx * 0.005;
+      velY = dy * 0.005;
+
+      const rotY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), dx * 0.005);
+      const rotX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), dy * 0.005);
+      earthGroup.quaternion.premultiply(rotY);
+      earthGroup.quaternion.premultiply(rotX);
+      targetQuat.copy(earthGroup.quaternion);
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      try {
+        mount.releasePointerCapture(e.pointerId);
+      } catch {}
+
+      if (isDragging && totalDrag < 8) {
+        // Detect click on any beacon pin
+        const rect = mount.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(hitObjects, false);
+        if (intersects.length > 0) {
+          const hitIdx = intersects[0].object.userData.offerIndex;
+          if (typeof hitIdx === 'number') {
+            setActiveOfferIndex(hitIdx);
+            setIsAutoRotating(false);
           }
-        } else {
-          started = false;
         }
       }
-      overlayCtx.stroke();
+      isDragging = false;
+    };
 
-      // Greenwich Meridian (lon = 0)
-      overlayCtx.beginPath();
-      started = false;
-      for (let lt = -85; lt <= 85; lt += 5) {
-        const pt = projectPoint(lt, 0, lonAngle, tiltAngle, cxScreen, cyScreen, radius);
-        if (pt.isVisible) {
-          if (!started) {
-            overlayCtx.moveTo(pt.x, pt.y);
-            started = true;
-          } else {
-            overlayCtx.lineTo(pt.x, pt.y);
-          }
-        } else {
-          started = false;
-        }
-      }
-      overlayCtx.stroke();
-      overlayCtx.restore();
+    mount.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
 
-      // C. Flight Arcs between Strategic Hubs
-      const bilbaoPt = projectPoint(43.33, -2.99, lonAngle, tiltAngle, cxScreen, cyScreen, radius);
-      const kielPt = projectPoint(54.32, 10.12, lonAngle, tiltAngle, cxScreen, cyScreen, radius);
-      const santiagoPt = projectPoint(-33.45, -70.67, lonAngle, tiltAngle, cxScreen, cyScreen, radius);
-
-      // Arc: Bilbao <-> Kiel (Solid Clean Flight Route)
-      if (bilbaoPt.isVisible && kielPt.isVisible) {
-        overlayCtx.beginPath();
-        overlayCtx.moveTo(bilbaoPt.x, bilbaoPt.y);
-        const midX = (bilbaoPt.x + kielPt.x) / 2 - 8;
-        const midY = (bilbaoPt.y + kielPt.y) / 2 - 16;
-        overlayCtx.quadraticCurveTo(midX, midY, kielPt.x, kielPt.y);
-        overlayCtx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
-        overlayCtx.lineWidth = 2.4;
-        overlayCtx.stroke();
+    // Continuous 60FPS Animation Loop
+    let lastOfferId = activeOfferRef.current.id;
+    const render = () => {
+      // If target offer changed, smoothly slerp to target coordinates
+      if (activeOfferRef.current.id !== lastOfferId) {
+        lastOfferId = activeOfferRef.current.id;
+        const v = latLngToVector3(activeOfferRef.current.lat, activeOfferRef.current.lon, 1).normalize();
+        targetQuat.setFromUnitVectors(v, new THREE.Vector3(0, 0, 1));
+        velX = 0;
+        velY = 0;
       }
 
-      // Arc: Bilbao <-> Santiago (Transatlantic Connection)
-      if (santiagoPt.isVisible && bilbaoPt.isVisible) {
-        overlayCtx.beginPath();
-        overlayCtx.moveTo(santiagoPt.x, santiagoPt.y);
-        const midX = (santiagoPt.x + bilbaoPt.x) / 2 + 18;
-        const midY = (santiagoPt.y + bilbaoPt.y) / 2 - 18;
-        overlayCtx.quadraticCurveTo(midX, midY, bilbaoPt.x, bilbaoPt.y);
-        overlayCtx.strokeStyle = 'rgba(251, 191, 36, 0.85)';
-        overlayCtx.lineWidth = 2;
-        overlayCtx.setLineDash([4, 4]);
-        overlayCtx.stroke();
-        overlayCtx.setLineDash([]);
+      if (isDragging) {
+        // Direct pointer tracking
+      } else if (Math.abs(velX) > 0.0001 || Math.abs(velY) > 0.0001) {
+        // Natural friction inertia
+        const rotY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), velX);
+        const rotX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), velY);
+        earthGroup.quaternion.premultiply(rotY);
+        earthGroup.quaternion.premultiply(rotX);
+        targetQuat.copy(earthGroup.quaternion);
+        velX *= 0.92;
+        velY *= 0.92;
+      } else {
+        earthGroup.quaternion.slerp(targetQuat, 0.055);
       }
 
-      // D. Target Location Markers
-      ATTRACTIVE_OFFERS.forEach((target, idx) => {
-        const pt = projectPoint(target.lat, target.lon, lonAngle, tiltAngle, cxScreen, cyScreen, radius);
-        if (!pt.isVisible) return;
+      // Atmospheric cloud drift
+      cloudsMesh.rotation.y += 0.00035;
 
-        const isCurrent = idx === activeOfferIndexRef.current;
+      // Update target reticle position and pulse animation
+      const curTarget = activeOfferRef.current;
+      const activePos = latLngToVector3(curTarget.lat, curTarget.lon, earthRadius * 1.004);
+      reticleGroup.position.copy(activePos);
+      reticleGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), activePos.clone().normalize());
 
-        if (isCurrent) {
-          // Radar pulse ring
-          overlayCtx.beginPath();
-          overlayCtx.arc(pt.x, pt.y, 16, 0, Math.PI * 2);
-          overlayCtx.fillStyle = 'rgba(255, 255, 255, 0.40)';
-          overlayCtx.fill();
-          overlayCtx.strokeStyle = target.color;
-          overlayCtx.lineWidth = 1.8;
-          overlayCtx.stroke();
+      const pulse = (Date.now() % 1400) / 1400;
+      pulseRing.scale.setScalar(1 + pulse * 2.0);
+      pulseRingMat.opacity = 1 - pulse;
 
-          // Teardrop Pin
-          const pinY = pt.y - 12;
-
-          // Pin Shadow
-          overlayCtx.beginPath();
-          overlayCtx.ellipse(pt.x, pt.y + 1, 4.5, 2, 0, 0, Math.PI * 2);
-          overlayCtx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-          overlayCtx.fill();
-
-          // Pin Head
-          overlayCtx.beginPath();
-          overlayCtx.arc(pt.x, pinY, 7.5, 0, Math.PI * 2);
-          overlayCtx.fillStyle = target.color;
-          overlayCtx.fill();
-          overlayCtx.strokeStyle = '#ffffff';
-          overlayCtx.lineWidth = 2.5;
-          overlayCtx.stroke();
-
-          // Inner white dot
-          overlayCtx.beginPath();
-          overlayCtx.arc(pt.x, pinY, 2.5, 0, Math.PI * 2);
-          overlayCtx.fillStyle = '#ffffff';
-          overlayCtx.fill();
-
-          // Pin Stem
-          overlayCtx.beginPath();
-          overlayCtx.moveTo(pt.x - 3.5, pinY + 5.5);
-          overlayCtx.lineTo(pt.x, pt.y);
-          overlayCtx.lineTo(pt.x + 3.5, pinY + 5.5);
-          overlayCtx.fillStyle = target.color;
-          overlayCtx.fill();
-
-          // City Badge Label
-          overlayCtx.font = 'bold 11px system-ui, -apple-system, sans-serif';
-          const labelText = target.city.split('/')[0].trim();
-          const textWidth = overlayCtx.measureText(labelText).width;
-          const badgeX = pt.x + 12;
-          const badgeY = pinY - 14;
-
-          overlayCtx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-          overlayCtx.beginPath();
-          overlayCtx.roundRect(badgeX, badgeY, textWidth + 12, 18, 4);
-          overlayCtx.fill();
-
-          overlayCtx.fillStyle = '#ffffff';
-          overlayCtx.fillText(labelText, badgeX + 6, badgeY + 13);
-        } else {
-          // Subtle city marker
-          overlayCtx.beginPath();
-          overlayCtx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-          overlayCtx.fillStyle = '#ffffff';
-          overlayCtx.fill();
-          overlayCtx.strokeStyle = target.color;
-          overlayCtx.lineWidth = 2;
-          overlayCtx.stroke();
-        }
+      // Update energy beams along arcs
+      const fTime = Date.now() * 0.001;
+      beamArcs.forEach(({ curve, speed, offset, headCore, headGlow }) => {
+        const t = (fTime * speed + offset) % 1;
+        const headPos = curve.getPoint(t);
+        headCore.position.copy(headPos);
+        headGlow.position.copy(headPos);
       });
 
-      overlayCtx.restore();
-
-      animId = requestAnimationFrame(renderLoop);
+      renderer.render(scene, camera);
+      animId = requestAnimationFrame(render);
     };
 
-    animId = requestAnimationFrame(renderLoop);
+    animId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(animId);
-      gl.deleteProgram(program);
-      gl.deleteBuffer(posBuffer);
-      gl.deleteBuffer(texBuffer);
-      gl.deleteBuffer(indexBuffer);
-      gl.deleteTexture(satTex);
-      gl.deleteTexture(cloudsTex);
+      mount.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      if (mount.contains(renderer.domElement)) {
+        mount.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+      earthGeo.dispose();
+      earthMat.dispose();
+      cloudsGeo.dispose();
+      cloudsMat.dispose();
+      haloGeo.dispose();
+      haloMat.dispose();
     };
-  }, [projectPoint]);
-
-  // Drag interaction to rotate the globe manually
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    isDraggingRef.current = true;
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      lon: currentLonRef.current,
-      tilt: currentTiltRef.current
-    };
-    setIsAutoRotating(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDraggingRef.current) return;
-    const deltaX = e.clientX - dragStartRef.current.x;
-    const deltaY = e.clientY - dragStartRef.current.y;
-    currentLonRef.current = dragStartRef.current.lon + deltaX * 0.55;
-    currentTiltRef.current = Math.max(-12, Math.min(38, dragStartRef.current.tilt - deltaY * 0.35));
-  };
-
-  const handleMouseUp = () => {
-    isDraggingRef.current = false;
-  };
+  }, []);
 
   const handleSelectOffer = (idx: number) => {
     setActiveOfferIndex(idx);
@@ -792,11 +622,11 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
                 VISOR PLANETARIO // RED GLOBAL DE EMPLEO
               </h2>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold">
-                SATELITAL REALISTA (NASA)
+                THREE.JS NASA 4K
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Esfera terrestre satelital de alta fidelidad con continentes nítidos, relieve continental y rotación orbital orientada a hubs estratégicos.
+              Globo terráqueo fotorrealista (NASA Blue Marble 4K + relieve normal map + specular oceánico + nubes dinámicas + slerp orbital).
             </p>
           </div>
         </div>
@@ -810,33 +640,26 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
         </div>
       </div>
 
-      {/* Main Grid: Photorealistic Satellite Globe + Clean Offer Dossier */}
+      {/* Main Grid: Authentic Three.js 3D Globe + Clean Offer Dossier */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-5 items-center">
         
-        {/* Left Column: True Satellite Earth Globe */}
+        {/* Left Column: True Three.js 3D Earth Globe with Soft Drop Shadow */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center select-none">
-          <div className="relative cursor-grab active:cursor-grabbing p-1 flex items-center justify-center">
+          <div className="relative cursor-grab active:cursor-grabbing flex items-center justify-center w-full max-w-[360px] aspect-square">
             
-            {/* WebGL Satellite Globe Canvas */}
-            <canvas
-              ref={canvasRef}
-              className="w-full max-w-[350px] aspect-square drop-shadow-2xl rounded-full"
-            />
+            {/* Soft Radial Ambient Drop Shadow on White Card */}
+            <div className="absolute inset-x-8 bottom-3 h-12 bg-radial from-slate-900/35 via-slate-800/15 to-transparent rounded-full blur-md pointer-events-none transform scale-y-50" />
 
-            {/* Overlay Canvas for Atmospheric Rim & Location Pins */}
-            <canvas
-              ref={overlayCanvasRef}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              className="absolute inset-0 w-full max-w-[350px] aspect-square pointer-events-auto"
-              title="Arrastra con el ratón para rotar el planeta libremente"
+            {/* Three.js Mount Container */}
+            <div
+              ref={mountRef}
+              className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
+              title="Arrastra con el ratón para rotar el planeta libremente o haz clic en cualquier pin"
             />
 
             {/* Drag Hint Tooltip */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-md px-3 py-1 rounded-full text-[10px] font-sans text-slate-600 dark:text-slate-300 pointer-events-none backdrop-blur-xs flex items-center gap-1.5 whitespace-nowrap">
-              <span>🌍 Fotografía Satelital NASA</span>
+              <span>🌍 Three.js NASA 4K</span>
               <span className="text-slate-400">•</span>
               <span>Arrastra para girar</span>
             </div>
@@ -907,7 +730,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
                 title={`Rotar hacia ${target.city}`}
               >
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: target.color }} />
-                <span>{target.city.split('/')[0].trim()}</span>
+                <span>{target.flag} {target.city}</span>
                 <span className="text-[10px] opacity-80">({target.matchScore}%)</span>
               </button>
             ))}
@@ -919,7 +742,7 @@ export const TacticalGlobeHUD: React.FC<TacticalGlobeHUDProps> = ({ onDeploySect
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
                   <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span>{activeOffer.city} • {activeOffer.country}</span>
+                  <span>{activeOffer.flag} {activeOffer.city} • {activeOffer.country}</span>
                 </div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1 tracking-tight leading-snug">
                   {activeOffer.role}
