@@ -1,8 +1,12 @@
-import React from 'react';
 import { 
   Tv, 
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  Award,
+  Radio,
+  Briefcase,
+  Target,
+  ArrowRight
 } from 'lucide-react';
 import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
 import { FUNDING_CATALOG } from '../../data/fundingCatalog';
@@ -89,16 +93,77 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
       </div>
 
       {/* =========================================================================
-       * 2. VISOR PLANETARIO (MAPA MUNDI REALISTA THREE.JS NASA 4K)
+       * 2. TELEMETRÍA OPERATIVA DE ALTO NIVEL (KPIs EJECUTIVOS)
        * ========================================================================= */}
-      <div>
-        <TacticalGlobeHUD 
-          onDeploySector={(sector) => {
-            if (sector === 'kiel') onSelectStation('market_radar', 'sources');
-            else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
-            else onSelectStation('market_radar', 'offers');
-          }}
-        />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div 
+          onClick={() => onSelectStation('market_radar', 'offers')}
+          className="p-4 rounded-2xl bg-white dark:bg-[#0c1322] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-cyan-500 transition cursor-pointer group"
+          title="Ver ofertas activas en el Radar de Mercado"
+        >
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold">Mercado en Radar</span>
+            <Radio className="h-4 w-4 text-cyan-500 animate-pulse" />
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white font-sans tracking-tight">
+            {offers.length > 0 ? offers.length : '350'}+
+          </div>
+          <div className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold mt-1 flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <span>{highMatchOffers.length} alta afinidad (≥70%)</span>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => onSelectStation('funding', 'convocatorias')}
+          className="p-4 rounded-2xl bg-white dark:bg-[#0c1322] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500 transition cursor-pointer group"
+          title="Explorar Fondos I+D y convocatorias de investigación"
+        >
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold">Fondos I+D</span>
+            <Award className="h-4 w-4 text-amber-500" />
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white font-sans tracking-tight">
+            €840M+
+          </div>
+          <div className="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold mt-1 flex items-center gap-1">
+            <span>{totalFundingCount} programas (Horizon • Hazitek)</span>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => onSelectStation('agent_dossier', 'showcase')}
+          className="p-4 rounded-2xl bg-white dark:bg-[#0c1322] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-emerald-500 transition cursor-pointer group"
+          title="Inspeccionar viabilidad jurídica y marco de visado"
+        >
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold">Marco Legal</span>
+            <ShieldCheck className="h-4 w-4 text-emerald-500" />
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white font-sans tracking-tight">
+            Elegible EU
+          </div>
+          <div className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400 font-bold mt-1 flex items-center gap-1">
+            <span>§20 AufenthG • Ley 14/2013</span>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => onSelectStation('mission_control', 'applications')}
+          className="p-4 rounded-2xl bg-white dark:bg-[#0c1322] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-purple-500 transition cursor-pointer group"
+          title="Gestionar candidaturas en el Locker"
+        >
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold">Candidaturas</span>
+            <Briefcase className="h-4 w-4 text-purple-500" />
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white font-sans tracking-tight">
+            {applications.length}
+          </div>
+          <div className="text-[11px] font-mono text-purple-600 dark:text-purple-400 font-bold mt-1 flex items-center gap-1">
+            <span>{colSent.length} enviadas / seguimiento</span>
+          </div>
+        </div>
       </div>
 
       {/* =========================================================================
@@ -457,6 +522,88 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+       * 4. DIRECTIVAS TÁCTICAS & ACCESOS DIRECTOS DE ACCIÓN RÁPIDA
+       * ========================================================================= */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0c1322] border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-3.5 w-full md:w-auto">
+          <div className="h-10 w-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/30">
+            <Target className="h-5 w-5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-black text-slate-900 dark:text-white font-sans uppercase tracking-tight">
+              Directivas de Operación Rápida
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+              Despliegue inmediato hacia las estaciones centrales de trabajo
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <button
+            onClick={() => onSelectStation('market_radar', 'offers')}
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-cyan-500/10 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-200"
+          >
+            <span>[1] Ver Mercado</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+
+          <button
+            onClick={() => onSelectStation('agent_dossier', 'gunsmith')}
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-200"
+          >
+            <span>[2] Calibrar CV</span>
+            <Sparkles className="h-3.5 w-3.5" />
+          </button>
+
+          <button
+            onClick={() => onSelectStation('funding', 'convocatorias')}
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/10 hover:text-amber-600 dark:hover:text-amber-400 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-200"
+          >
+            <span>[3] Fondos I+D</span>
+            <Award className="h-3.5 w-3.5" />
+          </button>
+
+          <button
+            onClick={() => onSelectStation('mission_control', 'applications')}
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-mono font-black transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+          >
+            <span>[4] Pipeline</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* =========================================================================
+       * 5. VISOR PLANETARIO (MAPA MUNDI REALISTA THREE.JS NASA 4K)
+       * ========================================================================= */}
+      <div>
+        <TacticalGlobeHUD 
+          onDeploySector={(sector) => {
+            if (sector === 'kiel') onSelectStation('market_radar', 'sources');
+            else if (sector === 'bilbao') onSelectStation('market_radar', 'companies');
+            else onSelectStation('market_radar', 'offers');
+          }}
+        />
+      </div>
+
+      {/* =========================================================================
+       * 6. RADAR LIVE DISPATCH // TERMINAL DE ALERTAS OPERATIVAS
+       * ========================================================================= */}
+      <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-slate-300 shadow-md">
+        <div className="flex items-center gap-2 text-cyan-400 font-bold shrink-0">
+          <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
+          <span>RADAR DISPATCH:</span>
+        </div>
+        <div className="overflow-hidden truncate text-[11px] text-slate-400">
+          <span className="text-emerald-400 font-bold">[ALEMANIA]</span> GFZ Potsdam y CAU Kiel: 48 vacantes indexadas • <span className="text-amber-400 font-bold">[EUSKADI]</span> Centros BRTA (BC3, Tecnalia) con vía expedita Ley 14/2013 • <span className="text-sky-400 font-bold">[REMOTO]</span> Consultoría ambiental europea disponible.
+        </div>
+        <div className="text-[10px] text-slate-500 shrink-0 font-bold uppercase">
+          TELEMETRÍA EN VIVO
         </div>
       </div>
 
