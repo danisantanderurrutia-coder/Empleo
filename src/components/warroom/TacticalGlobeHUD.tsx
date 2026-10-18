@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { Play, Pause, ChevronLeft, ChevronRight, MapPin, Building2, ArrowRight } from 'lucide-react';
+import { resolveAsset } from '../../utils/assets';
 
 interface TacticalGlobeHUDProps {
   onDeploySector?: (sector: string) => void;
@@ -153,15 +154,6 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     colorHex: 0xca8a04
   }
 ];
-
-function resolveAsset(path: string): string {
-  if (!path) return '';
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
-    return path;
-  }
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${import.meta.env.BASE_URL}${cleanPath}`;
-}
 
 const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector3 => {
   const phi = (90 - lat) * (Math.PI / 180);

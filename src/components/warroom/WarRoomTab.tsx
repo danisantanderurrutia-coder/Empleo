@@ -7,6 +7,7 @@ import {
 import { getStoredProfile, getStoredOffers, getStoredApplications, getStoredCompanies } from '../../services/db';
 import { FUNDING_CATALOG } from '../../data/fundingCatalog';
 import { TacticalGlobeHUD } from './TacticalGlobeHUD';
+import { resolveAsset } from '../../utils/assets';
 
 interface WarRoomTabProps {
   onSelectStation: (stationId: string, subTab?: string, filter?: string) => void;
@@ -59,14 +60,23 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
        * 1. TITULO PRINCIPAL DE PÁGINA (CAREER)
        * ========================================================================= */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-200/90 dark:border-slate-800 pb-4 gap-3">
-        <div>
-          <div className="flex items-center space-x-2 text-[11px] font-mono tracking-wider uppercase text-red-500 font-bold mb-1">
-            <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-            <span>EXPEDIENTE PROFESIONAL // {profile.fullName || 'DANIEL SANTANDER'}</span>
+        <div className="flex items-center space-x-3.5">
+          <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl overflow-hidden shadow-md border border-cyan-500/40 shrink-0 bg-[#090b0e] flex items-center justify-center p-1 group">
+            <img 
+              src={resolveAsset('/app_icon.svg')} 
+              alt="Logo Radar ATS" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tight font-sans drop-shadow-xs">
-            CAREER
-          </h1>
+          <div>
+            <div className="flex items-center space-x-2 text-[11px] font-mono tracking-wider uppercase text-red-500 font-bold mb-1">
+              <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+              <span>EXPEDIENTE PROFESIONAL // {profile.fullName || 'DANIEL SANTANDER'}</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tight font-sans drop-shadow-xs">
+              CAREER
+            </h1>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 text-[11px] font-mono">
