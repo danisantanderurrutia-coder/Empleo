@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}>
           {!logoError ? (
             <img 
-              src={resolveAsset('/empleo_master_logo.jpg')} 
+              src={resolveAsset('/app_icon.svg')} 
               alt="Empleo Master Radar Logo" 
               onError={() => setLogoError(true)}
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" 
