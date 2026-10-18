@@ -12,16 +12,15 @@ import { resolveAsset } from '../../utils/assets';
 interface NavTabItem {
   id: string;
   label: string;
-  sub: string;
   matches: string[];
 }
 
 const NAV_TABS: NavTabItem[] = [
-  { id: 'market_radar', label: 'RADAR', sub: 'MERCADO', matches: ['market_radar', 'offers', 'sources', 'companies'] },
-  { id: 'agent_dossier', label: 'OPERATORS', sub: 'PERFIL', matches: ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'] },
-  { id: 'mission_control', label: 'LOCKER', sub: 'CANDIDATURAS', matches: ['mission_control', 'applications', 'batch_applications', 'intelligence'] },
-  { id: 'funding', label: 'FONDOS I+D', sub: 'CONVOCATORIAS', matches: ['funding', 'convocatorias'] },
-  { id: 'settings', label: 'HQ', sub: 'AJUSTES', matches: ['settings'] }
+  { id: 'market_radar', label: 'MERCADO', matches: ['market_radar', 'offers', 'sources', 'companies'] },
+  { id: 'agent_dossier', label: 'PERFIL', matches: ['agent_dossier', 'profile', 'cvs', 'showcase', 'gunsmith', 'skills'] },
+  { id: 'mission_control', label: 'CANDIDATURAS', matches: ['mission_control', 'applications', 'batch_applications', 'intelligence'] },
+  { id: 'funding', label: 'CONVOCATORIAS', matches: ['funding', 'convocatorias'] },
+  { id: 'settings', label: 'AJUSTES', matches: ['settings'] }
 ];
 
 interface NavbarProps {
@@ -150,19 +149,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={tab.id}
                 onClick={() => onSelectStation && onSelectStation(tab.id)}
-                className={`relative py-1.5 px-2 sm:px-2.5 md:px-3.5 transition-all duration-150 flex flex-col items-center justify-center cursor-pointer group focus:outline-none ${
+                className={`relative py-1.5 px-2.5 sm:px-3 md:px-3.5 transition-all duration-150 flex items-center justify-center cursor-pointer group focus:outline-none ${
                   isActive
                     ? 'text-[var(--text-primary)] font-black'
                     : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] font-bold'
                 }`}
-                title={`${tab.label} — ${tab.sub}`}
+                title={tab.label}
               >
-                <span className="font-mono text-xs sm:text-[13px] tracking-[0.16em] uppercase font-black transition-colors">
+                <span className="font-mono text-xs sm:text-[13px] tracking-[0.14em] uppercase font-black transition-colors">
                   {tab.label}
-                </span>
-
-                <span className="text-[8.5px] font-mono tracking-wider opacity-60 group-hover:opacity-100 transition-opacity uppercase hidden xl:inline">
-                  // {tab.sub}
                 </span>
 
                 {/* Rainbow Six Siege Iconic Red Tactical Underline & Notch */}
