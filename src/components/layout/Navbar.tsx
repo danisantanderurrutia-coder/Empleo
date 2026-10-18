@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
 import { 
-  Crosshair, 
   ShieldCheck, 
   Sun, 
   Moon,
@@ -91,12 +90,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}
         title="CAREER // Consola Central de Operaciones (Click para volver al inicio)"
       >
-        <div className={`h-9 w-9 rounded-xl flex items-center justify-center shadow-inner shrink-0 transition ${
+        <div className={`h-9 w-9 rounded-xl overflow-hidden flex items-center justify-center shadow-inner shrink-0 transition ${
           currentTab === 'dashboard'
-            ? 'bg-emerald-500/20 border border-emerald-500 text-emerald-500 ring-2 ring-emerald-500/20'
-            : 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 group-hover:bg-emerald-500/20 group-hover:border-emerald-500'
+            ? 'ring-2 ring-cyan-500/50 border border-cyan-400'
+            : 'border border-cyan-500/30 group-hover:border-cyan-400'
         }`}>
-          <Crosshair className="h-5 w-5 group-hover:rotate-45 transition-transform duration-300" />
+          <img src="/app_icon.svg" alt="Radar Logo" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" />
         </div>
         <div>
           <div className="flex items-center space-x-2">
