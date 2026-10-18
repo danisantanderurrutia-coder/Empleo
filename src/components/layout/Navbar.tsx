@@ -101,8 +101,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}>
           {!logoError ? (
             <img 
-              src={resolveAsset('/app_icon.svg')} 
-              alt="Radar Logo" 
+              src={resolveAsset('/empleo_master_logo.jpg')} 
+              alt="Empleo Master Radar Logo" 
               onError={() => setLogoError(true)}
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" 
             />
@@ -112,8 +112,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-emerald-600 transition">
-              EMPLEO
+            <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-cyan-500 transition flex items-center gap-1.5">
+              <span>EMPLEO</span>
+              <span className="text-cyan-600 dark:text-cyan-400 font-extrabold text-xs sm:text-sm tracking-widest bg-cyan-500/10 dark:bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30">MASTER</span>
             </h1>
             <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded border hidden sm:inline-block ${
               currentTab === 'dashboard'

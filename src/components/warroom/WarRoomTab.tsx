@@ -61,10 +61,10 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
        * ========================================================================= */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-200/90 dark:border-slate-800 pb-4 gap-3">
         <div className="flex items-center space-x-3.5">
-          <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl overflow-hidden shadow-md border border-cyan-500/40 shrink-0 bg-[#090b0e] flex items-center justify-center p-1 group">
+          <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl overflow-hidden shadow-md border border-cyan-500/40 shrink-0 bg-[#090b0e] flex items-center justify-center p-0.5 group">
             <img 
-              src={resolveAsset('/app_icon.svg')} 
-              alt="Logo Radar ATS" 
+              src={resolveAsset('/empleo_master_logo.jpg')} 
+              alt="Empleo Master Radar Logo" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           </div>
