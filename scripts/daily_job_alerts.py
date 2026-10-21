@@ -19,6 +19,7 @@ import argparse
 import json
 import re
 import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import urllib.request
@@ -352,26 +353,44 @@ def send_via_resend(api_key: str, recipient: str, subject: str, html_content: st
 
 
 def send_via_smtp(host: str, port: int, user: str, password: str, recipient: str, subject: str, html_content: str):
-    """Deliver email using standard SMTP TLS (e.g. Gmail App Password)."""
-    print(f"[*] Enviando digest mediante SMTP ({host}:{port}) desde {user} hacia {recipient}...")
+    """Deliver email using secure SMTP (trying SSL 465 first, then STARTTLS 587)."""
+    clean_pass = password.replace(" ", "").strip()
+    clean_user = user.strip()
+
+    print(f"[*] Preparando envío SMTP hacia {recipient} desde {clean_user}...")
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = f"Job Search OS <{user}>"
+    msg["From"] = f"Job Search OS <{clean_user}>"
     msg["To"] = recipient
 
     part = MIMEText(html_content, "html")
     msg.attach(part)
 
+    context = ssl.create_default_context()
+
+    # Method 1: SMTP_SSL over port 465 (most reliable from cloud environments)
     try:
-        with smtplib.SMTP(host, port, timeout=20) as server:
-            server.ehlo()
-            server.starttls()
-            server.login(user, password)
-            server.sendmail(user, recipient, msg.as_string())
-        print(f"[✓] Email enviado con éxito vía SMTP a {recipient}")
+        print("[*] Intentando envío directo seguro SMTP_SSL (puerto 465)...")
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context, timeout=25) as server:
+            server.login(clean_user, clean_pass)
+            server.sendmail(clean_user, recipient, msg.as_string())
+        print(f"[✓] Email enviado con éxito vía SMTP SSL (465) a {recipient}")
         return True
-    except Exception as e:
-        print(f"[!] Error en envío SMTP: {e}")
+    except Exception as e_ssl:
+        print(f"[!] Conexión SSL 465 fallida ({e_ssl}). Reintentando con STARTTLS (puerto 587)...")
+
+    # Method 2: Fallback to STARTTLS over port 587
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=25) as server:
+            server.ehlo()
+            server.starttls(context=context)
+            server.ehlo()
+            server.login(clean_user, clean_pass)
+            server.sendmail(clean_user, recipient, msg.as_string())
+        print(f"[✓] Email enviado con éxito vía STARTTLS (587) a {recipient}")
+        return True
+    except Exception as e_tls:
+        print(f"[!] Error crítico en envío SMTP (587): {e_tls}")
         return False
 
 
@@ -428,8 +447,13 @@ def main():
     else:
         print("[!] No se detectaron credenciales RESEND_API_KEY ni SMTP_USER/SMTP_PASS en variables de entorno.")
         print(f"    El archivo local {preview_path} contiene el correo renderizado completo.")
+        return
 
-    print("[*] Pipeline finalizado con éxito.")
+    if delivered:
+        print("[*] Pipeline finalizado con éxito. Correo entregado en destino.")
+    else:
+        print("[!] Error en la entrega del correo. Revisa tus credenciales SMTP o API key.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
