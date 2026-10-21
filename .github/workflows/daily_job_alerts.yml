@@ -28,7 +28,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
           SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_USER: ${{ secrets.SMTP_USER || 'danisantander.urrutia@gmail.com' }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: |
           python scripts/daily_job_alerts.py

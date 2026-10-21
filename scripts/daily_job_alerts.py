@@ -354,7 +354,7 @@ def main():
 
     # 4. Attempt real delivery
     resend_api_key = os.getenv("RESEND_API_KEY")
-    smtp_user = os.getenv("SMTP_USER")
+    smtp_user = os.getenv("SMTP_USER") or os.getenv("ALERT_RECIPIENT_EMAIL") or DEFAULT_RECIPIENT
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
