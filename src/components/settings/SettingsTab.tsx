@@ -21,8 +21,10 @@ import {
   Landmark, 
   Trash2, 
   AlertCircle, 
-  ChevronLeft 
+  ChevronLeft,
+  Mail
 } from 'lucide-react';
+import { EmailAlertsPipelineSection } from './EmailAlertsPipelineSection';
 import { 
   getStoredSettings, 
   saveStoredSettings, 
@@ -46,7 +48,7 @@ interface SettingsTabProps {
 }
 
 export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onReturnToHub }) => {
-  const [activeHQSection, setActiveHQSection] = useState<'sources' | 'accounts' | 'audit_backup'>('sources');
+  const [activeHQSection, setActiveHQSection] = useState<'sources' | 'accounts' | 'audit_backup' | 'email_pipeline'>('sources');
   const [sourceSearch, setSourceSearch] = useState('');
   const [selectedTheater, setSelectedTheater] = useState<'ALL' | 'GERMANY' | 'EUSKADI' | 'REMOTE'>('ALL');
 
@@ -275,6 +277,18 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onRetur
             >
               <UserCheck className="h-3.5 w-3.5" />
               <span>MIS CUENTAS ({portals.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveHQSection('email_pipeline')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                activeHQSection === 'email_pipeline'
+                  ? 'bg-red-600 text-white shadow font-black'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              <Mail className="h-3.5 w-3.5" />
+              <span>ALERTAS EMAIL (9 AM)</span>
             </button>
 
             <button
@@ -779,6 +793,10 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onRetur
             </div>
           </div>
         </div>
+      )}
+
+      {activeHQSection === 'email_pipeline' && (
+        <EmailAlertsPipelineSection />
       )}
     </div>
   );

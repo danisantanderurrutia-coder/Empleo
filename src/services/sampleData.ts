@@ -4,6 +4,7 @@ import type { CompanyDossier } from '../types/companies';
 import type { ApplicationItem } from '../types/applications';
 import type { JobSource } from '../types/sources';
 import type { CVTemplateInfo, CVVersion } from '../types/cv';
+import { calculateMatchScore } from './matchEngine';
 
 export const cvTemplatesList: CVTemplateInfo[] = [
   {
@@ -247,6 +248,42 @@ export const initialProfile: MasterProfile = {
 
 export const initialSources: JobSource[] = [
   {
+    id: 'src-thuenen',
+    name: 'Thünen-Institut Karriereportal (Braunschweig & Bundesweit)',
+    type: 'research_center',
+    url: 'https://www.karriere-thuenen.de/',
+    priority: 'Alta',
+    frequency: 'Diario',
+    status: 'Activo',
+    lastScraped: '2026-10-21 03:00',
+    offersExtracted: 1,
+    notes: 'Instituto Federal de Investigación para Áreas Rurales, Bosques y Pesca (BMEL). Puestos de investigación en clima, suelos y agroecología.'
+  },
+  {
+    id: 'src-interamt',
+    name: 'Interamt (Karriereportal des Öffentlichen Dienstes)',
+    type: 'public_admin',
+    url: 'https://interamt.de/',
+    priority: 'Alta',
+    frequency: 'Diario',
+    status: 'Activo',
+    lastScraped: '2026-10-21 03:00',
+    offersExtracted: 1,
+    notes: 'Portal unificado de convocatorias públicas de Alemania (Bund, Länder, Kommunen), incluyendo Umweltbundesamt (UBA).'
+  },
+  {
+    id: 'src-bund',
+    name: 'Service.bund.de (Stellenangebote des Bundes)',
+    type: 'public_admin',
+    url: 'https://www.service.bund.de/Content/DE/Stellen/Suche/Formular.html',
+    priority: 'Alta',
+    frequency: 'Diario',
+    status: 'Activo',
+    lastScraped: '2026-10-21 03:00',
+    offersExtracted: 1,
+    notes: 'Canal oficial con agregación RSS de ofertas del Estado Federal en ciencia, digitalización y administración ambiental.'
+  },
+  {
     id: 'src-bc3',
     name: 'BC3 Basque Centre for Climate Change (Bilbao / Leioa)',
     type: 'research_center',
@@ -442,6 +479,74 @@ export const initialSources: JobSource[] = [
 
 
 export const initialCompanies: CompanyDossier[] = [
+  {
+    id: 'comp-thuenen',
+    name: 'Johann Heinrich von Thünen-Institut',
+    website: 'https://www.thuenen.de/',
+    sector: 'Investigación Federal en Suelos, Clima, Bosques y Agricultura (BMEL)',
+    size: '1.000+ investigadores y personal científico',
+    headquarters: 'Braunschweig, Niedersachsen, Alemania',
+    description: 'Bundesforschungsinstitut für Ländliche Räume, Wald und Fischerei. Su Institut für Agrarklimaschutz (AK) lidera la investigación científica en mitigación del cambio climático en el sector agrario, secuestro de carbono orgánico en suelos agrícolas y balances de GEI para el Gobierno Federal alemán.',
+    keyProjects: [
+      'Proyecto "TechWorms": Secuestro de carbono en subsuelo mediante bioporos verticales y estimulación radicular profunda',
+      'Inventario Nacional de Suelos Agrícolas de Alemania (Bodenzustandserhebung Landwirtschaft - BZE-LW)',
+      'Red nacional de monitoreo de flujos de carbono y GEI en ecosistemas agrícolas y turberas'
+    ],
+    recentNews: [
+      {
+        title: 'Lanzamiento de ensayos de campo del proyecto TechWorms para captura de carbono en subsuelos',
+        date: '2026-10-01',
+        snippet: 'Evaluación del potencial de macroporos artificiales para transportar carbono a horizontes edáficos profundos.'
+      }
+    ],
+    workCulture: [
+      'Investigación científica de alto impacto para políticas públicas federales',
+      'Convenio colectivo del sector público federal (TVöD Bund E13)',
+      'Excelente conciliación familiar, horarios flexibles por Gleitzeit y fomento del doctorado con universidades socias (TU Braunschweig)'
+    ],
+    redFlags: ['Contrato vinculado a duración del proyecto de investigación (noviembre 2030) y plazos de postulación estrictos'],
+    interviewArguments: [
+      'Máster europeo en Gestión y Protección Ambiental completado en Alemania (CAU Kiel) con conocimiento directo del sistema científico alemán.',
+      'Sólida formación en física y edafología con experiencia empírica en dinámica de suelos y flujos de gases.',
+      'Dominio demostrado de R para análisis estadístico y modelado de datos de campo.'
+    ],
+    techStack: ['R', 'RootBox', 'Isotopenanalytik', 'TVöD Bund', 'GIS', 'Python'],
+    lastResearched: '2026-10-21'
+  },
+  {
+    id: 'comp-uba',
+    name: 'Umweltbundesamt (UBA)',
+    website: 'https://www.umweltbundesamt.de/',
+    sector: 'Agencia Federal de Medio Ambiente de Alemania (BMUV)',
+    size: '1.800+ empleados',
+    headquarters: 'Dessau-Roßlau / Sedes en Berlín y Leipzig',
+    description: 'La máxima autoridad técnica y científica de Alemania para la protección del medio ambiente. Su Anwendungslabor für Künstliche Intelligenz und Big Data (KI-Lab) lidera la Agenda Digital de Política Ambiental, creando herramientas de IA para optimizar la toma de decisiones ecológicas y la administración ambiental.',
+    keyProjects: [
+      'Anwendungslabor für Künstliche Intelligenz und Big Data (KI-Lab) con hasta 30 especialistas en Leipzig/Berlín',
+      'Desarrollo de modelos predictivos y gemelos de IA para supervisión de calidad del aire, agua y suelos',
+      'Plataforma de datos federados e inteligencia ambiental para el Verwaltungsvollzug'
+    ],
+    recentNews: [
+      {
+        title: 'Despliegue de nuevas iniciativas del KI-Lab para la Agenda Digital de Política Ambiental',
+        date: '2026-10-05',
+        snippet: 'Proyectos piloto de IA aplicados a la evaluación de impacto y monitorización satelital.'
+      }
+    ],
+    workCulture: [
+      'Organismo federal con alta seguridad laboral y teletrabajo regulado',
+      'Metodologías ágiles (Scrum, Kanban) aplicadas al sector público',
+      'Compromiso social y ambiental con impacto directo en legislación y ciudadanía'
+    ],
+    redFlags: ['Puesto inicial como Mutterschutzvertretung, requiriendo validación de prórroga para la fase de Elternzeit'],
+    interviewArguments: [
+      'Capacidad probada de tender puentes entre la ciencia biofísica de datos y la gobernanza / gestión de proyectos.',
+      'Experiencia en proyectos de impacto internacional y comunicación efectiva con equipos multidisciplinares.',
+      'Perfil MINT riguroso con base analítica en geofísica y máster europeo en protección ambiental.'
+    ],
+    techStack: ['Scrum / Kanban', 'AI / Machine Learning', 'OpenProject', 'MS Project', 'Python', 'GIS'],
+    lastResearched: '2026-10-21'
+  },
   {
     id: 'comp-bc3',
     name: 'BC3 - Basque Centre for Climate Change',
@@ -1056,7 +1161,128 @@ export const initialCompanies: CompanyDossier[] = [
   }
 ];
 
-export const initialOffers: JobOffer[] = [];
+const thuenenRaw: Partial<JobOffer> = {
+  id: 'job-thuenen-techworms-369',
+  title: 'Wissenschaftliche*r Mitarbeiter*in / Doktorand*in Agrar-/Bodenwissenschaften (w/m/d)',
+  company: 'Johann Heinrich von Thünen-Institut',
+  companyId: 'comp-thuenen',
+  location: 'Braunschweig, Niedersachsen, Alemania',
+  country: 'Alemania',
+  isBilbaoLocation: false,
+  isRemote: false,
+  url: 'https://www.karriere-thuenen.de/index.php?ac=jobad&id=369&language=2',
+  sourceId: 'src-thuenen',
+  sourceName: 'Thünen-Institut Karriereportal',
+  publishedDate: '2026-10-01',
+  deadline: '2026-10-22',
+  salaryMin: 43742,
+  salaryMax: 62705,
+  salaryCurrency: 'EUR',
+  rawDescription: 'Das Institut für Agrarklimaschutz des Johann Heinrich von Thünen-Instituts am Standort Braunschweig sucht zum 01.12.2026 befristet bis zum 31.10.2030 eine*n wissenschaftliche*n Mitarbeiter*in / Doktorand*in im Bereich Agrar- oder Bodenwissenschaften (w/m/d) in Teilzeit mit 70 v. H. (27,3 h/Woche) zur Mitarbeit im Verbundprojekt "TechWorms". Das Projekt erforscht die Kohlenstoffsequestrierung im Unterboden durch künstliche vertikale Makroporen (Regenwurmtechnik), um Bodenkohlenstoff in tiefere Horizonte zu transportieren und landwirtschaftliche Erträge sowie Klimaschutz zu optimieren. Vergütung nach TVöD Bund E 13.',
+  requirements: [
+    'Estudios universitarios superiores (M.Sc. o Diplom) en Agronomía, Ciencias del Suelo (Bodenkunde), Geoecología o afines',
+    'Conocimientos sólidos y fundamentados en edafología y física/química del suelo',
+    'Conocimientos en interacción suelo-planta y dinámica radicular',
+    'Experiencia práctica en evaluación y análisis estadístico de datos en R',
+    'Experiencia en redacción científica y elaboración de reportes de proyectos',
+    'Disponibilidad para trabajo de campo independiente de la meteorología y viajes de muestreo',
+    'Excelente nivel de inglés y alemán (hablado y escrito)'
+  ],
+  responsibilities: [
+    'Montaje e instrumentación de ensayos de campo con la tecnología Tech-Worm',
+    'Mediciones de penetración radicular con RootBox y evaluación de rendimientos agrícolas',
+    'Análisis isotópicos en biomasa y raíces para evaluar la absorción hídrica y de nutrientes',
+    'Evaluación y modelado estadístico de series de datos en R',
+    'Redacción de publicaciones científicas y tesis doctoral en cooperación con universidades (TU Braunschweig)',
+    'Divulgación científica y comunicación con stakeholders agrícolas y del sector público'
+  ],
+  status: 'Nueva',
+  isFavorite: true,
+  extractedAt: '2026-10-21 03:00',
+  isVerified: true,
+  verificationStatus: 'Vigente y Verificada',
+  verifiedAt: '2026-10-21 03:00',
+  verificationReason: 'Convocatoria oficial activa del Instituto Thünen con plazo de recepción hasta el 22.10.2026.',
+  companyEnrichment: {
+    sector: 'Investigación Federal en Suelos, Clima, Bosques y Agricultura (BMEL)',
+    description: 'Bundesforschungsinstitut für Ländliche Räume, Wald und Fischerei.',
+    hqLocation: 'Braunschweig, Niedersachsen, Alemania',
+    websiteUrl: 'https://www.thuenen.de/',
+    strategicProjects: ['TechWorms', 'BZE-LW Bodenzustandserhebung', 'MoorNetz']
+  },
+  personalFitDetails: {
+    matchingSkills: ['R', 'Sistemas Biofísicos & Suelos', 'Gobernanza Ambiental', 'Python'],
+    skillGaps: [],
+    fitSummary: 'Encaje sobresaliente con el perfil de máster en CAU Kiel, experiencia en dinámica de suelos, carbono y análisis estadístico en R.'
+  }
+};
+
+const ubaRaw: Partial<JobOffer> = {
+  id: 'job-uba-ki-product-owner-1499096',
+  title: 'Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (KI-Lab)',
+  company: 'Umweltbundesamt (UBA)',
+  companyId: 'comp-uba',
+  location: 'Leipzig, Berlin oder Dessau-Roßlau, Alemania',
+  country: 'Alemania',
+  isBilbaoLocation: false,
+  isRemote: true,
+  url: 'https://interamt.de/koop/app/stelle?0&id=1499096',
+  sourceId: 'src-interamt',
+  sourceName: 'Interamt (Öffentlicher Dienst)',
+  publishedDate: '2026-10-05',
+  deadline: '2026-10-28',
+  salaryMin: 62489,
+  salaryMax: 89579,
+  salaryCurrency: 'EUR',
+  rawDescription: 'Das Umweltbundesamt (UBA) sucht für sein Anwendungslabor für Künstliche Intelligenz und Big Data (KI-Lab) mit bis zu 30 Mitarbeitenden an den Standorten Leipzig, Berlin oder Dessau-Roßlau eine*n Spezialistin*Spezialisten im Bereich KI-Projektmanagement und KI Product Owner (w/m/d). Es handelt sich um eine Mutterschutzvertretung mit 100% der regelmäßigen Arbeitszeit (39 h/Woche) vom 13.12.2026 bis 31.03.2027 mit angestrebter Verlängerung während der Elternzeit. Vergütung nach TVöD Bund E 13.',
+  requirements: [
+    'Título universitario superior (Máster o Diplom) preferentemente en área MINT (informática, ingeniería ambiental, diseño técnico, economía o gestión)',
+    'Conocimientos profundos y experiencia contrastada en gestión híbrida y ágil de proyectos (Scrum, Product Ownership)',
+    'Conocimientos metodológicos de procesos de desarrollo de software y aplicaciones de IA',
+    'Manejo solvente de herramientas de gestión de proyectos (MS Project, OpenProject, tableros Kanban)',
+    'Alta capacidad de comunicación, trabajo en equipo y resolución creativa de problemas',
+    'Sensibilidad de género y competencias relacionales en la administración pública',
+    'Excelente nivel de inglés y alemán (hablado y escrito)'
+  ],
+  responsibilities: [
+    'Product Ownership en proyectos de desarrollo de soluciones de Inteligencia Artificial para el Verwaltungsvollzug ambiental',
+    'Levantamiento de necesidades, conceptualización funcional y elaboración de business cases',
+    'Dirección y coordinación de proyectos ágiles/híbridos en el KI-Lab del UBA',
+    'Planificación, seguimiento y control de presupuestos y recursos del portfolio de IA',
+    'Asesoramiento y formación a coordinadores de proyectos en gestión ágil y contingencias',
+    'Interlocución con usuarios finales, personal científico y equipos de diseño UX/UI'
+  ],
+  status: 'Nueva',
+  isFavorite: true,
+  extractedAt: '2026-10-21 03:00',
+  isVerified: true,
+  verificationStatus: 'Vigente y Verificada',
+  verifiedAt: '2026-10-21 03:00',
+  verificationReason: 'Convocatoria oficial activa del Umweltbundesamt en Interamt con plazo hasta el 28.10.2026.',
+  companyEnrichment: {
+    sector: 'Agencia Federal de Medio Ambiente de Alemania (BMUV)',
+    description: 'La máxima autoridad técnica y científica de Alemania para la protección del medio ambiente.',
+    hqLocation: 'Dessau-Roßlau / Leipzig / Berlín',
+    websiteUrl: 'https://www.umweltbundesamt.de/',
+    strategicProjects: ['KI-Lab Umweltbundesamt', 'Umweltpolitische Digitalagenda', 'Smart Environmental Analytics']
+  },
+  personalFitDetails: {
+    matchingSkills: ['Python', 'Gobernanza Ambiental', 'Facilitación Multiactor', 'GIS'],
+    skillGaps: [],
+    fitSummary: 'Alta sintonía entre la formación MINT/geofísica, las políticas ambientales y la gestión de proyectos tecnológicos de IA.'
+  }
+};
+
+export const initialOffers: JobOffer[] = [
+  {
+    ...thuenenRaw,
+    matchScore: calculateMatchScore(thuenenRaw, initialProfile)
+  } as JobOffer,
+  {
+    ...ubaRaw,
+    matchScore: calculateMatchScore(ubaRaw, initialProfile)
+  } as JobOffer
+];
 
 export const initialApplications: ApplicationItem[] = [];
 

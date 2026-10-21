@@ -14,6 +14,11 @@ export interface AppSettings {
   enableAntigravityApply: boolean;
   autoScoutInterval: string;
   bilbaoPriorityBonus: number;
+  emailAlertRecipient?: string;
+  emailAlertKeywords?: string[];
+  emailAlertProvider?: 'resend' | 'smtp' | 'local';
+  emailAlertTime?: string;
+  emailAlertEnabled?: boolean;
 }
 
 const defaultSettings: AppSettings = {
@@ -23,7 +28,12 @@ const defaultSettings: AppSettings = {
   enableBrowserAgent: true,
   enableAntigravityApply: true,
   autoScoutInterval: '24h',
-  bilbaoPriorityBonus: 25
+  bilbaoPriorityBonus: 25,
+  emailAlertRecipient: 'danisantander.urrutia@gmail.com',
+  emailAlertKeywords: ['Boden', 'Bodenkunde', 'Klimaschutz', 'KI', 'Künstliche Intelligenz', 'Umweltbundesamt', 'Thünen', 'Geophysik', 'Eddy Covariance'],
+  emailAlertProvider: 'resend',
+  emailAlertTime: '09:00',
+  emailAlertEnabled: true
 };
 
 const KEYS = {
@@ -120,6 +130,15 @@ export const getStoredOffers = (): JobOffer[] => {
         };
       }
       return off;
+    });
+
+    // Ensure curated government offers from initialOffers exist
+    initialOffers.forEach(initOff => {
+      const exists = deduplicated.some(d => d.id === initOff.id || d.url === initOff.url);
+      if (!exists) {
+        deduplicated.unshift(initOff);
+        modified = true;
+      }
     });
 
     if (deduplicated.length !== list.length || modified) {

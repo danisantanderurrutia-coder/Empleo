@@ -444,5 +444,60 @@ export const MASTER_SECTORAL_SOURCES: SectorCategory[] = [
         notes: 'Agencia de colocación y ETT líder en España.'
       }
     ]
+  },
+  {
+    sectorName: '🏛️ Sector Público Federal e Investigación en Alemania (Öffentlicher Dienst)',
+    description: 'Portales oficiales del Gobierno Federal alemán, institutos de investigación (BMEL, BMUV) y bolsas TVöD Bund.',
+    icon: 'Building2',
+    sources: [
+      {
+        id: 'src-thuenen',
+        name: 'Thünen-Institut Karriereportal (Braunschweig & Bundesweit)',
+        type: 'research_center',
+        url: 'https://www.karriere-thuenen.de/',
+        priority: 'Alta',
+        frequency: 'Diario',
+        status: 'Activo',
+        lastScraped: '2026-10-21 03:00',
+        offersExtracted: 1,
+        notes: 'Bundesforschungsinstitut für Ländliche Räume, Wald und Fischerei. Enfoque en agronomía, suelos y clima.'
+      },
+      {
+        id: 'src-interamt',
+        name: 'Interamt (Karriereportal des Öffentlichen Dienstes)',
+        type: 'public_admin',
+        url: 'https://interamt.de/',
+        priority: 'Alta',
+        frequency: 'Diario',
+        status: 'Activo',
+        lastScraped: '2026-10-21 03:00',
+        offersExtracted: 1,
+        notes: 'Bolsa central de empleo público en Alemania (Bund, Länder, Kommunen), incluyendo convocatorias del UBA.'
+      },
+      {
+        id: 'src-bund',
+        name: 'Service.bund.de (Stellenangebote des Bundes)',
+        type: 'public_admin',
+        url: 'https://www.service.bund.de/Content/DE/Stellen/Suche/Formular.html',
+        priority: 'Alta',
+        frequency: 'Diario',
+        status: 'Activo',
+        lastScraped: '2026-10-21 03:00',
+        offersExtracted: 1,
+        notes: 'Agregador de convocatorias públicas del Estado Federal alemán con soporte de sindicación RSS.'
+      },
+      {
+        id: 'src-uba',
+        name: 'Umweltbundesamt (UBA) Stellenangebote',
+        type: 'research_center',
+        url: 'https://www.umweltbundesamt.de/das-uba/das-uba-als-arbeitgeber/stellenangebote',
+        priority: 'Alta',
+        frequency: 'Diario',
+        status: 'Activo',
+        lastScraped: '2026-10-21 03:00',
+        offersExtracted: 1,
+        notes: 'Agencia Federal de Medio Ambiente de Alemania. Proyectos de IA, cambio climático y protección ambiental.'
+      }
+    ]
   }
 ];

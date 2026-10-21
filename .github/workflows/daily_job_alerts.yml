@@ -1,0 +1,42 @@
+name: "Daily Job Alerts (09:00 AM CET)"
+
+on:
+  schedule:
+    # 07:00 UTC corresponds to 09:00 CEST (Central European Summer Time) or 08:00 CET
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+permissions:
+  contents: read
+
+jobs:
+  run-alerts:
+    name: Execute Daily Job Digest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Job Alert Pipeline
+        env:
+          ALERT_RECIPIENT_EMAIL: ${{ secrets.ALERT_RECIPIENT_EMAIL || 'danisantander.urrutia@gmail.com' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          python scripts/daily_job_alerts.py
+
+      - name: Upload HTML Digest Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: latest-job-digest
+          path: scripts/latest_job_digest.html
+          retention-days: 7
