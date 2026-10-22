@@ -77,7 +77,7 @@ export const initialProfile: MasterProfile = {
   email: 'danisantander.urrutia@gmail.com',
   phone: '+4917676497440',
   location: 'Kiel, Alemania / Bilbao, Bizkaia / Chile',
-  linkedin: 'https://linkedin.com/in/daniel-santander',
+  linkedin: 'https://www.linkedin.com/in/santanderurrutia/',
   github: 'https://github.com/danisantanderurrutia-coder',
   portfolio: 'https://danisantanderurrutia-coder.github.io/portafolio/',
   preferredCity: 'Bilbao',

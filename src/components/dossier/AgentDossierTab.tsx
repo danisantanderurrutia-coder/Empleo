@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { MasterProfileTab } from '../profile/MasterProfileTab';
 import { CVManagementTab } from '../cvs/CVManagementTab';
+import { CVStudioTab } from '../cvs/CVStudioTab';
 import { CVPreviewModal } from '../cvs/CVPreviewModal';
 import { CVGunsmithTab } from './CVGunsmithTab';
 import { SkillTreeTab } from './SkillTreeTab';
@@ -20,7 +21,7 @@ import { getStoredProfile, getStoredCVs } from '../../services/db';
 import type { CVVersion } from '../../types/cv';
 
 interface AgentDossierTabProps {
-  initialSubTab?: 'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs';
+  initialSubTab?: 'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs' | 'studio';
   onReturnToHub?: () => void;
 }
 
@@ -28,7 +29,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   initialSubTab = 'showcase',
   onReturnToHub
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs'>(initialSubTab);
+  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs' | 'studio'>(initialSubTab);
   const [previewingCv, setPreviewingCv] = useState<CVVersion | null>(null);
 
   const profile = getStoredProfile();
@@ -155,6 +156,18 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           >
             <FileCheck2 className="h-3.5 w-3.5" />
             <span>Plantillas</span>
+          </button>
+
+          <button
+            onClick={() => setActiveSubTab('studio')}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              activeSubTab === 'studio'
+                ? 'bg-sky-600 text-white shadow font-black'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            <span>CV Studio</span>
           </button>
         </div>
       </div>
@@ -510,6 +523,13 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
       {activeSubTab === 'cvs' && (
         <div className="space-y-4">
           <CVManagementTab />
+        </div>
+      )}
+
+      {/* SUB-PANEL 6: CV STUDIO (A4, datos verificados, adaptación por oferta) */}
+      {activeSubTab === 'studio' && (
+        <div className="space-y-4">
+          <CVStudioTab />
         </div>
       )}
 

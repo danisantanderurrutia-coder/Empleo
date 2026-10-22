@@ -19,7 +19,7 @@ export function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
   const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
-  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs'>('showcase');
+  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs' | 'studio'>('showcase');
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
 
   const [isUnifiedHelpOpen, setIsUnifiedHelpOpen] = useState(false);
@@ -48,10 +48,11 @@ export function App() {
       return;
     }
 
-    if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs'].includes(stationId)) {
+    if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs', 'studio'].includes(stationId)) {
       if (subTab === 'gunsmith' || stationId === 'gunsmith') setDossierSubTab('gunsmith');
       else if (subTab === 'skills' || stationId === 'skills') setDossierSubTab('skills');
       else if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('cvs');
+      else if (subTab === 'studio' || stationId === 'studio') setDossierSubTab('studio');
       else if (subTab === 'profile' || stationId === 'profile') setDossierSubTab('profile');
       else setDossierSubTab('showcase');
       setActiveTab('agent_dossier');
