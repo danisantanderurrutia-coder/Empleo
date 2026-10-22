@@ -138,11 +138,19 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">2.</span>
-                    <span><strong>Depuración Automática de URLs:</strong> El sistema purga enlaces 404, convocatorias caducadas y menús de navegación basura ("Cookies", "Login", "Sobre Nosotros").</span>
+                    <span><strong>Single Source of Truth (CV Studio & Portafolio):</strong> Cada hecho, título universitario (CAU Kiel, AMU Poznań, U. de Chile), proyecto empírico (Wallener Au, informe EPN, testimonio en el Congreso Nacional) y competencia proviene exclusivamente del Portafolio verificado (<code>verifiedCvFacts.ts</code>). Se prohíben datos inventados o no respaldados (cero menciones falsas a LoRaWAN o diatomeas).</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">3.</span>
-                    <span><strong>Aprobación Humana Obligatoria:</strong> Ningún correo, postulación o material se despacha sin que el usuario lo revise y confirme voluntariamente.</span>
+                    <span><strong>Auto-Ajuste Tipográfico A4:</strong> Algoritmo de bisección matemática que calibra el zoom tipográfico dinámicamente para llenar exactamente la hoja A4 (1 o 2 páginas) sin saltos huérfanos ni desbordes.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">4.</span>
+                    <span><strong>Depuración Automática de URLs:</strong> El sistema purga enlaces 404, convocatorias caducadas y menús de navegación basura ("Cookies", "Login", "Sobre Nosotros").</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">5.</span>
+                    <span><strong>Control Humano 100% & Borradores Asistidos:</strong> Las cartas de motivación y adaptaciones de CV son borradores estructurados con evidencia real que requieren la revisión, personalización y confirmación de Daniel antes de cualquier envío.</span>
                   </li>
                 </ul>
               </div>
@@ -159,7 +167,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                 <div>
                   <h4 className="font-mono font-bold text-white text-xs uppercase">RADAR // Mercado & Vacantes</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
-                    Barrido holográfico con sonar 360° para escanear 350+ vacantes indexadas, clasificar por sector (Alemania, Euskadi, Remoto) y filtrar por afinidad técnica.
+                    Barrido holográfico con sonar 360° para escanear 350+ vacantes indexadas, clasificar por sector (Alemania, Euskadi, Remoto), filtrar por afinidad técnica y abrir directamente la adaptación en CV Studio o el Pipeline de 5 Pasos.
                   </p>
                 </div>
               </div>
@@ -169,9 +177,9 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <UserCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Perfil & Competencias</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Perfil, Competencias & CV Studio</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
-                    Showcase del especialista Daniel Santander con calibración de atributos cuantitativos y versiones de CVs (Castellano para Euskadi, English para política internacional y Lebenslauf para Alemania).
+                    Showcase del especialista Daniel Santander y <strong>CV Studio</strong>: motor de ensamblado de CVs A4 (1 y 2 páginas, ES y EN) anclado en datos verificados, con ranking de relevancia según la oferta objetivo, auditoría del Perfil Maestro (reparación de enlaces en 1 clic), previsualización en vivo, descarga de HTML e impresión directa a PDF.
                   </p>
                 </div>
               </div>
@@ -193,9 +201,9 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <Send className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">LOCKER // Misiones & Kanban Asistido</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">CANDIDATURAS // Tablero Kanban & Pipeline Asistido</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
-                    Bandeja táctica para guardar vacantes de interés, preparar cartas y argumentos de entrevista específicos, y dar seguimiento al ciclo completo de postulación.
+                    Bandeja táctica para gestionar postulaciones activas, generar cartas de motivación sincronizadas con las evidencias del CV, ensayar preguntas de entrevista y dar seguimiento riguroso a cada fase de contratación.
                   </p>
                 </div>
               </div>
@@ -218,9 +226,23 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
           {activeTab === 'faq' && (
             <div className="space-y-3 font-sans">
               <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 space-y-1.5">
+                <h4 className="font-bold text-white text-xs">¿Cómo funciona la adaptación del CV en CV Studio?</h4>
+                <p className="text-[11px] text-slate-300">
+                  CV Studio cruza el texto de la vacante seleccionada contra las etiquetas verificadas de tu Portafolio. Reordena y prioriza las evidencias más relevantes respetando estrictamente los cupos de 1 o 2 páginas y asegurando que tus 3 títulos universitarios (Kiel, Poznań, U. de Chile) e idiomas siempre se incluyan.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 space-y-1.5">
+                <h4 className="font-bold text-white text-xs">¿Por qué las cartas de presentación se generan como borradores?</h4>
+                <p className="text-[11px] text-slate-300">
+                  Para garantizar autenticidad y cero alucinaciones. La herramienta redacta un borrador sólido anclado en tus evidencias empíricas reales que coinciden con la vacante, dejando secciones claras para que añadas tus motivaciones personales genuinas hacia la organización.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 space-y-1.5">
                 <h4 className="font-bold text-white text-xs">¿Dónde se guardan mis datos y candidaturas?</h4>
                 <p className="text-[11px] text-slate-300">
-                  Todos tus datos (perfil, cartas generadas, candidaturas guardadas y notas) se almacenan 100% de manera local en tu navegador (localStorage). Nada se sube a servidores remotos sin tu consentimiento explícito.
+                  Todos tus datos (perfil, versiones de CV Studio, cartas generadas, candidaturas guardadas y notas) se almacenan 100% de manera local en tu navegador (localStorage). Nada se sube a servidores remotos sin tu consentimiento explícito.
                 </p>
               </div>
 

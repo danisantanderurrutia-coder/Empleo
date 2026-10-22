@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   CheckCircle2,
   Clock,
-  Layers
+  Layers,
+  FileText
 } from 'lucide-react';
 import { getStoredOffers, saveStoredOffers } from '../../services/db';
 import type { JobOffer } from '../../types/offers';
@@ -31,11 +32,13 @@ import { checkUrlLiveness } from '../../services/liveWebScraper';
 interface OffersTabProps {
   initialLocationFilter?: string;
   onStartApplication: (offerId: string) => void;
+  onOpenStudio?: (offerId: string) => void;
 }
 
 export const OffersTab: React.FC<OffersTabProps> = ({ 
   initialLocationFilter = 'ALL',
-  onStartApplication 
+  onStartApplication,
+  onOpenStudio
 }) => {
   const [offers, setOffers] = useState<JobOffer[]>(getStoredOffers());
   const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
@@ -724,6 +727,18 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                     <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 )}
+
+                {onOpenStudio && (
+                  <button
+                    onClick={() => onOpenStudio(activeSelectedOffer.id)}
+                    className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    title="Abrir y adaptar en CV Studio A4"
+                  >
+                    <FileText className="h-3.5 w-3.5" />
+                    <span>Adaptar en CV Studio</span>
+                  </button>
+                )}
+
               </div>
 
               <button
@@ -734,7 +749,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                 className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-mono font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Sparkles className="h-4 w-4 text-white" />
-                <span>⚡ Iniciar Postulación (Calibrar CV)</span>
+                <span>⚡ Preparar Postulación (Pipeline + Wingman)</span>
               </button>
             </div>
           )}
@@ -748,6 +763,7 @@ export const OffersTab: React.FC<OffersTabProps> = ({
         isOpen={!!selectedOfferForPipeline}
         onClose={() => setSelectedOfferForPipeline(null)}
         onStartApplication={onStartApplication}
+        onOpenStudio={onOpenStudio}
       />
 
       <MatchRationaleModal

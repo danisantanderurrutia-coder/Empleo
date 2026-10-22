@@ -20,3 +20,44 @@ export interface StrategyChatMessage {
   timestamp: string;
   suggestedActions?: string[];
 }
+
+/**
+ * Job Wingman - Intelligence Models
+ * Modelos para inteligencia interpersonal, perfil de líderes de contratación y dossiers de abordaje.
+ */
+export interface TargetLeadProfile {
+  name: string;
+  titleHonorific?: string; // e.g. "Prof. Dr."
+  role: string; // e.g. "Head of Working Group / PI"
+  institution?: string;
+  email?: string;
+  keyPublications?: string[];
+  researchFocus?: string[];
+  styleNotes?: string; // Tono, exigencia científica, pragmatismo
+  knownProjects?: string[];
+}
+
+export interface ColdApproachEmail {
+  subjectDe: string;
+  bodyDe: string;
+  subjectEn: string;
+  bodyEn: string;
+}
+
+export interface JobDossier {
+  id: string;
+  offerId?: string;
+  targetCompany: string;
+  projectTitle: string;
+  leadProfile: TargetLeadProfile;
+  projectPainPoints: string[];
+  technicalHooks: string[];
+  candidateValueThesis: string;
+  coverLetterAngles: string[];
+  /** Qué priorizar/omitir en el CV para esta vacante según lo entendido del supervisor */
+  cvGuidance: string[];
+  coldApproachEmail: ColdApproachEmail;
+  createdAt: string;
+  notes?: string;
+}
+

@@ -1,3 +1,5 @@
+import type { TargetLeadProfile, JobDossier } from './intelligence';
+
 export interface MatchScoreBreakdown {
   totalScore: number; // 0 - 100
   skillFitScore: number; // 0 - 35
@@ -86,4 +88,6 @@ export interface JobOffer extends BaseJobOffer, VerifiedOfferMetadata, EnrichedO
   matchScore: MatchScoreBreakdown;
   status: 'Nueva' | 'En Evaluación' | 'Candidatura Creada' | 'Descartada';
   extractedAt: string;
+  leadProfile?: TargetLeadProfile;
+  jobDossier?: JobDossier;
 }

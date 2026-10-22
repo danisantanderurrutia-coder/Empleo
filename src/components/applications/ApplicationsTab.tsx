@@ -19,7 +19,7 @@ import {
   Send,
   HelpCircle
 } from 'lucide-react';
-import { getStoredApplications, saveStoredApplications, getStoredProfile } from '../../services/db';
+import { getStoredApplications, saveStoredApplications } from '../../services/db';
 import type { ApplicationItem, ApplicationStage } from '../../types/applications';
 import type { JobOffer } from '../../types/offers';
 import { STAGES } from '../../types/applications';
@@ -280,7 +280,6 @@ export const ApplicationsTab: React.FC = () => {
   const colInterviews = filteredApps.filter(a => a.currentStage === 8 || a.status === 'Entrevista');
   const colDone = filteredApps.filter(a => a.currentStage >= 9 || a.status === 'Oferta Recibida' || a.status === 'Desestimada' || a.status === 'Pausada');
 
-  const profile = getStoredProfile();
   const [mountTimestamp] = useState(() => Date.now());
 
   return (
@@ -300,17 +299,9 @@ export const ApplicationsTab: React.FC = () => {
               <KanbanSquare className="h-5 w-5" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <h2 className="text-base font-black text-[var(--text-primary)] font-mono uppercase tracking-tight">
-                  TABLERO DE PROCESOS & SEGUIMIENTO (KANBAN)
-                </h2>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/40">
-                  CONTROL HUMANO 100%
-                </span>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-black/10 dark:bg-slate-900 text-sky-600 dark:text-sky-300 border border-[var(--panel-border)] hidden sm:inline-block">
-                  OPERADOR: {profile.fullName.toUpperCase()}
-                </span>
-              </div>
+              <h2 className="text-base font-black text-[var(--text-primary)] font-mono uppercase tracking-tight">
+                TABLERO DE PROCESOS & SEGUIMIENTO (KANBAN)
+              </h2>
               <p className="text-xs text-[var(--text-secondary)] font-sans mt-0.5">
                 Seguimiento de postulaciones laborales y convocatorias I+D: genera cartas adaptadas (ES/EN/DE) y confirma despachos oficiales.
               </p>

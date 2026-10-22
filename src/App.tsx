@@ -19,7 +19,8 @@ export function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
   const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
-  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs' | 'studio'>('showcase');
+  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'skills' | 'profile' | 'cvs' | 'studio'>('showcase');
+  const [studioOfferId, setStudioOfferId] = useState<string | undefined>();
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
 
   const [isUnifiedHelpOpen, setIsUnifiedHelpOpen] = useState(false);
@@ -35,7 +36,11 @@ export function App() {
     saveStoredTheme(nextTheme);
   };
 
-  const handleNavigate = (stationId: string, subTab?: string, filterParam?: string) => {
+  const handleNavigate = (stationId: string, subTab?: string, filterParam?: string, targetOfferId?: string) => {
+    if (targetOfferId) {
+      setStudioOfferId(targetOfferId);
+    }
+
     if (filterParam) {
       setRadarLocationFilter(filterParam);
     }
@@ -49,10 +54,13 @@ export function App() {
     }
 
     if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs', 'studio'].includes(stationId)) {
-      if (subTab === 'gunsmith' || stationId === 'gunsmith') setDossierSubTab('gunsmith');
+      if (subTab === 'gunsmith' || stationId === 'gunsmith') setDossierSubTab('studio'); // Taller CV fusionado en CV Studio
       else if (subTab === 'skills' || stationId === 'skills') setDossierSubTab('skills');
       else if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('cvs');
-      else if (subTab === 'studio' || stationId === 'studio') setDossierSubTab('studio');
+      else if (subTab === 'studio' || stationId === 'studio') {
+        setDossierSubTab('studio');
+        if (filterParam && !targetOfferId) setStudioOfferId(filterParam);
+      }
       else if (subTab === 'profile' || stationId === 'profile') setDossierSubTab('profile');
       else setDossierSubTab('showcase');
       setActiveTab('agent_dossier');
@@ -225,6 +233,7 @@ export function App() {
                 initialSubTab={radarSubTab}
                 initialFilter={radarLocationFilter}
                 onStartApplication={handleStartApplicationFromOffer}
+                onOpenStudio={(offerId) => handleNavigate('agent_dossier', 'studio', undefined, offerId)}
                 onReturnToHub={() => handleNavigate('dashboard')}
               />
             )}
@@ -239,6 +248,7 @@ export function App() {
             {activeTab === 'agent_dossier' && (
               <AgentDossierTab
                 initialSubTab={dossierSubTab}
+                initialStudioOfferId={studioOfferId}
                 onReturnToHub={() => handleNavigate('dashboard')}
               />
             )}

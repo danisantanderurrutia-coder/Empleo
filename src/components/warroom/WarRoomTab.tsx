@@ -553,7 +553,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           </button>
 
           <button
-            onClick={() => onSelectStation('agent_dossier', 'gunsmith')}
+            onClick={() => onSelectStation('agent_dossier', 'studio')}
             className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-200"
           >
             <span>[2] Calibrar CV</span>

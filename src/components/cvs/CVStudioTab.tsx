@@ -46,13 +46,17 @@ const segBtn = (active: boolean) =>
     active ? 'bg-sky-600 text-white shadow' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
   }`;
 
-export const CVStudioTab: React.FC = () => {
+interface CVStudioTabProps {
+  initialOfferId?: string;
+}
+
+export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '' }) => {
   const [profile, setProfile] = useState(getStoredProfile());
   const offers = useMemo(() => getStoredOffers(), []);
 
   const [lang, setLang] = useState<CvLang>('es');
   const [length, setLength] = useState<CvLength>('1p');
-  const [offerId, setOfferId] = useState<string>('');
+  const [offerId, setOfferId] = useState<string>(initialOfferId);
   const [forceInclude, setForceInclude] = useState<string[]>([]);
   const [exclude, setExclude] = useState<string[]>([]);
   const [location, setLocation] = useState<string>(CANONICAL_CONTACT.defaultLocation);
@@ -60,6 +64,12 @@ export const CVStudioTab: React.FC = () => {
   const [versions, setVersions] = useState<SavedStudioVersion[]>(getSavedVersions());
   const [versionName, setVersionName] = useState('');
   const [fitInfo, setFitInfo] = useState<{ zoom?: string; overflow: boolean }>({ overflow: false });
+
+  useEffect(() => {
+    if (initialOfferId) {
+      setOfferId(initialOfferId);
+    }
+  }, [initialOfferId]);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -98,6 +108,16 @@ export const CVStudioTab: React.FC = () => {
     if (!w) return;
     w.focus();
     w.print();
+  };
+
+  const downloadHtml = () => {
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileBase}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const toggleFact = (id: string, currentlyIncluded: boolean) => {
@@ -180,8 +200,16 @@ export const CVStudioTab: React.FC = () => {
               <button className={segBtn(length === '2p')} onClick={() => setLength('2p')}>2 pág.</button>
             </div>
             <button
+              onClick={downloadHtml}
+              className="px-3 py-2 rounded-xl border border-[var(--panel-border)] bg-[var(--panel-bg)] hover:bg-[var(--card-bg)] text-xs font-bold flex items-center gap-1.5 cursor-pointer text-[var(--text-primary)] transition"
+              title={`Descargar archivo HTML autónomo (${fileBase}.html)`}
+            >
+              <FileDown className="h-4 w-4 text-emerald-500" />
+              <span>Descargar HTML</span>
+            </button>
+            <button
               onClick={print}
-              className="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow"
               title={`Imprimir → Guardar como PDF (${fileBase}.pdf)`}
             >
               <Printer className="h-4 w-4" /> Imprimir / Guardar PDF

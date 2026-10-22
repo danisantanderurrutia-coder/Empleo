@@ -5,6 +5,7 @@ import {
   auditProfile,
   buildCv,
   renderCvHtml,
+  renderCvMarkdown,
   tagMatches,
   type StudioConfig
 } from '../cvStudio';
@@ -123,6 +124,22 @@ describe('cvStudio · renderCvHtml', () => {
   it('escapa HTML del contenido', () => {
     const html = renderCvHtml(buildCv({ lang: 'es', length: '1p', location: '<script>x</script>' }));
     expect(html).not.toContain('<script>x</script>');
+  });
+});
+
+describe('cvStudio · renderCvMarkdown', () => {
+  it('genera texto markdown estructurado con datos verificados', () => {
+    const md = renderCvMarkdown(buildCv({ lang: 'es', length: '1p' }));
+    expect(md).toContain('# DANIEL SANTANDER URRUTIA');
+    expect(md).toContain('## FORMACIÓN ACADÉMICA');
+    expect(md).toContain('M.Sc. en Manejo Ambiental');
+    expect(md).toContain('CAU Kiel');
+  });
+
+  it('genera texto en inglés correctamente', () => {
+    const md = renderCvMarkdown(buildCv({ lang: 'en', length: '1p' }));
+    expect(md).toContain('## EDUCATION');
+    expect(md).toContain('M.Sc. in Environmental Management');
   });
 });
 

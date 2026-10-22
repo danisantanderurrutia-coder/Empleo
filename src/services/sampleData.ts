@@ -5,6 +5,7 @@ import type { ApplicationItem } from '../types/applications';
 import type { JobSource } from '../types/sources';
 import type { CVTemplateInfo, CVVersion } from '../types/cv';
 import { calculateMatchScore } from './matchEngine';
+import { THUENEN_TECHWORMS_DOSSIER } from './jobWingmanService';
 
 export const cvTemplatesList: CVTemplateInfo[] = [
   {
@@ -159,7 +160,7 @@ export const initialProfile: MasterProfile = {
     {
       id: 'edu-geophysics-uchile',
       institution: 'Universidad de Chile (FCFM)',
-      degree: 'Licenciatura en Geofísica (con Distinción Máxima)',
+      degree: 'Licenciatura en Geofísica (con Distinción)',
       fieldOfStudy: 'Geofísica de la Tierra Sólida, Hidrogeofísica y Física de Fluidos',
       startDate: '2016',
       endDate: '2021',
@@ -1214,7 +1215,9 @@ const thuenenRaw: Partial<JobOffer> = {
     matchingSkills: ['R', 'Sistemas Biofísicos & Suelos', 'Gobernanza Ambiental', 'Python'],
     skillGaps: [],
     fitSummary: 'Encaje sobresaliente con el perfil de máster en CAU Kiel, experiencia en dinámica de suelos, carbono y análisis estadístico en R.'
-  }
+  },
+  leadProfile: THUENEN_TECHWORMS_DOSSIER.leadProfile,
+  jobDossier: THUENEN_TECHWORMS_DOSSIER
 };
 
 const ubaRaw: Partial<JobOffer> = {
@@ -1403,7 +1406,7 @@ export const initialCVs: CVVersion[] = [
         {
           id: 'edu-geophysics-uchile',
           institution: 'University of Chile (FCFM)',
-          degree: 'B.Sc. in Geophysics (Graduated with Highest Distinction)',
+          degree: 'B.Sc. in Geophysics (Graduated with Distinction)',
           fieldOfStudy: 'Solid Earth Geophysics, Hydrogeophysics & Fluid Mechanics',
           startDate: '2016',
           endDate: '2021',

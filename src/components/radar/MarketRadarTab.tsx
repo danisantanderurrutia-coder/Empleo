@@ -20,6 +20,7 @@ interface MarketRadarTabProps {
   initialSubTab?: 'offers' | 'sources' | 'companies';
   initialFilter?: string;
   onStartApplication: (offerId: string) => void;
+  onOpenStudio?: (offerId: string) => void;
   onReturnToHub?: () => void;
 }
 
@@ -27,6 +28,7 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
   initialSubTab = 'offers', 
   initialFilter = 'ALL',
   onStartApplication,
+  onOpenStudio,
   onReturnToHub
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'offers' | 'sources' | 'companies'>(initialSubTab);
@@ -153,6 +155,7 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
 
           <OffersTab 
             onStartApplication={onStartApplication} 
+            onOpenStudio={onOpenStudio}
             initialLocationFilter={getEffectiveLocationFilter()}
           />
         </div>

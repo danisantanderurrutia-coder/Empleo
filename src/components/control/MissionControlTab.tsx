@@ -53,39 +53,13 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
           </div>
 
           <div>
-            <div className="flex items-center space-x-2">
-              <h1 className="text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight">
-                CANDIDATURAS // GESTIÓN & SEGUIMIENTO DE PROCESOS
-              </h1>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-600 dark:text-purple-300 border border-purple-500/40 font-extrabold hidden sm:inline-block">
-                PIPELINE ACTIVO
-              </span>
-            </div>
+            <h1 className="text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight">
+              CANDIDATURAS // GESTIÓN & SEGUIMIENTO DE PROCESOS
+            </h1>
             <p className="text-[11px] text-[var(--text-secondary)] font-sans">
               Seguimiento de postulaciones laborales y convocatorias I+D • Control humano 100% verificado.
             </p>
           </div>
-        </div>
-
-        {/* 3-Stage Pipeline Indicator */}
-        <div 
-          className="hidden xl:flex items-center gap-1.5 text-[10px] font-mono font-bold px-3 py-1.5 rounded-xl border"
-          style={{ 
-            backgroundColor: 'var(--panel-bg)', 
-            borderColor: 'var(--panel-border)' 
-          }}
-        >
-          <span className="px-2 py-0.5 rounded bg-black/10 dark:bg-slate-900 text-[var(--text-muted)]">
-            1. MERCADO & FONDOS
-          </span>
-          <span className="text-[var(--text-muted)] font-black">➔</span>
-          <span className="px-2 py-0.5 rounded bg-black/10 dark:bg-slate-900 text-[var(--text-muted)]">
-            2. PERFIL & CV MODULAR
-          </span>
-          <span className="text-[var(--text-muted)] font-black">➔</span>
-          <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/40">
-            3. CANDIDATURAS & KANBAN
-          </span>
         </div>
 
         {/* Sub-Tabs Switcher */}

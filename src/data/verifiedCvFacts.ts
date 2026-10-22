@@ -55,8 +55,8 @@ export const CV_HEADLINE = {
 } as const;
 
 export const CV_SUMMARY = {
-  es: 'Geofísico (Universidad de Chile, distinción máxima) y candidato a doble Máster en Ciencias en Manejo Ambiental (CAU Kiel, Alemania) y Protección Ambiental (AMU Poznań, Polonia). Combina trabajo cuantitativo de terreno en hidrogeofísica y flujos de gases de efecto invernadero en turberas con análisis de datos, desarrollo de aplicaciones científicas, testimonio ante el Congreso Nacional de Chile y comunicación pública de gran alcance.',
-  en: "Geophysicist (Universidad de Chile, highest distinction) and dual M.Sc. candidate in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland). Combines quantitative fieldwork in hydrogeophysics and peatland greenhouse-gas fluxes with data analysis, scientific application development, testimony before Chile's National Congress, and large-scale public communication."
+  es: 'Geofísico (Universidad de Chile, con distinción) y candidato a doble Máster en Ciencias en Manejo Ambiental (CAU Kiel, Alemania) y Protección Ambiental (AMU Poznań, Polonia). Combina trabajo cuantitativo de terreno en hidrogeofísica y flujos de gases de efecto invernadero en turberas con análisis de datos, desarrollo de aplicaciones científicas, testimonio ante el Congreso Nacional de Chile y comunicación pública de gran alcance.',
+  en: "Geophysicist (Universidad de Chile, with distinction) and dual M.Sc. candidate in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland). Combines quantitative fieldwork in hydrogeophysics and peatland greenhouse-gas fluxes with data analysis, scientific application development, testimony before Chile's National Congress, and large-scale public communication."
 } as const;
 
 export const CV_FOOTER_GENERAL = {
@@ -140,9 +140,9 @@ export const VERIFIED_FACTS: CvFact[] = [
       title: 'Geofísico y Licenciado en Ciencias, mención Geofísica',
       org: 'Universidad de Chile (FCFM)',
       place: 'Santiago, Chile',
-      short: 'Distinción máxima. Memoria de título: resistividad eléctrica de suelos (SEV) y descenso del nivel freático en la Cuenca del Maule bajo agroforestería y cambio climático.',
+      short: 'Con distinción. Memoria de título: resistividad eléctrica de suelos (SEV) y descenso del nivel freático en la Cuenca del Maule bajo agroforestería y cambio climático.',
       long: [
-        'Facultad de Ciencias Físicas y Matemáticas. Aprobado con distinción máxima.',
+        'Facultad de Ciencias Físicas y Matemáticas. Aprobado con distinción.',
         'Memoria de título: resistividad eléctrica de suelos (Sondeo Eléctrico Vertical, SEV) y descenso del nivel freático en la Cuenca del Maule bajo sistemas agroforestales y cambio climático.'
       ]
     },
@@ -150,9 +150,9 @@ export const VERIFIED_FACTS: CvFact[] = [
       title: 'Geophysicist & B.Sc. in Geophysics',
       org: 'Universidad de Chile (FCFM)',
       place: 'Santiago, Chile',
-      short: 'Highest distinction. Thesis: soil electrical resistivity (VES) and water table drawdown in the Maule Basin under agroforestry and climate change.',
+      short: 'With distinction. Thesis: soil electrical resistivity (VES) and water table drawdown in the Maule Basin under agroforestry and climate change.',
       long: [
-        'Faculty of Physical & Mathematical Sciences. Awarded with highest distinction.',
+        'Faculty of Physical & Mathematical Sciences. Awarded with distinction.',
         'Degree thesis: soil electrical resistivity (Vertical Electrical Sounding, VES) and water table drawdown in the Maule Basin under agroforestry systems and climate change.'
       ]
     }

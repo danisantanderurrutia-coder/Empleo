@@ -3,8 +3,7 @@ import {
   Crosshair,
   ShieldCheck, 
   Sun, 
-  Moon,
-  Radio
+  Moon
 } from 'lucide-react';
 import type { AppTheme } from '../../services/themeManager';
 import { resolveAsset } from '../../utils/assets';
@@ -185,31 +184,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* 3. Right: Operator Clearance & Tactical HUD Controls */}
       <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
         
-        {/* Operator Badge (Rainbow Six Profile HUD) */}
-        <div 
-          onClick={() => onSelectStation && onSelectStation('agent_dossier', 'showcase')}
-          className="hidden 2xl:flex items-center space-x-2 px-2.5 py-1 rounded-xl border border-[var(--panel-border)] bg-[var(--card-bg)] shadow-xs cursor-pointer hover:border-emerald-500 transition"
-          title="Ver Expediente Operativo"
-        >
-          <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold font-mono text-[10px] flex items-center justify-center border border-emerald-500/40">
-            50
-          </div>
-          <div className="text-left font-mono leading-none">
-            <div className="text-[10px] font-black text-[var(--text-primary)]">
-              D. SANTANDER
-            </div>
-            <div className="text-[8px] text-emerald-600 dark:text-emerald-400 font-bold">
-              CLEARANCE: MAX
-            </div>
-          </div>
-        </div>
-
-        {/* Live Radar Ping Indicator */}
-        <div className="hidden sm:flex items-center space-x-1.5 text-[10px] font-mono px-2.5 py-1 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 font-bold">
-          <Radio className="h-3 w-3 animate-pulse text-emerald-500" />
-          <span>RADAR: 350+</span>
-        </div>
-
         {/* Tactical Theme Toggle (Nieve / Noche) */}
         {onToggleTheme && (
           <button

@@ -1,210 +1,153 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Search, 
-  FileText, 
-  MessageSquare, 
-  Globe2, 
+import {
+  X,
+  Search,
+  FileText,
+  MessageSquare,
+  Target,
+  Mail,
   ExternalLink,
   Copy,
   Check,
   Cpu,
-  ShieldCheck
+  ShieldCheck,
+  Lightbulb,
+  AlertCircle,
+  UserCheck
 } from 'lucide-react';
 import type { JobOffer } from '../../types/offers';
-import { getStoredProfile } from '../../services/db';
 import { generateTailoredCoverLetter, generateApplicationQA } from '../../services/coverLetterCopilot';
+import { getDossierForOffer } from '../../services/jobWingmanService';
+import { WingmanEditor } from './WingmanEditor';
+import { buildCv, renderCvMarkdown } from '../../services/cvStudio';
 
 interface FiveStepPipelineModalProps {
   offer: JobOffer | null;
   isOpen: boolean;
   onClose: () => void;
   onStartApplication: (offerId: string) => void;
+  onOpenStudio?: (offerId: string) => void;
 }
+
+const STEPS = [
+  { num: 1, label: 'Análisis del empleo', icon: Search },
+  { num: 2, label: 'Consejo Wingman', icon: Target },
+  { num: 3, label: 'Preparar CV', icon: FileText },
+  { num: 4, label: 'Carta', icon: MessageSquare },
+  { num: 5, label: 'Contacto & Formularios', icon: Mail },
+  { num: 6, label: 'Entrevista', icon: Cpu }
+];
+
+const card = 'p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3';
+const btnPrimary = 'px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition cursor-pointer';
+const btnGhost = 'px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 cursor-pointer';
+const textareaCls = 'w-full p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 font-mono text-[11px] leading-relaxed focus:outline-none';
 
 export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
   offer,
   isOpen,
   onClose,
-  onStartApplication
+  onStartApplication,
+  onOpenStudio
 }) => {
   const [activeStep, setActiveStep] = useState<number>(1);
-  const [selectedLang, setSelectedLang] = useState<'es' | 'en'>('es');
-  const [copiedCv, setCopiedCv] = useState(false);
-  const [copiedLetter, setCopiedLetter] = useState(false);
-  const [copiedQaIndex, setCopiedQaIndex] = useState<number | null>(null);
+  const [cvLang, setCvLang] = useState<'es' | 'en'>('es');
+  const [letterLang, setLetterLang] = useState<'de' | 'en' | 'es'>('de');
+  const [emailLang, setEmailLang] = useState<'de' | 'en'>('de');
+  const [copied, setCopied] = useState<string | null>(null);
+  const [editingLead, setEditingLead] = useState(false);
+  const [, setDossierVersion] = useState(0);
 
   if (!isOpen || !offer) return null;
 
-  const profile = getStoredProfile();
-  const coverLetter = generateTailoredCoverLetter(offer, selectedLang);
+  const dossier = getDossierForOffer(offer);
+  const lead = dossier.leadProfile;
+  const leadFull = `${lead.titleHonorific ? lead.titleHonorific + ' ' : ''}${lead.name}`;
+  const coverLetter = generateTailoredCoverLetter(offer, letterLang, lead, dossier);
   const qaPairs = generateApplicationQA(offer);
+  const builtCv = buildCv({ lang: cvLang, length: '1p', offer });
+  const cvText = renderCvMarkdown(builtCv);
+  const emailSubject = emailLang === 'de' ? dossier.coldApproachEmail.subjectDe : dossier.coldApproachEmail.subjectEn;
+  const emailBody = emailLang === 'de' ? dossier.coldApproachEmail.bodyDe : dossier.coldApproachEmail.bodyEn;
+  const match = offer.matchScore;
 
-  // Paso 3: Executive Scientific CV Markdown (Highly Tailored & Extensive)
-  const cvText = selectedLang === 'en' ? `
-# ${profile.fullName.toUpperCase()}
-${profile.email} | ${profile.phone} | ${profile.location} | LinkedIn: ${profile.linkedin} | GitHub: ${profile.github}
+  const copy = (key: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 2000);
+  };
+  const CopyBtn = ({ k, text, label }: { k: string; text: string; label: string }) => (
+    <button
+      onClick={() => copy(k, text)}
+      className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition flex items-center space-x-1 border border-slate-700 cursor-pointer"
+    >
+      {copied === k ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+      <span>{copied === k ? '¡Copiado!' : label}</span>
+    </button>
+  );
+  const LangToggle = <T extends string>({ value, options, onChange }: { value: T; options: { v: T; l: string }[]; onChange: (v: T) => void }) => (
+    <div className="flex bg-slate-950 rounded-lg p-0.5 border border-slate-800">
+      {options.map(o => (
+        <button
+          key={o.v}
+          onClick={() => onChange(o.v)}
+          className={`px-3 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${value === o.v ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}
+        >
+          {o.l}
+        </button>
+      ))}
+    </div>
+  );
+  const Nav = ({ prev, next, nextLabel }: { prev?: number; next?: number; nextLabel?: string }) => (
+    <div className="flex justify-end pt-2 space-x-2">
+      {prev && <button onClick={() => setActiveStep(prev)} className={btnGhost}>← Atrás</button>}
+      {next && <button onClick={() => setActiveStep(next)} className={btnPrimary}>{nextLabel} →</button>}
+    </div>
+  );
 
----
-
-## 🎯 EXECUTIVE PROFILE — TAILORED FOR: ${offer.title.toUpperCase()} (${offer.company.toUpperCase()})
-Geophysicist and Senior Environmental Policy Specialist holding a **Double M.Sc. in Environmental Management & Environmental Protection from Christian-Albrechts-Universität zu Kiel (Germany) and Adam Mickiewicz University in Poznan (Poland)**. Over 5+ years of verified professional experience in quantitative spatial modeling (**R, Python, QGIS, ArcGIS, Google Earth Engine**), agro-meteorological climate risk assessment, soil biogeochemistry, and socio-ecological governance. Proven track record facilitating high-level multi-stakeholder dialogues, authoring public policy advisories, and building spatial early warning frameworks across Europe and Latin America.
-
----
-
-## 💡 CORE COMPETENCIES & TECHNICAL MATRIX FOR ${offer.company.toUpperCase()}
-- **Quantitative Spatial Modeling & Remote Sensing**: Expert in R (sf, raster, terra, ggplot2, tidyverse), Python (geopandas, rasterio, numpy, scikit-learn), QGIS, ArcGIS Pro, and Google Earth Engine for spatio-temporal environmental mapping.
-- **Agro-Meteorology & Climate Risk Analysis**: Deep understanding of IPCC SSP climate scenarios, drought/flood vulnerability modeling, agro-climatic indices, and early warning system design.
-- **Soil Biogeochemistry & Carbon Sequestration**: Specialized in soil degradation mechanics, organic carbon dynamics, SWAT hydrologic modeling, and ecosystem service valuation.
-- **Socio-Ecological Governance & Policy Facilitation**: Demonstrated expertise in multi-stakeholder mediation, participatory watershed planning, public policy drafting, and international environmental law.
-- **Languages**: Native Spanish, Fluent English (C1 - Professional Academic & Technical), German (B1).
-
----
-
-## 💼 PROFESSIONAL EXPERIENCE & STRATEGIC PROJECTS
-
-### Senior Environmental Policy Advisor & Spatial Analyst — International Consultancies & Research Hubs (2021 – Present)
-*Bilbao / Euskadi, Europe & Latin America*
-- **Climate Adaptation & Risk Governance**: Engineered spatial vulnerability models in R and Google Earth Engine evaluating extreme weather events and soil degradation risks across regional watersheds.
-- **Multi-Stakeholder Facilitation**: Mediated multi-sectoral technical working groups comprising ministry representatives, research institutions, regional agencies, and local landholders to co-design sustainable land-use policies.
-- **Policy Advisories & Technical Drafting**: Authored comprehensive technical reports on forest fire governance, climate change adaptation, soil carbon accounting, and socio-environmental safeguards.
-- **Data Integration & Automation**: Built automated reproducible data pipelines in R and Python for processing multi-gigabyte Copernicus Sentinel-2 satellite feeds and regional meteorological observations.
-
-### Research Fellow in Soil Biogeochemistry & Environmental Management — CAU Kiel & AMU Poznan (2023 – 2026)
-*Kiel, Germany & Poznan, Poland*
-- **Spatio-Temporal Carbon Modeling**: Conducted research on soil organic carbon stocks, greenhouse gas fluxes, and agricultural land management strategies under changing climate regimes.
-- **Cross-Border Research Collaboration**: Coordinated interdisciplinary research teams across European research networks, integrating field sampling datasets with regional GIS predictive models.
-
----
-
-## 🎓 ACADEMIC FORMATION & DISTINCTIONS
-- **Double Master of Science (M.Sc.) in Environmental Management & Environmental Protection** (2023 – 2026)
-  * *Christian-Albrechts-Universität zu Kiel (Germany)* & *Adam Mickiewicz University in Poznan (Poland)*
-  * Focus: Spatial Modeling, Soil Biogeochemistry, Environmental Governance, Climate Adaptation Policy.
-- **Bachelor of Science (B.Sc.) in Geophysics (Graduated with Highest Distinction)** (2016 – 2021)
-  * *University of Chile (Santiago, Chile)*
-  * Focus: Physical Fluid Dynamics, Geospatial Data Analysis, Mathematical & Computational Modeling.
-
----
-
-## 🛠️ TECHNICAL TOOLBOX & METRICS
-- **Programming & Analysis**: R, Python, SQL, Git, Shell Scripting, Markdown, LaTeX.
-- **GIS & Remote Sensing**: QGIS, ArcGIS Pro, Google Earth Engine, SNAP, Sentinel-Hub, GDAL.
-- **Languages**: Spanish (Native), English (C1 Certified Technical/Executive), German (B1).
-`.trim() : `
-# ${profile.fullName.toUpperCase()}
-${profile.email} | ${profile.phone} | ${profile.location} | LinkedIn: ${profile.linkedin} | GitHub: ${profile.github}
-
----
-
-## 🎯 PERFIL EJECUTIVO — ADAPTADO A: ${offer.title.toUpperCase()} (${offer.company.toUpperCase()})
-Geofísico y Especialista Senior en Políticas Ambientales con **Doble Titulación de Máster en Gestión y Protección Ambiental por la Universidad de Kiel (Alemania) y la Universidad de Poznan (Polonia)**. Más de 5 años de trayectoria profesional acreditada en modelación espacial cuantitativa (**R, Python, QGIS, ArcGIS, Google Earth Engine**), evaluación de riesgos agrometeorológicos y climáticos, biogeoquímica del suelo y gobernanza socio-ecológica participativa. Experiencia probada en la facilitación de mesas de diálogo multi-actor de alto nivel, elaboración de informes de políticas públicas e integración de sistemas de alerta temprana en Europa y América Latina.
-
----
-
-## 💡 MATRIZ DE COMPETENCIAS TÉCNICAS PARA ${offer.company.toUpperCase()}
-- **Modelación Espacial Cuantitativa & Teledetección**: Dominio experto de R (sf, raster, terra, ggplot2, tidyverse), Python (geopandas, rasterio, numpy), QGIS, ArcGIS Pro y Google Earth Engine para cartografía socio-ambiental.
-- **Agrometeorología & Análisis de Riesgo Climático**: Comprensión profunda de escenarios IPCC (SSPs), modelación de vulnerabilidad frente a sequías e inundaciones, índices agrometeorológicos y diseño de alertas tempranas.
-- **Biogeoquímica de Suelos & Carbono Orgánico**: Especialización en dinámicas de degradación de tierras, captura de carbono en suelos, modelación hidrológica (SWAT) y valoración de servicios ecosistémicos.
-- **Gobernanza Socio-Ecológica & Incidencia Política**: Experiencia en mediación comunitaria e institucional, ordenamiento territorial participativo y redacción de normativas ambientales.
-- **Idiomas**: Español Nativo, Inglés C1 (Fluidez Profesional y Técnica Acreditada), Alemán B1.
-
----
-
-## 💼 TRAYECTORIA PROFESIONAL Y PROYECTOS ESTRATÉGICOS
-
-### Asesor Senior en Políticas Ambientales y Analista Espacial — Consultoría e Investigación (2021 – Presente)
-*Bilbao / Euskadi, Europa y América Latina*
-- **Adaptación al Cambio Climático y Gobernanza del Riesgo**: Diseño de modelos de vulnerabilidad espacial en R y Google Earth Engine para evaluar eventos extremos y degradación de suelos en cuencas prioritarias.
-- **Facilitación Multi-Actor e Intermediación**: Liderazgo de mesas técnicas con representantes de ministerios, centros de investigación de vanguardia, organismos regionales y actores locales para consensuar planes territoriales.
-- **Informes Estratégicos de Políticas Públicas**: Elaboración de dictámenes técnicos sobre gobernanza de incendios forestales, adaptación climática, salvaguardias socio-ambientales y conservación de suelos.
-- **Automatización y Flujos de Datos Reproducibles**: Construcción de scripts en R y Python para el procesamiento masivo de datos satelitales Copernicus Sentinel-2 y series agrometeorológicas históricas.
-
-### Investigador en Biogeoquímica de Suelos & Gestión Ambiental — CAU Kiel & AMU Poznan (2023 – 2026)
-*Kiel, Alemania y Poznan, Polonia*
-- **Modelación Espaciotemporal de Carbono**: Investigación aplicada sobre reservas de carbono orgánico en el suelo y dinámicas de emisión de gases de efecto invernadero bajo diversos escenarios de gestión agrícola.
-- **Coordinación de Redes Científicas Europeas**: Integración de datos de campo con modelos espacializados a escala regional en consorcios científicos internacionales.
-
----
-
-## 🎓 FORMACIÓN ACADÉMICA Y DISTINCIONES
-- **Doble Titulación de Máster (M.Sc.) en Environmental Management & Environmental Protection** (2023 – 2026)
-  * *Christian-Albrechts-Universität zu Kiel (Alemania)* & *Uniwersytet im. Adama Mickiewicza w Poznaniu (Polonia)*
-  * Especialización: Modelación Espacial, Biogeoquímica de Suelos, Gobernanza del Clima y Políticas Adaptativas.
-- **Licenciado en Geofísica (Graduado con Máxima Distinción)** (2016 – 2021)
-  * *Universidad de Chile (Santiago, Chile)*
-  * Especialización: Dinámica de Fluidos Físicos, Análisis de Datos Geofísicos, Modelación Matemática y Computacional.
-
----
-
-## 🛠️ HERRAMIENTAS TÉCNICAS Y MÉTRICAS
-- **Programación y Análisis**: R, Python, SQL, Git, Shell Scripting, Markdown, LaTeX.
-- **SIG y Teledetección**: QGIS, ArcGIS Pro, Google Earth Engine, SNAP, Sentinel-Hub, GDAL.
-- **Idiomas**: Español (Nativo), Inglés (C1 Profesional/Técnico), Alemán (B1).
-`.trim();
-
-  // Paso 5: Comprehensive Executive Interview Questions & Winning Strategies
   const interviewQuestions = [
     {
-      q: `1. ¿Cómo aplica su formación cuantitativa en Geofísica y R/GIS a las exigencias concretas de la posición de ${offer.title} en ${offer.company}?`,
-      a: `Unifico el rigor físico-matemático de la geofísica con más de 5 años de desarrollo de scripts en R, Python, QGIS y Google Earth Engine. Esto me permite tomar series temporales climáticas complejas y convertirlas en modelos espaciales de vulnerabilidad gráfica y cuantitativamente comprensibles para los tomadores de decisiones.`
+      q: `¿Cómo aplica su formación cuantitativa en Geofísica y R/Python a las exigencias concretas de ${offer.title} en ${offer.company}?`,
+      a: dossier.candidateValueThesis
     },
-    {
-      q: `2. ¿De qué manera su Doble Máster en Alemania (CAU Kiel) y Polonia (AMU Poznan) garantiza que comprende los estándares internacionales que exige ${offer.company}?`,
-      a: `Mi formación europea me ha expuesto directamente a los estándares normativos del Pacto Verde Europeo, los marcos de las Naciones Unidas (FAO/IPCC) y las metodologías avanzadas de gestión de suelos y agua. He trabajado en consorcios internacionales bilingües resolviendo problemas complejos de gobernanza transfronteriza.`
-    },
-    {
-      q: `3. ¿Cómo aborda la facilitación cuando existe conflicto entre la evidencia científica dura y los intereses económicos o comunitarios en el territorio?`,
-      a: `Aplico un enfoque de gobernanza socio-ecológica basada en transparencia: primero, construyo modelos espaciales participativos con R/GIS para validar los datos objetivamente; segundo, establezco mesas multi-actor donde los indicadores científicos se traducen en incentivos y salvaguardias claras para las partes involucradas.`
-    },
-    {
-      q: `4. ¿Por qué considera que su residencia en Bilbao (Bizkaia) y su flexibilidad profesional benefician la ejecución de los proyectos de ${offer.company}?`,
-      a: `Estar afincado en Bilbao me otorga disponibilidad inmediata para trabajar de manera presencial u híbrida en la región o desplazarme en misiones internacionales. Combino la estabilidad geográfica local con una mentalidad y red de contactos de alcance global.`
-    }
+    ...dossier.projectPainPoints.slice(0, 3).map(p => ({
+      q: `Reto del proyecto: ${p}`,
+      a: `Prepara una respuesta técnica propia (con un ejemplo verificable de tu CV) sobre cómo abordarías este punto. Ganchos disponibles: ${dossier.technicalHooks.slice(0, 2).join(' | ')}`
+    }))
   ];
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-[#131c2e] max-w-4xl w-full rounded-2xl border border-slate-700 shadow-2xl space-y-4 my-8 flex flex-col max-h-[90vh] text-slate-100">
-        
-        {/* Modal Header */}
+
+        {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-slate-800 shrink-0">
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                Fase 3: Preparación Asistida de Candidatura
-              </span>
-              <h3 className="font-bold text-white text-base">{offer.title}</h3>
-            </div>
+            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+              Preparación Asistida de Candidatura
+            </span>
+            <h3 className="font-bold text-white text-base mt-1">{offer.title}</h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Empresa: <strong className="text-white">{offer.company}</strong> • {offer.location}
+              <strong className="text-white">{offer.company}</strong> • {offer.location}
             </p>
           </div>
-
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white cursor-pointer">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* 5-Step Stepper Header */}
+        {/* Stepper */}
         <div className="px-6 py-3 bg-slate-900/90 border-b border-slate-800 shrink-0">
-          <div className="grid grid-cols-5 gap-2">
-            {[
-              { num: 1, label: '1. Palabras Clave', icon: Search },
-              { num: 2, label: '2. Reseña & Link Directo', icon: Globe2 },
-              { num: 3, label: '3. Generación CV', icon: FileText },
-              { num: 4, label: '4. Carta & Formularios', icon: MessageSquare },
-              { num: 5, label: '5. Preparar Entrevista', icon: Cpu }
-            ].map(step => {
+          <div className="grid grid-cols-6 gap-2">
+            {STEPS.map(step => {
               const Icon = step.icon;
               const isActive = activeStep === step.num;
               const isPast = activeStep > step.num;
-
               return (
                 <button
                   key={step.num}
                   onClick={() => setActiveStep(step.num)}
-                  className={`flex flex-col items-center p-2 rounded-xl text-[11px] font-semibold transition border ${
+                  className={`flex flex-col items-center p-2 rounded-xl text-[11px] font-semibold transition border cursor-pointer ${
                     isActive
                       ? 'bg-emerald-600 text-white border-emerald-500 shadow-md'
                       : isPast
@@ -216,274 +159,256 @@ Geofísico y Especialista Senior en Políticas Ambientales con **Doble Titulaci�
                     <Icon className="h-3.5 w-3.5" />
                     <span>Paso {step.num}</span>
                   </div>
-                  <span className="truncate max-w-full text-[10px] mt-0.5 font-normal">{step.label.split('.')[1]}</span>
+                  <span className="truncate max-w-full text-[10px] mt-0.5 font-normal">{step.label}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Step Content Workspace */}
         <div className="p-6 space-y-5 overflow-y-auto flex-1 text-xs">
-          
-          {/* PASO 1: BÚSQUEDA Y FILTRO */}
+
+          {/* PASO 1: ANÁLISIS DEL EMPLEO */}
           {activeStep === 1 && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+              <div className={card}>
                 <h4 className="font-bold text-white text-sm flex items-center gap-2">
                   <Search className="h-4 w-4 text-emerald-400" />
-                  <span>Paso 1: Búsqueda con Palabras Clave Personalizables (Últimas 2 Semanas)</span>
+                  <span>Paso 1: Análisis del empleo</span>
                 </h4>
-                <p className="text-slate-300">
-                  Las palabras clave se han utilizado para rastrear portales en España y Google en las últimas 2 semanas:
-                </p>
+                <div className="flex flex-wrap gap-2 text-[11px] text-slate-300">
+                  <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800">Afinidad: <strong className="text-emerald-400">{match?.totalScore ?? '–'}/100</strong></span>
+                  {offer.deadline && <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800">Plazo: <strong className="text-amber-300">{offer.deadline}</strong></span>}
+                  {offer.verificationStatus && <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800">{offer.verificationStatus}</span>}
+                </div>
+                <p className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 leading-relaxed">{offer.rawDescription}</p>
+              </div>
 
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {['Suelos', 'Gobernanza Ambiental', 'Cambio Climático', 'R / GIS', 'Bilbao', 'Euskadi', 'Remoto'].map((kw, i) => (
-                    <span key={i} className="px-3 py-1 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-semibold">
-                      🔑 {kw}
-                    </span>
-                  ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className={card}>
+                  <span className="font-bold text-emerald-400">Requisitos</span>
+                  <ul className="space-y-1 text-slate-300">
+                    {offer.requirements.map((r, i) => <li key={i}>▸ {r}</li>)}
+                  </ul>
+                </div>
+                <div className={card}>
+                  <span className="font-bold text-sky-400">Responsabilidades</span>
+                  <ul className="space-y-1 text-slate-300">
+                    {offer.responsibilities.map((r, i) => <li key={i}>▸ {r}</li>)}
+                  </ul>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
-                <div className="flex items-center justify-between text-slate-300">
-                  <span className="font-semibold text-emerald-400">Verificación de Antigüedad:</span>
-                  <span className="px-2 py-0.5 bg-emerald-950 text-emerald-300 rounded border border-emerald-500/30 font-mono text-[11px]">
-                    Publicado / Verificado: Últimas 2 Semanas (Agosto 2026)
-                  </span>
+              {match && (
+                <div className={card}>
+                  <span className="font-bold text-white">Encaje con tu perfil</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {match.matchingSkills.map((k, i) => <span key={i} className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">✓ {k}</span>)}
+                    {match.missingSkills.map((k, i) => <span key={i} className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">△ {k}</span>)}
+                  </div>
+                  {match.pendingVerificationRequirements.length > 0 && (
+                    <p className="text-amber-300/90">Requisitos por verificar manualmente: {match.pendingVerificationRequirements.join('; ')}</p>
+                  )}
                 </div>
-                <p className="text-slate-400">
-                  Filtro temporal activo en Google (`tbs=qdr:w2`). Cero convocatorias caducadas.
-                </p>
-              </div>
+              )}
 
-              <div className="flex justify-end pt-2">
-                <button
-                  onClick={() => setActiveStep(2)}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition"
-                >
-                  Continuar al Paso 2: Reseña & Enlace Directo →
-                </button>
+              <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
+                <span className="font-mono text-xs text-slate-300 truncate mr-3">{offer.url}</span>
+                <a href={offer.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl flex items-center space-x-1.5 shrink-0">
+                  <span>Abrir vacante</span><ExternalLink className="h-4 w-4" />
+                </a>
               </div>
+              <Nav next={2} nextLabel="Paso 2: Consejo Wingman" />
             </div>
           )}
 
-          {/* PASO 2: RESEÑA CORTA Y ENLACE DIRECTO PROFUNDO */}
+          {/* PASO 2: CONSEJO WINGMAN */}
           {activeStep === 2 && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setEditingLead(v => !v)}
+                  className="px-3 py-1.5 bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 text-xs font-semibold rounded-lg border border-sky-500/40 cursor-pointer"
+                >
+                  {editingLead ? 'Cerrar formulario' : '✎ Cargar / editar supervisor y proyecto'}
+                </button>
+              </div>
+              {editingLead && (
+                <WingmanEditor
+                  offer={offer}
+                  dossier={dossier}
+                  onSaved={() => { setEditingLead(false); setDossierVersion(v => v + 1); }}
+                  onCancel={() => setEditingLead(false)}
+                />
+              )}
+              <div className={card}>
                 <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                  <Globe2 className="h-4 w-4 text-emerald-400" />
-                  <span>Paso 2: Reseña de la Vacante & Enlace Directo Profundo</span>
+                  <Target className="h-4 w-4 text-sky-400" />
+                  <span>Paso 2: Consejo Wingman — supervisor e instituto</span>
                 </h4>
-
-                <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 leading-relaxed font-medium space-y-2">
-                  <span className="font-bold text-emerald-400 block">📝 Reseña Antigravity AI:</span>
-                  <p>
-                    {offer.rawDescription}
-                  </p>
-                  <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-slate-400">
-                    <span>Organismo / Empresa: <strong className="text-white">{offer.company}</strong></span>
-                    <span>Ubicación: <strong className="text-white">{offer.location}</strong></span>
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-950 border border-slate-800">
+                  <UserCheck className="h-5 w-5 text-sky-400 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <div className="font-bold text-white text-sm">{leadFull}</div>
+                    <div className="text-sky-300">{lead.role}</div>
+                    <div className="text-slate-400">{lead.institution}</div>
+                    {lead.email && <a href={`mailto:${lead.email}`} className="text-sky-400 hover:underline font-mono">{lead.email}</a>}
                   </div>
                 </div>
-
-                <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
+                {lead.researchFocus && lead.researchFocus.length > 0 && (
                   <div>
-                    <span className="font-semibold text-emerald-300 block">🔗 Enlace Directo Profundo a la Pestaña de la Vacante:</span>
-                    <span className="font-mono text-xs text-slate-300">{offer.url}</span>
+                    <span className="font-semibold text-slate-300">Líneas científicas:</span>
+                    <ul className="mt-1 space-y-0.5 text-slate-300">{lead.researchFocus.map((r, i) => <li key={i}>▸ {r}</li>)}</ul>
                   </div>
+                )}
+                {lead.styleNotes && <p className="text-slate-400"><strong className="text-slate-300">Estilo / qué valora:</strong> {lead.styleNotes}</p>}
+              </div>
 
-                  <a
-                    href={offer.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition flex items-center space-x-1.5 shrink-0"
-                  >
-                    <span>Abrir Vacante Real</span>
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
+              <div className={card}>
+                <span className="font-bold text-amber-400 flex items-center gap-1.5"><AlertCircle className="h-4 w-4" />Dolores y retos del proyecto</span>
+                <ul className="space-y-1.5">
+                  {dossier.projectPainPoints.map((p, i) => (
+                    <li key={i} className="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/30 text-amber-200/90">{p}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={card}>
+                <span className="font-bold text-emerald-400 flex items-center gap-1.5"><Lightbulb className="h-4 w-4" />Tu ángulo (hooks)</span>
+                <p className="italic text-slate-300 p-3 rounded-lg bg-emerald-950/20 border border-emerald-900/40">"{dossier.candidateValueThesis}"</p>
+                <ul className="space-y-1.5">
+                  {dossier.technicalHooks.map((h, i) => (
+                    <li key={i} className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300"><strong className="text-emerald-400">#{i + 1}</strong> {h}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className={card}>
+                  <span className="font-bold text-sky-400">→ Para el CV (paso 3)</span>
+                  <ul className="space-y-1 text-slate-300">{dossier.cvGuidance.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
+                </div>
+                <div className={card}>
+                  <span className="font-bold text-sky-400">→ Para la carta (paso 4)</span>
+                  <ul className="space-y-1 text-slate-300">{dossier.coverLetterAngles.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
                 </div>
               </div>
-
-              <div className="flex justify-end pt-2 space-x-2">
-                <button
-                  onClick={() => setActiveStep(1)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700"
-                >
-                  ← Atrás
-                </button>
-                <button
-                  onClick={() => setActiveStep(3)}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition"
-                >
-                  Continuar al Paso 3: Generar CV Adaptado →
-                </button>
-              </div>
+              <Nav prev={1} next={3} nextLabel="Paso 3: Preparar CV" />
             </div>
           )}
 
-          {/* PASO 3: CV ADAPTADO E IDIOMA */}
+          {/* PASO 3: CV */}
           {activeStep === 3 && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+              <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 space-y-1">
+                <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Guía Wingman para el CV de {leadFull}</span>
+                <ul className="text-slate-300 space-y-0.5">{dossier.cvGuidance.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
+              </div>
+              <div className={card}>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2">
                     <FileText className="h-4 w-4 text-emerald-400" />
-                    <span>Paso 3: Carga de Perfil & Generación de CV Adaptado</span>
+                    <span>Paso 3: Preparación del CV (datos verificados del Portafolio)</span>
                   </h4>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-slate-400 font-medium">Idioma del CV:</span>
-                    <button
-                      onClick={() => setSelectedLang('es')}
-                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-                        selectedLang === 'es' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300'
-                      }`}
-                    >
-                      🇪🇸 Español
-                    </button>
-                    <button
-                      onClick={() => setSelectedLang('en')}
-                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-                        selectedLang === 'en' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300'
-                      }`}
-                    >
-                      🇬🇧 English
-                    </button>
-                  </div>
+                  <LangToggle value={cvLang} onChange={setCvLang} options={[{ v: 'es', l: '🇪🇸 ES' }, { v: 'en', l: '🇬🇧 EN' }]} />
                 </div>
-
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(cvText);
-                      setCopiedCv(true);
-                      setTimeout(() => setCopiedCv(false), 2000);
-                    }}
-                    className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition flex items-center space-x-1 border border-slate-700"
-                  >
-                    {copiedCv ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5 text-slate-300" />}
-                    <span>{copiedCv ? '¡CV Copiado!' : 'Copiar CV Markdown'}</span>
-                  </button>
+                <div className="flex items-center justify-end gap-2">
+                  {onOpenStudio && (
+                    <button
+                      onClick={() => { onOpenStudio(offer.id); onClose(); }}
+                      className="px-3 py-1 bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 text-xs font-semibold rounded-lg flex items-center space-x-1.5 border border-sky-500/40 cursor-pointer"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" /><span>Afinar en CV Studio A4</span>
+                    </button>
+                  )}
+                  <CopyBtn k="cv" text={cvText} label="Copiar CV" />
                 </div>
-
-                <textarea
-                  value={cvText}
-                  readOnly
-                  rows={10}
-                  className="w-full p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 font-mono text-[11px] leading-relaxed focus:outline-none"
-                />
+                <textarea value={cvText} readOnly rows={10} className={textareaCls} />
               </div>
-
-              <div className="flex justify-end pt-2 space-x-2">
-                <button
-                  onClick={() => setActiveStep(2)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700"
-                >
-                  ← Atrás
-                </button>
-                <button
-                  onClick={() => setActiveStep(4)}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition"
-                >
-                  Continuar al Paso 4: Carta & Preguntas →
-                </button>
-              </div>
+              <Nav prev={2} next={4} nextLabel="Paso 4: Carta" />
             </div>
           )}
 
-          {/* PASO 4: CARTA DE MOTIVACIÓN Y PREGUNTAS */}
+          {/* PASO 4: CARTA */}
           {activeStep === 4 && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+              <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 space-y-1">
+                <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Ángulos Wingman para la carta</span>
+                <ul className="text-slate-300 space-y-0.5">{dossier.coverLetterAngles.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
+              </div>
+              <div className={card}>
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2">
                     <MessageSquare className="h-4 w-4 text-emerald-400" />
-                    <span>Paso 4: Carta de Motivación & Copilot de Formulario</span>
+                    <span>Paso 4: Carta de presentación</span>
                   </h4>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(coverLetter.fullMarkdown);
-                      setCopiedLetter(true);
-                      setTimeout(() => setCopiedLetter(false), 2000);
-                    }}
-                    className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition flex items-center space-x-1 border border-slate-700"
-                  >
-                    {copiedLetter ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5 text-slate-300" />}
-                    <span>{copiedLetter ? '¡Carta Copiada!' : 'Copiar Carta'}</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <LangToggle value={letterLang} onChange={setLetterLang} options={[{ v: 'de', l: '🇩🇪 DE' }, { v: 'en', l: '🇬🇧 EN' }, { v: 'es', l: '🇪🇸 ES' }]} />
+                    <CopyBtn k="letter" text={coverLetter.fullMarkdown} label="Copiar carta" />
+                  </div>
                 </div>
+                <textarea value={coverLetter.fullMarkdown} readOnly rows={14} className={textareaCls} />
+              </div>
+              <Nav prev={3} next={5} nextLabel="Paso 5: Contacto & Formularios" />
+            </div>
+          )}
 
-                <textarea
-                  value={coverLetter.fullMarkdown}
-                  readOnly
-                  rows={8}
-                  className="w-full p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 font-mono text-[11px] leading-relaxed focus:outline-none"
-                />
+          {/* PASO 5: CONTACTO + FORMULARIOS */}
+          {activeStep === 5 && (
+            <div className="space-y-4">
+              <div className={card}>
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-emerald-400" />
+                    <span>Consulta previa a {leadFull} (opcional)</span>
+                  </h4>
+                  <div className="flex items-center gap-2">
+                    <LangToggle value={emailLang} onChange={setEmailLang} options={[{ v: 'de', l: '🇩🇪 DE' }, { v: 'en', l: '🇬🇧 EN' }]} />
+                    {lead.email && (
+                      <a
+                        href={`mailto:${lead.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`}
+                        className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-sky-300 text-xs font-semibold rounded-lg border border-slate-700"
+                      >
+                        Abrir en correo
+                      </a>
+                    )}
+                    <CopyBtn k="email" text={emailBody} label="Copiar cuerpo" />
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 font-mono"><strong className="text-slate-400">Asunto:</strong> {emailSubject}</div>
+                <textarea value={emailBody} readOnly rows={12} className={textareaCls} />
+                <p className="text-slate-400">Una pregunta técnica real, sin pedir nada. Enviar antes del plazo; no se envía nada automáticamente.</p>
               </div>
 
-              {/* Form QA Answers */}
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-                <span className="font-bold text-white block">📋 Respuestas Recomendadas para Preguntas de Formulario:</span>
+              <div className={card}>
+                <span className="font-bold text-white block">📋 Preguntas de formulario del portal</span>
                 {qaPairs.map((qa, idx) => (
                   <div key={idx} className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                     <div className="flex items-center justify-between text-slate-300 font-semibold">
                       <span>{qa.question}</span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(qa.recommendedAnswer);
-                          setCopiedQaIndex(idx);
-                          setTimeout(() => setCopiedQaIndex(null), 2000);
-                        }}
-                        className="px-2 py-0.5 bg-slate-800 text-slate-200 text-[11px] rounded hover:bg-slate-700 flex items-center gap-1"
-                      >
-                        {copiedQaIndex === idx ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                        <span>{copiedQaIndex === idx ? 'Copiado' : 'Copiar'}</span>
-                      </button>
+                      <CopyBtn k={`qa${idx}`} text={qa.recommendedAnswer} label="Copiar" />
                     </div>
                     <p className="text-slate-300 text-[11px] font-mono">{qa.recommendedAnswer}</p>
                   </div>
                 ))}
               </div>
-
-              <div className="flex justify-end pt-2 space-x-2">
-                <button
-                  onClick={() => setActiveStep(3)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700"
-                >
-                  ← Atrás
-                </button>
-                <button
-                  onClick={() => setActiveStep(5)}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition"
-                >
-                  Continuar al Paso 5: Preparar Entrevista →
-                </button>
-              </div>
+              <Nav prev={4} next={6} nextLabel="Paso 6: Entrevista" />
             </div>
           )}
 
-          {/* PASO 5: PREPARACIÓN DE ENTREVISTAS */}
-          {activeStep === 5 && (
+          {/* PASO 6: ENTREVISTA */}
+          {activeStep === 6 && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+              <div className={card}>
                 <h4 className="font-bold text-white text-sm flex items-center gap-2">
                   <Cpu className="h-4 w-4 text-emerald-400" />
-                  <span>Paso 5: Preparación de Entrevista Personalizada (Interview Copilot)</span>
+                  <span>Paso 6: Preparación de entrevista con {leadFull}</span>
                 </h4>
-                <p className="text-slate-300">
-                  Preguntas estratégicas clave y argumentos de impacto preparados para tu entrevista en <strong className="text-white">{offer.company}</strong>:
-                </p>
-
                 <div className="space-y-3">
                   {interviewQuestions.map((iq, i) => (
                     <div key={i} className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1.5">
-                      <span className="font-bold text-emerald-400 block">❓ Pregunta Probable #{i + 1}: {iq.q}</span>
-                      <div className="p-2.5 rounded bg-slate-900 text-slate-200 font-mono text-[11px]">
-                        💡 <strong>Respuesta Ganadora:</strong> {iq.a}
-                      </div>
+                      <span className="font-bold text-emerald-400 block">❓ #{i + 1}: {iq.q}</span>
+                      <div className="p-2.5 rounded bg-slate-900 text-slate-200 font-mono text-[11px]">💡 {iq.a}</div>
                     </div>
                   ))}
                 </div>
@@ -493,27 +418,20 @@ Geofísico y Especialista Senior en Políticas Ambientales con **Doble Titulaci�
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="h-5 w-5 text-emerald-400" />
-                    <span className="font-semibold text-emerald-300">¡Pipeline de 5 Pasos Completado con Éxito!</span>
+                    <span className="font-semibold text-emerald-300">Pipeline completado</span>
                   </div>
-
                   <button
-                    onClick={() => {
-                      onClose();
-                      onStartApplication(offer.id);
-                    }}
-                    className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition"
+                    onClick={() => { onClose(); onStartApplication(offer.id); }}
+                    className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer"
                   >
-                    📋 Registrar en Mis Candidaturas (Seguimiento Privado)
+                    📋 Registrar en Mis Candidaturas
                   </button>
                 </div>
-
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300 space-y-1">
-                  <span className="font-bold text-emerald-400 block">🔒 Garantía de Control Humano & Privacidad:</span>
-                  <p>
-                    Ningún correo ni postulación se envía automáticamente a la empresa externa ({offer.company}). Todos los borradores de CV, cartas y preparaciones quedan registrados <strong>exclusivamente en tu ordenador en la pestaña 'Candidaturas'</strong>. Tú siempre realizas el envío oficial ingresando directamente en el portal web oficial de la empresa.
-                  </p>
-                </div>
+                <p className="text-[11px] text-slate-300">
+                  Nada se envía automáticamente a {offer.company}. Los borradores quedan solo en tu ordenador; el envío oficial lo haces tú en el portal.
+                </p>
               </div>
+              <Nav prev={5} />
             </div>
           )}
 

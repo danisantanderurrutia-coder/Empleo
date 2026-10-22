@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   UserCheck, 
   FileCheck2, 
@@ -15,22 +15,27 @@ import { MasterProfileTab } from '../profile/MasterProfileTab';
 import { CVManagementTab } from '../cvs/CVManagementTab';
 import { CVStudioTab } from '../cvs/CVStudioTab';
 import { CVPreviewModal } from '../cvs/CVPreviewModal';
-import { CVGunsmithTab } from './CVGunsmithTab';
 import { SkillTreeTab } from './SkillTreeTab';
 import { getStoredProfile, getStoredCVs } from '../../services/db';
 import type { CVVersion } from '../../types/cv';
 
 interface AgentDossierTabProps {
-  initialSubTab?: 'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs' | 'studio';
+  initialSubTab?: 'showcase' | 'skills' | 'profile' | 'cvs' | 'studio';
+  initialStudioOfferId?: string;
   onReturnToHub?: () => void;
 }
 
 export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({ 
   initialSubTab = 'showcase',
+  initialStudioOfferId,
   onReturnToHub
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'gunsmith' | 'skills' | 'profile' | 'cvs' | 'studio'>(initialSubTab);
+  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'skills' | 'profile' | 'cvs' | 'studio'>(initialSubTab);
   const [previewingCv, setPreviewingCv] = useState<CVVersion | null>(null);
+
+  useEffect(() => {
+    setActiveSubTab(initialSubTab);
+  }, [initialSubTab]);
 
   const profile = getStoredProfile();
   const cvList = getStoredCVs();
@@ -108,18 +113,6 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           >
             <ShieldCheck className="h-3.5 w-3.5" />
             <span>Resumen</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('gunsmith')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'gunsmith'
-                ? 'bg-sky-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            <FileText className="h-3.5 w-3.5 text-sky-500" />
-            <span>Taller CV</span>
           </button>
 
           <button
@@ -493,18 +486,13 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 </div>
                 <div className="text-xs text-slate-300 space-y-1 font-sans">
                   <div>🎓 <strong>CAU Kiel / AMU Poznań</strong>: Doble M.Sc. Gestión & Protección Ambiental</div>
-                  <div>🔬 <strong>Universidad de Chile</strong>: Licenciatura en Geofísica (Distinción Máxima)</div>
+                  <div>🔬 <strong>Universidad de Chile</strong>: Licenciatura en Geofísica (Con Distinción)</div>
                   <div>🛰️ <strong>5+ Años de Experiencia</strong>: Proyectos en Euskadi, Alemania y Latinoamérica</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-
-      {/* SUB-PANEL 2: THE GUNSMITH (MODULAR CV LOADOUTS & PORTFOLIO ALLIANCE) */}
-      {activeSubTab === 'gunsmith' && (
-        <CVGunsmithTab />
       )}
 
       {/* SUB-PANEL 3: SKILL TREE & TRAINING BOUNTIES */}
@@ -529,7 +517,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
       {/* SUB-PANEL 6: CV STUDIO (A4, datos verificados, adaptación por oferta) */}
       {activeSubTab === 'studio' && (
         <div className="space-y-4">
-          <CVStudioTab />
+          <CVStudioTab initialOfferId={initialStudioOfferId} />
         </div>
       )}
 

@@ -273,6 +273,58 @@ export const renderCvHtml = (built: BuiltCv): string => {
 
 export const countPages = (length: CvLength): number => (length === '1p' ? 1 : 2);
 
+/**
+ * Renderiza el CV estructurado como texto Markdown (usado por el Pipeline de 5 pasos
+ * y como exportación textual limpia con datos 100% verificados).
+ */
+export const renderCvMarkdown = (built: BuiltCv): string => {
+  const { lang, length } = built.config;
+  const lines: string[] = [];
+
+  lines.push(`# DANIEL SANTANDER URRUTIA`);
+  lines.push(`**${built.headline}**`);
+  lines.push(built.contact.map((c) => c.value).join(' | '));
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  lines.push(built.summary);
+  lines.push('');
+
+  built.sections.forEach((sec) => {
+    if (!sec.items.length) return;
+    lines.push(`## ${SECTION_TITLES[sec.section][lang].toUpperCase()}`);
+    lines.push('');
+    sec.items.forEach((item) => {
+      const f = item.fact;
+      const x = f[lang];
+      if (f.section === 'skills' || f.section === 'languages') {
+        lines.push(`- **${x.title}**: ${x.short || ''}`);
+      } else if (f.section === 'publications') {
+        lines.push(`- **${x.title}** (${f.period || ''})`);
+        if (x.org) lines.push(`  *${x.org}*`);
+      } else if (f.section === 'courses') {
+        lines.push(`- **${x.title}** — ${x.org || ''} (${f.period || ''})`);
+      } else {
+        const meta = [x.place, f.period].filter(Boolean).join(' | ');
+        lines.push(`- **${x.title}**${x.org ? ` — *${x.org}*` : ''}${meta ? ` (${meta})` : ''}`);
+        if (length === '2p' && x.long?.length) {
+          x.long.forEach((l) => lines.push(`  * ${l}`));
+        } else if (x.short) {
+          lines.push(`  ${x.short}`);
+        }
+      }
+    });
+    lines.push('');
+  });
+
+  if (built.footer) {
+    lines.push('---');
+    lines.push(`*${built.footer}*`);
+  }
+
+  return lines.join('\n').trim();
+};
+
 // ----------------------------------------------------------------------------
 // Auditoría del Master Profile contra los hechos verificados del Portafolio.
 // ----------------------------------------------------------------------------
