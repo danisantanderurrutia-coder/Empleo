@@ -26,7 +26,7 @@ interface FiveStepPipelineModalProps {
   isOpen: boolean;
   onClose: () => void;
   onStartApplication: (offerId: string) => void;
-  onOpenStudio?: (offerId: string) => void;
+  onOpenStudio?: (offerId: string, docType?: 'cv' | 'cover_letter') => void;
 }
 
 const STEPS = [
@@ -315,7 +315,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 <div className="flex items-center justify-end gap-2">
                   {onOpenStudio && (
                     <button
-                      onClick={() => { onOpenStudio(offer.id); onClose(); }}
+                      onClick={() => { onOpenStudio(offer.id, 'cv'); onClose(); }}
                       className="px-3 py-1 bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 text-xs font-semibold rounded-lg flex items-center space-x-1.5 border border-sky-500/40 cursor-pointer"
                     >
                       <ExternalLink className="h-3.5 w-3.5" /><span>Afinar en CV Studio A4</span>
@@ -344,6 +344,15 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   </h4>
                   <div className="flex items-center gap-2">
                     <LangToggle value={letterLang} onChange={setLetterLang} options={[{ v: 'de', l: '🇩🇪 DE' }, { v: 'en', l: '🇬🇧 EN' }, { v: 'es', l: '🇪🇸 ES' }]} />
+                    {onOpenStudio && (
+                      <button
+                        onClick={() => { onOpenStudio(offer.id, 'cover_letter'); onClose(); }}
+                        className="px-3 py-1 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 text-xs font-semibold rounded-lg flex items-center space-x-1.5 border border-purple-500/40 cursor-pointer"
+                        title="Abrir en Cover Letter Studio (A4 / DIN 5008)"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" /><span>Afinar en Carta Studio</span>
+                      </button>
+                    )}
                     <CopyBtn k="letter" text={coverLetter.fullMarkdown} label="Copiar carta" />
                   </div>
                 </div>

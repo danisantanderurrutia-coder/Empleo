@@ -20,7 +20,7 @@ interface MarketRadarTabProps {
   initialSubTab?: 'offers' | 'sources' | 'companies';
   initialFilter?: string;
   onStartApplication: (offerId: string) => void;
-  onOpenStudio?: (offerId: string) => void;
+  onOpenStudio?: (offerId: string, docType?: 'cv' | 'cover_letter') => void;
   onReturnToHub?: () => void;
 }
 

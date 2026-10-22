@@ -129,7 +129,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
               <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 space-y-3">
                 <h4 className="font-mono font-bold text-white text-xs uppercase flex items-center gap-1.5 text-emerald-400">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span>Garantías de Transparencia & Cero Alucinaciones</span>
+                  <span>Garantías de Transparencia, Cero Alucinaciones & Filtro Anti-IA</span>
                 </h4>
                 <ul className="space-y-2 text-slate-300">
                   <li className="flex items-start gap-2">
@@ -142,15 +142,15 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">3.</span>
-                    <span><strong>Auto-Ajuste Tipográfico A4:</strong> Algoritmo de bisección matemática que calibra el zoom tipográfico dinámicamente para llenar exactamente la hoja A4 (1 o 2 páginas) sin saltos huérfanos ni desbordes.</span>
+                    <span><strong>Filtro Editorial Anti-IA en Cover Letter Studio:</strong> Las cartas de postulación prohíben clichés genéricos de IA ("thrilled", "delve into", "testament to", "foster", "beacon of", "aligns seamlessly"). Exigen primera persona analítica y traducen la degradación ambiental a balances de masa y metodologías duras (resistividad eléctrica SEV, flujos de GEI por Eddy Covariance, tensión de preconsolidación σp = 62,4 kPa y modelación en R).</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">4.</span>
-                    <span><strong>Depuración Automática de URLs:</strong> El sistema purga enlaces 404, convocatorias caducadas y menús de navegación basura ("Cookies", "Login", "Sobre Nosotros").</span>
+                    <span><strong>Auto-Ajuste Tipográfico A4 & DIN 5008:</strong> Algoritmo de bisección matemática para CVs de 1 o 2 páginas y maquetación formal DIN 5008 para cartas institucionales de 1 página.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">5.</span>
-                    <span><strong>Control Humano 100% & Borradores Asistidos:</strong> Las cartas de motivación y adaptaciones de CV son borradores estructurados con evidencia real que requieren la revisión, personalización y confirmación de Daniel antes de cualquier envío.</span>
+                    <span><strong>Control Humano 100% & Borradores Asistidos:</strong> Las cartas y adaptaciones son borradores de alta fidelidad que requieren la revisión, personalización y confirmación de Daniel antes de cualquier envío.</span>
                   </li>
                 </ul>
               </div>
@@ -167,7 +167,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                 <div>
                   <h4 className="font-mono font-bold text-white text-xs uppercase">RADAR // Mercado & Vacantes</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
-                    Barrido holográfico con sonar 360° para escanear 350+ vacantes indexadas, clasificar por sector (Alemania, Euskadi, Remoto), filtrar por afinidad técnica y abrir directamente la adaptación en CV Studio o el Pipeline de 5 Pasos.
+                    Barrido holográfico con sonar 360° para escanear 350+ vacantes indexadas, clasificar por sector (Alemania, Euskadi, Remoto), filtrar por afinidad técnica y abrir directamente la adaptación en CV Studio o Cover Letter Studio.
                   </p>
                 </div>
               </div>
@@ -177,9 +177,9 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <UserCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Perfil, Competencias & CV Studio</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Perfil, CV Studio & Cover Letter Studio</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
-                    Showcase del especialista Daniel Santander y <strong>CV Studio</strong>: motor de ensamblado de CVs A4 (1 y 2 páginas, ES y EN) anclado en datos verificados, con ranking de relevancia según la oferta objetivo, auditoría del Perfil Maestro (reparación de enlaces en 1 clic), previsualización en vivo, descarga de HTML e impresión directa a PDF.
+                    Showcase del especialista Daniel Santander, <strong>CV Studio</strong> (A4, 1p/2p, ES/EN) y <strong>Cover Letter Studio</strong> (formato DIN 5008, ES/EN/DE, filtro estricto anti-clichés de IA, editor editable y generador de prompts para LLMs externos).
                   </p>
                 </div>
               </div>

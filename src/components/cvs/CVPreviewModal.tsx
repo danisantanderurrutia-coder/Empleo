@@ -18,17 +18,20 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ cv, isOpen, onCl
   const data = cv.compiledData;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="glass-panel max-w-4xl w-full rounded-2xl border border-slate-700 shadow-2xl space-y-4 my-8 flex flex-col max-h-[90vh]">
-        <div className="flex items-center justify-between p-4 border-b border-slate-800 shrink-0">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div 
+        className="max-w-4xl w-full rounded-2xl border shadow-2xl space-y-4 my-8 flex flex-col max-h-[90vh]"
+        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
+      >
+        <div className="flex items-center justify-between p-4 border-b border-[var(--panel-border)] shrink-0">
           <div>
-            <h3 className="font-bold text-slate-100 text-base flex items-center gap-2">
+            <h3 className="font-bold text-[var(--text-primary)] text-base flex items-center gap-2">
               <span>{cv.name}</span>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20 font-bold">
                 {cv.templateId}
               </span>
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Generado dinámicamente desde Master Profile • {cv.updatedAt}
             </p>
           </div>
@@ -41,13 +44,13 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ cv, isOpen, onCl
               <Printer className="h-4 w-4" />
               <span>Imprimir / PDF</span>
             </button>
-            <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-white rounded-lg">
+            <button onClick={onClose} className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg">
               <X className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 bg-slate-900 rounded-b-2xl">
+        <div className="flex-1 overflow-y-auto p-6 bg-slate-900/10 dark:bg-slate-950/80 rounded-b-2xl">
           <div 
             id="printable-cv"
             className="max-w-2xl mx-auto bg-white text-slate-900 p-8 rounded-xl shadow-2xl space-y-6 font-sans border border-slate-200"

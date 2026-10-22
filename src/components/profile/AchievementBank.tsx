@@ -74,15 +74,18 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
   };
 
   return (
-    <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+    <div 
+      className="p-5 rounded-2xl border shadow-sm space-y-4"
+      style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+          <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
             <Trophy className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-100 text-base">Banco de Logros Reutilizable</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="font-bold text-[var(--text-primary)] text-base">Banco de Logros Reutilizable</h3>
+            <p className="text-xs text-[var(--text-muted)]">
               Metas cuantificables con métricas verificadas. Puedes editarlas o añadir nuevas.
             </p>
           </div>
@@ -90,7 +93,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
 
         <button
           onClick={() => setIsAdding(!isAdding)}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold border border-amber-500/30 transition"
+          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-300 text-xs font-semibold border border-amber-500/30 transition"
         >
           <Plus className="h-3.5 w-3.5" />
           <span>Añadir Logro</span>
@@ -98,54 +101,62 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
       </div>
 
       {isAdding && (
-        <form onSubmit={handleSave} className="p-4 rounded-xl bg-emerald-950/90 border border-amber-500/30 space-y-3">
-          <h4 className="font-semibold text-xs text-amber-300">Nuevo Logro Cuantificable</h4>
+        <form 
+          onSubmit={handleSave} 
+          className="p-4 rounded-xl border border-amber-500/30 space-y-3"
+          style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
+        >
+          <h4 className="font-semibold text-xs text-amber-600 dark:text-amber-300">Nuevo Logro Cuantificable</h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-[11px] font-medium text-slate-400">Título del Logro *</label>
+              <label className="text-[11px] font-medium text-[var(--text-secondary)]">Título del Logro *</label>
               <input
                 type="text"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="Ej. Publicación en ElDesconcierto / Reducción FCP 42%"
-                className="w-full mt-1 px-3 py-1.5 bg-emerald-950 border border-emerald-700 rounded-lg text-xs text-white focus:outline-none focus:border-amber-400"
+                className="w-full mt-1 px-3 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-amber-400"
+                style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
                 required
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-medium text-slate-400">Métrica Impacto *</label>
+              <label className="text-[11px] font-medium text-[var(--text-secondary)]">Métrica Impacto *</label>
               <input
                 type="text"
                 value={metrics}
                 onChange={e => setMetrics(e.target.value)}
                 placeholder="Ej. 7 Publicaciones / 8 Ponencias"
-                className="w-full mt-1 px-3 py-1.5 bg-emerald-950 border border-emerald-700 rounded-lg text-xs text-white focus:outline-none focus:border-amber-400"
+                className="w-full mt-1 px-3 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-amber-400 font-semibold"
+                style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[11px] font-medium text-slate-400">Descripción detallada</label>
+            <label className="text-[11px] font-medium text-[var(--text-secondary)]">Descripción detallada</label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
               rows={2}
               placeholder="Detalla el logro..."
-              className="w-full mt-1 px-3 py-1.5 bg-emerald-950 border border-emerald-700 rounded-lg text-xs text-white focus:outline-none focus:border-amber-400"
+              className="w-full mt-1 px-3 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-amber-400 leading-relaxed"
+              style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
             />
           </div>
 
           <div>
-            <label className="text-[11px] font-medium text-slate-400">Etiquetas (separadas por coma)</label>
+            <label className="text-[11px] font-medium text-[var(--text-secondary)]">Etiquetas (separadas por coma)</label>
             <input
               type="text"
               value={tagsInput}
               onChange={e => setTagsInput(e.target.value)}
               placeholder="Investigación, Gobernanza, Internacional"
-              className="w-full mt-1 px-3 py-1.5 bg-emerald-950 border border-emerald-700 rounded-lg text-xs text-white focus:outline-none focus:border-amber-400"
+              className="w-full mt-1 px-3 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-amber-400"
+              style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
             />
           </div>
 
@@ -153,7 +164,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="px-3 py-1.5 text-xs text-slate-400 hover:text-white font-medium"
+              className="px-3 py-1.5 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium"
             >
               Cancelar
             </button>
@@ -173,10 +184,14 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
 
           if (isEditing) {
             return (
-              <div key={ach.id} className="p-4 rounded-xl bg-emerald-950/90 border border-amber-500/40 space-y-2">
+              <div 
+                key={ach.id} 
+                className="p-4 rounded-xl border border-amber-500/40 space-y-2"
+                style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
+              >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs text-amber-300">Editando Logro</span>
-                  <button onClick={() => setEditingId(null)} className="text-slate-400 hover:text-white">
+                  <span className="font-bold text-xs text-amber-600 dark:text-amber-300">Editando Logro</span>
+                  <button onClick={() => setEditingId(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -186,7 +201,8 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                   value={editTitle}
                   onChange={e => setEditTitle(e.target.value)}
                   placeholder="Título"
-                  className="w-full px-2.5 py-1 bg-emerald-950 border border-emerald-700 rounded text-xs text-white"
+                  className="w-full px-2.5 py-1 border rounded text-xs focus:outline-none focus:border-amber-400"
+                  style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
                 />
 
                 <input
@@ -194,7 +210,8 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                   value={editMetrics}
                   onChange={e => setEditMetrics(e.target.value)}
                   placeholder="Métrica"
-                  className="w-full px-2.5 py-1 bg-emerald-950 border border-emerald-700 rounded text-xs text-amber-300 font-bold"
+                  className="w-full px-2.5 py-1 border rounded text-xs text-amber-600 dark:text-amber-400 font-bold focus:outline-none focus:border-amber-400"
+                  style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
                 />
 
                 <textarea
@@ -202,7 +219,8 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                   onChange={e => setEditDescription(e.target.value)}
                   rows={2}
                   placeholder="Descripción"
-                  className="w-full px-2.5 py-1 bg-emerald-950 border border-emerald-700 rounded text-xs text-slate-200"
+                  className="w-full px-2.5 py-1 border rounded text-xs focus:outline-none focus:border-amber-400"
+                  style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
                 />
 
                 <input
@@ -210,7 +228,8 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                   value={editTagsInput}
                   onChange={e => setEditTagsInput(e.target.value)}
                   placeholder="Etiquetas (coma)"
-                  className="w-full px-2.5 py-1 bg-emerald-950 border border-emerald-700 rounded text-xs text-slate-300"
+                  className="w-full px-2.5 py-1 border rounded text-xs focus:outline-none focus:border-amber-400"
+                  style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', color: 'var(--text-primary)' }}
                 />
 
                 <div className="flex justify-end space-x-2 pt-1">
@@ -229,29 +248,30 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
           return (
             <div
               key={ach.id}
-              className="p-4 rounded-xl bg-emerald-950/60 border border-emerald-800/60 space-y-2 relative group hover:border-emerald-700 transition"
+              className="p-4 rounded-xl border space-y-2 relative group hover:border-amber-500/40 transition"
+              style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="space-y-0.5">
                   <div className="flex items-center space-x-2">
-                    <h4 className="font-semibold text-xs text-slate-100">{ach.title}</h4>
+                    <h4 className="font-semibold text-xs text-[var(--text-primary)]">{ach.title}</h4>
                     {ach.isVerified ? (
                       <span title="Verificado sin alucinación">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                       </span>
                     ) : (
                       <span title="Pendiente de verificación">
-                        <ShieldAlert className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                        <ShieldAlert className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] text-amber-400 font-bold">{ach.metrics}</div>
+                  <div className="text-[11px] text-amber-600 dark:text-amber-400 font-bold">{ach.metrics}</div>
                 </div>
 
                 <div className="flex items-center space-x-1.5">
                   <button
                     onClick={() => handleStartEdit(ach)}
-                    className="text-emerald-400 hover:text-emerald-200 transition p-1"
+                    className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-200 transition p-1"
                     title="Editar logro allí mismo"
                   >
                     <Edit3 className="h-3.5 w-3.5" />
@@ -259,7 +279,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
 
                   <button
                     onClick={() => onDeleteAchievement(ach.id)}
-                    className="text-slate-400 hover:text-rose-400 transition p-1"
+                    className="text-[var(--text-muted)] hover:text-rose-500 transition p-1"
                     title="Eliminar logro"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -267,15 +287,15 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                 </div>
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed">{ach.description}</p>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{ach.description}</p>
 
               <div className="flex flex-wrap gap-1 pt-1">
                 {ach.tags.map((tag, i) => (
                   <span
                     key={i}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-200 flex items-center space-x-1 border border-emerald-800/60"
+                    className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 flex items-center space-x-1 border border-emerald-500/20 font-medium"
                   >
-                    <Tag className="h-2.5 w-2.5 text-emerald-400" />
+                    <Tag className="h-2.5 w-2.5 text-emerald-500" />
                     <span>{tag}</span>
                   </span>
                 ))}

@@ -34,13 +34,16 @@ export const CVManagementTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-slate-800">
+      <div 
+        className="flex items-center justify-between p-5 rounded-2xl border shadow-sm"
+        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+      >
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <FileCheck2 className="h-5 w-5 text-indigo-400" />
+          <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <FileCheck2 className="h-5 w-5 text-indigo-500" />
             <span>Gestor de Currículums por Plantilla</span>
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--text-muted)]">
             Los CVs se compilan dinámicamente desde el Master Profile. Sin información duplicada ni datos inventados.
           </p>
         </div>
@@ -55,31 +58,37 @@ export const CVManagementTab: React.FC = () => {
       </div>
 
       {isCreating && (
-        <form onSubmit={handleGenerateCV} className="glass-panel p-5 rounded-2xl border border-indigo-500/30 space-y-4">
-          <h3 className="font-bold text-sm text-indigo-300 flex items-center space-x-2">
+        <form 
+          onSubmit={handleGenerateCV} 
+          className="p-5 rounded-2xl border border-indigo-500/30 shadow-sm space-y-4"
+          style={{ backgroundColor: 'var(--card-bg)' }}
+        >
+          <h3 className="font-bold text-sm text-indigo-600 dark:text-indigo-300 flex items-center space-x-2">
             <Sparkles className="h-4 w-4" />
             <span>Generar Versión de CV desde Master Profile</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-medium text-slate-300">Nombre de la Versión *</label>
+              <label className="text-xs font-medium text-[var(--text-secondary)]">Nombre de la Versión *</label>
               <input
                 type="text"
                 value={newCvName}
                 onChange={e => setNewCvName(e.target.value)}
                 placeholder="Ej. CV Tech Senior - Euskadi (React + TS)"
-                className="w-full mt-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full mt-1 px-3 py-2 border rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition"
+                style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)', color: 'var(--text-primary)' }}
                 required
               />
             </div>
 
             <div>
-              <label className="text-xs font-medium text-slate-300">Seleccionar Formato de Plantilla *</label>
+              <label className="text-xs font-medium text-[var(--text-secondary)]">Seleccionar Formato de Plantilla *</label>
               <select
                 value={selectedTemplate}
                 onChange={e => setSelectedTemplate(e.target.value as CVTemplateId)}
-                className="w-full mt-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full mt-1 px-3 py-2 border rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition font-medium"
+                style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)', color: 'var(--text-primary)' }}
               >
                 {cvTemplatesList.map(t => (
                   <option key={t.id} value={t.id}>
@@ -93,9 +102,12 @@ export const CVManagementTab: React.FC = () => {
           {(() => {
             const currentTpl = cvTemplatesList.find(t => t.id === selectedTemplate);
             return currentTpl ? (
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 space-y-1">
-                <div className="font-semibold text-indigo-300">Público Objetivo: {currentTpl.targetAudience}</div>
-                <p className="text-[11px] text-slate-400">{currentTpl.description}</p>
+              <div 
+                className="p-3 rounded-xl border text-xs space-y-1"
+                style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
+              >
+                <div className="font-semibold text-indigo-600 dark:text-indigo-300">Público Objetivo: {currentTpl.targetAudience}</div>
+                <p className="text-[11px] text-[var(--text-secondary)]">{currentTpl.description}</p>
               </div>
             ) : null;
           })()}
@@ -104,7 +116,7 @@ export const CVManagementTab: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsCreating(false)}
-              className="px-4 py-2 text-xs text-slate-400 hover:text-white font-medium"
+              className="px-4 py-2 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium"
             >
               Cancelar
             </button>
@@ -119,8 +131,8 @@ export const CVManagementTab: React.FC = () => {
       )}
 
       <div className="space-y-3">
-        <h3 className="font-bold text-slate-100 text-sm flex items-center space-x-2">
-          <Layers className="h-4 w-4 text-indigo-400" />
+        <h3 className="font-bold text-[var(--text-primary)] text-sm flex items-center space-x-2">
+          <Layers className="h-4 w-4 text-indigo-500" />
           <span>Plantillas Disponibles en el Sistema (7 Formatos)</span>
         </h3>
 
@@ -133,24 +145,28 @@ export const CVManagementTab: React.FC = () => {
                 setNewCvName(`CV ${tpl.name.split(' ')[0]} - Master Profile`);
                 setIsCreating(true);
               }}
-              className="glass-card p-3.5 rounded-xl border border-slate-800 hover:border-indigo-500/40 cursor-pointer transition space-y-1.5 group"
+              className="p-3.5 rounded-xl border hover:border-indigo-500/40 cursor-pointer transition space-y-1.5 group shadow-sm"
+              style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
             >
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-100 group-hover:text-indigo-300">
+              <div className="flex items-center justify-between text-xs font-semibold text-[var(--text-primary)] group-hover:text-indigo-600 dark:group-hover:text-indigo-300">
                 <span>{tpl.name}</span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
+                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold border border-indigo-500/20">
                   {tpl.language}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">{tpl.description}</p>
-              <div className="text-[10px] text-slate-500 font-mono font-medium">{tpl.pages}</div>
+              <p className="text-[11px] text-[var(--text-secondary)] line-clamp-2 leading-relaxed">{tpl.description}</p>
+              <div className="text-[10px] text-[var(--text-muted)] font-mono font-medium">{tpl.pages}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
-        <h3 className="font-bold text-slate-100 text-sm flex items-center space-x-2">
-          <FileText className="h-4 w-4 text-emerald-400" />
+      <div 
+        className="p-5 rounded-2xl border shadow-sm space-y-4"
+        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+      >
+        <h3 className="font-bold text-[var(--text-primary)] text-sm flex items-center space-x-2">
+          <FileText className="h-4 w-4 text-emerald-500" />
           <span>Historial de Versiones Generadas ({cvList.length})</span>
         </h3>
 
@@ -158,28 +174,29 @@ export const CVManagementTab: React.FC = () => {
           {cvList.map((cv) => (
             <div
               key={cv.id}
-              className="glass-card p-4 rounded-xl border border-slate-800 hover:border-indigo-500/30 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="p-4 rounded-xl border hover:border-indigo-500/30 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
             >
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
-                  <h4 className="font-semibold text-sm text-slate-100">{cv.name}</h4>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                  <h4 className="font-semibold text-sm text-[var(--text-primary)]">{cv.name}</h4>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20 font-bold">
                     {cv.templateId}
                   </span>
                 </div>
-                <div className="flex items-center space-x-3 text-xs text-slate-400">
+                <div className="flex items-center space-x-3 text-xs text-[var(--text-muted)]">
                   <span>Modificado: {cv.updatedAt}</span>
                   <span>•</span>
                   <span>Logros vinculados: {cv.compiledData.achievements.length}</span>
                   <span>•</span>
-                  <span className="text-emerald-400 font-medium">Anti-Hallucination OK</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">Anti-Hallucination OK</span>
                 </div>
               </div>
 
               <div className="flex items-center space-x-2 shrink-0">
                 <button
                   onClick={() => setSelectedCvForPreview(cv)}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600/30 text-xs font-semibold border border-indigo-500/30 transition"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-500/20 text-xs font-semibold border border-indigo-500/30 transition"
                 >
                   <Eye className="h-3.5 w-3.5" />
                   <span>Previsualizar / Imprimir</span>

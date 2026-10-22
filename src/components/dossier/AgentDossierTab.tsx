@@ -22,12 +22,14 @@ import type { CVVersion } from '../../types/cv';
 interface AgentDossierTabProps {
   initialSubTab?: 'showcase' | 'skills' | 'profile' | 'cvs' | 'studio';
   initialStudioOfferId?: string;
+  initialStudioDocType?: 'cv' | 'cover_letter';
   onReturnToHub?: () => void;
 }
 
 export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({ 
   initialSubTab = 'showcase',
   initialStudioOfferId,
+  initialStudioDocType,
   onReturnToHub
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'skills' | 'profile' | 'cvs' | 'studio'>(initialSubTab);
@@ -46,7 +48,6 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   const cvDe = cvList.find(c => c.language === 'de') || cvList[2] || cvList[0];
 
   // Professional operative and research laboratory images from Unsplash
-  const backgroundWall = 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1920&q=80';
   const tacticalOperative = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80';
 
   return (
@@ -170,15 +171,14 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
        * ============================================================== */}
       {activeSubTab === 'showcase' && (
         <div 
-          className="relative rounded-3xl overflow-hidden p-6 border border-slate-800 shadow-2xl select-none"
+          className="relative rounded-3xl overflow-hidden p-6 border shadow-2xl select-none transition-colors"
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(10, 15, 25, 0.92), rgba(7, 11, 20, 0.96)), url('${backgroundWall}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundColor: 'var(--panel-bg)',
+            borderColor: 'var(--panel-border)'
           }}
         >
           {/* Subtle Scanlines & Tactical Grid */}
-          <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-20 mix-blend-overlay" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             
@@ -187,50 +187,74 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
              * -------------------------------------------------------- */}
             <div className="lg:col-span-4 flex flex-col justify-between space-y-4">
               {/* Identity Header */}
-              <div className="bg-[#121927]/95 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 shadow-xl space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div 
+                className="rounded-2xl p-5 border shadow-xl space-y-3 transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--card-bg)', 
+                  borderColor: 'var(--card-border)' 
+                }}
+              >
+                <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2.5">
                   <div>
-                    <span className="text-[10px] font-mono font-black text-amber-400 uppercase tracking-widest">
+                    <span className="text-[10px] font-mono font-black text-amber-500 uppercase tracking-widest">
                       CALLSIGN // GEO-SCIENTIST
                     </span>
-                    <h2 className="text-xl font-black text-white uppercase tracking-tight font-sans">
+                    <h2 className="text-xl font-black text-[var(--text-primary)] uppercase tracking-tight font-sans">
                       {profile.fullName || 'DANIEL SANTANDER'}
                     </h2>
                   </div>
-                  <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-black/60 text-amber-300 border border-amber-500/50">
+                  <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/40">
                     TIER-1 MINT
                   </span>
                 </div>
 
-                <div className="text-xs text-slate-200 font-sans leading-relaxed">
+                <div className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
                   Científico Ambiental y Geofísico con Doble M.Sc. en Alemania (CAU Kiel) y Polonia (AMU Poznań). Especialista en modelación cuantitativa de carbono, balances hidrológicos y gobernanza socio-ecológica.
                 </div>
 
                 {/* Mobility & Legal Status */}
-                <div className="pt-2 border-t border-slate-800 space-y-1.5">
-                  <div className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-wider">
+                <div className="pt-2 border-t border-[var(--panel-border)] space-y-1.5">
+                  <div className="text-[10px] font-mono font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Estatus Migratorio & Movilidad UE
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                      <div className="text-[9px] text-slate-400 uppercase">Alemania</div>
-                      <div className="font-bold text-emerald-400">§20 AufenthG</div>
+                    <div 
+                      className="p-2 rounded-lg border"
+                      style={{ 
+                        backgroundColor: 'var(--panel-bg)', 
+                        borderColor: 'var(--panel-border)' 
+                      }}
+                    >
+                      <div className="text-[9px] text-[var(--text-muted)] uppercase">Alemania</div>
+                      <div className="font-bold text-emerald-600 dark:text-emerald-400">§20 AufenthG</div>
                     </div>
-                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                      <div className="text-[9px] text-slate-400 uppercase">España</div>
-                      <div className="font-bold text-sky-400">Ley 14 / PAC</div>
+                    <div 
+                      className="p-2 rounded-lg border"
+                      style={{ 
+                        backgroundColor: 'var(--panel-bg)', 
+                        borderColor: 'var(--panel-border)' 
+                      }}
+                    >
+                      <div className="text-[9px] text-[var(--text-muted)] uppercase">España</div>
+                      <div className="font-bold text-sky-600 dark:text-sky-400">Ley 14 / PAC</div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Attributes Radar & Competencies Matrix */}
-              <div className="bg-[#121927]/95 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 shadow-xl space-y-3 flex-1 flex flex-col justify-between">
-                <div className="border-b border-slate-800 pb-2">
-                  <h3 className="text-xs font-mono font-black text-white uppercase tracking-wider">
+              <div 
+                className="rounded-2xl p-5 border shadow-xl space-y-3 flex-1 flex flex-col justify-between transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--card-bg)', 
+                  borderColor: 'var(--card-border)' 
+                }}
+              >
+                <div className="border-b border-[var(--panel-border)] pb-2">
+                  <h3 className="text-xs font-mono font-black text-[var(--text-primary)] uppercase tracking-wider">
                     MATRIZ DE ATRIBUTOS TÉCNICOS
                   </h3>
-                  <span className="text-[10px] font-mono text-slate-300">
+                  <span className="text-[10px] font-mono text-[var(--text-muted)]">
                     CALIBRACIÓN BASADA EN PROYECTOS VERIFICADOS
                   </span>
                 </div>
@@ -238,47 +262,47 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 <div className="space-y-3 font-mono text-xs">
                   <div>
                     <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-200 font-bold">Modelación Espacial (R, Python, GIS, GEE)</span>
-                      <span className="text-emerald-400 font-extrabold">98%</span>
+                      <span className="text-[var(--text-secondary)] font-bold">Modelación Espacial (R, Python, GIS, GEE)</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">98%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div className="h-1.5 w-full bg-black/10 dark:bg-slate-900 rounded-full overflow-hidden border border-[var(--card-border)]">
                       <div className="h-full bg-emerald-500 rounded-full" style={{ width: '98%' }} />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-200 font-bold">Biogeoquímica & Dinámica de Carbono</span>
-                      <span className="text-emerald-400 font-extrabold">94%</span>
+                      <span className="text-[var(--text-secondary)] font-bold">Biogeoquímica & Dinámica de Carbono</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">94%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div className="h-1.5 w-full bg-black/10 dark:bg-slate-900 rounded-full overflow-hidden border border-[var(--card-border)]">
                       <div className="h-full bg-emerald-500 rounded-full" style={{ width: '94%' }} />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-200 font-bold">Gobernanza Socio-Ecológica & Políticas</span>
-                      <span className="text-sky-400 font-extrabold">90%</span>
+                      <span className="text-[var(--text-secondary)] font-bold">Gobernanza Socio-Ecológica & Políticas</span>
+                      <span className="text-sky-600 dark:text-sky-400 font-extrabold">90%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div className="h-1.5 w-full bg-black/10 dark:bg-slate-900 rounded-full overflow-hidden border border-[var(--card-border)]">
                       <div className="h-full bg-sky-500 rounded-full" style={{ width: '90%' }} />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-200 font-bold">Rigor Académico Europeo (Kiel / Poznań)</span>
-                      <span className="text-amber-400 font-extrabold">96%</span>
+                      <span className="text-[var(--text-secondary)] font-bold">Rigor Académico Europeo (Kiel / Poznań)</span>
+                      <span className="text-amber-600 dark:text-amber-400 font-extrabold">96%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div className="h-1.5 w-full bg-black/10 dark:bg-slate-900 rounded-full overflow-hidden border border-[var(--card-border)]">
                       <div className="h-full bg-amber-500 rounded-full" style={{ width: '96%' }} />
                     </div>
                   </div>
                 </div>
 
                 {/* Languages Matrix */}
-                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-300">
+                <div className="pt-2 border-t border-[var(--panel-border)] flex items-center justify-between text-[10px] font-mono text-[var(--text-secondary)]">
                   <span>Español: <strong>C2 Nativo</strong></span>
                   <span>•</span>
                   <span>English: <strong>C1 CEMS</strong></span>
@@ -346,39 +370,56 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
              * -------------------------------------------------------- */}
             <div className="lg:col-span-4 flex flex-col justify-between space-y-4">
               {/* Tactical Weaponry / Loadout Card */}
-              <div className="bg-[#121927]/95 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 shadow-xl space-y-3 flex-1 flex flex-col justify-between">
-                <div className="border-b border-slate-800 pb-2 flex items-center justify-between">
+              <div 
+                className="rounded-2xl p-5 border shadow-xl space-y-3 flex-1 flex flex-col justify-between transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--card-bg)', 
+                  borderColor: 'var(--card-border)' 
+                }}
+              >
+                <div className="border-b border-[var(--panel-border)] pb-2 flex items-center justify-between">
                   <div>
-                    <h3 className="text-xs font-mono font-black text-white uppercase tracking-wider">
+                    <h3 className="text-xs font-mono font-black text-[var(--text-primary)] uppercase tracking-wider">
                       VERSIONES DE CV // FORMATOS POR REGIÓN
                     </h3>
-                    <span className="text-[10px] font-mono text-slate-300">
+                    <span className="text-[10px] font-mono text-[var(--text-muted)]">
                       DOCUMENTACIÓN COMPILADA & VERIFICADA
                     </span>
                   </div>
-                  <FileText className="h-4 w-4 text-amber-400" />
+                  <FileText className="h-4 w-4 text-amber-500" />
                 </div>
 
                 <div className="space-y-3">
                   {/* Loadout 1: ES */}
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/80 transition group">
+                  <div 
+                    className="p-3.5 rounded-xl border hover:border-amber-500 transition group"
+                    style={{ 
+                      backgroundColor: 'var(--panel-bg)', 
+                      borderColor: 'var(--panel-border)' 
+                    }}
+                  >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-white group-hover:text-amber-400 transition">
+                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-500 transition">
                         🇪🇸 VERSIÓN 1: ESPAÑOL (EUSKADI & ESPAÑA)
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                         LISTO
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300 font-sans mb-2">
+                    <p className="text-[11px] text-[var(--text-secondary)] font-sans mb-2">
                       Optimizado para I+D vasco (BC3, Tecnalia, IDOM, Neiker) y convocatorias de Ley 14.
                     </p>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setPreviewingCv(cvEs)}
-                        className="flex-1 py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-[11px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer border border-slate-700"
+                        className="flex-1 py-1 px-2.5 rounded-lg text-[11px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer border"
+                        style={{ 
+                          backgroundColor: 'var(--card-bg)', 
+                          borderColor: 'var(--panel-border)',
+                          color: 'var(--text-primary)'
+                        }}
                       >
-                        <Eye className="h-3.5 w-3.5 text-amber-400" />
+                        <Eye className="h-3.5 w-3.5 text-amber-500" />
                         <span>Ver CV</span>
                       </button>
                       <button
@@ -386,7 +427,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                           setPreviewingCv(cvEs);
                           setTimeout(() => window.print(), 300);
                         }}
-                        className="py-1 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 text-[11px] font-mono font-black transition flex items-center justify-center gap-1 cursor-pointer"
+                        className="py-1 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-mono font-black transition flex items-center justify-center gap-1 cursor-pointer shadow"
                         title="Imprimir / Exportar a PDF"
                       >
                         <Printer className="h-3.5 w-3.5" />
@@ -396,24 +437,35 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                   </div>
 
                   {/* Loadout 2: EN */}
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/80 transition group">
+                  <div 
+                    className="p-3.5 rounded-xl border hover:border-amber-500 transition group"
+                    style={{ 
+                      backgroundColor: 'var(--panel-bg)', 
+                      borderColor: 'var(--panel-border)' 
+                    }}
+                  >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-white group-hover:text-amber-400 transition">
+                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-500 transition">
                         🇬🇧 VERSIÓN 2: INGLÉS (POLÍTICA INTERNACIONAL & I+D)
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                         LISTO
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300 font-sans mb-2">
+                    <p className="text-[11px] text-[var(--text-secondary)] font-sans mb-2">
                       Formato internacional para think-tanks, consultorías climáticas y teletrabajo europeo.
                     </p>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setPreviewingCv(cvEn)}
-                        className="flex-1 py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-[11px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer border border-slate-700"
+                        className="flex-1 py-1 px-2.5 rounded-lg text-[11px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer border"
+                        style={{ 
+                          backgroundColor: 'var(--card-bg)', 
+                          borderColor: 'var(--panel-border)',
+                          color: 'var(--text-primary)'
+                        }}
                       >
-                        <Eye className="h-3.5 w-3.5 text-amber-400" />
+                        <Eye className="h-3.5 w-3.5 text-amber-500" />
                         <span>Ver CV</span>
                       </button>
                       <button
@@ -421,7 +473,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                           setPreviewingCv(cvEn);
                           setTimeout(() => window.print(), 300);
                         }}
-                        className="py-1 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 text-[11px] font-mono font-black transition flex items-center justify-center gap-1 cursor-pointer"
+                        className="py-1 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-mono font-black transition flex items-center justify-center gap-1 cursor-pointer shadow"
                         title="Imprimir / Exportar a PDF"
                       >
                         <Printer className="h-3.5 w-3.5" />
@@ -431,24 +483,35 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                   </div>
 
                   {/* Loadout 3: DE */}
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/80 transition group">
+                  <div 
+                    className="p-3.5 rounded-xl border hover:border-amber-500 transition group"
+                    style={{ 
+                      backgroundColor: 'var(--panel-bg)', 
+                      borderColor: 'var(--panel-border)' 
+                    }}
+                  >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-white group-hover:text-amber-400 transition">
+                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-500 transition">
                         🇩🇪 VERSIÓN 3: ALEMÁN (§20 AUFENTHG / DACH)
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                         LISTO
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300 font-sans mb-2">
+                    <p className="text-[11px] text-[var(--text-secondary)] font-sans mb-2">
                       Lebenslauf estructurado con foco en instituciones alemanas y centros de investigación.
                     </p>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setPreviewingCv(cvDe)}
-                        className="flex-1 py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-[11px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer border border-slate-700"
+                        className="flex-1 py-1 px-2.5 rounded-lg text-[11px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer border"
+                        style={{ 
+                          backgroundColor: 'var(--card-bg)', 
+                          borderColor: 'var(--panel-border)',
+                          color: 'var(--text-primary)'
+                        }}
                       >
-                        <Eye className="h-3.5 w-3.5 text-amber-400" />
+                        <Eye className="h-3.5 w-3.5 text-amber-500" />
                         <span>Ver CV</span>
                       </button>
                       <button
@@ -456,7 +519,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                           setPreviewingCv(cvDe);
                           setTimeout(() => window.print(), 300);
                         }}
-                        className="py-1 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 text-[11px] font-mono font-black transition flex items-center justify-center gap-1 cursor-pointer"
+                        className="py-1 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-mono font-black transition flex items-center justify-center gap-1 cursor-pointer shadow"
                         title="Imprimir / Exportar a PDF"
                       >
                         <Printer className="h-3.5 w-3.5" />
@@ -467,24 +530,35 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 </div>
 
                 {/* Switch to Full CV Armory */}
-                <div className="pt-2 border-t border-slate-800">
+                <div className="pt-2 border-t border-[var(--panel-border)]">
                   <button
                     onClick={() => setActiveSubTab('cvs')}
-                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-mono font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer border border-slate-700"
+                    className="w-full py-2 rounded-xl font-mono font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer border"
+                    style={{ 
+                      backgroundColor: 'var(--panel-bg)', 
+                      borderColor: 'var(--panel-border)',
+                      color: 'var(--text-primary)'
+                    }}
                   >
-                    <FileCheck2 className="h-4 w-4 text-amber-400" />
+                    <FileCheck2 className="h-4 w-4 text-amber-500" />
                     <span>GESTIONAR O COMPILAR MÁS PLANTILLAS</span>
                   </button>
                 </div>
               </div>
 
               {/* Verified Deployments Badge Box */}
-              <div className="bg-[#121927]/95 backdrop-blur-md rounded-2xl p-4 border border-slate-700/80 shadow-xl space-y-2">
-                <div className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+              <div 
+                className="rounded-2xl p-4 border shadow-xl space-y-2 transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--card-bg)', 
+                  borderColor: 'var(--card-border)' 
+                }}
+              >
+                <div className="text-[10px] font-mono font-bold text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                   <span>HITOS ACADÉMICOS Y CIENTÍFICOS VERIFICADOS</span>
                 </div>
-                <div className="text-xs text-slate-300 space-y-1 font-sans">
+                <div className="text-xs text-[var(--text-secondary)] space-y-1 font-sans">
                   <div>🎓 <strong>CAU Kiel / AMU Poznań</strong>: Doble M.Sc. Gestión & Protección Ambiental</div>
                   <div>🔬 <strong>Universidad de Chile</strong>: Licenciatura en Geofísica (Con Distinción)</div>
                   <div>🛰️ <strong>5+ Años de Experiencia</strong>: Proyectos en Euskadi, Alemania y Latinoamérica</div>
@@ -517,7 +591,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
       {/* SUB-PANEL 6: CV STUDIO (A4, datos verificados, adaptación por oferta) */}
       {activeSubTab === 'studio' && (
         <div className="space-y-4">
-          <CVStudioTab initialOfferId={initialStudioOfferId} />
+          <CVStudioTab initialOfferId={initialStudioOfferId} initialDocType={initialStudioDocType} />
         </div>
       )}
 

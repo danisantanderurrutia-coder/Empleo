@@ -21,6 +21,7 @@ export function App() {
   const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
   const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'skills' | 'profile' | 'cvs' | 'studio'>('showcase');
   const [studioOfferId, setStudioOfferId] = useState<string | undefined>();
+  const [studioDocType, setStudioDocType] = useState<'cv' | 'cover_letter'>('cv');
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
 
   const [isUnifiedHelpOpen, setIsUnifiedHelpOpen] = useState(false);
@@ -36,10 +37,17 @@ export function App() {
     saveStoredTheme(nextTheme);
   };
 
-  const handleNavigate = (stationId: string, subTab?: string, filterParam?: string, targetOfferId?: string) => {
+  const handleNavigate = (
+    stationId: string,
+    subTab?: string,
+    filterParam?: string,
+    targetOfferId?: string,
+    targetDocType: 'cv' | 'cover_letter' = 'cv'
+  ) => {
     if (targetOfferId) {
       setStudioOfferId(targetOfferId);
     }
+    setStudioDocType(targetDocType);
 
     if (filterParam) {
       setRadarLocationFilter(filterParam);
@@ -233,7 +241,7 @@ export function App() {
                 initialSubTab={radarSubTab}
                 initialFilter={radarLocationFilter}
                 onStartApplication={handleStartApplicationFromOffer}
-                onOpenStudio={(offerId) => handleNavigate('agent_dossier', 'studio', undefined, offerId)}
+                onOpenStudio={(offerId, docType) => handleNavigate('agent_dossier', 'studio', undefined, offerId, docType)}
                 onReturnToHub={() => handleNavigate('dashboard')}
               />
             )}
@@ -249,6 +257,7 @@ export function App() {
               <AgentDossierTab
                 initialSubTab={dossierSubTab}
                 initialStudioOfferId={studioOfferId}
+                initialStudioDocType={studioDocType}
                 onReturnToHub={() => handleNavigate('dashboard')}
               />
             )}

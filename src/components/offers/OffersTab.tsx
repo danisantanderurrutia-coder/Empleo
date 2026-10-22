@@ -15,7 +15,8 @@ import {
   CheckCircle2,
   Clock,
   Layers,
-  FileText
+  FileText,
+  Mail
 } from 'lucide-react';
 import { getStoredOffers, saveStoredOffers } from '../../services/db';
 import type { JobOffer } from '../../types/offers';
@@ -32,7 +33,7 @@ import { checkUrlLiveness } from '../../services/liveWebScraper';
 interface OffersTabProps {
   initialLocationFilter?: string;
   onStartApplication: (offerId: string) => void;
-  onOpenStudio?: (offerId: string) => void;
+  onOpenStudio?: (offerId: string, docType?: 'cv' | 'cover_letter') => void;
 }
 
 export const OffersTab: React.FC<OffersTabProps> = ({ 
@@ -729,16 +730,25 @@ export const OffersTab: React.FC<OffersTabProps> = ({
                 )}
 
                 {onOpenStudio && (
-                  <button
-                    onClick={() => onOpenStudio(activeSelectedOffer.id)}
-                    className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
-                    title="Abrir y adaptar en CV Studio A4"
-                  >
-                    <FileText className="h-3.5 w-3.5" />
-                    <span>Adaptar en CV Studio</span>
-                  </button>
+                  <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                    <button
+                      onClick={() => onOpenStudio(activeSelectedOffer.id, 'cv')}
+                      className="flex-1 sm:flex-initial px-3 py-2.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      title="Abrir y calibrar CV A4"
+                    >
+                      <FileText className="h-3.5 w-3.5" />
+                      <span>CV Studio</span>
+                    </button>
+                    <button
+                      onClick={() => onOpenStudio(activeSelectedOffer.id, 'cover_letter')}
+                      className="flex-1 sm:flex-initial px-3 py-2.5 rounded-xl bg-purple-600/10 hover:bg-purple-600/20 text-purple-600 dark:text-purple-400 border border-purple-500/30 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      title="Abrir y redactar Carta DIN 5008 (Anti-AI)"
+                    >
+                      <Mail className="h-3.5 w-3.5" />
+                      <span>Carta Studio</span>
+                    </button>
+                  </div>
                 )}
-
               </div>
 
               <button

@@ -770,12 +770,15 @@ export const SkillTreeTab: React.FC = () => {
                     <text 
                       x={node.cx} 
                       y={node.cy + (node.cy > 185 ? 18 : -13)} 
-                      fill={isSelected ? '#ffffff' : '#94a3b8'} 
                       fontSize="7" 
                       fontWeight="bold" 
                       fontFamily="sans-serif" 
                       textAnchor="middle"
-                      className="group-hover:fill-sky-400 transition"
+                      className={`transition-colors ${
+                        isSelected 
+                          ? 'fill-sky-700 dark:fill-sky-300 font-black' 
+                          : 'fill-slate-800 dark:fill-slate-200 group-hover:fill-sky-600 dark:group-hover:fill-sky-400'
+                      }`}
                     >
                       {node.shortName}
                     </text>
