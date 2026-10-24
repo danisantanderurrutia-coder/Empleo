@@ -63,8 +63,8 @@ export function App() {
 
     if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs', 'studio'].includes(stationId)) {
       if (subTab === 'gunsmith' || stationId === 'gunsmith') setDossierSubTab('studio'); // Taller CV fusionado en CV Studio
-      else if (subTab === 'skills' || stationId === 'skills') setDossierSubTab('skills');
-      else if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('cvs');
+      else if (subTab === 'skills' || stationId === 'skills') setDossierSubTab('showcase'); // Competencias integradas en Resumen
+      else if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('studio'); // Plantillas unificadas en CV Studio
       else if (subTab === 'studio' || stationId === 'studio') {
         setDossierSubTab('studio');
         if (filterParam && !targetOfferId) setStudioOfferId(filterParam);

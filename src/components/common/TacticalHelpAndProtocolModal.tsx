@@ -177,7 +177,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <UserCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">OPERATORS // Perfil, CV Studio & Cover Letter Studio</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">PERFIL // Expediente, Competencias & CV Studio</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
                     Showcase del especialista Daniel Santander, <strong>CV Studio</strong> (A4, 1p/2p, ES/EN) y <strong>Cover Letter Studio</strong> (formato DIN 5008, ES/EN/DE, filtro estricto anti-clichés de IA, editor editable y generador de prompts para LLMs externos).
                   </p>
@@ -189,7 +189,7 @@ export const TacticalHelpAndProtocolModal: React.FC<TacticalHelpAndProtocolModal
                   <FileText className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-mono font-bold text-white text-xs uppercase">CAREER // Consola Central (Logo EMPLEO)</h4>
+                  <h4 className="font-mono font-bold text-white text-xs uppercase">CONSOLA CENTRAL // Logo EMPLEO MASTER</h4>
                   <p className="text-[11px] text-slate-300 mt-0.5">
                     Hub central que enlaza estadísticas de carrera, nivel de autorización 50, reputación y acceso directo a cada teatro de operaciones.
                   </p>

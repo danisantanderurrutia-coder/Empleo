@@ -12,7 +12,6 @@ import {
   FileText
 } from 'lucide-react';
 import { MasterProfileTab } from '../profile/MasterProfileTab';
-import { CVManagementTab } from '../cvs/CVManagementTab';
 import { CVStudioTab } from '../cvs/CVStudioTab';
 import { CVPreviewModal } from '../cvs/CVPreviewModal';
 import { SkillTreeTab } from './SkillTreeTab';
@@ -32,11 +31,14 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   initialStudioDocType,
   onReturnToHub
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'skills' | 'profile' | 'cvs' | 'studio'>(initialSubTab);
+  const normalizedInitial = (initialSubTab === 'skills' ? 'showcase' : initialSubTab === 'cvs' ? 'studio' : initialSubTab) as 'showcase' | 'profile' | 'studio';
+  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'profile' | 'studio'>(normalizedInitial);
   const [previewingCv, setPreviewingCv] = useState<CVVersion | null>(null);
 
   useEffect(() => {
-    setActiveSubTab(initialSubTab);
+    if (initialSubTab === 'skills') setActiveSubTab('showcase');
+    else if (initialSubTab === 'cvs') setActiveSubTab('studio');
+    else setActiveSubTab(initialSubTab as any);
   }, [initialSubTab]);
 
   const profile = getStoredProfile();
@@ -52,7 +54,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
 
   return (
     <div className="space-y-5 text-[var(--text-primary)] animate-fadeIn">
-      {/* Tactical Top Bar */}
+      {/* Top Header Bar */}
       <div 
         className="flex flex-col lg:flex-row lg:items-center justify-between p-3.5 sm:p-4 rounded-2xl border shadow-xl backdrop-blur-md gap-3 transition-colors"
         style={{ 
@@ -82,21 +84,16 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           </div>
 
           <div className="min-w-0">
-            <div className="flex items-center space-x-2">
-              <h1 className="text-sm sm:text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight truncate">
-                OPERATORS // EXPEDIENTE & COMPETENCIAS
-              </h1>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/40 font-extrabold hidden md:inline-block">
-                VERIFICADO
-              </span>
-            </div>
+            <h1 className="text-sm sm:text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-sans uppercase tracking-tight truncate">
+              Expediente y Perfil Profesional
+            </h1>
             <p className="text-[11px] text-[var(--text-secondary)] font-sans truncate">
               Daniel Santander: Doble M.Sc. CAU Kiel • Geofísica U. de Chile • Calibración Curricular Modular.
             </p>
           </div>
         </div>
 
-        {/* Sub-Tabs Switcher (Clean, compact, no horizontal overflow) */}
+        {/* Sub-Tabs Switcher (Unified 3 core views) */}
         <div 
           className="flex items-center p-1 rounded-xl border gap-1 shrink-0 overflow-x-auto max-w-full"
           style={{ 
@@ -106,62 +103,38 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         >
           <button
             onClick={() => setActiveSubTab('showcase')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'showcase'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Resumen</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('skills')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'skills'
-                ? 'bg-emerald-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            <Award className="h-3.5 w-3.5 text-emerald-500" />
-            <span>Competencias</span>
+            <span>Resumen & Competencias</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('profile')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'profile'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <GraduationCap className="h-3.5 w-3.5" />
-            <span>Expediente</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('cvs')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'cvs'
-                ? 'bg-sky-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            <FileCheck2 className="h-3.5 w-3.5" />
-            <span>Plantillas</span>
+            <span>Expediente Maestro</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('studio')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeSubTab === 'studio'
                 ? 'bg-sky-600 text-white shadow font-black'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <FileText className="h-3.5 w-3.5" />
-            <span>CV Studio</span>
+            <span>CV & Cartas Studio</span>
           </button>
         </div>
       </div>
@@ -170,8 +143,9 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
        * VISTA PRINCIPAL: RESUMEN DE EXPEDIENTE PROFESIONAL
        * ============================================================== */}
       {activeSubTab === 'showcase' && (
-        <div 
-          className="relative rounded-3xl overflow-hidden p-6 border shadow-2xl select-none transition-colors"
+        <div className="space-y-6">
+          <div 
+            className="relative rounded-3xl overflow-hidden p-6 border shadow-2xl select-none transition-colors"
           style={{
             backgroundColor: 'var(--panel-bg)',
             borderColor: 'var(--panel-border)'
@@ -196,16 +170,13 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
               >
                 <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2.5">
                   <div>
-                    <span className="text-[10px] font-mono font-black text-amber-700 dark:text-amber-400 uppercase tracking-widest">
-                      CALLSIGN // GEO-SCIENTIST
+                    <span className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
+                      CIENTÍFICO AMBIENTAL & GEOFÍSICO
                     </span>
                     <h2 className="text-xl font-black text-[var(--text-primary)] uppercase tracking-tight font-sans">
                       {profile.fullName || 'DANIEL SANTANDER'}
                     </h2>
                   </div>
-                  <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/40">
-                    TIER-1 MINT
-                  </span>
                 </div>
 
                 <div className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
@@ -532,7 +503,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 {/* Switch to Full CV Armory */}
                 <div className="pt-2 border-t border-[var(--panel-border)]">
                   <button
-                    onClick={() => setActiveSubTab('cvs')}
+                    onClick={() => setActiveSubTab('studio')}
                     className="w-full py-2 rounded-xl font-mono font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer border"
                     style={{ 
                       backgroundColor: 'var(--panel-bg)', 
@@ -541,7 +512,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                     }}
                   >
                     <FileCheck2 className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                    <span>GESTIONAR O COMPILAR MÁS PLANTILLAS</span>
+                    <span>ACCEDER A CV & CARTAS STUDIO</span>
                   </button>
                 </div>
               </div>
@@ -567,28 +538,20 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             </div>
           </div>
         </div>
-      )}
 
-      {/* SUB-PANEL 3: SKILL TREE & TRAINING BOUNTIES */}
-      {activeSubTab === 'skills' && (
+        {/* SECTOR COMPETENCIAS DIRECTAMENTE DEBAJO DEL RESUMEN */}
         <SkillTreeTab />
+      </div>
       )}
 
-      {/* SUB-PANEL 4: MASTER PROFILE DETAILED FORM */}
+      {/* SUB-PANEL 2: MASTER PROFILE DETAILED FORM */}
       {activeSubTab === 'profile' && (
         <div className="space-y-4">
           <MasterProfileTab />
         </div>
       )}
 
-      {/* SUB-PANEL 5: CV MANAGEMENT & TEMPLATE COMPILER */}
-      {activeSubTab === 'cvs' && (
-        <div className="space-y-4">
-          <CVManagementTab />
-        </div>
-      )}
-
-      {/* SUB-PANEL 6: CV STUDIO (A4, datos verificados, adaptación por oferta) */}
+      {/* SUB-PANEL 3: CV STUDIO (A4, datos verificados, adaptación por oferta y plantillas) */}
       {activeSubTab === 'studio' && (
         <div className="space-y-4">
           <CVStudioTab initialOfferId={initialStudioOfferId} initialDocType={initialStudioDocType} />

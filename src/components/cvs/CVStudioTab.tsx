@@ -13,9 +13,13 @@ import {
   Sparkles,
   Target,
   Trash2,
-  Wrench
+  Wrench,
+  Layers
 } from 'lucide-react';
-import { getStoredOffers, getStoredProfile, saveStoredProfile } from '../../services/db';
+import { getStoredOffers, getStoredProfile, saveStoredProfile, getStoredCVs } from '../../services/db';
+import { cvTemplatesList } from '../../services/sampleData';
+import type { CVVersion } from '../../types/cv';
+import { CVPreviewModal } from './CVPreviewModal';
 import {
   applyLinkFixes,
   auditProfile,
@@ -82,6 +86,9 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
   const [versions, setVersions] = useState<SavedStudioVersion[]>(getSavedVersions());
   const [versionName, setVersionName] = useState('');
   const [fitInfo, setFitInfo] = useState<{ zoom?: string; overflow: boolean }>({ overflow: false });
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('es_standard');
+  const [selectedCvForModal, setSelectedCvForModal] = useState<CVVersion | null>(null);
+  const storedCompiledCVs = getStoredCVs();
 
   // ------------------------------------------------------------- Estado Carta
   const [letterLang, setLetterLang] = useState<CoverLetterLang>('es');
@@ -376,6 +383,55 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(340px,460px)_1fr] gap-4 items-start">
         {/* ======================================================== CONTROLES IZQUIERDA */}
         <div className="space-y-4">
+          {/* Selector de Plantillas y Formatos Oficiales (Unificación con Gestor de Plantillas) */}
+          {docMode === 'cv' && (
+            <div className={panel} style={panelStyle}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-black font-mono uppercase flex items-center gap-1.5">
+                  <Layers className="h-4 w-4 text-sky-500" /> Plantilla Base del CV
+                </h3>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                  {cvTemplatesList.length} Formatos
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                {cvTemplatesList.map((tpl) => {
+                  const isSelected = selectedTemplateId === tpl.id;
+                  return (
+                    <button
+                      key={tpl.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedTemplateId(tpl.id);
+                        if (tpl.language === 'en') setLang('en');
+                        else if (tpl.language === 'es') setLang('es');
+                        if (tpl.pages === '1 pág.') setLength('1p');
+                        else if (tpl.pages === '2 pág.' || tpl.pages === '2-3 pág.') setLength('2p');
+                      }}
+                      className={`p-2 rounded-xl text-left border transition text-xs cursor-pointer ${
+                        isSelected
+                          ? 'border-sky-500 bg-sky-500/10 shadow-xs ring-1 ring-sky-500/30'
+                          : 'border-[var(--card-border)] bg-[var(--panel-bg)] hover:border-sky-500/40'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[11px] truncate text-[var(--text-primary)]">
+                          {tpl.name.split(' ')[0]} {tpl.name.split(' ')[1] || ''}
+                        </span>
+                        <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-black/10 dark:bg-white/10 uppercase font-bold text-[var(--text-muted)]">
+                          {tpl.language.toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">
+                        {tpl.pages} • {tpl.targetAudience}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Selector de Oferta (Común a CV y Carta) */}
           <div className={panel} style={panelStyle}>
             <h3 className="text-xs font-black font-mono uppercase flex items-center gap-1.5">
@@ -536,6 +592,32 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                       </li>
                     ))}
                   </ul>
+                )}
+
+                {/* Versiones pre-compiladas del Expediente */}
+                {storedCompiledCVs.length > 0 && (
+                  <div className="pt-2 border-t border-[var(--panel-border)] space-y-1">
+                    <div className="text-[10px] font-mono font-bold text-[var(--text-muted)] uppercase">
+                      Compilaciones Rápidas ({storedCompiledCVs.length})
+                    </div>
+                    <ul className="space-y-1 max-h-36 overflow-y-auto">
+                      {storedCompiledCVs.map((cv) => (
+                        <li key={cv.id} className="flex items-center justify-between gap-2 text-[11px] p-2 rounded-lg border" style={{ borderColor: 'var(--panel-border)', backgroundColor: 'var(--panel-bg)' }}>
+                          <div className="min-w-0 flex-1">
+                            <div className="font-bold truncate text-[var(--text-primary)]">{cv.name}</div>
+                            <div className="text-[9px] text-[var(--text-muted)] font-mono">{cv.updatedAt} · {cv.templateId}</div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCvForModal(cv)}
+                            className="px-2 py-1 rounded-md bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-bold cursor-pointer transition shrink-0"
+                          >
+                            Ver / Imprimir
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
 
@@ -803,6 +885,13 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
           </div>
         </div>
       </div>
+
+      {/* Modal de Previsualización para CVs del Expediente */}
+      <CVPreviewModal
+        cv={selectedCvForModal}
+        isOpen={!!selectedCvForModal}
+        onClose={() => setSelectedCvForModal(null)}
+      />
     </div>
   );
 };

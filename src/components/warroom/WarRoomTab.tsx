@@ -286,11 +286,8 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
               }}
             >
               <div className="flex items-center justify-between z-10">
-                <span className="text-xs font-mono font-black uppercase tracking-wider text-white drop-shadow">
-                  MY RANK
-                </span>
-                <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-black/70 text-white border border-red-400">
-                  TIER-1 MINT
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-white drop-shadow">
+                  EXPEDIENTE CIENTÍFICO
                 </span>
               </div>
 

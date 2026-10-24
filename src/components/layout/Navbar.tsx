@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Crosshair,
   ShieldCheck, 
@@ -39,18 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [logoError, setLogoError] = useState(false);
 
-  // Find current active tab index
-  const activeIndex = NAV_TABS.findIndex(t => t.matches.includes(currentTab));
-
-  const handleCycleTab = useCallback((direction: -1 | 1) => {
-    if (!onSelectStation) return;
-    const nextIndex = activeIndex === -1 
-      ? 0 
-      : (activeIndex + direction + NAV_TABS.length) % NAV_TABS.length;
-    onSelectStation(NAV_TABS[nextIndex].id);
-  }, [activeIndex, onSelectStation]);
-
-  // Keyboard navigation for [Q] and [E] bumpers + [F1]
+  // F1 Help shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -63,13 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         return;
       }
 
-      if (e.key === 'q' || e.key === 'Q') {
-        e.preventDefault();
-        handleCycleTab(-1);
-      } else if (e.key === 'e' || e.key === 'E') {
-        e.preventDefault();
-        handleCycleTab(1);
-      } else if (e.key === 'F1') {
+      if (e.key === 'F1') {
         e.preventDefault();
         onOpenUnifiedHelp();
       }
@@ -77,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleCycleTab, onOpenUnifiedHelp]);
+  }, [onOpenUnifiedHelp]);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[var(--nav-bg)] backdrop-blur-md border-b border-[var(--nav-border)] px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-md text-[var(--text-primary)] font-mono transition-colors">
@@ -87,12 +70,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         onClick={() => onSelectStation && onSelectStation('dashboard')}
         className={`flex items-center space-x-3 cursor-pointer group text-left focus:outline-none shrink-0 px-2 py-1 -ml-2 rounded-xl transition ${
           currentTab === 'dashboard'
-            ? 'bg-emerald-500/10 border border-emerald-500/40 shadow-xs'
+            ? 'bg-sky-500/10 border border-sky-500/40 shadow-xs'
             : 'hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
         }`}
-        title="CAREER // Consola Central de Operaciones (Click para volver al inicio)"
+        title="Consola Central de Operaciones (Click para volver al inicio)"
       >
-        <div className={`h-9 w-9 rounded-xl overflow-hidden flex items-center justify-center shadow-inner shrink-0 transition bg-[#090b0e] ${
+        <div className={`h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden flex items-center justify-center shadow-inner shrink-0 transition bg-[#060910] p-0.5 ${
           currentTab === 'dashboard'
             ? 'ring-2 ring-cyan-500/50 border border-cyan-400'
             : 'border border-cyan-500/30 group-hover:border-cyan-400'
@@ -100,46 +83,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           {!logoError ? (
             <img 
               src={resolveAsset('/app_icon.svg')} 
-              alt="Empleo Master Radar Logo" 
+              alt="Empleo Master Logo" 
               onError={() => setLogoError(true)}
-              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" 
+              className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300" 
             />
           ) : (
-            <Crosshair className="h-5 w-5 text-cyan-400 group-hover:rotate-45 transition-transform duration-300" />
+            <Crosshair className="h-6 w-6 text-cyan-400 group-hover:rotate-45 transition-transform duration-300" />
           )}
         </div>
         <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-cyan-500 transition flex items-center gap-1.5">
-              <span>EMPLEO</span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-extrabold text-xs sm:text-sm tracking-widest bg-cyan-500/10 dark:bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30">MASTER</span>
-            </h1>
-            <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded border hidden sm:inline-block ${
-              currentTab === 'dashboard'
-                ? 'bg-red-600 text-white border-red-500 shadow-xs'
-                : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
-            }`}>
-              {currentTab === 'dashboard' ? 'CAREER // HQ' : 'TACTICAL OPS'}
-            </span>
-          </div>
-          <p className="text-[10px] text-[var(--text-muted)] font-mono hidden xl:block">
-            CAU Kiel • U. de Chile • 54°20&apos;N • 43°15&apos;N
+          <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-cyan-500 transition">
+            EMPLEO MASTER
+          </h1>
+          <p className="text-[10px] text-[var(--text-muted)] font-mono hidden sm:block">
+            Consola Profesional & Radar Laboral
           </p>
         </div>
       </button>
 
-      {/* 2. Center: Authentic Rainbow Six Siege Tactical Menu Bar */}
+      {/* 2. Center: Authentic Tactical Menu Bar */}
       <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 text-xs uppercase tracking-wider font-mono">
-        
-        {/* Left Bumper [Q] */}
-        <button
-          onClick={() => handleCycleTab(-1)}
-          className="hidden lg:flex items-center justify-center px-2 py-1 rounded-lg text-[10px] font-mono font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-[var(--panel-border)] cursor-pointer"
-          title="Pestaña anterior [Tecla Q]"
-        >
-          <span>[Q] ◀</span>
-        </button>
-
         {/* Tab Buttons */}
         <nav className="flex items-center space-x-1 sm:space-x-2 md:space-x-3">
           {NAV_TABS.map((tab) => {
@@ -170,15 +133,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             );
           })}
         </nav>
-
-        {/* Right Bumper [E] */}
-        <button
-          onClick={() => handleCycleTab(1)}
-          className="hidden lg:flex items-center justify-center px-2 py-1 rounded-lg text-[10px] font-mono font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition border border-[var(--panel-border)] cursor-pointer"
-          title="Pestaña siguiente [Tecla E]"
-        >
-          <span>▶ [E]</span>
-        </button>
       </div>
 
       {/* 3. Right: Operator Clearance & Tactical HUD Controls */}
