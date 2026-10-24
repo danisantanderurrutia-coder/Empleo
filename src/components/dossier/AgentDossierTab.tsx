@@ -196,7 +196,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
               >
                 <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2.5">
                   <div>
-                    <span className="text-[10px] font-mono font-black text-amber-500 uppercase tracking-widest">
+                    <span className="text-[10px] font-mono font-black text-amber-700 dark:text-amber-400 uppercase tracking-widest">
                       CALLSIGN // GEO-SCIENTIST
                     </span>
                     <h2 className="text-xl font-black text-[var(--text-primary)] uppercase tracking-tight font-sans">
@@ -386,7 +386,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                       DOCUMENTACIÓN COMPILADA & VERIFICADA
                     </span>
                   </div>
-                  <FileText className="h-4 w-4 text-amber-500" />
+                  <FileText className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                 </div>
 
                 <div className="space-y-3">
@@ -399,7 +399,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                     }}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-500 transition">
+                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
                         🇪🇸 VERSIÓN 1: ESPAÑOL (EUSKADI & ESPAÑA)
                       </span>
                       <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
@@ -419,7 +419,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                           color: 'var(--text-primary)'
                         }}
                       >
-                        <Eye className="h-3.5 w-3.5 text-amber-500" />
+                        <Eye className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
                         <span>Ver CV</span>
                       </button>
                       <button
@@ -445,7 +445,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                     }}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-500 transition">
+                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
                         🇬🇧 VERSIÓN 2: INGLÉS (POLÍTICA INTERNACIONAL & I+D)
                       </span>
                       <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
@@ -465,7 +465,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                           color: 'var(--text-primary)'
                         }}
                       >
-                        <Eye className="h-3.5 w-3.5 text-amber-500" />
+                        <Eye className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
                         <span>Ver CV</span>
                       </button>
                       <button
@@ -491,7 +491,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                     }}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-500 transition">
+                      <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
                         🇩🇪 VERSIÓN 3: ALEMÁN (§20 AUFENTHG / DACH)
                       </span>
                       <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
@@ -511,7 +511,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                           color: 'var(--text-primary)'
                         }}
                       >
-                        <Eye className="h-3.5 w-3.5 text-amber-500" />
+                        <Eye className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
                         <span>Ver CV</span>
                       </button>
                       <button
@@ -540,7 +540,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                       color: 'var(--text-primary)'
                     }}
                   >
-                    <FileCheck2 className="h-4 w-4 text-amber-500" />
+                    <FileCheck2 className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                     <span>GESTIONAR O COMPILAR MÁS PLANTILLAS</span>
                   </button>
                 </div>

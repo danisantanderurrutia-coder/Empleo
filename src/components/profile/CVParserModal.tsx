@@ -227,7 +227,7 @@ export const CVParserModal: React.FC<CVParserModalProps> = ({ isOpen, onClose, o
                     onChange={() => setImportMode('replace')}
                     className="text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="text-amber-600 dark:text-amber-400 font-medium">Reemplazar perfil completamente</span>
+                  <span className="text-amber-700 dark:text-amber-400 font-semibold">Reemplazar perfil completamente</span>
                 </label>
               </div>
             </div>

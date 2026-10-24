@@ -152,6 +152,15 @@ html.theme-luminous,
     color: var(--text-primary);
     font-weight: 700;
   }
+
+  input, textarea, select {
+    color: var(--text-primary);
+  }
+
+  ::placeholder {
+    color: var(--text-muted);
+    opacity: 0.85;
+  }
 }
 
 /* Scrollbars */

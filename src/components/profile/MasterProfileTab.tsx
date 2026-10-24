@@ -563,12 +563,12 @@ export const MasterProfileTab: React.FC = () => {
             style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
           >
             <h4 className="font-semibold text-xs text-[var(--text-secondary)] flex items-center space-x-1.5">
-              <RotateCcw className="h-3.5 w-3.5 text-amber-500" />
+              <RotateCcw className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
               <span>Limpiar Datos de Ejemplo</span>
             </h4>
             <button
               onClick={handleClearSampleData}
-              className="text-xs text-amber-600 dark:text-amber-400 hover:underline font-semibold"
+              className="text-xs text-amber-700 dark:text-amber-400 hover:underline font-semibold"
             >
               Vaciar Experiencias de Prueba
             </button>

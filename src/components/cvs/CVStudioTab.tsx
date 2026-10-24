@@ -411,7 +411,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                       </span>
                     ))
                   ) : (
-                    <span className="text-amber-500">Sin coincidencias textuales directas en tags.</span>
+                    <span className="text-amber-700 dark:text-amber-400 font-medium">Sin coincidencias textuales directas en tags.</span>
                   )}
                 </div>
               </div>
@@ -463,7 +463,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                                     {s.fact[lang].org ? ` · ${s.fact[lang].org}` : ''}
                                   </span>
                                   {s.matchedTags.length > 0 && (
-                                    <span className="ml-1 text-[9px] font-mono text-emerald-500 font-bold">
+                                    <span className="ml-1 text-[9px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
                                       +{s.matchedTags.length} match
                                     </span>
                                   )}
@@ -545,7 +545,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                   <Wrench className="h-4 w-4 text-sky-500" /> Auditoría del Perfil Maestro
                 </h3>
                 {audit.length === 0 ? (
-                  <p className="text-[11px] text-emerald-500 flex items-center gap-1">
+                  <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
                     <CheckCircle2 className="h-4 w-4" /> El Perfil Maestro coincide con los datos verificados.
                   </p>
                 ) : (
@@ -553,17 +553,17 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                     <ul className="space-y-2">
                       {audit.map((a) => (
                         <li key={a.id} className="text-[11px] flex gap-2">
-                          <AlertTriangle className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${a.severity === 'error' ? 'text-red-500' : 'text-amber-500'}`} />
+                          <AlertTriangle className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${a.severity === 'error' ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'}`} />
                           <div>
                             <div>{a.message}</div>
                             {a.current && <div className="text-[var(--text-muted)] font-mono break-all">Actual: {a.current}</div>}
-                            {a.expected && <div className="text-emerald-500 font-mono break-all">Esperado: {a.expected}</div>}
+                            {a.expected && <div className="text-emerald-700 dark:text-emerald-400 font-mono break-all">Esperado: {a.expected}</div>}
                           </div>
                         </li>
                       ))}
                     </ul>
                     {fixable.length > 0 && (
-                      <button onClick={applyFixes} className="w-full px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold cursor-pointer">
+                      <button onClick={applyFixes} className="w-full px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold cursor-pointer">
                         Corregir {fixable.length} enlace(s) en el Perfil Maestro
                       </button>
                     )}
@@ -580,16 +580,16 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
               <div
                 className={`p-3.5 rounded-2xl border text-xs space-y-2 transition-colors ${
                   builtLetter.audit.passed
-                    ? 'bg-emerald-950/20 border-emerald-500/40 text-emerald-400'
-                    : 'bg-amber-950/25 border-amber-500/40 text-amber-300'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300'
+                    : 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-500/40 text-amber-900 dark:text-amber-200'
                 }`}
               >
                 <div className="flex items-center justify-between font-mono font-bold">
                   <span className="flex items-center gap-1.5 text-xs uppercase">
                     {builtLetter.audit.passed ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     ) : (
-                      <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
+                      <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
                     )}
                     <span>
                       {builtLetter.audit.passed
@@ -597,11 +597,11 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                         : `Alerta Anti-IA: ${builtLetter.audit.clicheCount} Cliché(s) Detectado(s)`}
                     </span>
                   </span>
-                  <span className="text-[9px] px-2 py-0.5 rounded bg-black/30 border border-white/10 uppercase">
+                  <span className="text-[9px] px-2 py-0.5 rounded bg-black/10 dark:bg-black/30 border border-slate-300 dark:border-white/10 uppercase text-[var(--text-secondary)]">
                     Reglas Críticas
                   </span>
                 </div>
-                <p className="text-[11px] leading-relaxed text-slate-300">
+                <p className="text-[11px] leading-relaxed text-[var(--text-secondary)]">
                   {builtLetter.audit.passed
                     ? 'La carta respeta tu narrativa analítica en primera persona, sustentada en balances de masa, resistividad eléctrica (SEV), Eddy Covariance y modelación en R sin fórmulas infladas.'
                     : `Se han detectado fórmulas genéricas de IA no deseadas: "${builtLetter.audit.detectedCliches.join(
@@ -609,10 +609,10 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                       )}". Reemplázalas por descripciones biofísicas concretas.`}
                 </p>
                 <div className="flex flex-wrap gap-1 pt-1 font-mono text-[10px]">
-                  <span className={`px-2 py-0.5 rounded border ${builtLetter.audit.hasMethodology ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/20 border-rose-500/30 text-rose-300'}`}>
+                  <span className={`px-2 py-0.5 rounded border ${builtLetter.audit.hasMethodology ? 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-500/20 border-rose-300 dark:border-rose-500/30 text-rose-800 dark:text-rose-300'}`}>
                     Metodología (SEV/Eddy): {builtLetter.audit.hasMethodology ? 'OK' : 'Falta'}
                   </span>
-                  <span className={`px-2 py-0.5 rounded border ${builtLetter.audit.hasMassBalancePerspective ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/20 border-rose-500/30 text-rose-300'}`}>
+                  <span className={`px-2 py-0.5 rounded border ${builtLetter.audit.hasMassBalancePerspective ? 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-500/20 border-rose-300 dark:border-rose-500/30 text-rose-800 dark:text-rose-300'}`}>
                     Balance de masa: {builtLetter.audit.hasMassBalancePerspective ? 'OK' : 'Falta'}
                   </span>
                 </div>
@@ -637,7 +637,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                   value={effectiveLetterBody}
                   onChange={(e) => setLetterBodyText(e.target.value)}
                   rows={13}
-                  className="w-full p-3 rounded-xl text-xs font-sans leading-relaxed border bg-slate-950/60 text-slate-200 focus:outline-none focus:border-purple-500 transition shadow-inner"
+                  className="w-full p-3 rounded-xl text-xs font-sans leading-relaxed border bg-[var(--card-bg)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-purple-500 transition shadow-inner"
                   style={{ borderColor: 'var(--panel-border)' }}
                   placeholder="Escribe o pega aquí el cuerpo de tu carta..."
                 />
@@ -667,7 +667,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                       value={recipientOrg}
                       onChange={(e) => setRecipientOrg(e.target.value)}
                       placeholder={offer?.company || 'Ej: Thünen-Institut für Agrarklimaschutz'}
-                      className="w-full px-3 py-1.5 rounded-xl border bg-transparent"
+                      className="w-full px-3 py-1.5 rounded-xl border bg-[var(--card-bg)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500 transition"
                       style={{ borderColor: 'var(--panel-border)' }}
                     />
                   </div>
@@ -679,7 +679,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                         value={recipientName}
                         onChange={(e) => setRecipientName(e.target.value)}
                         placeholder="Ej: Prof. Dr. Axel Don"
-                        className="w-full px-3 py-1.5 rounded-xl border bg-transparent"
+                        className="w-full px-3 py-1.5 rounded-xl border bg-[var(--card-bg)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500 transition"
                         style={{ borderColor: 'var(--panel-border)' }}
                       />
                     </div>
@@ -690,7 +690,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                         value={recipientRole}
                         onChange={(e) => setRecipientRole(e.target.value)}
                         placeholder="Ej: Leitung der Arbeitsgruppe"
-                        className="w-full px-3 py-1.5 rounded-xl border bg-transparent"
+                        className="w-full px-3 py-1.5 rounded-xl border bg-[var(--card-bg)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500 transition"
                         style={{ borderColor: 'var(--panel-border)' }}
                       />
                     </div>
@@ -702,7 +702,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                       value={recipientAddress}
                       onChange={(e) => setRecipientAddress(e.target.value)}
                       placeholder="Ej: Bundesallee 50, 38116 Braunschweig, Deutschland"
-                      className="w-full px-3 py-1.5 rounded-xl border bg-transparent"
+                      className="w-full px-3 py-1.5 rounded-xl border bg-[var(--card-bg)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500 transition"
                       style={{ borderColor: 'var(--panel-border)' }}
                     />
                   </div>
@@ -720,7 +720,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                     value={letterVersionName}
                     onChange={(e) => setLetterVersionName(e.target.value)}
                     placeholder={offer ? `${offer.title} (${letterLang.toUpperCase()})` : 'Nombre de versión'}
-                    className="flex-1 px-3 py-1.5 rounded-xl text-xs border bg-transparent"
+                    className="flex-1 px-3 py-1.5 rounded-xl text-xs border bg-[var(--card-bg)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-purple-500 transition"
                     style={{ borderColor: 'var(--panel-border)' }}
                   />
                   <button onClick={saveLetterVer} className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold cursor-pointer">
@@ -764,7 +764,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                   <AlertTriangle className="h-3.5 w-3.5" /> No cabe: quita contenido
                 </span>
               ) : (
-                <span className="text-emerald-500 font-mono">Ajuste tipográfico ×{fitInfo.zoom || '1.00'}</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-mono font-medium">Ajuste tipográfico ×{fitInfo.zoom || '1.00'}</span>
               )
             )}
             {docMode === 'cover_letter' && (

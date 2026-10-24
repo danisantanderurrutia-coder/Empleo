@@ -80,7 +80,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
+          <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/20">
             <Trophy className="h-4 w-4" />
           </div>
           <div>
@@ -93,7 +93,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
 
         <button
           onClick={() => setIsAdding(!isAdding)}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-300 text-xs font-semibold border border-amber-500/30 transition"
+          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-semibold border border-amber-500/30 transition"
         >
           <Plus className="h-3.5 w-3.5" />
           <span>Añadir Logro</span>
@@ -106,7 +106,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
           className="p-4 rounded-xl border border-amber-500/30 space-y-3"
           style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
         >
-          <h4 className="font-semibold text-xs text-amber-600 dark:text-amber-300">Nuevo Logro Cuantificable</h4>
+          <h4 className="font-semibold text-xs text-amber-700 dark:text-amber-300">Nuevo Logro Cuantificable</h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
@@ -190,7 +190,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                 style={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs text-amber-600 dark:text-amber-300">Editando Logro</span>
+                  <span className="font-bold text-xs text-amber-700 dark:text-amber-300">Editando Logro</span>
                   <button onClick={() => setEditingId(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                     <X className="h-4 w-4" />
                   </button>
@@ -210,7 +210,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                   value={editMetrics}
                   onChange={e => setEditMetrics(e.target.value)}
                   placeholder="Métrica"
-                  className="w-full px-2.5 py-1 border rounded text-xs text-amber-600 dark:text-amber-400 font-bold focus:outline-none focus:border-amber-400"
+                  className="w-full px-2.5 py-1 border rounded text-xs text-amber-700 dark:text-amber-400 font-bold focus:outline-none focus:border-amber-400"
                   style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
                 />
 
@@ -265,7 +265,7 @@ export const AchievementBank: React.FC<AchievementBankProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] text-amber-600 dark:text-amber-400 font-bold">{ach.metrics}</div>
+                  <div className="text-[11px] text-amber-700 dark:text-amber-400 font-bold">{ach.metrics}</div>
                 </div>
 
                 <div className="flex items-center space-x-1.5">
