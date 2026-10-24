@@ -398,7 +398,20 @@ def main():
     parser = argparse.ArgumentParser(description="Job Search OS Daily Job Alert Pipeline")
     parser.add_argument("--to", default=os.getenv("ALERT_RECIPIENT_EMAIL", DEFAULT_RECIPIENT), help="Recipient email")
     parser.add_argument("--preview-only", action="store_true", help="Do not send, only write preview HTML file")
+    parser.add_argument("--force-send", action="store_true", help="Force send even if alerts are paused")
     args = parser.parse_args()
+
+    # 0. KILL-SWITCH PREVENTIVO: Detener envíos automáticos para prevenir alucinaciones
+    is_force_enabled = args.force_send or os.getenv("ENABLE_JOB_ALERTS", "false").lower() == "true"
+    if not is_force_enabled and not args.preview_only:
+        print("[!] ===========================================================================")
+        print("[!] ALERTAS CANCELADAS PREVENTIVAMENTE:")
+        print("[!] El pipeline de alertas automáticas por correo está desactivado.")
+        print("[!] Ningún correo será enviado para evitar enlaces inexistentes o no verificados.")
+        print("[!] Para generar solo la vista previa local HTML use: --preview-only")
+        print("[!] Para forzar un envío intencional use: --force-send")
+        print("[!] ===========================================================================")
+        sys.exit(0)
 
     recipient = args.to
     now_str = datetime.now().strftime("%d de %B de %Y a las 09:00 CEST")

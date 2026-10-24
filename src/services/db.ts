@@ -33,7 +33,7 @@ const defaultSettings: AppSettings = {
   emailAlertKeywords: ['Boden', 'Bodenkunde', 'Klimaschutz', 'KI', 'Künstliche Intelligenz', 'Umweltbundesamt', 'Thünen', 'Geophysik', 'Eddy Covariance'],
   emailAlertProvider: 'resend',
   emailAlertTime: '09:00',
-  emailAlertEnabled: true
+  emailAlertEnabled: false
 };
 
 const KEYS = {

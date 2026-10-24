@@ -1,17 +1,17 @@
-name: "Daily Job Alerts (09:00 AM CET)"
+name: "Daily Job Alerts (PAUSADO / PAUSED)"
 
 on:
-  schedule:
-    # 07:15 UTC corresponds to 09:15 CEST (avoids :00 queue congestion in GitHub Actions)
-    - cron: '15 7 * * *'
-  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+  # DESACTIVADO PREVENTIVAMENTE: Cron matutino pausado para evitar envíos con enlaces obsoletos o alucinados
+  # schedule:
+  #   - cron: '15 7 * * *'
+  workflow_dispatch: # Permite disparo manual controlado desde la pestaña Actions de GitHub solo si se desea probar
 
 permissions:
   contents: read
 
 jobs:
   run-alerts:
-    name: Execute Daily Job Digest
+    name: Execute Daily Job Digest (Manual Only)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -22,8 +22,20 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Check if Alerts are Explicitly Enabled
+        id: check-enabled
+        run: |
+          if [ "${{ vars.ENABLE_JOB_ALERTS }}" != "true" ]; then
+            echo "::notice ::Las alertas automáticas por correo están en PAUSA PREVENTIVA. Cancelando envío para evitar alucinaciones."
+            echo "enabled=false" >> $GITHUB_OUTPUT
+          else
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Job Alert Pipeline
+        if: steps.check-enabled.outputs.enabled == 'true'
         env:
+          ENABLE_JOB_ALERTS: ${{ vars.ENABLE_JOB_ALERTS || 'false' }}
           ALERT_RECIPIENT_EMAIL: ${{ secrets.ALERT_RECIPIENT_EMAIL || 'danisantander.urrutia@gmail.com' }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
