@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  schedule:
-    # Runs automatically every day at 06:00 UTC (08:00 CET)
-    - cron: '0 6 * * *'
+  # Cron diario en pausa para mantener el control estricto y saneado de la base de datos
+  # schedule:
+  #   - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -33,8 +33,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run Daily Job Scraper
-        run: python scripts/job_scraper.py
+      - name: Run Daily Job Scraper & Pre-Flight Validator
+        run: |
+          python scripts/job_scraper.py
+          python scripts/verify_job_links.py
 
       - name: Commit updated jobs.json on schedule (if changed)
         if: github.event_name == 'schedule'
