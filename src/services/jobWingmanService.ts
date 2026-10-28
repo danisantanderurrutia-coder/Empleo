@@ -98,25 +98,92 @@ danisantander.urrutia@gmail.com | +49 152 23026367`
 };
 
 /**
+ * DOSSIER CANÓNICO: UMWELTBUNDESAMT (UBA) / KI-LAB
+ * Kennziffer 8/LB/26 (Interamt ID 1499096)
+ * Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner
+ */
+export const UBA_KILAB_DOSSIER: JobDossier = {
+  id: 'dossier-uba-kilab-1499096',
+  offerId: 'job-uba-ki-product-owner-1499096',
+  targetCompany: 'Umweltbundesamt (UBA) – KI-Lab',
+  projectTitle: 'KI-Projektmanagement & KI Product Owner (KI-Lab Leipzig / Berlin / Dessau-Roßlau) – Kennziffer 8/LB/26',
+  createdAt: '2026-10-28T08:00:00.000Z',
+  notes: 'Dossier prioritario para convocatoria pública del Bund (TVöD E 13). Énfasis en Product Ownership de aplicaciones ambientales, integración de datos satelitales/in-situ y articulación ágil entre ciencia ecológica y desarrollo de software.',
+  leadProfile: {
+    name: 'Auswahlkommission / Leitung Fachgebiet I 1.4',
+    titleHonorific: 'Dr.',
+    role: 'Leitung des Anwendungslabors für Künstliche Intelligenz und Big Data (KI-Lab)',
+    institution: 'Umweltbundesamt (UBA), Dienstsitz Leipzig',
+    email: 'bewerbung@uba.de',
+    researchFocus: [
+      'Umweltpolitische Digitalagenda des BMUV / UBA',
+      'KI-basierte Umweltbeobachtung und Datenföderation',
+      'Agile Softwareentwicklung im Verwaltungsvollzug (Scrum, Kanban)',
+      'Explainable AI (XAI) & Green AI-Architekturen'
+    ],
+    keyPublications: [
+      'UBA-Positionspapier: Künstliche Intelligenz für Umwelt, Klima und Natur',
+      'Digitalagenda für eine ökologische Transformation der Bundesverwaltung',
+      'KI-Lab Jahresbericht: Prototyping und MLOps im öffentlichen Sektor'
+    ],
+    styleNotes: 'Hohe fachliche Stringenz im TVöD-Rahmen. Schätzt nachgewiesene Product-Ownership-Erfahrung an der Schnittstelle zwischen MINT-Forschung und lauffähiger Software. Pragmatisch, lösungsorientiert und strukturiert.',
+    knownProjects: ['KI-Lab Umweltbundesamt', 'Umweltpolitische Digitalagenda', 'Smart Environmental Analytics']
+  },
+  projectPainPoints: [
+    'Kommunikationsverlust zwischen Fachwissenschaft und Software-Entwicklung: Umweltforscher*innen formulieren ökologische Herausforderungen oft als offene Forschungsfragen, während Entwicklungsteams präzise User Stories, Akzeptanzkriterien und MLOps-Pipelines benötigen.',
+    'Heterogene Sensordaten und föderale Silos: Verknüpfung von In-situ-Messnetzen, Satellitendaten (Copernicus Sentinel) und Modellergebnissen unter Einhaltung offener Datenstandards.',
+    'Verwaltungstaugliche Einführung agiler Methoden: Etablierung iterativer Sprintzyklen im strengen formalen Rahmen des Bundesverwaltungsvollzugs (TVöD, BSI-Grundschutz, Haushaltsrecht).',
+    'Modelltransparenz & Nachvollziehbarkeit: Black-Box-Modelle sind für behördliche Entscheidungen ungeeignet; KI-Lösungen müssen transparent, validiert und auditierbar sein.'
+  ],
+  technicalHooks: [
+    'Konkrete Product Ownership von drei funktionierenden Umweltanwendungen: Daniel konzipierte und entwickelte eigenständig Wetland Monitor (3D-Webanwendung in React/Three.js/R für Moorwiedervernässung und Eddy-Covariance-Daten), AgriTwin (landwirtschaftlicher digitaler Zwilling mit IoT-Bodenfeuchte und Sentinel-2-Daten) sowie die Rewilding Field Suite (Offline-First PWA mit IndexedDB und GIS-Schichten für Feldprotokolle und Brandrisikominimierung).',
+    'Interdisziplinäres MINT-Profil: Als quantitativer Umweltgeophysiker (Universidad de Chile, Auszeichnung) und M.Sc. Umweltmanagement (CAU Kiel) übersetzt er komplexe biogeochemische Prozesse nahtlos in mathematische Anforderungen und User Stories.',
+    'Praxiserprobte Feld- und Sensorkompetenz: Erfahrung mit hochfrequenten mikrometeorologischen Systemen (Eddy Covariance) und geophysikalischen Messkampagnen (ERT/SEV) schützt vor unrealistischen Annahmen bei Sensorik und Datenqualität.',
+    'Kommunikation in politischen Gremien: Vortragserfahrung vor der chilenischen Abgeordnetenkammer und Verfassung von Fachberichten für internationale Netzwerke belegen Dialogfähigkeit mit Entscheidungsträgern.'
+  ],
+  candidateValueThesis: 'Daniel bringt die seltene Kombination aus fundiertem MINT-Umweltwissen und konkreter Product-Ownership-Praxis mit: Anstatt agile Methoden nur theoretisch zu kennen, hat er mit Wetland Monitor, AgriTwin und Rewilding Field Suite drei eigenständige Umwelt-Software-Lösungen von der Anforderungserhebung bis zum Produkt realisiert und kann diesen Entwicklungszyklus sofort in das KI-Lab des UBA übertragen.',
+  coverLetterAngles: [
+    'Ángulo 1 (Product Ownership mit drei Referenzprodukten): Vorstellung von Wetland Monitor, AgriTwin und Rewilding Field Suite als Belege für agiles Product Management von Umwelt-Software.',
+    'Ángulo 2 (Brücke zwischen Fachwissenschaft und agiler IT): Übersetzung biogeochemischer Massenbilanzen und Satellitendaten in strukturierte Backlogs und MLOps-Anforderungen.',
+    'Ángulo 3 (Verlässlichkeit im öffentlichen Dienst): Formale Passfähigkeit zum TVöD Bund E 13, B1-B2 Deutsch / verhandlungssicheres Englisch, sofortige Verfügbarkeit.'
+  ],
+  cvGuidance: [
+    'An erster Stelle der Berufserfahrung die drei Umwelt-Software-Projekte hervorheben: Wetland Monitor (3D-Moor-Twin), AgriTwin (IoT/Copernicus-Twin) und Rewilding Field Suite (Offline-First PWA).',
+    'Die Rolle als Product Owner und technischer Konzeptionist klar deklarieren.',
+    'MINT-Grundausbildung in Geophysik (U. de Chile) und M.Sc. an CAU Kiel als wissenschaftliches Fundament unterstreichen.',
+    'Führungs- und Koordinationskompetenzen (Apruebo Rural, Kampagnen, Sachverständigenaussagen) als Stakeholder-Management einbetten.'
+  ],
+  coldApproachEmail: {
+    subjectDe: 'Fachliche Bewerbungsfrage: Spezialist*in KI-Projektmanagement & Product Owner (Kennziffer 8/LB/26, Interamt 1499096)',
+    bodyDe: `Sehr geehrte Damen und Herren der Auswahlkommission,\n\nmit großem Interesse bereite ich meine Bewerbung für die Position als Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner im KI-Lab des Umweltbundesamtes (Kennziffer 8/LB/26) vor.\n\nAls Umweltgeophysiker (Universidad de Chile, mit Auszeichnung) und M.Sc.-Kandidat für Umweltmanagement (CAU Kiel) verfolge ich die Umweltpolitische Digitalagenda des UBA mit hoher Aufmerksamkeit. In meiner bisherigen Arbeit habe ich mit dem Wetland Monitor (3D-Moor-Zwilling für Treibhausgasflüsse), AgriTwin (IoT-Bodenfeuchte gekoppelt mit Sentinel-2) und der Rewilding Field Suite (Offline-First PWA für Restaurierungsprotokolle) bereits eigenständig drei funktionierende Softwarelösungen an der Schnittstelle von Umweltdaten und agiler Produktentwicklung konzipiert und umgesetzt.\n\nVor Einreichung meiner vollständigen Unterlagen im Interamt-Portal erlaube ich mir eine kurze methodische Frage: Liegt der primäre Schwerpunkt des KI-Labs in der anstehenden Projektphase auf der Konzeption von Datenföderations- und MLOps-Architekturen für den behördlichen Verwaltungsvollzug oder auf der agilen Nutzerzentrierung (User Research / UX) für behördenübergreifende Analysewerkzeuge?\n\nÜber eine kurze Orientierung würde ich mich freuen; meine formalen Unterlagen übermittle ich fristgerecht über Interamt.\n\nMit freundlichen Grüßen,\nDaniel Santander Urrutia\nM.Sc. Candidate | Environmental Geophysicist\ndanisantander.urrutia@gmail.com | +49 176 76497440`,
+    subjectEn: 'Technical inquiry: AI Project Management & Product Owner (Ref. 8/LB/26, Interamt 1499096)',
+    bodyEn: `Dear Selection Committee,\n\nI am currently preparing my application for the AI Project Management and AI Product Owner position within the UBA KI-Lab (Reference 8/LB/26, Interamt ID 1499096).\n\nAs an Environmental Geophysicist (Universidad de Chile, with distinction) and M.Sc. candidate in Environmental Management (CAU Kiel), I have independently architected and shipped three working environmental software applications: Wetland Monitor (a 3D peatland twin for GHG fluxes and Eddy Covariance data), AgriTwin (IoT soil-moisture telemetry coupled with Sentinel-2 NDVI/NDRE), and the Rewilding Field Suite (an offline-first PWA for field restoration protocols).\n\nPrior to final submission via the Interamt portal, I would like to inquire whether the immediate priority for the KI-Lab portfolio centers on MLOps and federated data pipelines for administrative enforcement, or on user research and agile backlog definition for inter-agency environmental analytics.\n\nThank you for your guidance. I look forward to submitting my formal application.\n\nSincerely,\nDaniel Santander Urrutia\ndanisantander.urrutia@gmail.com | +49 176 76497440`
+  }
+};
+
+/**
  * Recuperar todos los dossiers guardados
  */
 export const getStoredDossiers = (): JobDossier[] => {
   try {
     if (typeof localStorage === 'undefined') {
-      return [THUENEN_TECHWORMS_DOSSIER];
+      return [THUENEN_TECHWORMS_DOSSIER, UBA_KILAB_DOSSIER];
     }
     const raw = localStorage.getItem(WINGMAN_STORAGE_KEY);
     if (!raw) {
-      return [THUENEN_TECHWORMS_DOSSIER];
+      return [THUENEN_TECHWORMS_DOSSIER, UBA_KILAB_DOSSIER];
     }
     const parsed = JSON.parse(raw) as JobDossier[];
-    // Asegurar que el dossier canónico de Thünen esté presente
+    // Asegurar que los dossiers canónicos estén presentes
     if (!parsed.some(d => d.id === THUENEN_TECHWORMS_DOSSIER.id)) {
       parsed.unshift(THUENEN_TECHWORMS_DOSSIER);
     }
+    if (!parsed.some(d => d.id === UBA_KILAB_DOSSIER.id)) {
+      parsed.push(UBA_KILAB_DOSSIER);
+    }
     return parsed;
   } catch (e) {
-    return [THUENEN_TECHWORMS_DOSSIER];
+    return [THUENEN_TECHWORMS_DOSSIER, UBA_KILAB_DOSSIER];
   }
 };
 
@@ -149,13 +216,24 @@ export const getDossierForOffer = (offer: JobOffer): JobDossier => {
   const direct = dossiers.find(d => d.offerId === offer.id || (offer.jobDossier && d.id === offer.jobDossier.id));
   if (direct) return direct;
 
-  // 2. Si la oferta menciona Thünen o Axel Don o TechWorms
+  // 2. Si la oferta menciona UBA, Umweltbundesamt, KI-Lab o ID 1499096
   const text = `${offer.company} ${offer.title} ${offer.rawDescription}`.toLowerCase();
+  if (
+    text.includes('uba') ||
+    text.includes('umweltbundesamt') ||
+    text.includes('1499096') ||
+    text.includes('8/lb/26') ||
+    (text.includes('ki-lab') && text.includes('product owner'))
+  ) {
+    return UBA_KILAB_DOSSIER;
+  }
+
+  // 3. Si la oferta menciona Thünen o Axel Don o TechWorms
   if (text.includes('thünen') || text.includes('thuenen') || text.includes('techworm') || text.includes('axel don')) {
     return THUENEN_TECHWORMS_DOSSIER;
   }
 
-  // 3. Fallback inteligente: construir dossier preliminar
+  // 4. Fallback inteligente: construir dossier preliminar
   return createPreliminaryDossier(offer);
 };
 

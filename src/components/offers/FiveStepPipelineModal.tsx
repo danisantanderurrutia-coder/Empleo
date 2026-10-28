@@ -13,7 +13,9 @@ import {
   ShieldCheck,
   Lightbulb,
   AlertCircle,
-  UserCheck
+  UserCheck,
+  FolderCheck,
+  FileCheck
 } from 'lucide-react';
 import type { JobOffer } from '../../types/offers';
 import { generateTailoredCoverLetter, generateApplicationQA } from '../../services/coverLetterCopilot';
@@ -30,12 +32,89 @@ interface FiveStepPipelineModalProps {
 }
 
 const STEPS = [
-  { num: 1, label: 'Análisis del empleo', icon: Search },
+  { num: 1, label: 'Análisis empleo', icon: Search },
   { num: 2, label: 'Consejo Wingman', icon: Target },
-  { num: 3, label: 'Preparar CV', icon: FileText },
-  { num: 4, label: 'Carta', icon: MessageSquare },
-  { num: 5, label: 'Contacto & Formularios', icon: Mail },
-  { num: 6, label: 'Entrevista', icon: Cpu }
+  { num: 3, label: 'Docs requeridos', icon: FolderCheck },
+  { num: 4, label: 'Preparar CV', icon: FileText },
+  { num: 5, label: 'Carta', icon: MessageSquare },
+  { num: 6, label: 'Contacto & Formulario', icon: Mail },
+  { num: 7, label: 'Entrevista', icon: Cpu }
+];
+
+interface RequiredDocItem {
+  id: string;
+  name: string;
+  category: 'core' | 'academic' | 'legal' | 'evidence';
+  description: string;
+  status: 'ready' | 'in_progress' | 'pending';
+  tip: string;
+}
+
+const INITIAL_REQUIRED_DOCS: RequiredDocItem[] = [
+  {
+    id: 'doc-cv',
+    name: 'Currículum Vitae (A4 / Formato DIN 5008 / Europass)',
+    category: 'core',
+    description: 'CV adaptado a la vacante con foco cuantitativo y datos verificados.',
+    status: 'ready',
+    tip: 'Utiliza CV Studio para generar el PDF A4 con espaciado calibrado.'
+  },
+  {
+    id: 'doc-letter',
+    name: 'Carta de Motivación / Anschreiben personalizada',
+    category: 'core',
+    description: 'Carta nominal orientada al supervisor o equipo técnico (sin clichés).',
+    status: 'in_progress',
+    tip: 'Personalizada con los ganchos de Wingman en el Paso 5.'
+  },
+  {
+    id: 'doc-degrees',
+    name: 'Títulos Universitarios Oficiales (Diplomas)',
+    category: 'academic',
+    description: 'Licenciatura en Geofísica (U. de Chile) + Másteres (CAU Kiel / AMU Poznań).',
+    status: 'ready',
+    tip: 'Para convocatorias públicas alemanas (TVöD), anexar copia legalizada o apostillada si procede.'
+  },
+  {
+    id: 'doc-transcript',
+    name: 'Certificado de Calificaciones (Transcript of Records)',
+    category: 'academic',
+    description: 'Concentración de notas oficial con equivalencia en créditos ECTS.',
+    status: 'ready',
+    tip: 'Descargar el PDF oficial firmado del portal universitario de CAU Kiel / Poznań.'
+  },
+  {
+    id: 'doc-references',
+    name: 'Cartas de Recomendación / Referencias Académicas',
+    category: 'academic',
+    description: 'Contactos y cartas de PIs o supervisores de proyectos previos.',
+    status: 'in_progress',
+    tip: 'Indicar afiliación institucional, email institucional y relación científica.'
+  },
+  {
+    id: 'doc-language',
+    name: 'Certificados de Competencia Lingüística',
+    category: 'academic',
+    description: 'Acreditación de Inglés C1 y Alemán funcional (B1-B2).',
+    status: 'ready',
+    tip: 'Certificados oficiales o acreditación de máster impartido íntegramente en inglés.'
+  },
+  {
+    id: 'doc-visa',
+    name: 'Habilitación de Residencia / Permiso Contractual',
+    category: 'legal',
+    description: 'Marco para graduados de universidades alemanas (§20 AufenthG).',
+    status: 'ready',
+    tip: 'Mencionar en la postulación disponibilidad contractual inmediata sin patrocinio extraordinario.'
+  },
+  {
+    id: 'doc-samples',
+    name: 'Muestras de Trabajo / Tesis / Reportes Técnicos',
+    category: 'evidence',
+    description: 'Memoria de título en geofísica de suelos, reportes EPN o enlaces a repositorios R/Python.',
+    status: 'ready',
+    tip: 'Incluir enlace con hipervínculo clickeable al portafolio y a repositorios en GitHub.'
+  }
 ];
 
 const card = 'p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3';
@@ -57,6 +136,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
   const [copied, setCopied] = useState<string | null>(null);
   const [editingLead, setEditingLead] = useState(false);
   const [, setDossierVersion] = useState(0);
+  const [docItems, setDocItems] = useState<RequiredDocItem[]>(INITIAL_REQUIRED_DOCS);
 
   if (!isOpen || !offer) return null;
 
@@ -71,11 +151,24 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
   const emailBody = emailLang === 'de' ? dossier.coldApproachEmail.bodyDe : dossier.coldApproachEmail.bodyEn;
   const match = offer.matchScore;
 
+  const toggleDocStatus = (id: string) => {
+    setDocItems(prev => prev.map(item => {
+      if (item.id !== id) return item;
+      const nextStatus: Record<RequiredDocItem['status'], RequiredDocItem['status']> = {
+        ready: 'in_progress',
+        in_progress: 'pending',
+        pending: 'ready'
+      };
+      return { ...item, status: nextStatus[item.status] };
+    }));
+  };
+
   const copy = (key: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(key);
     setTimeout(() => setCopied(null), 2000);
   };
+
   const CopyBtn = ({ k, text, label }: { k: string; text: string; label: string }) => (
     <button
       onClick={() => copy(k, text)}
@@ -85,6 +178,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
       <span>{copied === k ? '¡Copiado!' : label}</span>
     </button>
   );
+
   const LangToggle = <T extends string>({ value, options, onChange }: { value: T; options: { v: T; l: string }[]; onChange: (v: T) => void }) => (
     <div className="flex bg-slate-950 rounded-lg p-0.5 border border-slate-800">
       {options.map(o => (
@@ -98,6 +192,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
       ))}
     </div>
   );
+
   const Nav = ({ prev, next, nextLabel }: { prev?: number; next?: number; nextLabel?: string }) => (
     <div className="flex justify-end pt-2 space-x-2">
       {prev && <button onClick={() => setActiveStep(prev)} className={btnGhost}>← Atrás</button>}
@@ -116,6 +211,8 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
     }))
   ];
 
+  const readyDocsCount = docItems.filter(d => d.status === 'ready').length;
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-[#131c2e] max-w-4xl w-full rounded-2xl border border-slate-700 shadow-2xl space-y-4 my-8 flex flex-col max-h-[90vh] text-slate-100">
@@ -124,7 +221,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
         <div className="flex items-center justify-between p-5 border-b border-slate-800 shrink-0">
           <div>
             <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-              Preparación Asistida de Candidatura
+              Pipeline Táctico de 7 Pasos // Job Search OS
             </span>
             <h3 className="font-bold text-white text-base mt-1">{offer.title}</h3>
             <p className="text-xs text-slate-400 mt-0.5">
@@ -136,9 +233,9 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
           </button>
         </div>
 
-        {/* Stepper */}
+        {/* Stepper (7 Pasos) */}
         <div className="px-6 py-3 bg-slate-900/90 border-b border-slate-800 shrink-0">
-          <div className="grid grid-cols-6 gap-2">
+          <div className="grid grid-cols-7 gap-1.5">
             {STEPS.map(step => {
               const Icon = step.icon;
               const isActive = activeStep === step.num;
@@ -147,7 +244,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 <button
                   key={step.num}
                   onClick={() => setActiveStep(step.num)}
-                  className={`flex flex-col items-center p-2 rounded-xl text-[11px] font-semibold transition border cursor-pointer ${
+                  className={`flex flex-col items-center p-2 rounded-xl text-[10.5px] font-semibold transition border cursor-pointer ${
                     isActive
                       ? 'bg-emerald-600 text-white border-emerald-500 shadow-md'
                       : isPast
@@ -156,10 +253,10 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   }`}
                 >
                   <div className="flex items-center space-x-1">
-                    <Icon className="h-3.5 w-3.5" />
+                    <Icon className="h-3 w-3" />
                     <span>Paso {step.num}</span>
                   </div>
-                  <span className="truncate max-w-full text-[10px] mt-0.5 font-normal">{step.label}</span>
+                  <span className="truncate max-w-full text-[9.5px] mt-0.5 font-normal">{step.label}</span>
                 </button>
               );
             })}
@@ -285,20 +382,91 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className={card}>
-                  <span className="font-bold text-sky-400">→ Para el CV (paso 3)</span>
+                  <span className="font-bold text-sky-400">→ Para el CV (paso 4)</span>
                   <ul className="space-y-1 text-slate-300">{dossier.cvGuidance.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
                 </div>
                 <div className={card}>
-                  <span className="font-bold text-sky-400">→ Para la carta (paso 4)</span>
+                  <span className="font-bold text-sky-400">→ Para la carta (paso 5)</span>
                   <ul className="space-y-1 text-slate-300">{dossier.coverLetterAngles.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
                 </div>
               </div>
-              <Nav prev={1} next={3} nextLabel="Paso 3: Preparar CV" />
+              <Nav prev={1} next={3} nextLabel="Paso 3: Documentos Requeridos" />
             </div>
           )}
 
-          {/* PASO 3: CV */}
+          {/* PASO 3: NUEVO NIVEL - DOCUMENTOS REQUERIDOS & ANEXOS */}
           {activeStep === 3 && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                  <div>
+                    <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                      <FolderCheck className="h-4 w-4 text-emerald-400" />
+                      <span>Paso 3: Auditoría y Checklist de Documentos Requeridos</span>
+                    </h4>
+                    <p className="text-slate-400 text-[11px] mt-0.5">
+                      Verificación de anexos exigidos para la postulación ante <strong className="text-white">{offer.company}</strong>. Haz clic en el estado para actualizar.
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono font-bold text-emerald-400">
+                      {readyDocsCount} de {docItems.length} Listos
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2.5">
+                  {docItems.map(doc => {
+                    const statusConfig = {
+                      ready: { label: '✓ Listo', bg: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40' },
+                      in_progress: { label: '⏳ En preparación', bg: 'bg-amber-500/15 text-amber-300 border-amber-500/40' },
+                      pending: { label: '⚠️ Pendiente', bg: 'bg-rose-500/15 text-rose-300 border-rose-500/40' }
+                    }[doc.status];
+
+                    return (
+                      <div
+                        key={doc.id}
+                        className="p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-slate-700 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center space-x-2">
+                            <FileCheck className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+                            <span className="font-bold text-white text-xs">{doc.name}</span>
+                          </div>
+                          <p className="text-slate-400 text-[11px] pl-5">{doc.description}</p>
+                          <p className="text-sky-300/80 text-[10px] pl-5 italic font-mono">Tip: {doc.tip}</p>
+                        </div>
+
+                        <button
+                          onClick={() => toggleDocStatus(doc.id)}
+                          className={`px-3 py-1 rounded-lg text-xs font-mono font-bold border transition cursor-pointer shrink-0 self-start sm:self-center ${statusConfig.bg}`}
+                          title="Haz clic para alternar: Listo -> En preparación -> Pendiente"
+                        >
+                          {statusConfig.label}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-sky-950/20 border border-sky-900/40 text-slate-300 text-xs flex items-start gap-2.5">
+                <ShieldCheck className="h-4 w-4 text-sky-400 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <strong className="text-sky-200">Protocolo de Envío Consolidado (DACH / Europa):</strong>
+                  <p className="text-[11px] leading-relaxed">
+                    La mayoría de institutos públicos alemanes (como Thünen o UBA) y portales de contratación exigen un <strong>único archivo PDF continuo</strong> (&lt; 10 MB) ordenado estratégicamente: 
+                    1) Carta de motivación, 2) CV cronológico A4, 3) Diplomas universitarios, 4) Transcript of Records, 5) Cartas de recomendación y certificados complementarios.
+                  </p>
+                </div>
+              </div>
+
+              <Nav prev={2} next={4} nextLabel="Paso 4: Preparar CV" />
+            </div>
+          )}
+
+          {/* PASO 4: CV */}
+          {activeStep === 4 && (
             <div className="space-y-4">
               <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 space-y-1">
                 <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Guía Wingman para el CV de {leadFull}</span>
@@ -308,7 +476,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2">
                     <FileText className="h-4 w-4 text-emerald-400" />
-                    <span>Paso 3: Preparación del CV (datos verificados del Portafolio)</span>
+                    <span>Paso 4: Preparación del CV (datos verificados del Portafolio)</span>
                   </h4>
                   <LangToggle value={cvLang} onChange={setCvLang} options={[{ v: 'es', l: '🇪🇸 ES' }, { v: 'en', l: '🇬🇧 EN' }]} />
                 </div>
@@ -325,12 +493,12 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 </div>
                 <textarea value={cvText} readOnly rows={10} className={textareaCls} />
               </div>
-              <Nav prev={2} next={4} nextLabel="Paso 4: Carta" />
+              <Nav prev={3} next={5} nextLabel="Paso 5: Carta" />
             </div>
           )}
 
-          {/* PASO 4: CARTA */}
-          {activeStep === 4 && (
+          {/* PASO 5: CARTA */}
+          {activeStep === 5 && (
             <div className="space-y-4">
               <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 space-y-1">
                 <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Ángulos Wingman para la carta</span>
@@ -340,7 +508,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2">
                     <MessageSquare className="h-4 w-4 text-emerald-400" />
-                    <span>Paso 4: Carta de presentación</span>
+                    <span>Paso 5: Carta de presentación (Versión Académica Completa)</span>
                   </h4>
                   <div className="flex items-center gap-2">
                     <LangToggle value={letterLang} onChange={setLetterLang} options={[{ v: 'de', l: '🇩🇪 DE' }, { v: 'en', l: '🇬🇧 EN' }, { v: 'es', l: '🇪🇸 ES' }]} />
@@ -356,14 +524,14 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                     <CopyBtn k="letter" text={coverLetter.fullMarkdown} label="Copiar carta" />
                   </div>
                 </div>
-                <textarea value={coverLetter.fullMarkdown} readOnly rows={14} className={textareaCls} />
+                <textarea value={coverLetter.fullMarkdown} readOnly rows={15} className={textareaCls} />
               </div>
-              <Nav prev={3} next={5} nextLabel="Paso 5: Contacto & Formularios" />
+              <Nav prev={4} next={6} nextLabel="Paso 6: Contacto & Formularios" />
             </div>
           )}
 
-          {/* PASO 5: CONTACTO + FORMULARIOS */}
-          {activeStep === 5 && (
+          {/* PASO 6: CONTACTO + FORMULARIOS */}
+          {activeStep === 6 && (
             <div className="space-y-4">
               <div className={card}>
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
@@ -401,17 +569,17 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   </div>
                 ))}
               </div>
-              <Nav prev={4} next={6} nextLabel="Paso 6: Entrevista" />
+              <Nav prev={5} next={7} nextLabel="Paso 7: Entrevista" />
             </div>
           )}
 
-          {/* PASO 6: ENTREVISTA */}
-          {activeStep === 6 && (
+          {/* PASO 7: ENTREVISTA */}
+          {activeStep === 7 && (
             <div className="space-y-4">
               <div className={card}>
                 <h4 className="font-bold text-white text-sm flex items-center gap-2">
                   <Cpu className="h-4 w-4 text-emerald-400" />
-                  <span>Paso 6: Preparación de entrevista con {leadFull}</span>
+                  <span>Paso 7: Preparación de entrevista con {leadFull}</span>
                 </h4>
                 <div className="space-y-3">
                   {interviewQuestions.map((iq, i) => (
@@ -427,7 +595,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="h-5 w-5 text-emerald-400" />
-                    <span className="font-semibold text-emerald-300">Pipeline completado</span>
+                    <span className="font-semibold text-emerald-300">Pipeline completado con éxito</span>
                   </div>
                   <button
                     onClick={() => { onClose(); onStartApplication(offer.id); }}
@@ -440,7 +608,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   Nada se envía automáticamente a {offer.company}. Los borradores quedan solo en tu ordenador; el envío oficial lo haces tú en el portal.
                 </p>
               </div>
-              <Nav prev={5} />
+              <Nav prev={6} />
             </div>
           )}
 

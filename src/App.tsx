@@ -266,6 +266,7 @@ export function App() {
               <MissionControlTab
                 initialSubTab={missionSubTab}
                 onReturnToHub={() => handleNavigate('dashboard')}
+                onOpenStudio={(offerId, docType) => handleNavigate('agent_dossier', 'studio', undefined, offerId, docType)}
               />
             )}
 

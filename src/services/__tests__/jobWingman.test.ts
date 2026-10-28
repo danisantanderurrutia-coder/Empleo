@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { getStoredDossiers, getDossierForOffer, THUENEN_TECHWORMS_DOSSIER } from '../jobWingmanService';
+import { getStoredDossiers, getDossierForOffer, THUENEN_TECHWORMS_DOSSIER, UBA_KILAB_DOSSIER } from '../jobWingmanService';
 import { generateTailoredCoverLetter } from '../coverLetterCopilot';
 import type { JobOffer } from '../../types/offers';
 
@@ -80,5 +80,30 @@ describe('Job Wingman Intelligence System', () => {
     );
     expect(letterEs.salutation).toBe('Estimado Prof. Dr. Axel Don:');
     expect(letterEs.bodyParagraphs[1]).toContain('medio poroso anisótropo');
+  });
+
+  it('retrieves and matches UBA KI-Lab dossier (Interamt 1499096 / Kennziffer 8/LB/26)', () => {
+    const ubaOffer: Partial<JobOffer> = {
+      id: 'job-uba-ki-product-owner-1499096',
+      company: 'Umweltbundesamt (UBA)',
+      title: 'Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (KI-Lab)',
+      rawDescription: 'Anwendungslabor für Künstliche Intelligenz und Big Data Kennziffer 8/LB/26 Interamt 1499096 TVöD E 13',
+      requirements: ['Scrum', 'KI', 'Product Owner']
+    };
+
+    const dossier = getDossierForOffer(ubaOffer as JobOffer);
+    expect(dossier.id).toBe(UBA_KILAB_DOSSIER.id);
+    expect(dossier.targetCompany).toContain('Umweltbundesamt');
+    expect(dossier.technicalHooks.join(' ')).toContain('Wetland Monitor');
+    expect(dossier.technicalHooks.join(' ')).toContain('AgriTwin');
+    expect(dossier.technicalHooks.join(' ')).toContain('Rewilding Field Suite');
+
+    // Test German Anschreiben incorporates the 3 digital twins / environmental apps
+    const letterDe = generateTailoredCoverLetter(ubaOffer as JobOffer, 'de', dossier.leadProfile, dossier);
+    expect(letterDe.bodyParagraphs[0]).toContain('8/LB/26');
+    expect(letterDe.bodyParagraphs[0]).toContain('1499096');
+    expect(letterDe.bodyParagraphs[2]).toContain('Wetland Monitor');
+    expect(letterDe.bodyParagraphs[2]).toContain('AgriTwin');
+    expect(letterDe.bodyParagraphs[2]).toContain('Rewilding Field Suite');
   });
 });

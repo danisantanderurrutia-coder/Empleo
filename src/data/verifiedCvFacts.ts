@@ -208,6 +208,34 @@ export const VERIFIED_FACTS: CvFact[] = [
     }
   },
   {
+    id: 'exp-rewilding-suite',
+    section: 'experience',
+    priority: 4,
+    period: '2026',
+    tags: ['rewilding', 'restoration', 'restauración', 'gis', 'sig', 'pwa', 'offline-first', 'indexeddb', 'product owner', 'software', 'digital twin', 'gemelo digital', 'aljezur', 'portugal', 'biomass', 'biomasa', 'fire risk', 'incendios', 'protocols', 'survey', 'fieldwork'],
+    source: 'Portafolio · Software ambiental (Rewilding Field Suite, Aljezur, Portugal)',
+    es: {
+      title: 'Arquitectura y Desarrollo',
+      org: 'Rewilding Field Suite (PWA offline-first)',
+      place: 'Aljezur, Portugal',
+      short: 'PWA modular con almacenamiento local IndexedDB para protocolos de campo de rewilding, fusión de capas GIS, monitoreo de biomasa y mitigación de riesgo de incendios.',
+      long: [
+        'Concepción de producto y desarrollo de una Progressive Web App (PWA) de campo con motor de persistencia offline (IndexedDB) para protocolos GoWild de rewilding.',
+        'Mapeo territorial y fusión de capas GIS para monitoreo de biomasa, regeneración de suelo y prevención de incendios forestales en la costa suroeste de Portugal.'
+      ]
+    },
+    en: {
+      title: 'Architecture & Lead Developer',
+      org: 'Rewilding Field Suite (Offline-First PWA)',
+      place: 'Aljezur, Portugal',
+      short: 'Modular offline-first PWA with IndexedDB persistence for rewilding field survey protocols, GIS layer fusion, biomass monitoring, and wildfire risk mitigation.',
+      long: [
+        'Product conception and development of an offline-first Progressive Web App (PWA) with IndexedDB local storage engine for GoWild ecological restoration protocols.',
+        'Territorial mapping and GIS layer fusion for biomass monitoring, soil regeneration, and wildfire risk mitigation on the southwest coast of Portugal.'
+      ]
+    }
+  },
+  {
     id: 'exp-congress',
     section: 'experience',
     priority: 4,

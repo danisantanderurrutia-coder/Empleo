@@ -90,4 +90,32 @@ describe('coverLetterStudio · buildCoverLetter & Render', () => {
     expect(prompt).toContain('SEV');
     expect(prompt).toContain('Eddy Covariance');
   });
+
+  it('ensambla un Anschreiben en alemán para el UBA KI-Lab con los 3 gemelos digitales y 0 clichés', () => {
+    const ubaLetter = buildCoverLetter({
+      lang: 'de',
+      offer: {
+        id: 'job-uba-ki-product-owner-1499096',
+        title: 'Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (KI-Lab)',
+        company: 'Umweltbundesamt (UBA)',
+        location: 'Leipzig, Deutschland',
+        rawDescription: 'KI-Lab Kennziffer 8/LB/26 Interamt ID 1499096'
+      }
+    });
+
+    expect(ubaLetter.recipient.org).toContain('Umweltbundesamt');
+    expect(ubaLetter.referenceSubject).toContain('Kennziffer 8/LB/26');
+    expect(ubaLetter.referenceSubject).toContain('1499096');
+
+    const text = ubaLetter.paragraphs.join('\n\n');
+    expect(text).toContain('Wetland Monitor');
+    expect(text).toContain('AgriTwin');
+    expect(text).toContain('Rewilding Field Suite');
+    expect(text).toContain('Eddy Covariance');
+
+    // Anti-AI compliance
+    expect(ubaLetter.audit.clicheCount).toBe(0);
+    expect(ubaLetter.audit.detectedCliches).toEqual([]);
+    expect(ubaLetter.audit.passed).toBe(true);
+  });
 });

@@ -13,11 +13,13 @@ import { IntelligenceTab } from '../intelligence/IntelligenceTab';
 interface MissionControlTabProps {
   initialSubTab?: 'applications' | 'batch' | 'intelligence';
   onReturnToHub?: () => void;
+  onOpenStudio?: (offerId: string, docType?: 'cv' | 'cover_letter') => void;
 }
 
 export const MissionControlTab: React.FC<MissionControlTabProps> = ({ 
   initialSubTab = 'applications',
-  onReturnToHub
+  onReturnToHub,
+  onOpenStudio
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'applications' | 'batch' | 'intelligence'>(initialSubTab);
 
@@ -111,7 +113,7 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
       {/* SUB-PANEL 1: APPLICATIONS KANBAN & UNIFIED DESPACHO ASISTIDO */}
       {activeSubTab === 'applications' && (
         <div className="space-y-4">
-          <ApplicationsTab />
+          <ApplicationsTab onOpenStudio={onOpenStudio} />
         </div>
       )}
 

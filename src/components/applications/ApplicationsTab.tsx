@@ -17,14 +17,21 @@ import {
   X,
   CheckCircle2,
   Send,
-  HelpCircle
+  HelpCircle,
+  UserCheck,
+  Mail,
+  FolderCheck,
+  ShieldCheck,
+  Lightbulb
 } from 'lucide-react';
-import { getStoredApplications, saveStoredApplications } from '../../services/db';
+import { getStoredApplications, saveStoredApplications, getStoredOffers } from '../../services/db';
 import type { ApplicationItem, ApplicationStage } from '../../types/applications';
 import type { JobOffer } from '../../types/offers';
 import { STAGES } from '../../types/applications';
 import { generateTailoredCoverLetter, generateApplicationQA } from '../../services/coverLetterCopilot';
+import { getDossierForOffer } from '../../services/jobWingmanService';
 import { AddApplicationModal } from './AddApplicationModal';
+import { FiveStepPipelineModal } from '../offers/FiveStepPipelineModal';
 
 const buildMockOfferFromApp = (app: ApplicationItem): JobOffer => ({
   id: app.offerId,
@@ -56,7 +63,52 @@ const buildMockOfferFromApp = (app: ApplicationItem): JobOffer => ({
   }
 });
 
+const getOfferForApp = (app: ApplicationItem): JobOffer => {
+  const stored = getStoredOffers();
+  const found = stored.find(o => o.id === app.offerId);
+  if (found) return found;
+  return buildMockOfferFromApp(app);
+};
+
+const THUENEN_SEED_APP: ApplicationItem = {
+  id: 'CAND-THUENEN-369',
+  offerId: 'job-thuenen-techworms-369',
+  offerTitle: 'Wissenschaftliche*r Mitarbeiter*in / Doktorand*in (TechWorms)',
+  companyName: 'Johann Heinrich von Thünen-Institut',
+  location: 'Braunschweig, Niedersachsen, Alemania',
+  currentStage: 2,
+  status: 'En Progreso',
+  createdDate: '2026-10-21',
+  updatedDate: '2026-10-28',
+  offerUrl: 'https://www.karriere-thuenen.de/index.php?ac=jobad&id=369&language=2',
+  humanApprovalGranted: false,
+  adaptedCvSummary: [
+    'Física de Medios Porosos & Ecuaciones de Richards',
+    'RootBox / Cuantificación Radicular bajo UV',
+    'Modelado y Análisis Estadístico en R / Python',
+    'Isótopos 13C/15N y Dinámica de Carbono en Subsuelo'
+  ],
+  interviewNotes: 'Proyecto TechWorms (Prof. Dr. Axel Don). Pipeline calibrado con enfoque cuantitativo.',
+  history: [
+    {
+      id: 'h-thuenen-1',
+      timestamp: '2026-10-21 12:00',
+      stage: 1,
+      title: 'Vacante detectada e interceptada en portal Thünen',
+      actor: 'Usuario'
+    },
+    {
+      id: 'h-thuenen-2',
+      timestamp: '2026-10-22 20:00',
+      stage: 2,
+      title: 'Dossier Wingman generado para Prof. Dr. Axel Don',
+      actor: 'Usuario'
+    }
+  ]
+};
+
 const DEFAULT_SEED_APPS: ApplicationItem[] = [
+  THUENEN_SEED_APP,
   {
     id: 'CAND-2026-001',
     offerId: 'seed-bc3-01',
@@ -132,12 +184,22 @@ const DEFAULT_SEED_APPS: ApplicationItem[] = [
   }
 ];
 
-export const ApplicationsTab: React.FC = () => {
+interface ApplicationsTabProps {
+  onOpenStudio?: (offerId: string, docType?: 'cv' | 'cover_letter') => void;
+}
+
+export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }) => {
   const [applications, setApplications] = useState<ApplicationItem[]>(() => {
     const stored = getStoredApplications();
     if (stored.length === 0) {
       saveStoredApplications(DEFAULT_SEED_APPS);
       return DEFAULT_SEED_APPS;
+    }
+    const hasThuenen = stored.some(a => a.offerId === 'job-thuenen-techworms-369' || a.id === 'CAND-THUENEN-369');
+    if (!hasThuenen) {
+      const merged = [THUENEN_SEED_APP, ...stored];
+      saveStoredApplications(merged);
+      return merged;
     }
     return stored;
   });
@@ -145,12 +207,16 @@ export const ApplicationsTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'germany' | 'euskadi' | 'remote' | 'interviews'>('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedAppForPipeline, setSelectedAppForPipeline] = useState<ApplicationItem | null>(null);
   const [assistedDispatchApp, setAssistedDispatchApp] = useState<ApplicationItem | null>(null);
-  
+
   // Assisted dispatch internal state
-  const [letterLang, setLetterLang] = useState<'es' | 'en' | 'de'>('es');
+  const [letterLang, setLetterLang] = useState<'es' | 'en' | 'de'>('de');
   const [copiedLetter, setCopiedLetter] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [dispatchTab, setDispatchTab] = useState<'briefing' | 'letter' | 'docs' | 'qa'>('briefing');
+  const [emailLang, setEmailLang] = useState<'de' | 'en'>('de');
 
   useEffect(() => {
     saveStoredApplications(applications);
@@ -410,6 +476,7 @@ export const ApplicationsTab: React.FC = () => {
               onMoveStage={handleMoveStage}
               onDelete={handleDeleteApplication}
               onOpenDispatch={() => setAssistedDispatchApp(app)}
+              onOpenPipeline={() => setSelectedAppForPipeline(app)}
               canMovePrev={false}
               canMoveNext={true}
             />
@@ -417,7 +484,7 @@ export const ApplicationsTab: React.FC = () => {
           {colRadar.length === 0 && <EmptyColumnPlaceholder text="Sin ofertas guardadas en radar" />}
         </KanbanColumn>
 
-        {/* COL 2: PREPARACIÓN / CARTAS & DOSSIER */}
+        {/* COL 2: PREPARACIÓN // DOSSIER */}
         <KanbanColumn
           title="⚡ PREPARACIÓN // DOSSIER"
           badgeColor="bg-sky-950 text-sky-300 border-sky-700"
@@ -432,6 +499,7 @@ export const ApplicationsTab: React.FC = () => {
               onMoveStage={handleMoveStage}
               onDelete={handleDeleteApplication}
               onOpenDispatch={() => setAssistedDispatchApp(app)}
+              onOpenPipeline={() => setSelectedAppForPipeline(app)}
               canMovePrev={true}
               canMoveNext={true}
             />
@@ -439,7 +507,7 @@ export const ApplicationsTab: React.FC = () => {
           {colPrep.length === 0 && <EmptyColumnPlaceholder text="Sin candidaturas en preparación" />}
         </KanbanColumn>
 
-        {/* COL 3: POSTULADAS / DESPACHADAS */}
+        {/* COL 3: POSTULADAS // ENVIADAS */}
         <KanbanColumn
           title="🚀 POSTULADAS // ENVIADAS"
           badgeColor="bg-emerald-950 text-emerald-300 border-emerald-700"
@@ -454,6 +522,7 @@ export const ApplicationsTab: React.FC = () => {
               onMoveStage={handleMoveStage}
               onDelete={handleDeleteApplication}
               onOpenDispatch={() => setAssistedDispatchApp(app)}
+              onOpenPipeline={() => setSelectedAppForPipeline(app)}
               canMovePrev={true}
               canMoveNext={true}
             />
@@ -476,6 +545,7 @@ export const ApplicationsTab: React.FC = () => {
               onMoveStage={handleMoveStage}
               onDelete={handleDeleteApplication}
               onOpenDispatch={() => setAssistedDispatchApp(app)}
+              onOpenPipeline={() => setSelectedAppForPipeline(app)}
               canMovePrev={true}
               canMoveNext={true}
             />
@@ -483,7 +553,7 @@ export const ApplicationsTab: React.FC = () => {
           {colInterviews.length === 0 && <EmptyColumnPlaceholder text="Sin entrevistas activas" />}
         </KanbanColumn>
 
-        {/* COL 5: CONCLUIDAS / HISTÓRICO */}
+        {/* COL 5: CONCLUIDAS // HISTÓRICO */}
         <KanbanColumn
           title="🏁 HISTÓRICO // CONCLUIDAS"
           badgeColor="bg-slate-900 text-slate-400 border-slate-800"
@@ -498,6 +568,7 @@ export const ApplicationsTab: React.FC = () => {
               onMoveStage={handleMoveStage}
               onDelete={handleDeleteApplication}
               onOpenDispatch={() => setAssistedDispatchApp(app)}
+              onOpenPipeline={() => setSelectedAppForPipeline(app)}
               canMovePrev={true}
               canMoveNext={false}
             />
@@ -514,226 +585,502 @@ export const ApplicationsTab: React.FC = () => {
         onAddApplication={handleAddApplication}
       />
 
-      {/* Slide-over / Modal: DESPACHO ASISTIDO */}
-      {assistedDispatchApp && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn font-sans">
-          <div 
-            className="max-w-4xl w-full rounded-2xl border shadow-2xl flex flex-col max-h-[92vh] overflow-hidden transition-colors"
-            style={{
-              backgroundColor: 'var(--card-bg)',
-              borderColor: 'var(--card-border)',
-              color: 'var(--text-primary)'
-            }}
-          >
-            
-            {/* Dispatch Header */}
+      {/* Modal: PIPELINE UNIFICADO (7 Pasos: Análisis, Supervisor, Documentos, CV, Carta, Contacto, Entrevista) */}
+      {selectedAppForPipeline && (
+        <FiveStepPipelineModal
+          offer={getOfferForApp(selectedAppForPipeline)}
+          isOpen={!!selectedAppForPipeline}
+          onClose={() => setSelectedAppForPipeline(null)}
+          onStartApplication={() => {
+            setSelectedAppForPipeline(null);
+          }}
+          onOpenStudio={onOpenStudio}
+        />
+      )}
+
+      {/* Modal: DESPACHO ASISTIDO + WINGMAN BRIEFING */}
+      {assistedDispatchApp && (() => {
+        const dispatchOffer = getOfferForApp(assistedDispatchApp);
+        const dispatchDossier = getDossierForOffer(dispatchOffer);
+        const tailoredLetter = generateTailoredCoverLetter(dispatchOffer, letterLang, dispatchDossier?.leadProfile, dispatchDossier);
+        const letterMarkdown = tailoredLetter.fullMarkdown;
+        const qaList = generateApplicationQA(dispatchOffer);
+        const coldApproach = dispatchDossier?.coldApproachEmail;
+
+        return (
+          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 animate-fadeIn">
             <div 
-              className="flex items-center justify-between p-5 border-b shrink-0"
+              className="w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl border"
               style={{
                 backgroundColor: 'var(--panel-bg)',
                 borderColor: 'var(--panel-border)'
               }}
             >
-              <div className="flex items-center space-x-3">
-                <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-500 border border-sky-500/30">
-                  <Sparkles className="h-6 w-6" />
-                </div>
-                <div>
+              {/* Tactical Unsplash Hero Banner */}
+              <div className="relative h-44 w-full shrink-0 overflow-hidden bg-slate-950">
+                <img 
+                  src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" 
+                  alt="Job Wingman Ops" 
+                  className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--panel-bg)] via-[var(--panel-bg)]/40 to-transparent" />
+                
+                <div className="absolute top-3 left-4 right-4 flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <h3 className="font-mono font-black text-[var(--text-primary)] text-base uppercase tracking-tight">
-                      DESPACHO ASISTIDO // {assistedDispatchApp.id}
-                    </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 font-bold">
-                      FASE 3
+                    <span className="px-2.5 py-1 rounded-full bg-sky-500/30 text-sky-200 border border-sky-400/40 text-[10px] font-mono font-black uppercase tracking-wider backdrop-blur-md flex items-center gap-1.5 shadow-sm">
+                      <Sparkles className="h-3 w-3 text-sky-400 animate-pulse" />
+                      JOB WINGMAN // TACTICAL DISPATCH HUB
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-black/50 text-slate-300 text-[10px] font-mono border border-white/10 backdrop-blur-md">
+                      Etapa {assistedDispatchApp.currentStage}: {STAGES.find(s => s.stage === assistedDispatchApp.currentStage)?.shortName}
                     </span>
                   </div>
-                  <p className="text-xs text-[var(--text-secondary)] font-sans mt-0.5">
-                    {assistedDispatchApp.offerTitle} • <strong className="text-[var(--text-primary)]">{assistedDispatchApp.companyName}</strong> ({assistedDispatchApp.location})
-                  </p>
+                  <button
+                    onClick={() => setAssistedDispatchApp(null)}
+                    className="p-1.5 rounded-xl bg-black/50 text-white/70 hover:text-white hover:bg-black/80 transition cursor-pointer border border-white/10 backdrop-blur-md"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="absolute bottom-3 left-4 right-4">
+                  <h3 className="text-base sm:text-lg font-black text-white font-mono uppercase tracking-tight line-clamp-1 drop-shadow-md">
+                    {assistedDispatchApp.offerTitle}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-200 mt-1">
+                    <span className="flex items-center gap-1 font-bold text-sky-300">
+                      <Building2 className="h-3.5 w-3.5" />
+                      {assistedDispatchApp.companyName}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {assistedDispatchApp.location}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <button 
-                onClick={() => setAssistedDispatchApp(null)} 
-                className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-slate-800 transition cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Dispatch Content Tabs / Sections */}
-            <div className="p-6 space-y-6 overflow-y-auto flex-1 font-sans text-xs">
-              
-              {/* Section 1: Tailored Cover Letter Generator */}
-              <div 
-                className="p-4 rounded-xl border space-y-3"
-                style={{
-                  backgroundColor: 'var(--panel-bg)',
-                  borderColor: 'var(--card-border)'
-                }}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center space-x-2 font-mono font-bold text-[var(--text-primary)] text-sm">
-                    <FileText className="h-4 w-4 text-sky-500" />
-                    <span>CARTA DE PRESENTACIÓN A MEDIDA (TEMPLATE TÁCTICO)</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <div className="flex items-center p-0.5 bg-black/5 dark:bg-slate-950 rounded-lg border border-[var(--card-border)] font-mono text-[11px]">
-                      <button
-                        onClick={() => setLetterLang('es')}
-                        className={`px-2.5 py-1 rounded transition cursor-pointer ${letterLang === 'es' ? 'bg-sky-600 text-white font-bold' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}
-                      >
-                        🇪🇸 Español
-                      </button>
-                      <button
-                        onClick={() => setLetterLang('en')}
-                        className={`px-2.5 py-1 rounded transition cursor-pointer ${letterLang === 'en' ? 'bg-sky-600 text-white font-bold' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}
-                      >
-                        🇬🇧 English
-                      </button>
-                      <button
-                        onClick={() => setLetterLang('de')}
-                        className={`px-2.5 py-1 rounded transition cursor-pointer ${letterLang === 'de' ? 'bg-sky-600 text-white font-bold' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}
-                      >
-                        🇩🇪 Deutsch
-                      </button>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        const offer = buildMockOfferFromApp(assistedDispatchApp);
-                        const letter = generateTailoredCoverLetter(offer, letterLang);
-                        navigator.clipboard.writeText(letter.fullMarkdown);
-                        setCopiedLetter(true);
-                        setTimeout(() => setCopiedLetter(null as any), 2000);
-                      }}
-                      className="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-mono font-bold rounded-lg border border-sky-500 flex items-center space-x-1.5 transition cursor-pointer shadow-sm"
-                    >
-                      {copiedLetter ? <Check className="h-3.5 w-3.5 text-white" /> : <Copy className="h-3.5 w-3.5 text-white" />}
-                      <span>{copiedLetter ? '¡Copiado!' : 'Copiar Carta'}</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-lg bg-black/5 dark:bg-slate-950 border border-[var(--card-border)] font-mono text-[var(--text-secondary)] text-[11px] leading-relaxed whitespace-pre-line max-h-52 overflow-y-auto">
-                  {(() => {
-                    const offer = buildMockOfferFromApp(assistedDispatchApp);
-                    const letter = generateTailoredCoverLetter(offer, letterLang);
-                    return letter.fullMarkdown;
-                  })()}
-                </div>
+              {/* Navigation Tabs */}
+              <div className="flex items-center space-x-1 px-4 py-2 border-b border-[var(--panel-border)] bg-[var(--card-bg)] overflow-x-auto text-xs font-mono shrink-0">
+                <button
+                  onClick={() => setDispatchTab('briefing')}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center space-x-1.5 shrink-0 cursor-pointer ${
+                    dispatchTab === 'briefing'
+                      ? 'bg-sky-600 text-white shadow font-black'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--panel-bg)]'
+                  }`}
+                >
+                  <UserCheck className="h-3.5 w-3.5" />
+                  <span>🎯 Briefing Wingman & Contacto PI</span>
+                </button>
+                <button
+                  onClick={() => setDispatchTab('letter')}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center space-x-1.5 shrink-0 cursor-pointer ${
+                    dispatchTab === 'letter'
+                      ? 'bg-sky-600 text-white shadow font-black'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--panel-bg)]'
+                  }`}
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  <span>📄 Carta Adaptada (5 Párrafos)</span>
+                </button>
+                <button
+                  onClick={() => setDispatchTab('docs')}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center space-x-1.5 shrink-0 cursor-pointer ${
+                    dispatchTab === 'docs'
+                      ? 'bg-sky-600 text-white shadow font-black'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--panel-bg)]'
+                  }`}
+                >
+                  <FolderCheck className="h-3.5 w-3.5" />
+                  <span>📋 Documentos & Anexos</span>
+                </button>
+                <button
+                  onClick={() => setDispatchTab('qa')}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center space-x-1.5 shrink-0 cursor-pointer ${
+                    dispatchTab === 'qa'
+                      ? 'bg-sky-600 text-white shadow font-black'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--panel-bg)]'
+                  }`}
+                >
+                  <Lightbulb className="h-3.5 w-3.5" />
+                  <span>💡 Q&A y Argumentos</span>
+                </button>
               </div>
 
-              {/* Section 2: Strategic Talking Points & Pre-Filled Answers */}
-              <div 
-                className="p-4 rounded-xl border space-y-3"
-                style={{
-                  backgroundColor: 'var(--panel-bg)',
-                  borderColor: 'var(--card-border)'
-                }}
-              >
-                <div className="flex items-center space-x-2 font-mono font-bold text-[var(--text-primary)] text-sm">
-                  <Sparkles className="h-4 w-4 text-amber-500" />
-                  <span>ARGUMENTARIO ESTRATÉGICO PARA ENTREVISTAS & FORMULARIOS</span>
-                </div>
-
-                <div className="space-y-2.5">
-                  {(() => {
-                    const offer = buildMockOfferFromApp(assistedDispatchApp);
-                    const qa = generateApplicationQA(offer);
-                    return qa.map((item, idx) => (
-                      <div key={idx} className="p-3 bg-black/5 dark:bg-slate-950 rounded-lg border border-[var(--card-border)] space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-[var(--text-primary)] font-sans">{item.question}</span>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(item.recommendedAnswer);
-                              setCopiedIndex(idx);
-                              setTimeout(() => setCopiedIndex(null), 2000);
-                            }}
-                            className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer font-mono"
-                          >
-                            {copiedIndex === idx ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
-                            <span>{copiedIndex === idx ? 'Copiado' : 'Copiar'}</span>
-                          </button>
-                        </div>
-                        <p className="text-[11px] text-[var(--text-secondary)] font-sans">{item.recommendedAnswer}</p>
-                        <p className="text-[10px] text-amber-600 dark:text-amber-400 font-mono">Tip: {item.tips}</p>
+              {/* Body Content */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+                
+                {/* TAB 1: BRIEFING WINGMAN */}
+                {dispatchTab === 'briefing' && (
+                  <div className="space-y-4 font-sans text-xs">
+                    {/* Explanatory Wingman Mission Box */}
+                    <div className="p-4 rounded-xl border border-sky-500/30 bg-sky-500/10 space-y-2">
+                      <div className="flex items-center space-x-2 font-mono font-black text-sky-600 dark:text-sky-300 text-xs uppercase tracking-wide">
+                        <Sparkles className="h-4 w-4 text-sky-500 shrink-0" />
+                        <span>Misión Wingman: De la Burocracia al Abordaje de Alto Valor</span>
                       </div>
-                    ));
-                  })()}
-                </div>
-              </div>
-
-              {/* Section 3: Official Human Confirmation */}
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Lock className="h-5 w-5 text-amber-500" />
-                    <div>
-                      <h4 className="font-mono font-bold text-[var(--text-primary)] text-xs uppercase">
-                        VERIFICACIÓN HUMANA OBLIGATORIA (FASE 7)
-                      </h4>
-                      <p className="text-[11px] text-[var(--text-secondary)]">
-                        Ningún envío se realiza a espaldas del usuario. Una vez enviada la candidatura en la web oficial, confirma aquí para trasladar al estado &quot;Postuladas&quot;.
+                      <p className="text-[11.5px] text-[var(--text-secondary)] leading-relaxed font-sans">
+                        Job Wingman analiza las prioridades del decisor científico ({dispatchDossier?.leadProfile.name || 'Supervisor a cargo'}), detecta los cuellos de botella del proyecto ({dispatchOffer.title}) y formula ángulos sin clichés ni servilismo. Tu perfil geofísico en física de medios porosos y modelado de datos en R/Python se posiciona como una ventaja técnica diferencial frente a perfiles agronómicos tradicionales.
                       </p>
                     </div>
-                  </div>
 
-                  {assistedDispatchApp.humanApprovalGranted ? (
-                    <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-mono font-bold text-xs shrink-0">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Envío Confirmado ({assistedDispatchApp.approvalTimestamp})</span>
+                    {/* PI Intelligence Card */}
+                    <div 
+                      className="p-4 rounded-xl border space-y-3"
+                      style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+                    >
+                      <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2">
+                        <div className="flex items-center space-x-2 font-mono font-bold text-xs uppercase">
+                          <UserCheck className="h-4 w-4 text-purple-500" />
+                          <span>Decisor / Investigador Principal (PI)</span>
+                        </div>
+                        {dispatchDossier?.leadProfile.email && (
+                          <a
+                            href={`mailto:${dispatchDossier.leadProfile.email}`}
+                            className="font-mono text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 font-bold"
+                          >
+                            <Mail className="h-3.5 w-3.5" />
+                            <span>{dispatchDossier.leadProfile.email}</span>
+                          </a>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11.5px]">
+                        <div>
+                          <span className="font-mono text-[var(--text-muted)] text-[10px] uppercase block">Nombre y Afiliación:</span>
+                          <span className="font-bold text-[var(--text-primary)]">
+                            {dispatchDossier?.leadProfile.name || 'Prof. Dr. Axel Don'}
+                          </span>
+                          <span className="text-[var(--text-secondary)] block text-[11px]">
+                            {dispatchDossier?.leadProfile.role || 'Leiter der Arbeitsgruppe Subsoil Carbon / Thünen-Institut'}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="font-mono text-[var(--text-muted)] text-[10px] uppercase block">Reto Clave del Proyecto:</span>
+                          <span className="text-[var(--text-secondary)]">
+                            {dispatchDossier?.projectPainPoints?.[0] || 'Cuantificación in-situ de biomasa radicular bajo UV (RootBox) y transporte en macroporos.'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {dispatchDossier?.leadProfile.keyPublications && dispatchDossier.leadProfile.keyPublications.length > 0 && (
+                        <div className="pt-2 border-t border-[var(--panel-border)]">
+                          <span className="font-mono text-[var(--text-muted)] text-[10px] uppercase block mb-1">Publicaciones / Enfoques de Referencia:</span>
+                          <ul className="list-disc list-inside space-y-0.5 text-[11px] text-[var(--text-secondary)] font-mono">
+                            {dispatchDossier.leadProfile.keyPublications.map((pub, i) => (
+                              <li key={i}>{pub}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      onClick={() => handleConfirmHumanSubmission(assistedDispatchApp.id)}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-black text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 cursor-pointer shrink-0 uppercase tracking-wide"
-                    >
-                      <Send className="h-3.5 w-3.5" />
-                      <span>Confirmar Envío Oficial</span>
-                    </button>
-                  )}
-                </div>
 
-                {assistedDispatchApp.offerUrl && (
-                  <div className="pt-2 border-t border-amber-500/20 flex items-center justify-between text-[11px]">
-                    <span className="text-[var(--text-secondary)]">Enlace oficial a la vacante:</span>
-                    <a
-                      href={assistedDispatchApp.offerUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sky-600 dark:text-sky-400 hover:underline font-mono flex items-center gap-1 font-bold"
-                    >
-                      <span>Abrir Portal de Postulación</span>
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
+                    {/* Cold Approach Email Box */}
+                    {coldApproach && (
+                      <div 
+                        className="p-4 rounded-xl border space-y-3"
+                        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2 font-mono font-bold text-xs uppercase">
+                            <Mail className="h-4 w-4 text-emerald-500" />
+                            <span>Email de Abordaje Directo / Consulta Previa</span>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <div className="flex rounded-lg border border-[var(--card-border)] overflow-hidden text-[10px] font-mono">
+                              <button
+                                onClick={() => setEmailLang('de')}
+                                className={`px-2 py-1 font-bold cursor-pointer ${emailLang === 'de' ? 'bg-sky-600 text-white' : 'bg-[var(--panel-bg)] text-[var(--text-secondary)]'}`}
+                              >
+                                DE
+                              </button>
+                              <button
+                                onClick={() => setEmailLang('en')}
+                                className={`px-2 py-1 font-bold cursor-pointer ${emailLang === 'en' ? 'bg-sky-600 text-white' : 'bg-[var(--panel-bg)] text-[var(--text-secondary)]'}`}
+                              >
+                                EN
+                              </button>
+                            </div>
+
+                            <button
+                              onClick={() => {
+                                const text = emailLang === 'de' 
+                                  ? `Betreff: ${coldApproach.subjectDe}\n\n${coldApproach.bodyDe}`
+                                  : `Subject: ${coldApproach.subjectEn}\n\n${coldApproach.bodyEn}`;
+                                navigator.clipboard.writeText(text);
+                                setCopiedEmail(true);
+                                setTimeout(() => setCopiedEmail(false), 2000);
+                              }}
+                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-mono font-bold flex items-center space-x-1 cursor-pointer shadow-sm transition"
+                            >
+                              {copiedEmail ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                              <span>{copiedEmail ? 'Copiado' : 'Copiar Correo'}</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="p-3 rounded-lg bg-[var(--panel-bg)] border border-[var(--card-border)] space-y-2 font-mono text-[11px]">
+                          <div>
+                            <span className="text-[var(--text-muted)]">Betreff / Asunto: </span>
+                            <span className="font-bold text-[var(--text-primary)]">
+                              {emailLang === 'de' ? coldApproach.subjectDe : coldApproach.subjectEn}
+                            </span>
+                          </div>
+                          <div className="text-[var(--text-secondary)] whitespace-pre-wrap leading-relaxed pt-2 border-t border-[var(--panel-border)] font-sans text-xs">
+                            {emailLang === 'de' ? coldApproach.bodyDe : coldApproach.bodyEn}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Hooks Match List */}
+                    {dispatchDossier?.technicalHooks && (
+                      <div 
+                        className="p-4 rounded-xl border space-y-2.5"
+                        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+                      >
+                        <span className="font-mono text-xs font-bold text-[var(--text-primary)] uppercase flex items-center gap-1.5">
+                          <ShieldCheck className="h-4 w-4 text-amber-500" />
+                          <span>Ganchos Estratégicos Detectados (Hooks)</span>
+                        </span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                          {dispatchDossier.technicalHooks.map((hook, i) => (
+                            <div key={i} className="p-2.5 rounded-lg bg-[var(--panel-bg)] border border-[var(--card-border)] space-y-1">
+                              <span className="font-mono text-[9.5px] uppercase font-bold text-sky-600 dark:text-sky-400 block">
+                                Gancho Técnico #{i + 1}
+                              </span>
+                              <p className="text-[11px] text-[var(--text-secondary)] leading-snug">
+                                {hook}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
+
+                {/* TAB 2: CARTA ADAPTADA */}
+                {dispatchTab === 'letter' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center space-x-1.5 font-mono text-xs">
+                        <button
+                          onClick={() => setLetterLang('de')}
+                          className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                            letterLang === 'de'
+                              ? 'bg-amber-600 text-white font-black shadow'
+                              : 'bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                          }`}
+                        >
+                          🇩🇪 Alemán (Oficial)
+                        </button>
+                        <button
+                          onClick={() => setLetterLang('en')}
+                          className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                            letterLang === 'en'
+                              ? 'bg-sky-600 text-white font-black shadow'
+                              : 'bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                          }`}
+                        >
+                          🇬🇧 Inglés
+                        </button>
+                        <button
+                          onClick={() => setLetterLang('es')}
+                          className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                            letterLang === 'es'
+                              ? 'bg-emerald-600 text-white font-black shadow'
+                              : 'bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                          }`}
+                        >
+                          🇪🇸 Español
+                        </button>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                          ~480 palabras • 5 párrafos académicos
+                        </span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(letterMarkdown);
+                            setCopiedLetter(true);
+                            setTimeout(() => setCopiedLetter(false), 2000);
+                          }}
+                          className="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-mono font-bold flex items-center space-x-1.5 cursor-pointer shadow-sm transition"
+                        >
+                          {copiedLetter ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                          <span>{copiedLetter ? 'Copiada al portapapeles' : 'Copiar Carta'}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div 
+                      className="p-5 rounded-xl border text-xs leading-relaxed whitespace-pre-wrap font-sans space-y-3"
+                      style={{ 
+                        backgroundColor: 'var(--card-bg)', 
+                        borderColor: 'var(--card-border)',
+                        color: 'var(--text-primary)'
+                      }}
+                    >
+                      {letterMarkdown}
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 3: DOCUMENTOS Y ANEXOS */}
+                {dispatchTab === 'docs' && (
+                  <div className="space-y-4 font-sans text-xs">
+                    <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20 space-y-1">
+                      <span className="font-mono font-bold text-purple-600 dark:text-purple-300 text-xs uppercase block">
+                        Auditoría de Documentos para Convocatorias Públicas y Científicas
+                      </span>
+                      <p className="text-[11px] text-[var(--text-secondary)]">
+                        En procesos académicos alemanes (TVöD / TV-L E13) y europeos, enviar el expediente incompleto descalifica automáticamente al candidato antes de la revisión por el PI.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {[
+                        { title: 'Anschreiben / Motivation Letter (1 pág.)', desc: 'Personalizada para el PI y el proyecto específico, destacando física vs agronomía.', status: 'Listo' },
+                        { title: 'Tabellarischer Lebenslauf (CV estilo cronológico)', desc: 'Estructura clara de 2 páginas con stack técnico R/Python e instrumental de campo.', status: 'Listo' },
+                        { title: 'Urkunden & Zeugnisse (Títulos Oficiales)', desc: 'Licenciatura y Título de Geofísico de la Univ. de Chile "con distinción", con traducción jurada/oficial.', status: 'Requerido' },
+                        { title: 'Notenübersicht / Transcript of Records', desc: 'Certificado de notas detallado en escala original con ponderación de créditos.', status: 'Requerido' },
+                        { title: 'Empfehlungsschreiben / Referenzen (2 contactos)', desc: 'Contactos académicos directos (teléfono/email institucional de profesores guía).', status: 'Recomendado' },
+                        { title: 'Sprachzertifikate (Alemán / Inglés)', desc: 'Acreditación de inglés C1 y nivel de alemán operativo (B1/B2 o compromiso de inmersión).', status: 'Recomendado' },
+                        { title: 'Arbeitsproben / Repositorios GitHub', desc: 'Scripts en R / Python demostrando reproducibilidad en análisis numérico de datos.', status: 'Opcional' }
+                      ].map((doc, idx) => (
+                        <div 
+                          key={idx}
+                          className="p-3 rounded-xl border flex items-start justify-between gap-3"
+                          style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+                        >
+                          <div className="space-y-0.5">
+                            <span className="font-bold text-[var(--text-primary)] block font-sans">
+                              {doc.title}
+                            </span>
+                            <span className="text-[11px] text-[var(--text-secondary)] block">
+                              {doc.desc}
+                            </span>
+                          </div>
+                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border shrink-0 ${
+                            doc.status === 'Listo' 
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                              : doc.status === 'Requerido'
+                              ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                              : 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30'
+                          }`}>
+                            {doc.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 4: Q&A Y ARGUMENTOS */}
+                {dispatchTab === 'qa' && (
+                  <div className="space-y-3 font-sans text-xs">
+                    <span className="font-mono text-xs font-bold text-[var(--text-primary)] uppercase block mb-1">
+                      Defensa Técnica de la Candidatura en Entrevista / Formulario
+                    </span>
+                    {qaList.map((qa, index) => (
+                      <div 
+                        key={index}
+                        className="p-4 rounded-xl border space-y-2 transition"
+                        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <span className="font-bold text-sky-600 dark:text-sky-400 text-xs">
+                            {qa.question}
+                          </span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(qa.recommendedAnswer);
+                              setCopiedIndex(index);
+                              setTimeout(() => setCopiedIndex(null), 2000);
+                            }}
+                            className="p-1 rounded bg-[var(--panel-bg)] hover:bg-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer shrink-0 border border-[var(--card-border)]"
+                            title="Copiar respuesta"
+                          >
+                            {copiedIndex === index ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                          </button>
+                        </div>
+                        <p className="text-[11.5px] text-[var(--text-secondary)] leading-relaxed">
+                          {qa.recommendedAnswer}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+              </div>
+
+              {/* Modal Footer with Verification & Pipeline launcher */}
+              <div 
+                className="p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: 'var(--panel-border)'
+                }}
+              >
+                {/* Human Verification State */}
+                <div className="flex items-center space-x-2">
+                  <div className="h-8 w-8 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/30 shrink-0">
+                    <Lock className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">
+                      Verificación Humana (Paso 7):
+                    </span>
+                    {assistedDispatchApp.humanApprovalGranted ? (
+                      <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        Envío oficial confirmado ({assistedDispatchApp.approvalTimestamp})
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleConfirmHumanSubmission(assistedDispatchApp.id)}
+                        className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <Send className="h-3.5 w-3.5" />
+                        <span>Confirmar Envío Oficial en Portal</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Pipeline and Close Actions */}
+                <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                  <button
+                    onClick={() => {
+                      const appToOpen = assistedDispatchApp;
+                      setAssistedDispatchApp(null);
+                      setSelectedAppForPipeline(appToOpen);
+                    }}
+                    className="px-4 py-2 bg-gradient-to-r from-sky-600 to-purple-600 hover:from-sky-500 hover:to-purple-500 text-white font-mono font-bold text-xs rounded-xl shadow-md transition flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>Abrir Pipeline Completo (7 Pasos)</span>
+                  </button>
+
+                  <button
+                    onClick={() => setAssistedDispatchApp(null)}
+                    className="px-4 py-2 bg-[var(--panel-bg)] hover:bg-[var(--card-border)] text-[var(--text-secondary)] font-mono font-bold text-xs rounded-xl border border-[var(--card-border)] transition cursor-pointer"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </div>
 
             </div>
-
-            {/* Modal Footer */}
-            <div 
-              className="p-4 border-t flex justify-end shrink-0"
-              style={{
-                backgroundColor: 'var(--panel-bg)',
-                borderColor: 'var(--panel-border)'
-              }}
-            >
-              <button
-                onClick={() => setAssistedDispatchApp(null)}
-                className="px-5 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-[var(--text-primary)] font-bold font-mono text-xs rounded-xl border border-[var(--card-border)] transition cursor-pointer"
-              >
-                Cerrar Despacho
-              </button>
-            </div>
-
           </div>
-        </div>
-      )}
+        );
+      })()}
 
     </div>
   );
@@ -803,6 +1150,7 @@ interface ApplicationCardProps {
   onMoveStage: (appId: string, direction: 'prev' | 'next') => void;
   onDelete: (appId: string) => void;
   onOpenDispatch: () => void;
+  onOpenPipeline: () => void;
   canMovePrev: boolean;
   canMoveNext: boolean;
 }
@@ -813,6 +1161,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onMoveStage,
   onDelete,
   onOpenDispatch,
+  onOpenPipeline,
   canMovePrev,
   canMoveNext
 }) => {
@@ -921,11 +1270,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         <div className="flex items-center space-x-1.5">
           <button
             onClick={onOpenDispatch}
-            className="px-2.5 py-1 bg-sky-500/15 hover:bg-sky-600 text-sky-600 dark:text-sky-300 hover:text-white rounded-lg text-[10px] font-mono font-bold transition flex items-center space-x-1 border border-sky-500/30 cursor-pointer shadow-sm"
-            title="Abrir Despacho Asistido (Cartas, Argumentos y Envío)"
+            className="px-2 py-1 bg-sky-500/15 hover:bg-sky-600 text-sky-600 dark:text-sky-300 hover:text-white rounded-lg text-[10px] font-mono font-bold transition flex items-center space-x-1 border border-sky-500/30 cursor-pointer shadow-sm"
+            title="Abrir Despacho Asistido con Inteligencia Wingman y Radar"
           >
-            <Sparkles className="h-3 w-3" />
+            <Sparkles className="h-3 w-3 text-sky-500" />
             <span>Despacho</span>
+          </button>
+
+          <button
+            onClick={onOpenPipeline}
+            className="px-2 py-1 bg-purple-500/15 hover:bg-purple-600 text-purple-600 dark:text-purple-300 hover:text-white rounded-lg text-[10px] font-mono font-bold transition flex items-center space-x-1 border border-purple-500/30 cursor-pointer shadow-sm"
+            title="Abrir Pipeline Completo (7 Pasos: Análisis, Supervisor, Documentos, CV, Carta, Contacto, Entrevista)"
+          >
+            <FolderCheck className="h-3 w-3 text-purple-500" />
+            <span>Pipeline</span>
           </button>
 
           {app.offerUrl && (

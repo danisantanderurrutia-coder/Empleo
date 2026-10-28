@@ -39,6 +39,18 @@ describe('cvStudio · datos verificados', () => {
     expect(CANONICAL_CONTACT.linkedin).toContain('/in/santanderurrutia');
     expect(CANONICAL_CONTACT.github).toContain('danisantanderurrutia-coder');
   });
+
+  it('contiene las 3 aplicaciones ambientales verificadas: Wetland Monitor, AgriTwin y Rewilding Suite', () => {
+    const ids = VERIFIED_FACTS.map((f) => f.id);
+    expect(ids).toContain('exp-wetland-monitor');
+    expect(ids).toContain('exp-agritwin');
+    expect(ids).toContain('exp-rewilding-suite');
+
+    const rewild = VERIFIED_FACTS.find((f) => f.id === 'exp-rewilding-suite');
+    expect(rewild?.tags).toContain('pwa');
+    expect(rewild?.tags).toContain('gis');
+    expect(rewild?.tags).toContain('product owner');
+  });
 });
 
 describe('cvStudio · tagMatches', () => {

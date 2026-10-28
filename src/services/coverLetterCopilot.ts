@@ -46,6 +46,16 @@ export const generateTailoredCoverLetter = (
     jobTitle.toLowerCase().includes('techworm') ||
     (activeLead?.name && activeLead.name.toLowerCase().includes('axel don'));
 
+  // Detección de contexto Umweltbundesamt / UBA KI-Lab
+  const isUbaContext =
+    activeDossier?.id === 'dossier-uba-kilab-1499096' ||
+    companyName.toLowerCase().includes('umweltbundesamt') ||
+    companyName.toLowerCase().includes('uba') ||
+    jobTitle.toLowerCase().includes('ki-lab') ||
+    jobTitle.toLowerCase().includes('product owner') ||
+    offer.rawDescription?.toLowerCase().includes('1499096') ||
+    offer.rawDescription?.toLowerCase().includes('8/lb/26');
+
   const scored = scoreFacts(offer);
   const matchedExperiences = scored
     .filter((s) => s.fact.section === 'experience' && s.matchedTags.length > 0)
@@ -72,22 +82,37 @@ export const generateTailoredCoverLetter = (
         `Having conducted extensive all-weather hydrogeophysical and peatland greenhouse-gas fieldwork, I am accustomed to physically demanding core sampling and long-term in-situ instrumentation. Currently completing my M.Sc. in Environmental Management at CAU Kiel, I am based in northern Germany and prepared for immediate deployment in Braunschweig.`,
         `Thank you for considering my application. I would welcome the opportunity to discuss how my quantitative skillset can advance the experimental and analytical goals of the TechWorms team.`
       ];
+    } else if (isUbaContext) {
+      bodyParagraphs = [
+        `I am submitting my application for the position of AI Project Management Specialist and AI Product Owner within the AI Application Laboratory (KI-Lab) at the German Environment Agency (Umweltbundesamt - UBA, Reference 8/LB/26, Interamt ID 1499096). As an Environmental Geophysicist and dual European M.Sc. candidate in Environmental Management (CAU Kiel) and Environmental Protection (AMU Poznań), I combine rigorous quantitative STEM training with hands-on Product Ownership experience across three self-architected environmental software systems. My operational focus is bridging complex biophysical and Earth-observation data with agile sprint backlogs (Scrum) and reproducible MLOps architectures for environmental public administration.`,
+        `My methodology is grounded in physical mass balances and verifiable data integrity: At Universidad de Chile (graduated with distinction), I analyzed subsurface electrical resistivity anomalies and groundwater drawdown under forestry monocultures in the Maule Basin via Schlumberger vertical electrical soundings (VES). At CAU Kiel, I quantify greenhouse gas fluxes (CO₂, CH₄) on the rewetted peatland Wallener Au using closed chambers, high-frequency Eddy Covariance towers, and soil precompression stress analysis (σp = 62.4 kPa) processed through reproducible R scripts. This continuous field sensor instrumentation prevents naive assumptions regarding sensor noise, data drift, or calibration limits.`,
+        `I have bridged environmental science and agile software delivery through the end-to-end architecture and product management of three dedicated environmental applications:
+1. "Wetland Monitor": An interactive 3D web application (React, Three.js, R) for temporal simulation of peatland rewetting, GHG fluxes, and Eddy Covariance data.
+2. "AgriTwin": An agricultural digital twin coupling continuous IoT soil-moisture telemetry with Sentinel-2 satellite imagery (NDVI/NDRE) in vineyard catchment systems.
+3. "Rewilding Field Suite": A modular, offline-first Progressive Web App (PWA with local IndexedDB persistence and GIS layer fusion) for standardized ecological restoration protocols, biomass monitoring, and wildfire risk mitigation (Aljezur, Portugal).`,
+        `Across all three applications, I acted as Product Owner: translating stakeholder needs and ecological metrics into user stories, managing backlog priorities, and conducting usability validation with field teams. This technical execution is complemented by institutional communication acumen: serving as an invited expert witness before Chile's Chamber of Deputies on wildfire risk and authoring international technical reports on carbon accounting frameworks (EPN & Global Forest Coalition, 2023).`,
+        `As a graduate of a German university, I offer immediate contractual readiness under Germany's §20 AufenthG framework, operational fluency in English (C1) and German (B1–B2), and full flexibility for on-site collaboration in Leipzig as well as hybrid mobile work. I remain available for any technical or formal inquiries.`
+      ];
     } else {
       const expSnippet = topExp
-        ? `In particular, my work on ${topExp.en.title} (${topExp.en.short || ''}) provides direct, verified evidence supporting this application.`
-        : '';
+        ? `In particular, my work on ${topExp.en.title} (${topExp.en.short || ''}) provides direct, verified empirical evidence supporting the operational requirements of this role.`
+        : 'Throughout my research trajectory, I have focused on translating physical data and environmental metrics into robust, reproducible analytical pipelines.';
       const kwSnippet = matchedKeywords.length > 0
-        ? `My background connects directly with your technical requirements in ${matchedKeywords.join(', ')}.`
-        : '';
+        ? `My core technical competencies align directly with your priorities in ${matchedKeywords.join(', ')}.`
+        : 'My quantitative framework directly bridges physical system modeling with data analytics.';
       const hooksSnippet = activeDossier?.technicalHooks?.length
-        ? `Specifically: ${activeDossier.technicalHooks.slice(0, 2).join(' ')}`
+        ? `In particular: ${activeDossier.technicalHooks.slice(0, 2).join(' ')}`
+        : '';
+      const painPointsContext = activeDossier?.projectPainPoints?.length
+        ? `I have structured my approach to address key project challenges, specifically: ${activeDossier.projectPainPoints[0]}`
         : '';
 
       bodyParagraphs = [
-        `I am writing to apply for the position of ${jobTitle} at ${companyName}${location ? ` (${location})` : ''}.`,
-        `As an Environmental Geophysicist (Universidad de Chile, with distinction) and dual European M.Sc. candidate in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland), I combine quantitative environmental modeling with empirical fieldwork and scientific software development in R and Python. ${kwSnippet} ${expSnippet} ${hooksSnippet}`.trim(),
-        activeDossier?.candidateValueThesis || `My analytical foundation and field autonomy enable me to resolve key data integration and experimental bottlenecks effectively.`,
-        'Thank you for your time and consideration. I would welcome the opportunity to discuss my application in an interview.'
+        `I am writing to submit my application for the position of ${jobTitle} at ${companyName}${location ? ` (${location})` : ''}. Having reviewed the objectives and technical scope of this appointment, I am confident that my quantitative background in environmental physics, data engineering, and multi-scale environmental monitoring provides a decisive asset for your team.`,
+        `As an Environmental Geophysicist (Universidad de Chile, with distinction) and dual European M.Sc. candidate in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland), I do not approach environmental systems from a purely descriptive standpoint. Instead, I frame complex environmental dynamics as anisotropic physical media governed by transport equations, boundary conditions, and rigorous conservation principles. ${kwSnippet}`,
+        `On the methodological and computational front, I specialize in scientific computing using R and Python for spatial data analysis, time-series processing, and sensor data integration. ${expSnippet} ${hooksSnippet} This quantitative foundation allows me to build reproducible workflows, automate quality control, and extract statistically defensible insights from noisy field observations.`,
+        `${painPointsContext ? painPointsContext + ' ' : ''}${activeDossier?.candidateValueThesis || 'My dual technical and operational profile allows me to take end-to-end ownership of data processing workflows, field calibration, and technical reporting.'} Having conducted demanding all-weather instrumentation campaigns across diverse environments, I combine computational rigor with complete autonomy in physical setup, sensor maintenance, and analytical troubleshooting.`,
+        `Based in northern Germany with immediate contractual readiness under Germany's §20 AufenthG framework and full working proficiency in English (C1) and German, I am prepared for immediate deployment. Thank you for your time and consideration; I welcome the opportunity to discuss my qualifications and technical approach in an interview.`
       ];
     }
 
@@ -124,16 +149,34 @@ export const generateTailoredCoverLetter = (
         `Aus meiner feldgeophysikalischen Praxis (unter anderem bei hydrogeophysikalischen Messungen und Treibhausgasmessungen in Mooren) bin ich an anspruchsvolle, wetterunabhängige Beprobungskampagnen und kontinuierliche in-situ-Sensorik gewöhnt. Durch meinen Wohnsitz in Kiel bin ich regional unmittelbar angebunden und kurzfristig einsatzbereit.`,
         `Über die Gelegenheit, mich und meinen Beitrag zum Projekt TechWorms in einem persönlichen Gespräch vorzustellen, freue ich mich sehr.`
       ];
+    } else if (isUbaContext) {
+      bodyParagraphs = [
+        `ich bewerbe mich auf die ausgeschriebene Stelle als Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner im Anwendungslabor für Künstliche Intelligenz und Big Data (KI-Lab) des Umweltbundesamtes (Kennziffer 8/LB/26, Interamt-ID 1499096). Als quantitativer Umweltgeophysiker und Doppel-M.Sc.-Kandidat für Umweltmanagement (CAU Kiel) und Umweltschutz (AMU Poznań) verbinde ich ein fundiertes MINT-Fundament mit praxiserprobter Product-Ownership-Erfahrung in der Konzeption und eigenständigen Realisierung dreier ökologischer Softwareanwendungen. Mein methodischer Fokus liegt auf der präzisen Übersetzung komplexer biogeochemischer Fachanforderungen in agile Backlogs (Scrum) und auditsichere Datenpipelines für den Verwaltungsvollzug.`,
+        `Mein wissenschaftlicher Ansatz basiert auf messbaren biophysikalischen Bilanzen und methodischer Transparenz: An der Universidad de Chile (Abschluss mit Auszeichnung) untersuchte ich im Maule-Becken mittels geoelektrischer Schlumberger-Tiefensondierungen (VES) die Veränderung der subsuperfiziellen Resistivität und den Grundwasserabfall unter forstlichen Monokulturen. An der CAU Kiel quantifiziere ich auf der wiedervernässten Moorfläche Wallener Au Treibhausgasflüsse (CO₂, CH₄) mittels geschlossener Hauben und hochfrequenter Eddy Covariance sowie die Vorbelastungsspannung des Bodens (σp = 62,4 kPa) mit reproduzierbaren R-Pipelines. Diese Feld- und Sensorerfahrung schützt mich vor praxisfernen Annahmen bei Datenqualität und Sensorrauschen.`,
+        `Den Schritt von der reinen Umweltforschung zur agilen Software- und Produktentwicklung habe ich durch die eigenständige Konzeption und Entwicklung dreier Umwelt-Software-Lösungen vollzogen:
+1. „Wetland Monitor“: Eine interaktive 3D-Webanwendung (React, Three.js, R) zur räumlich-zeitlichen Modellierung von Moorwiedervernässung und Eddy-Covariance-Flüssen.
+2. „AgriTwin“: Ein landwirtschaftlicher digitaler Zwilling, der kontinuierliche IoT-Bodenfeuchte-Sensorik mit Copernicus-Satellitendaten (Sentinel-2 NDVI/NDRE) im Weinbau fusioniert.
+3. „Rewilding Field Suite“: Eine modulare, offline-fähige Progressive Web App (PWA mit lokaler IndexedDB-Architektur und GIS-Schichtfusion) für standardisierte Feldprotokolle im ökologischen Gewässerschutz, Biomassemonitoring und Waldbrandrisiko-Management (Aljezur, Portugal).`,
+        `In allen drei Vorhaben übernahm ich die Rolle des Product Owners: von der Bedarfsanalyse und Datenmodellierung über das Anforderungsmanagement im Backlog bis hin zur Usability-Validierung im Gelände. Ergänzt wird diese Praxis durch Verhandlungssicherheit im öffentlichen Raum: als geladener Sachverständiger vor der Kommission für Katastrophenschutz der chilenischen Abgeordnetenkammer und als Hauptautor internationaler Fachanalysen zu Kohlenstoff- und Biomasse-Bilanzen (EPN & Global Forest Coalition, 2023).`,
+        `Als Absolvent einer deutschen Hochschule stehe ich dem Umweltbundesamt mit voller vertraglicher Verfügbarkeit (§20 AufenthG), verhandlungssicherem Englisch (C1), praxiserprobtem Deutsch (B1–B2) und hoher Einsatzbereitschaft für den Standort Leipzig sowie mobiles Arbeiten zur Verfügung. Für Rückfragen stehe ich Ihnen gerne zur Verfügung.`
+      ];
     } else {
       const hooksSnippetDe = activeDossier?.technicalHooks?.length
         ? `Konkret: ${activeDossier.technicalHooks.slice(0, 2).join(' ')}`
         : '';
+      const expSnippetDe = topExp
+        ? `Praktische Evidenz hierfür liefert insbesondere meine Arbeit im Bereich ${topExp.es.title} (${topExp.es.short || ''}).`
+        : 'Meine methodische Arbeitsweise gründet auf reproduzierbaren Datenpipelines und physikalischer Modellierung.';
+      const painPointsDe = activeDossier?.projectPainPoints?.length
+        ? `Für die anstehenden Projektherausforderungen – insbesondere ${activeDossier.projectPainPoints[0]} – bringe ich zielgerichtete Lösungsansätze mit.`
+        : '';
 
       bodyParagraphs = [
-        `hiermit bewerbe ich mich mit großem Interesse auf die Stelle als ${jobTitle} bei ${companyName}${location ? ` (${location})` : ''}.`,
-        `Als Umweltgeophysiker (Universidad de Chile, mit Auszeichnung) und M.Sc.-Kandidat für Umweltmanagement an der CAU Kiel verbinde ich quantitative Feldarbeit und Datenanalyse (R, Python) mit fundierter wissenschaftlicher Praxis in Deutschland und Europa. ${hooksSnippetDe}`.trim(),
-        activeDossier?.candidateValueThesis || `Mein quantitatives Profil und meine Selbstständigkeit im Feld ermöglichen es mir, komplexe experimentelle Fragestellungen und datenanalytische Engpässe zielgerichtet zu lösen.`,
-        'Über eine Gelegenheit, meine Motivation und Qualifikationen in einem persönlichen Gespräch zu vertiefen, freue ich mich sehr.'
+        `hiermit bewerbe ich mich mit großem fachlichem Interesse auf die Stelle als ${jobTitle} bei ${companyName}${location ? ` (${location})` : ''}. Angesichts des wissenschaftlich-technischen Profils dieser Position bin ich überzeugt, Ihr Team mit meiner quantitativen Ausbildung in Umweltphysik, methodischer Datenanalyse und Feldpraxis wirkungsvoll zu verstärken.`,
+        `Als Umweltgeophysiker (Universidad de Chile, mit Auszeichnung) und M.Sc.-Kandidat für Umweltmanagement an der CAU Kiel sowie Umweltschutz an der AMU Poznań nähere ich mich komplexen Umweltsystemen nicht rein deskriptiv. Ich begreife biogeochemische und ökologische Prozesse als kontinuierliche physikalische Medien, die über Transportgleichungen, Randbedingungen und Erhaltungssätze exakt modelliert und quantifiziert werden können.`,
+        `Methodisch liegt mein Schwerpunkt in der wissenschaftlichen Datenverarbeitung mit R und Python, der raum-zeitlichen Modellierung und der Einbindung kontinuierlicher Feld- und Sensordaten. ${expSnippetDe} ${hooksSnippetDe} Dieser Ansatz erlaubt es mir, automatisierte Workflows aufzubauen und auch aus heterogenen Messdaten belastbare statistische Aussagen abzuleiten.`,
+        `${painPointsDe ? painPointsDe + ' ' : ''}${activeDossier?.candidateValueThesis || 'Mein Profil verbindet analytische Selbstständigkeit im Code mit praktischer Eigenverantwortung bei Messkampagnen.'} Durch umfangreiche Kampagnen unter realen Witterungsbedingungen bin ich an anspruchsvolle Feldarbeiten, Sensorwartung und selbstständige Fehlerdiagnose gewöhnt.`,
+        `Durch meinen Wohnsitz in Norddeutschland, vertragliche Verfügbarkeit über den §20 AufenthG-Rahmen und verhandlungssichere Deutsch- sowie Englischkenntnisse (C1) stehe ich kurzfristig zur Verfügung. Über die Einladung zu einem persönlichen Gespräch freue ich mich sehr.`
       ];
     }
 
@@ -167,22 +210,37 @@ export const generateTailoredCoverLetter = (
       `Mi experiencia de campo en geofísica ambiental e hidrología (campañas pesadas de prospección y medición in-situ de flujos de gases de efecto invernadero en turberas bajo condiciones meteorológicas rigurosas) me confiere total autonomía operativa en muestreos profundos de suelo y mantenimiento de sensores continuos. Estando radicado en Kiel, cuento con disponibilidad y vinculación inmediata para integrarme al equipo en Braunschweig.`,
       `Agradezco su atención y consideración. Quedo a su entera disposición para dialogar en detalle sobre mi propuesta y encaje técnico en el proyecto TechWorms.`
     ];
+  } else if (isUbaContext) {
+    bodyParagraphs = [
+      `Presento mi postulación a la posición de Especialista en Gestión de Proyectos de IA y Product Owner de IA en el Laboratorio de Aplicación de Inteligencia Artificial y Big Data (KI-Lab) de la Agencia Federal de Medio Ambiente de Alemania (Umweltbundesamt - UBA, Kennziffer 8/LB/26, Interamt-ID 1499096). Como Geofísico Ambiental y candidato a doble Máster en Ciencias europeo en Manejo Ambiental (CAU Kiel) y Protección Ambiental (AMU Poznań), integro una formación cuantitativa rigurosa con experiencia contrastada de Product Ownership en la concepción y desarrollo autónomo de tres aplicaciones de software ambiental. Mi enfoque radica en traducir requerimientos biogeoquímicos complejos en backlogs ágiles (Scrum) y arquitecturas de datos verificables para la administración ambiental pública.`,
+      `Mi metodología parte de balances de masa biofísicos y rigor empírico: En la Universidad de Chile (con distinción) analicé, mediante sondeos eléctricos verticales (SEV, Schlumberger), las alteraciones de resistividad eléctrica del subsuelo y la depresión freática bajo monocultivos forestales en el Maule. En la CAU Kiel cuantifico los flujos de gases de efecto invernadero (CO₂, CH₄) en la turbera rehumedecida Wallener Au mediante cámaras cerradas y torres micrometeorológicas de Eddy Covariance, evaluando la tensión de preconsolidación del suelo (σp = 62,4 kPa) con pipelines reproducibles en R. Esta experiencia de instrumentación continua en terreno evita supuestos desconectados de la calidad real de los datos.`,
+      `He trasladado la ciencia ambiental al desarrollo ágil de software mediante la arquitectura y entrega de tres productos tecnológicos:
+1. «Wetland Monitor»: Aplicación web 3D interactiva (React, Three.js, R) para la modelación espaciotemporal de rehumedecimiento de turberas, flujos de GEI y registros de Eddy Covariance.
+2. «AgriTwin»: Gemelo digital agrícola que integra telemetría continua de humedad de suelo IoT con índices satelitales Sentinel-2 (NDVI/NDRE) en cuencas vitivinícolas.
+3. «Rewilding Field Suite»: Aplicación web progresiva modular y offline-first (PWA con almacenamiento local IndexedDB y fusión de capas GIS) para protocolos de campo de restauración ecológica, monitoreo de biomasa y prevención de incendios (Aljezur, Portugal).`,
+      `En los tres productos ejercí el rol de Product Owner: desde el levantamiento de especificaciones y arquitectura de datos hasta la priorización de historias de usuario y la validación con equipos de terreno. Esta solvencia técnica se complementa con capacidad probada de interlocución pública: perito invitado ante la Cámara de Diputadas y Diputados de Chile para la modelación de riesgo de incendios y autor principal de informes internacionales sobre balances de carbono y biomasa (EPN y Global Forest Coalition, 2023).`,
+      `Como graduado de una universidad alemana, dispongo de plena habilitación contractual (§20 AufenthG), inglés profesional (C1), alemán operativo (B1–B2) y total disposición para trabajar en Leipzig y en modalidad híbrida/remota. Quedo a su disposición para cualquier requerimiento técnico o formal.`
+    ];
   } else {
     const expSnippetEs = topExp
-      ? `En particular, mi labor en ${topExp.es.title} (${topExp.es.short || ''}) aporta respaldo empírico directo a estas competencias.`
-      : '';
+      ? `En particular, mi labor en ${topExp.es.title} (${topExp.es.short || ''}) aporta respaldo empírico directo y verificable a estas competencias.`
+      : 'Mi trayectoria investigadora se fundamenta en la construcción de modelos cuantitativos rigurosos a partir de datos empíricos de campo.';
     const kwSnippetEs = matchedKeywords.length > 0
       ? `He contrastado los requisitos de la vacante con mi trayectoria acreditada en ${matchedKeywords.join(', ')}.`
-      : '';
+      : 'Aporto una sólida base físico-matemática aplicada a sistemas ambientales complejos.';
     const hooksSnippetEs = activeDossier?.technicalHooks?.length
       ? `Específicamente: ${activeDossier.technicalHooks.slice(0, 2).join(' ')}`
       : '';
+    const painPointsEs = activeDossier?.projectPainPoints?.length
+      ? `Mi enfoque metodológico está orientado a resolver los desafíos clave del proyecto, entre ellos: ${activeDossier.projectPainPoints[0]}`
+      : '';
 
     bodyParagraphs = [
-      `Me dirijo a ustedes para presentar mi candidatura al puesto de ${jobTitle} en ${companyName}${location ? ` (${location})` : ''}.`,
-      `Mi perfil como Geofísico (Universidad de Chile, con distinción) y candidato a doble Máster en Ciencias en Manejo Ambiental (CAU Kiel, Alemania) y Protección Ambiental (AMU Poznań, Polonia) combina trabajo cuantitativo de terreno y modelación con desarrollo de aplicaciones científicas y análisis de datos en R y Python. ${kwSnippetEs} ${expSnippetEs} ${hooksSnippetEs}`.trim(),
-      activeDossier?.candidateValueThesis || `Aporto capacidad analítica avanzada y autonomía operativa en campo para resolver los retos técnicos del rol.`,
-      'Agradezco su atención y quedo a su entera disposición para ampliar cualquier antecedente en una entrevista.'
+      `Me dirijo a ustedes para presentar mi candidatura al puesto de ${jobTitle} en ${companyName}${location ? ` (${location})` : ''}. Tras examinar el perfil y los objetivos técnicos del equipo, estoy convencido de que mi formación físico-matemática en ciencias de la Tierra y mi experiencia en modelado y análisis de datos aportan una ventaja diferencial a sus proyectos.`,
+      `Mi perfil como Geofísico Ambiental (Universidad de Chile, con distinción) y candidato a doble Máster en Ciencias en Manejo Ambiental (CAU Kiel, Alemania) y Protección Ambiental (AMU Poznań, Polonia) concibe los sistemas ambientales no desde una perspectiva descriptiva genérica, sino como medios físicos complejos gobernados por leyes de conservación, gradientes de transporte y balances de masa. ${kwSnippetEs}`,
+      `En el ámbito computacional y metodológico, me especializo en programación científica y análisis espacial en R y Python, integrando series temporales complejas con telemetría de sensores continuos. ${expSnippetEs} ${hooksSnippetEs} Esta metodología me permite automatizar flujos de procesamiento, asegurar la reproducibilidad analítica y extraer conclusiones estadísticas fiables a partir de mediciones heterogéneas.`,
+      `${painPointsEs ? painPointsEs + ' ' : ''}${activeDossier?.candidateValueThesis || 'Mi perfil combina rigor analítico en gabinete con autonomía operativa completa en campañas de terreno exigentes.'} Habiendo liderado mediciones bajo condiciones meteorológicas rigurosas, garantizo solvencia en calibración de instrumental, mantenimiento preventivo y resolución de incidencias en campo.`,
+      `Radicado en el norte de Alemania, con disponibilidad contractual inmediata bajo el marco de posgraduados (§20 AufenthG) y dominio fluido de inglés (C1) y alemán, quedo a su entera disposición para profundizar en mi propuesta técnica en una entrevista.`
     ];
   }
 

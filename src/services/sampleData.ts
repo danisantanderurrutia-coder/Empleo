@@ -5,7 +5,7 @@ import type { ApplicationItem } from '../types/applications';
 import type { JobSource } from '../types/sources';
 import type { CVTemplateInfo, CVVersion } from '../types/cv';
 import { calculateMatchScore } from './matchEngine';
-import { THUENEN_TECHWORMS_DOSSIER } from './jobWingmanService';
+import { THUENEN_TECHWORMS_DOSSIER, UBA_KILAB_DOSSIER } from './jobWingmanService';
 
 export const cvTemplatesList: CVTemplateInfo[] = [
   {
@@ -1270,10 +1270,12 @@ const ubaRaw: Partial<JobOffer> = {
     strategicProjects: ['KI-Lab Umweltbundesamt', 'Umweltpolitische Digitalagenda', 'Smart Environmental Analytics']
   },
   personalFitDetails: {
-    matchingSkills: ['Python', 'Gobernanza Ambiental', 'Facilitación Multiactor', 'GIS'],
+    matchingSkills: ['Product Owner', 'Scrum / Agile', 'Digital Twins (AgriTwin, Wetland Monitor, Rewilding Suite)', 'Python', 'GIS', 'Gobernanza Ambiental'],
     skillGaps: [],
-    fitSummary: 'Alta sintonía entre la formación MINT/geofísica, las políticas ambientales y la gestión de proyectos tecnológicos de IA.'
-  }
+    fitSummary: 'Encaje sobresaliente: Product Ownership probado en 3 soluciones de software ambiental (Wetland Monitor, AgriTwin, Rewilding Field Suite), base MINT cuantitativa y doble máster europeo.'
+  },
+  leadProfile: UBA_KILAB_DOSSIER.leadProfile,
+  jobDossier: UBA_KILAB_DOSSIER
 };
 
 export const initialOffers: JobOffer[] = [

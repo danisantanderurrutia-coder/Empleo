@@ -25,6 +25,24 @@ export const AddOfferModal: React.FC<AddOfferModalProps> = ({ isOpen, onClose, o
   const [isExtractingPdf, setIsExtractingPdf] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  const handleUrlChange = (val: string) => {
+    setUrl(val);
+    const low = val.toLowerCase();
+    if (low.includes('1499096') || (low.includes('interamt') && (low.includes('uba') || low.includes('ki')))) {
+      if (!title) setTitle('Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (KI-Lab)');
+      if (!company) setCompany('Umweltbundesamt (UBA)');
+      if (!location || location.includes('Bilbao')) setLocation('Leipzig, Berlin oder Dessau-Roßlau, Alemania (Hybrid)');
+      if (!salaryMin) setSalaryMin(62489);
+      if (!salaryMax) setSalaryMax(89579);
+      if (requirementsInput.includes('Residencia en Bilbao')) {
+        setRequirementsInput('Scrum / Agile, KI Product Owner, MINT, Softwareentwicklung, Verwaltungsvollzug, Copernicus');
+      }
+      if (!rawDescription) {
+        setRawDescription('Das Umweltbundesamt (UBA) sucht für sein Anwendungslabor für Künstliche Intelligenz und Big Data (KI-Lab) eine*n Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (Kennziffer 8/LB/26, Interamt 1499096, TVöD E 13).');
+      }
+    }
+  };
+
   if (!isOpen) return null;
 
   const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +96,15 @@ export const AddOfferModal: React.FC<AddOfferModalProps> = ({ isOpen, onClose, o
       } catch (err) {
         console.warn('URL scraping fallback:', err);
       }
+    }
+
+    // Specialized dynamic fallback for Interamt / UBA KI-Lab (id=1499096 o Kennziffer 8/LB/26)
+    if (url.toLowerCase().includes('1499096') || (url.toLowerCase().includes('interamt') && (url.toLowerCase().includes('uba') || url.toLowerCase().includes('ki')))) {
+      finalTitle = finalTitle || 'Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (KI-Lab)';
+      finalCompany = finalCompany || 'Umweltbundesamt (UBA)';
+      finalLocation = finalLocation && !finalLocation.includes('Bilbao') ? finalLocation : 'Leipzig, Berlin oder Dessau-Roßlau, Alemania (Hybrid)';
+      finalDesc = finalDesc || 'Das Umweltbundesamt (UBA) sucht für sein Anwendungslabor für Künstliche Intelligenz und Big Data (KI-Lab) eine*n Spezialist*in im Bereich KI-Projektmanagement und KI Product Owner (Kennziffer 8/LB/26, Interamt 1499096, TVöD E 13).';
+      finalReqs = ['Scrum / Agile', 'KI Product Owner', 'MINT', 'Softwareentwicklung', 'Verwaltungsvollzug', 'Copernicus'];
     }
 
     // Specialized dynamic fallback for ASI Assurance Services (asi-assurance.org)
@@ -177,8 +204,8 @@ export const AddOfferModal: React.FC<AddOfferModalProps> = ({ isOpen, onClose, o
             <input
               type="url"
               value={url}
-              onChange={e => setUrl(e.target.value)}
-              placeholder="https://www.asi-assurance.org/ASIAboutWorkWithUs"
+              onChange={e => handleUrlChange(e.target.value)}
+              placeholder="https://interamt.de/koop/app/stelle?0&id=1499096"
               className="w-full mt-1 px-3 py-2 bg-emerald-950 border border-emerald-700/60 rounded-xl text-white focus:outline-none focus:border-emerald-400 font-mono text-[11px]"
             />
           </div>
