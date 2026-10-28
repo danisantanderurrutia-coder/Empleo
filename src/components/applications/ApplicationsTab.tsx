@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  KanbanSquare, 
   Lock, 
   Building2, 
   PlusCircle,
@@ -22,7 +21,12 @@ import {
   Mail,
   FolderCheck,
   ShieldCheck,
-  Lightbulb
+  Lightbulb,
+  Bot,
+  Workflow,
+  Cpu,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { getStoredApplications, saveStoredApplications, getStoredOffers } from '../../services/db';
 import type { ApplicationItem, ApplicationStage } from '../../types/applications';
@@ -32,6 +36,72 @@ import { generateTailoredCoverLetter, generateApplicationQA } from '../../servic
 import { getDossierForOffer } from '../../services/jobWingmanService';
 import { AddApplicationModal } from './AddApplicationModal';
 import { FiveStepPipelineModal } from '../offers/FiveStepPipelineModal';
+
+const PIPELINE_STEPS_DECLARATION = [
+  {
+    step: 1,
+    title: 'Radar & Análisis',
+    badge: 'Filtro Algorítmico',
+    desc: 'Extracción de requerimientos clave, stack técnico y condiciones contractuales (TVöD/TV-L/Sector Privado).',
+    wingmanRole: 'Ingesta y parsing de la vacante',
+    icon: Search,
+    color: 'text-sky-500 bg-sky-500/10 border-sky-500/30'
+  },
+  {
+    step: 2,
+    title: 'Inteligencia de PI',
+    badge: 'Wingman Radar',
+    desc: 'Mapeo de publicaciones del supervisor/director, diagnóstico del dolor del proyecto y ganchos de paridad.',
+    wingmanRole: 'Dossier de abordaje interpersonal',
+    icon: UserCheck,
+    color: 'text-purple-500 bg-purple-500/10 border-purple-500/30'
+  },
+  {
+    step: 3,
+    title: 'Auditoría de Docs',
+    badge: 'Expediente Oficial',
+    desc: 'Verificación estricta de documentos requeridos (título con distinción, transcript, cartas de recomendación).',
+    wingmanRole: 'Checklist anti-descalificación',
+    icon: FolderCheck,
+    color: 'text-amber-500 bg-amber-500/10 border-amber-500/30'
+  },
+  {
+    step: 4,
+    title: 'Calibración de CV',
+    badge: 'CV Cuantitativo',
+    desc: 'Reordenamiento de módulos: física de medios porosos, balances de masa y reproducibilidad en R/Python.',
+    wingmanRole: 'Sugerencias de priorización de hechos',
+    icon: FileText,
+    color: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30'
+  },
+  {
+    step: 5,
+    title: 'Carta de Impacto',
+    badge: '5 Párrafos Rigurosos',
+    desc: 'Borrador académico en alemán/inglés/español con balances físicos concretos y cero clichés serviles.',
+    wingmanRole: 'Ensamblaje anti-AI y rigor técnico',
+    icon: Sparkles,
+    color: 'text-indigo-500 bg-indigo-500/10 border-indigo-500/30'
+  },
+  {
+    step: 6,
+    title: 'Cold Approach',
+    badge: 'Email al Supervisor',
+    desc: 'Pregunta técnica pertinente o consulta previa directamente al PI antes o durante la postulación.',
+    wingmanRole: 'Borrador sobrio de par a par',
+    icon: Mail,
+    color: 'text-rose-500 bg-rose-500/10 border-rose-500/30'
+  },
+  {
+    step: 7,
+    title: 'Despacho & Control',
+    badge: 'Aprobación Humana',
+    desc: 'Ningún envío se ejecuta en automático. El candidato aprueba y confirma el envío en la plataforma oficial.',
+    wingmanRole: 'Blindaje ético y confirmación formal',
+    icon: Send,
+    color: 'text-teal-500 bg-teal-500/10 border-teal-500/30'
+  }
+];
 
 const buildMockOfferFromApp = (app: ApplicationItem): JobOffer => ({
   id: app.offerId,
@@ -217,6 +287,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [dispatchTab, setDispatchTab] = useState<'briefing' | 'letter' | 'docs' | 'qa'>('briefing');
   const [emailLang, setEmailLang] = useState<'de' | 'en'>('de');
+  const [showPipelineExplainer, setShowPipelineExplainer] = useState(true);
 
   useEffect(() => {
     saveStoredApplications(applications);
@@ -351,33 +422,81 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
   return (
     <div className="space-y-6 text-[var(--text-primary)] font-sans animate-fadeIn select-none">
       
-      {/* Tactical Hero Control Header */}
+      {/* TACTICAL HERO: JOB WINGMAN AI COPILOT & PIPELINE ARCHITECTURE */}
       <div 
-        className="p-5 rounded-2xl border shadow-xl backdrop-blur-md space-y-4 transition-colors"
+        className="rounded-2xl border shadow-xl backdrop-blur-md overflow-hidden transition-colors"
         style={{ 
           backgroundColor: 'var(--card-bg)', 
           borderColor: 'var(--card-border)' 
         }}
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center border border-purple-500/30 shrink-0 shadow-inner">
-              <KanbanSquare className="h-5 w-5" />
+        <div className="relative p-5 sm:p-6 flex flex-col lg:flex-row items-center gap-6 justify-between overflow-hidden">
+          {/* Subtle gradient glow in the background */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
+
+          {/* Left: Avatar + Title & Mission Statement */}
+          <div className="flex items-start gap-4 sm:gap-5 relative z-10 max-w-3xl">
+            {/* Robot / Tactical Copilot Wingman Avatar */}
+            <div className="relative shrink-0">
+              <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-hidden border-2 border-sky-400/50 shadow-lg shadow-sky-500/20 group bg-slate-950">
+                <img 
+                  src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=400&q=80" 
+                  alt="Job Wingman AI Copilot" 
+                  className="h-full w-full object-cover grayscale contrast-125 group-hover:scale-105 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-sky-500/20" />
+                <div className="absolute bottom-1 left-0 right-0 flex justify-center">
+                  <span className="px-1.5 py-0.5 rounded bg-sky-600 text-white font-mono font-black text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                    <Bot className="h-2.5 w-2.5" />
+                    <span>WINGMAN</span>
+                  </span>
+                </div>
+              </div>
+              <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 border-2 border-[var(--card-bg)] flex items-center justify-center shadow" title="Wingman en línea y asistiendo">
+                <span className="h-2 w-2 rounded-full bg-white animate-ping" />
+              </div>
             </div>
-            <div>
-              <h2 className="text-base font-black text-[var(--text-primary)] font-mono uppercase tracking-tight">
-                TABLERO DE PROCESOS & SEGUIMIENTO (KANBAN)
+
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-300 border border-sky-500/30 text-[10px] font-mono font-black uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="h-3 w-3 text-sky-500 animate-pulse" />
+                  JOB WINGMAN // TACTICAL APPLICATION COPILOT
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/30 text-[10px] font-mono font-bold">
+                  Pipeline Asistido en 7 Fases
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold">
+                  Zero-Servility Standard
+                </span>
+              </div>
+
+              <h2 className="text-base sm:text-lg font-black text-[var(--text-primary)] font-mono uppercase tracking-tight">
+                Tablero de Procesos, Despacho Asistido & Pipeline Táctico
               </h2>
-              <p className="text-xs text-[var(--text-secondary)] font-sans mt-0.5">
-                Seguimiento de postulaciones laborales y convocatorias I+D: genera cartas adaptadas (ES/EN/DE) y confirma despachos oficiales.
+
+              <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
+                Tu copiloto técnico para superar el filtro burocrático de empleo y convocatorias I+D. Mapeamos la psicología del PI a cargo, diagnosticamos los cuellos de botella del proyecto, calibramos el CV cuantitativo y redactamos cartas con rigor físico de par a par — garantizando siempre <span className="font-bold text-[var(--text-primary)]">control y despacho humano innegociable</span>.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2.5 shrink-0">
+          {/* Right: Actions */}
+          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-center gap-2.5 shrink-0 relative z-10 w-full lg:w-auto">
+            <button
+              onClick={() => setShowPipelineExplainer(prev => !prev)}
+              className="w-full sm:w-auto px-3.5 py-2 rounded-xl border border-[var(--card-border)] bg-[var(--panel-bg)] hover:bg-[var(--card-border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm"
+              title="Mostrar u ocultar la arquitectura declarativa del pipeline"
+            >
+              <Workflow className="h-3.5 w-3.5 text-sky-500" />
+              <span>{showPipelineExplainer ? 'Ocultar Arquitectura' : 'Ver Arquitectura Pipeline'}</span>
+              {showPipelineExplainer ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+            </button>
+
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-mono font-black text-xs rounded-xl shadow-md transition flex items-center space-x-1.5 cursor-pointer uppercase tracking-wider"
+              className="w-full sm:w-auto px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-mono font-black text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-1.5 cursor-pointer uppercase tracking-wider"
             >
               <PlusCircle className="h-4 w-4" />
               <span>+ Añadir Candidatura</span>
@@ -385,8 +504,67 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
           </div>
         </div>
 
+        {/* Declarative Pipeline Architecture Breakdown (Expandable) */}
+        {showPipelineExplainer && (
+          <div className="px-5 pb-5 pt-2 border-t border-[var(--panel-border)] bg-[var(--panel-bg)] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <Cpu className="h-4 w-4 text-sky-500" />
+                <h3 className="font-mono font-black text-xs uppercase tracking-wider text-[var(--text-primary)]">
+                  Arquitectura del Pipeline Asistido (7 Pasos de Alto Valor)
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                «El Wingman investiga y modela. El candidato valida y ejecuta.»
+              </span>
+            </div>
+
+            {/* Step sequence grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2.5">
+              {PIPELINE_STEPS_DECLARATION.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <div
+                    key={item.step}
+                    className="p-3 rounded-xl border flex flex-col justify-between space-y-2 relative group hover:border-sky-500/50 transition-all shadow-sm"
+                    style={{
+                      backgroundColor: 'var(--card-bg)',
+                      borderColor: 'var(--card-border)'
+                    }}
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className={`h-6 w-6 rounded-lg flex items-center justify-center border text-[10px] font-mono font-black ${item.color}`}>
+                          0{item.step}
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--panel-bg)] text-[var(--text-muted)] border border-[var(--card-border)] font-bold">
+                          {item.badge}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-1.5 font-bold text-xs text-[var(--text-primary)] font-mono">
+                        <IconComponent className="h-3.5 w-3.5 text-sky-500 shrink-0" />
+                        <span className="truncate">{item.title}</span>
+                      </div>
+
+                      <p className="text-[10.5px] text-[var(--text-secondary)] leading-snug line-clamp-3">
+                        {item.desc}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-[var(--panel-border)] text-[9.5px] font-mono text-sky-600 dark:text-sky-400">
+                      <span className="font-bold">Wingman: </span>
+                      <span className="text-[var(--text-muted)]">{item.wingmanRole}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Filter and Search Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[var(--panel-border)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 border-t border-[var(--panel-border)] bg-[var(--card-bg)]">
           <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
             <button
               onClick={() => setSelectedFilter('all')}
