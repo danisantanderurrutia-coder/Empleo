@@ -12,6 +12,7 @@ import { SettingsTab } from './components/settings/SettingsTab';
 import { getStoredOffers, saveStoredOffers, getStoredProfile, getStoredApplications, saveStoredApplications } from './services/db';
 import { calculateMatchScore } from './services/matchEngine';
 import { getStoredTheme, saveStoredTheme, applyThemeToDOM, type AppTheme } from './services/themeManager';
+import { getSlugForState, parseSlugToState } from './utils/routes';
 import type { JobOffer } from './types/offers';
 
 export function App() {
@@ -53,42 +54,85 @@ export function App() {
       setRadarLocationFilter(filterParam);
     }
 
-    if (stationId === 'market_radar' || ['offers', 'sources', 'companies'].includes(stationId)) {
-      if (subTab === 'sources' || stationId === 'sources') setRadarSubTab('sources');
-      else if (subTab === 'companies' || stationId === 'companies') setRadarSubTab('companies');
-      else setRadarSubTab('offers');
-      setActiveTab('market_radar');
-      return;
-    }
+    let resolvedStation = stationId;
+    let resolvedSubTab = subTab;
 
-    if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs', 'studio'].includes(stationId)) {
-      if (subTab === 'gunsmith' || stationId === 'gunsmith') setDossierSubTab('studio'); // Taller CV fusionado en CV Studio
-      else if (subTab === 'skills' || stationId === 'skills') setDossierSubTab('showcase'); // Competencias integradas en Resumen
-      else if (subTab === 'cvs' || stationId === 'cvs') setDossierSubTab('studio'); // Plantillas unificadas en CV Studio
+    if (stationId === 'market_radar' || ['offers', 'sources', 'companies'].includes(stationId)) {
+      resolvedStation = 'market_radar';
+      if (subTab === 'sources' || stationId === 'sources') resolvedSubTab = 'sources';
+      else if (subTab === 'companies' || stationId === 'companies') resolvedSubTab = 'companies';
+      else resolvedSubTab = 'offers';
+      setRadarSubTab(resolvedSubTab as 'offers' | 'sources' | 'companies');
+      setActiveTab('market_radar');
+    } else if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs', 'studio'].includes(stationId)) {
+      resolvedStation = 'agent_dossier';
+      if (subTab === 'gunsmith' || stationId === 'gunsmith') resolvedSubTab = 'studio';
+      else if (subTab === 'skills' || stationId === 'skills') resolvedSubTab = 'showcase';
+      else if (subTab === 'cvs' || stationId === 'cvs') resolvedSubTab = 'studio';
       else if (subTab === 'studio' || stationId === 'studio') {
-        setDossierSubTab('studio');
+        resolvedSubTab = 'studio';
         if (filterParam && !targetOfferId) setStudioOfferId(filterParam);
       }
-      else if (subTab === 'profile' || stationId === 'profile') setDossierSubTab('profile');
-      else setDossierSubTab('showcase');
+      else if (subTab === 'profile' || stationId === 'profile') resolvedSubTab = 'profile';
+      else resolvedSubTab = 'showcase';
+      setDossierSubTab(resolvedSubTab as 'showcase' | 'skills' | 'profile' | 'cvs' | 'studio');
       setActiveTab('agent_dossier');
-      return;
-    }
-
-    if (stationId === 'mission_control' || ['applications', 'batch_applications', 'intelligence'].includes(stationId)) {
-      if (subTab === 'batch' || stationId === 'batch_applications') setMissionSubTab('batch');
-      else if (subTab === 'intelligence' || stationId === 'intelligence') setMissionSubTab('intelligence');
-      else setMissionSubTab('applications');
+    } else if (stationId === 'mission_control' || ['applications', 'batch_applications', 'intelligence'].includes(stationId)) {
+      resolvedStation = 'mission_control';
+      if (subTab === 'batch' || stationId === 'batch_applications') resolvedSubTab = 'batch';
+      else if (subTab === 'intelligence' || stationId === 'intelligence') resolvedSubTab = 'intelligence';
+      else resolvedSubTab = 'applications';
+      setMissionSubTab(resolvedSubTab as 'applications' | 'batch' | 'intelligence');
       setActiveTab('mission_control');
-      return;
+    } else {
+      setActiveTab(stationId);
     }
 
-    setActiveTab(stationId);
+    // Sincronizar slug en la URL del navegador sin recargar
+    try {
+      if (typeof window !== 'undefined' && window.history) {
+        const slug = getSlugForState(resolvedStation, resolvedSubTab, targetDocType);
+        const targetHash = `#${slug}`;
+        if (window.location.hash !== targetHash) {
+          window.history.replaceState(null, '', targetHash);
+        }
+      }
+    } catch {
+      // Ignorar en entornos sin DOM completo
+    }
   };
 
   const handleRefreshData = () => {
     setDataRefreshKey(prev => prev + 1);
   };
+
+  // Deep-linking inicial por URL hash o pathname
+  useEffect(() => {
+    try {
+      const raw = window.location.hash || window.location.pathname;
+      if (raw && raw !== '/' && raw !== '#/' && raw !== '') {
+        const parsed = parseSlugToState(raw);
+        if (parsed.station && parsed.station !== 'dashboard') {
+          handleNavigate(parsed.station, parsed.subTab, undefined, undefined, parsed.docType || 'cv');
+        }
+      }
+    } catch (e) {
+      console.warn('Error resolviendo slug inicial:', e);
+    }
+  }, []);
+
+  // Escuchar navegación con botones Atrás / Adelante del navegador
+  useEffect(() => {
+    const onHashChange = () => {
+      const raw = window.location.hash;
+      if (raw) {
+        const parsed = parseSlugToState(raw);
+        handleNavigate(parsed.station, parsed.subTab, undefined, undefined, parsed.docType || 'cv');
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   useEffect(() => {
     try {
