@@ -274,6 +274,14 @@ export const saveStoredSources = (sources: JobSource[]): void => {
   localStorage.setItem(KEYS.SOURCES, JSON.stringify(sources));
 };
 
+export const updateSourceManualCheck = (sourceId: string): JobSource[] => {
+  const sources = getStoredSources();
+  const now = new Date().toISOString();
+  const updated = sources.map(s => s.id === sourceId ? { ...s, lastManualCheck: now } : s);
+  saveStoredSources(updated);
+  return updated;
+};
+
 export const getStoredCVs = (): CVVersion[] => {
   const data = localStorage.getItem(KEYS.CVS);
   if (!data) {

@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """
-Automated Job Scraper & Ingestion Script for Empleo.
+Automated Job Scraper & Ingestion Script for Empleo Master.
+===========================================================
 Runs as a scheduled Git-Scraping job in GitHub Actions or locally.
-Aggregates authentic job postings matching Daniel Santander's scientific & environmental profile:
-- Climate, Greenhouse Gas (GHG), Eddy Covariance, Peatlands & Wetlands
-- Biophysical Systems, Soil Biogeochemistry, Watershed Modeling (SWAT, Hydrogeophysics)
-- GIS, QGIS, ArcGIS, Google Earth Engine, Remote Sensing, Satellite Data
-- Data Science with R & Python, Micrometeorology
-- Environmental Governance, Climate Policy, Public Advocacy & Stakeholder Facilitation
-- Locations: Spain (Bilbao / Euskadi / Madrid / Barcelona), Germany (Kiel / Hannover / Berlin), EU Remote.
+Aggregates authentic job postings strictly matching Daniel Santander's
+scientific & environmental profile:
+- Soil science, biogeochemistry, edaphology, carbon sequestration
+- Climate dynamics, greenhouse gas (GHG) fluxes, peatlands & eddy covariance
+- Geospatial analysis, GIS, QGIS, ArcGIS, Google Earth Engine, Remote Sensing
+- Hydrology, watershed modeling, hydrogeophysics
+- Environmental governance, ecological transition & sustainability policy
+
+NO MOCK JOBS. NO GENERIC HOMEPAGES. NO IRRELEVANT TECH/SALES POSTINGS.
 """
 
 import json
@@ -17,6 +20,7 @@ import re
 import sys
 import urllib.request
 import urllib.error
+from urllib.parse import urlparse
 from datetime import datetime
 
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "public", "data", "jobs.json")
@@ -26,26 +30,82 @@ HEADERS = {
     "Accept": "application/json, text/plain, */*"
 }
 
-KEYWORDS_PRIORITY = [
-    "climate", "clima", "environmental", "ambiental", "gis", "qgis", "remote sensing",
-    "teledetecci", "soil", "suelo", "carbon", "carbono", "ghg", "gei", "water", "agua",
-    "hydrolog", "hidro", "geophysic", "geofisic", "data", "datos", "r", "python",
-    "research", "investiga", "policy", "politica", "governance", "gobernanza",
-    "sustainab", "sostenib", "ecosystem", "ecosistema", "biodiversity", "biodiversidad",
-    "eddy covariance", "peatland", "turbera", "modeling", "modelacion"
+GENERIC_PATHS = {"", "/", "/careers", "/careers.html", "/empleo", "/empleo/", "/jobs", "/unete-a-idom", "/unete-a-idom/"}
+
+# Mandatory Core Domain Anchors: at least one MUST be present in the job text
+CORE_DOMAIN_TERMS = [
+    r"\bclimate\b", r"\bclima\b", r"\bklima\b", r"\bklimaschutz\b",
+    r"\bsoil\b", r"\bsuelos?\b", r"\bboden\b", r"\bbodenkunde\b",
+    r"\bcarbon\b", r"\bcarbono\b", r"\bkohlenstoff\b",
+    r"\bghg\b", r"\bgei\b", r"\btreibhausgas\b",
+    r"\beddy\s+covariance\b", r"\bpeatlands?\b", r"\bturberas?\b", r"\bmoore?\b",
+    r"\bwatershed\b", r"\bcuencas?\b", r"\bhydrolog\w*\b", r"\bhidrolog\w*\b",
+    r"\bremote\s+sensing\b", r"\bteledetecci\w*\b", r"\bfernerkundung\b",
+    r"\bgeophysic\w*\b", r"\bgeofisic\w*\b", r"\bgeophysik\w*\b",
+    r"\bedafolog\w*\b", r"\bland\s+use\b", r"\buso\s+del\s+suelo\b",
+    r"\becosystem\s+services\b", r"\bservicios\s+ecosist[eé]micos\b",
+    r"\benvironmental\s+governance\b", r"\bgobernanza\s+ambiental\b"
 ]
+
+# Secondary Skills: only counted if a core domain anchor is already present
+SECONDARY_TERMS = [
+    r"\bqgis\b", r"\barcgis\b", r"\bgis\b", r"\bsig\b", r"\bgoogle\s+earth\s+engine\b",
+    r"\br\b", r"\bpython\b", r"\bmodeling\b", r"\bmodelaci[oó]n\b", r"\bmodelierung\b"
+]
+
+# Excluded Titles / Roles that are completely outside the user's scientific profile
+EXCLUDED_ROLE_PATTERNS = [
+    r"\baccount\s+executive\b", r"\bsales\b", r"\bventas\b", r"\bvertrieb\b",
+    r"\bmarketing\b", r"\brecruiting\b", r"\btax\b", r"\bsteuerberater\b",
+    r"\bdevops\b", r"\bfrontend\b", r"\bfullstack\b", r"\bembedded\b",
+    r"\blaunch\s+vehicle\b", r"\brobotics\b", r"\bcompensation\b",
+    r"\bcorporate\s+finance\b", r"\bcustomer\s+support\b", r"\bcall\s+center\b"
+]
+
+
+def is_canonical_url(url_str: str) -> bool:
+    if not url_str or not url_str.startswith("http"):
+        return False
+    try:
+        parsed = urlparse(url_str)
+        return parsed.path.rstrip("/") not in GENERIC_PATHS and bool(parsed.path.strip("/"))
+    except Exception:
+        return False
+
 
 def strip_html(html_str):
     if not html_str:
         return ""
     clean = re.sub(r"<[^>]+>", " ", html_str)
-    clean = re.sub(r"\s+", " ", clean).strip()
-    return clean
+    return re.sub(r"\s+", " ", clean).strip()
 
-def calculate_match_keywords(text):
-    text_lower = text.lower()
-    matched = [k for k in KEYWORDS_PRIORITY if k in text_lower]
-    return matched
+
+def matches_profile_strictly(title: str, description: str, tags: list[str]) -> tuple[bool, list[str]]:
+    full_text = f"{title} {description} {' '.join(tags)}".lower()
+
+    # 1. Reject if title has excluded words
+    title_lower = title.lower()
+    for exc in EXCLUDED_ROLE_PATTERNS:
+        if re.search(exc, title_lower):
+            return False, []
+
+    # 2. Must match at least ONE core environmental/soil/climate anchor
+    matched_core = []
+    for pattern in CORE_DOMAIN_TERMS:
+        if re.search(pattern, full_text):
+            matched_core.append(pattern.replace(r"\b", "").replace(r"\w*", ""))
+
+    if not matched_core:
+        return False, []
+
+    # 3. Collect secondary matched terms
+    matched_secondary = []
+    for pattern in SECONDARY_TERMS:
+        if re.search(pattern, full_text):
+            matched_secondary.append(pattern.replace(r"\b", "").replace(r"\w*", ""))
+
+    return True, matched_core + matched_secondary
+
 
 def fetch_json(url):
     try:
@@ -56,9 +116,10 @@ def fetch_json(url):
         print(f"[Warning] Failed fetching {url}: {e}", file=sys.stderr)
         return None
 
+
 def scrape_arbeitnow():
     offers = []
-    print("[Arbeitnow] Fetching live jobs...")
+    print("[Arbeitnow] Consultando ofertas activas con filtro estricto...")
     data = fetch_json("https://www.arbeitnow.com/api/job-board-api")
     if not data or "data" not in data:
         return offers
@@ -66,13 +127,16 @@ def scrape_arbeitnow():
     timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
     for j in data["data"]:
         title = j.get("title", "")
+        url = j.get("url", "")
+        if not is_canonical_url(url):
+            continue
+
         desc = strip_html(j.get("description", ""))
         tags = j.get("tags") or []
         location = j.get("location") or ("Remoto (Europa)" if j.get("remote") else "Alemania")
-        full_text = f"{title} {desc} {' '.join(tags)} {location}"
 
-        matched = calculate_match_keywords(full_text)
-        if not matched:
+        is_match, matched_kws = matches_profile_strictly(title, desc, tags)
+        if not is_match:
             continue
 
         slug = j.get("slug", str(hash(title)))
@@ -92,9 +156,9 @@ def scrape_arbeitnow():
             "country": "Alemania" if ("germany" in location.lower() or "alemania" in location.lower()) else "Europa / Remoto",
             "isBilbaoLocation": is_bilbao,
             "isRemote": bool(j.get("remote")),
-            "url": j.get("url", ""),
+            "url": url,
             "sourceId": "src-arbeitnow-scraped",
-            "sourceName": "Arbeitnow (Europa & Alemania)",
+            "sourceName": "Arbeitnow (Europa & DACH)",
             "publishedDate": pub_date,
             "rawDescription": desc[:1200],
             "requirements": tags[:10],
@@ -103,14 +167,16 @@ def scrape_arbeitnow():
             "extractedAt": timestamp,
             "isVerified": True,
             "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": matched
+            "matchedKeywords": matched_kws
         })
-    print(f"[Arbeitnow] Collected {len(offers)} relevant jobs.")
+
+    print(f"[Arbeitnow] Encontradas {len(offers)} ofertas verdaderamente alineadas con ciencias ambientales/clima.")
     return offers
+
 
 def scrape_remotive():
     offers = []
-    print("[Remotive] Fetching remote jobs...")
+    print("[Remotive] Consultando vacantes remotas con filtro estricto...")
     data = fetch_json("https://remotive.com/api/remote-jobs?limit=50")
     if not data or "jobs" not in data:
         return offers
@@ -118,13 +184,16 @@ def scrape_remotive():
     timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
     for j in data["jobs"]:
         title = j.get("title", "")
+        url = j.get("url", "")
+        if not is_canonical_url(url):
+            continue
+
         desc = strip_html(j.get("description", ""))
         tags = j.get("tags") or []
         location = j.get("candidate_required_location") or "Remoto (Global)"
-        full_text = f"{title} {desc} {' '.join(tags)}"
 
-        matched = calculate_match_keywords(full_text)
-        if not matched:
+        is_match, matched_kws = matches_profile_strictly(title, desc, tags)
+        if not is_match:
             continue
 
         job_id = j.get("id", str(hash(title)))
@@ -138,7 +207,7 @@ def scrape_remotive():
             "country": "Remoto Global",
             "isBilbaoLocation": False,
             "isRemote": True,
-            "url": j.get("url", ""),
+            "url": url,
             "sourceId": "src-remotive-scraped",
             "sourceName": "Remotive (API Global)",
             "publishedDate": pub_date,
@@ -149,208 +218,37 @@ def scrape_remotive():
             "extractedAt": timestamp,
             "isVerified": True,
             "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": matched
+            "matchedKeywords": matched_kws
         })
-    print(f"[Remotive] Collected {len(offers)} relevant jobs.")
+
+    print(f"[Remotive] Encontradas {len(offers)} ofertas verificadas.")
     return offers
 
-def scrape_jobicy():
-    offers = []
-    print("[Jobicy] Fetching remote jobs...")
-    data = fetch_json("https://jobicy.com/api/v2/remote-jobs?count=30")
-    if not data or "jobs" not in data:
-        return offers
-
-    timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
-    for j in data["jobs"]:
-        title = j.get("jobTitle", "")
-        desc = strip_html(j.get("jobDescription") or j.get("jobExcerpt") or "")
-        location = j.get("jobGeo") or "Remoto"
-        full_text = f"{title} {desc} {location}"
-
-        matched = calculate_match_keywords(full_text)
-        if not matched:
-            continue
-
-        job_id = j.get("id", str(hash(title)))
-        pub_date = (j.get("pubDate") or "").split(" ")[0] or timestamp.split(" ")[0]
-
-        offers.append({
-            "id": f"jobicy-{job_id}",
-            "title": title,
-            "company": j.get("companyName", "Empresa"),
-            "location": location,
-            "country": "Remoto",
-            "isBilbaoLocation": False,
-            "isRemote": True,
-            "url": j.get("url", ""),
-            "sourceId": "src-jobicy-scraped",
-            "sourceName": "Jobicy (Remoto)",
-            "publishedDate": pub_date,
-            "rawDescription": desc[:1200],
-            "requirements": [],
-            "responsibilities": [],
-            "status": "Nueva",
-            "extractedAt": timestamp,
-            "isVerified": True,
-            "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": matched
-        })
-    print(f"[Jobicy] Collected {len(offers)} relevant jobs.")
-    return offers
-
-def get_curated_scientific_positions():
-    """
-    Curated baseline of authentic, active institutions and open fellowship/technical callings
-    in Basque Country & European Environmental research.
-    """
-    timestamp = datetime.utcnow().strftime("%Y-%m-%d")
-    return [
-        {
-            "id": "curated-bc3-predoc-postdoc",
-            "title": "Investigador/a en Modelación Climática, Suelos y Servicios Ecosistémicos",
-            "company": "BC3 Basque Centre for Climate Change",
-            "location": "Bilbao / Leioa (Bizkaia, España)",
-            "country": "España",
-            "isBilbaoLocation": True,
-            "isRemote": False,
-            "url": "https://www.bc3research.org/careers.html",
-            "sourceId": "src-bc3",
-            "sourceName": "BC3 Research Careers",
-            "publishedDate": timestamp,
-            "rawDescription": "Convocatorias abiertas y continuas para investigadores en modelación biofísica, balance de carbono, dinámicas de cambio global, teledetección (GIS/R) y políticas de transición socioecológica en el Campus de la UPV/EHU.",
-            "requirements": ["R", "GIS", "Modelación Climática", "Carbono", "Edafología", "Servicios Ecosistémicos"],
-            "responsibilities": ["Análisis de datos geoespaciales", "Modelación biogeoquímica", "Redacción de papers y reportes para políticas públicas"],
-            "status": "Nueva",
-            "extractedAt": timestamp,
-            "isVerified": True,
-            "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": ["clima", "gis", "r", "soil", "carbon", "research", "policy"]
-        },
-        {
-            "id": "curated-tecnalia-environment",
-            "title": "Técnico/a Especialista en Cambio Climático, Huella de Carbono y Teledetección",
-            "company": "Tecnalia Research & Innovation",
-            "location": "Bilbao / Derio (Bizkaia, España)",
-            "country": "España",
-            "isBilbaoLocation": True,
-            "isRemote": False,
-            "url": "https://www.tecnalia.com/empleo",
-            "sourceId": "src-tecnalia",
-            "sourceName": "Tecnalia Empleo",
-            "publishedDate": timestamp,
-            "rawDescription": "Posición en el área de Transición Energética, Climática y Urbana. Cuantificación de emisiones de GEI, planes de descarbonización territorial y proyectos europeos Horizon Europe.",
-            "requirements": ["Python", "QGIS", "Teledetección", "Inventarios GEI", "Ordenamiento Territorial"],
-            "responsibilities": ["Gestión técnica de proyectos I+D+i", "Procesamiento de datos satelitales", "Asesoría a administraciones públicas"],
-            "status": "Nueva",
-            "extractedAt": timestamp,
-            "isVerified": True,
-            "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": ["clima", "gis", "python", "carbon", "research"]
-        },
-        {
-            "id": "curated-neiker-soils",
-            "title": "Investigador/a en Ciencias del Suelo, Gestión de Cuencas y Dinámica de Carbono Edáfico",
-            "company": "Neiker - Instituto Vasco de Investigación y Desarrollo Agrario",
-            "location": "Arkaute / Vitoria-Gasteiz (Araba, Euskadi)",
-            "country": "España",
-            "isBilbaoLocation": True,
-            "isRemote": False,
-            "url": "https://neiker.eus/es/empleo/",
-            "sourceId": "src-neiker",
-            "sourceName": "Neiker Empleo",
-            "publishedDate": timestamp,
-            "rawDescription": "Investigación en calidad y salud del suelo, microbiología edáfica, secuestro de carbono en agroecosistemas y monitorización de humedad y nutrientes mediante sensores y SIG.",
-            "requirements": ["Suelos", "Edafología", "R", "Sensores", "Agroecología"],
-            "responsibilities": ["Muestreos de campo y análisis de laboratorio", "Procesamiento estadístico", "Publicación de resultados"],
-            "status": "Nueva",
-            "extractedAt": timestamp,
-            "isVerified": True,
-            "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": ["soil", "suelo", "carbon", "r", "research"]
-        },
-        {
-            "id": "curated-ihobe-governance",
-            "title": "Técnico/a de Proyectos Ambientales, Clima y Resiliencia del Territorio",
-            "company": "IHOBE - Sociedad Pública de Gestión Ambiental",
-            "location": "Bilbao (Bizkaia, España)",
-            "country": "España",
-            "isBilbaoLocation": True,
-            "isRemote": False,
-            "url": "https://www.ihobe.eus/empleo",
-            "sourceId": "src-ihobe",
-            "sourceName": "IHOBE Empleo Público",
-            "publishedDate": timestamp,
-            "rawDescription": "Desarrollo de proyectos de la estrategia de mitigación y adaptación al cambio climático de Euskadi (Klima 2050), restauración de suelos degradados y diálogo con municipios.",
-            "requirements": ["Políticas Ambientales", "Gobernanza", "Suelos Degradados", "Cambio Climático"],
-            "responsibilities": ["Coordinación técnica con entes locales", "Informes de estado del medio ambiente", "Seguimiento normativo"],
-            "status": "Nueva",
-            "extractedAt": timestamp,
-            "isVerified": True,
-            "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": ["politica", "gobernanza", "clima", "suelo"]
-        },
-        {
-            "id": "curated-idom-watershed",
-            "title": "Consultor/a Ambiental Senior: Hidrología, Cuencas y Ordenamiento Territorial",
-            "company": "IDOM Consulting, Engineering, Architecture",
-            "location": "Bilbao (Sede Zorrotzaurre, Bizkaia)",
-            "country": "España",
-            "isBilbaoLocation": True,
-            "isRemote": False,
-            "url": "https://www.idom.com/unete-a-idom/",
-            "sourceId": "src-idom",
-            "sourceName": "IDOM Careers",
-            "publishedDate": timestamp,
-            "rawDescription": "Modelación hidrológica de cuencas, estudios de impacto ambiental y diseño de soluciones basadas en la naturaleza para infraestructuras y gobernanza hídrica internacional.",
-            "requirements": ["GIS", "Hidrología", "QGIS", "Impacto Ambiental", "Gestión de Cuencas"],
-            "responsibilities": ["Modelación de inundabilidad y balance hídrico", "Coordinación de equipos multidisciplinares"],
-            "status": "Nueva",
-            "extractedAt": timestamp,
-            "isVerified": True,
-            "verificationStatus": "Vigente y Verificada",
-            "matchedKeywords": ["gis", "water", "hidro", "modelacion"]
-        }
-    ]
 
 def main():
-    print(f"=== Starting Job Scraper at {datetime.utcnow().isoformat()} ===")
+    print(f"=== Iniciando Job Scraper Estricto a las {datetime.utcnow().isoformat()} ===")
     all_offers = []
 
-    # 1. Curated Basque & Spanish institutions
-    curated = get_curated_scientific_positions()
-    all_offers.extend(curated)
+    # Scrape external APIs with strict domain anchors and canonical URL enforcement
+    all_offers.extend(scrape_arbeitnow())
+    all_offers.extend(scrape_remotive())
 
-    # 2. Scrape Arbeitnow
-    arbeitnow_offers = scrape_arbeitnow()
-    all_offers.extend(arbeitnow_offers)
-
-    # 3. Scrape Remotive
-    remotive_offers = scrape_remotive()
-    all_offers.extend(remotive_offers)
-
-    # 4. Scrape Jobicy
-    jobicy_offers = scrape_jobicy()
-    all_offers.extend(jobicy_offers)
-
-    # Deduplicate by URL and Title
+    # Deduplicate by URL
     seen_urls = set()
     unique_offers = []
     for o in all_offers:
         url = o.get("url")
-        key = (o.get("title", "").strip().lower(), o.get("company", "").strip().lower())
-        if url and url in seen_urls:
-            continue
-        if url:
+        if url and url not in seen_urls:
             seen_urls.add(url)
-        unique_offers.append(o)
+            unique_offers.append(o)
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(unique_offers, f, ensure_ascii=False, indent=2)
 
-    print(f"=== Scraping complete! Total unique matched jobs: {len(unique_offers)} ===")
-    print(f"Saved to: {os.path.abspath(OUTPUT_PATH)}")
+    print(f"=== Scraping finalizado. Vacantes auténticas verificadas: {len(unique_offers)} ===")
+    print(f"Base de datos saneada guardada en: {os.path.abspath(OUTPUT_PATH)}")
+
 
 if __name__ == "__main__":
     main()

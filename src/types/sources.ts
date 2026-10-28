@@ -27,4 +27,8 @@ export interface JobSource {
     searchQuery?: string;
     locationFilter?: string;
   };
+  region?: 'Euskadi / España' | 'Alemania / DACH' | 'Europa / Global' | 'Remoto';
+  lastManualCheck?: string;
+  typicalDeadlinesNotes?: string;
+  countryFocus?: string;
 }
