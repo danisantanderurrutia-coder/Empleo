@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { AppTheme } from '../../services/themeManager';
+import { resolveAsset } from '../../utils/assets';
 
 interface CosmicNeuralBackgroundProps {
   theme: AppTheme;
@@ -21,7 +22,7 @@ interface Particle {
 export const CosmicNeuralBackground: React.FC<CosmicNeuralBackgroundProps> = ({ theme }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgSrc, setImgSrc] = useState<string>('/backgrounds/cosmic-neural-bg.png');
+  const [imgSrc, setImgSrc] = useState<string>(() => resolveAsset('backgrounds/cosmic-neural-bg.jpg'));
 
   // Verify and load image
   useEffect(() => {
@@ -29,11 +30,9 @@ export const CosmicNeuralBackground: React.FC<CosmicNeuralBackgroundProps> = ({ 
     img.src = imgSrc;
     img.onload = () => setImgLoaded(true);
     img.onerror = () => {
-      // Try fallback extensions if png isn't ready or named differently
-      if (imgSrc.endsWith('.png')) {
-        setImgSrc('/backgrounds/cosmic-neural-bg.webp');
-      } else if (imgSrc.endsWith('.webp')) {
-        setImgSrc('/backgrounds/cosmic-neural-bg.jpg');
+      // Try fallback extensions if jpg isn't loaded or format differs
+      if (imgSrc.endsWith('.jpg')) {
+        setImgSrc(resolveAsset('backgrounds/cosmic-neural-bg.png'));
       }
     };
   }, [imgSrc]);

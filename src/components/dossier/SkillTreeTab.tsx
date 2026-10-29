@@ -72,84 +72,76 @@ export const SkillTreeTab: React.FC = () => {
   const [selectedNodeId, setSelectedNodeId] = useState<string>('n7-wetland');
 
   // --------------------------------------------------------------------------
-  // CANALES DE FLUORESCENCIA CONFOCAL (PALETA OPCIÓN A: SPECTRAL BIOMARKERS)
+  // LAS 7 ÁREAS PROFESIONALES DE DANIEL SANTANDER
   // --------------------------------------------------------------------------
   const branchStyles: Record<SkillBranch, { 
-    fluorophore: string;
-    channelName: string;
     color: string; 
     glow: string; 
     label: string; 
+    shortLabel: string;
     icon: string;
     bg: string; 
     border: string;
   }> = {
     geophysics: { 
-      fluorophore: 'GFP Emerald',
-      channelName: 'Canal 510 nm (Teledetección & Subsuelo)',
       color: '#10b981', 
       glow: 'rgba(16,185,129,0.5)', 
       label: 'GEOFÍSICA & SENSORES REMOTOS', 
+      shortLabel: 'Geofísica',
       icon: '🛰️',
       bg: 'bg-emerald-950/30', 
       border: 'border-emerald-500/40' 
     },
     biogeo: { 
-      fluorophore: 'CFP Cyan / Alexa 488',
-      channelName: 'Canal 488 nm (Flujos de Carbono & Hidrología)',
       color: '#06b6d4', 
       glow: 'rgba(6,182,212,0.5)', 
       label: 'BIOGEOQUÍMICA, SUELOS & AGUA', 
+      shortLabel: 'Biogeoquímica & Agua',
       icon: '💧',
       bg: 'bg-cyan-950/30', 
       border: 'border-cyan-500/40' 
     },
     comms: { 
-      fluorophore: 'Texas Red / mCherry',
-      channelName: 'Canal 590 nm (Medios Masivos & Campañas)',
       color: '#f97316', 
       glow: 'rgba(249,115,22,0.5)', 
       label: 'COMUNICACIONES, PRENSA & CAMPAÑAS', 
+      shortLabel: 'Comunicaciones & Prensa',
       icon: '📢',
       bg: 'bg-orange-950/30', 
       border: 'border-orange-500/40' 
     },
     culture: { 
-      fluorophore: 'Cy5 Violet / Alexa 647',
-      channelName: 'Canal 650 nm (Comunidades, Políticas & Diplomacia)',
       color: '#c084fc', 
       glow: 'rgba(192,132,252,0.5)', 
       label: 'CULTURA, COMUNIDADES & POLÍTICAS', 
+      shortLabel: 'Cultura & Políticas',
       icon: '🏛️',
       bg: 'bg-purple-950/30', 
       border: 'border-purple-500/40' 
     },
     grassroots: { 
-      fluorophore: 'Phyto-Lime / YFP',
-      channelName: 'Canal 535 nm (Territorio, APR & Regeneración)',
       color: '#a3e635', 
       glow: 'rgba(163,230,53,0.5)', 
       label: 'GRASSROOTS, TERRITORIO & REGENERACIÓN', 
+      shortLabel: 'Grassroots & Territorio',
       icon: '🌱',
       bg: 'bg-lime-950/30', 
       border: 'border-lime-500/40' 
     },
     pm: { 
-      fluorophore: 'Lucifer Amber',
-      channelName: 'Canal 560 nm (Consorcios I+D & Fondos UE)',
       color: '#fbbf24', 
       glow: 'rgba(251,191,36,0.5)', 
       label: 'GESTIÓN DE PROYECTOS, I+D & COOPERACIÓN', 
+      shortLabel: 'Gestión I+D',
       icon: '🧭',
       bg: 'bg-amber-950/30', 
       border: 'border-amber-500/40' 
     },
     software: { 
-      fluorophore: 'Laser Electric Blue / Hoechst',
-      channelName: 'Canal 450 nm (Software, Gemelos Digitales & IA)',
       color: '#60a5fa', 
       glow: 'rgba(96,165,250,0.5)', 
       label: 'PRODUCT OWNER, SOFTWARE & IA', 
+      shortLabel: 'Product Owner & IA',
       icon: '⚡',
       bg: 'bg-blue-950/30', 
       border: 'border-blue-500/40' 
@@ -1023,7 +1015,7 @@ export const SkillTreeTab: React.FC = () => {
   const selectedNode = nodes.find(n => n.id === selectedNodeId) || nodes[0];
   const currentBranchStyle = branchStyles[selectedNode.branch];
 
-  // Active synergy links when hovering or selecting a node
+  // Active synergy links when hovering or selecting a node (for SVG visualization only)
   const activeFocusId = hoveredNodeId || selectedNodeId;
   const activeSynergies = synergyBridges.filter(
     b => b.from === activeFocusId || b.to === activeFocusId
@@ -1032,6 +1024,11 @@ export const SkillTreeTab: React.FC = () => {
     ...activeSynergies.map(s => s.from),
     ...activeSynergies.map(s => s.to)
   ]);
+
+  // Stable synergies for the selected node (used in inspector to prevent layout reflow on hover)
+  const selectedSynergies = synergyBridges.filter(
+    b => b.from === selectedNode.id || b.to === selectedNode.id
+  );
 
   // Counts for filter pills
   const totalCount = nodes.length;
@@ -1044,31 +1041,31 @@ export const SkillTreeTab: React.FC = () => {
     all: {
       name: 'Todos los Dominios',
       match: '100% Cobertura',
-      description: 'Vista confocal multi-canal de los 7 troncos dendríticos y su árbol sináptico.',
+      description: 'Vista holística transdisciplinaria de las 7 áreas estratégicas y sus sinergias operativas.',
       targets: 'Institutos de I+D, Centros Tecnológicos, Startups de Impacto, Agencias Públicas'
     },
     'rd-scientist': {
       name: 'Investigador Científico I+D',
       match: '92% Afinidad',
-      description: 'Canal GFP & CFP: flujos de carbono, prospección ERT, limnología y publicaciones.',
+      description: 'Modelación biofísica, balance de GEI en turberas, resistividad ERT, limnología y publicaciones.',
       targets: 'Helmholtz GFZ, CAU Kiel, BC3 Basque Centre, AZTI, Thünen Institut'
     },
     'ai-product': {
       name: 'AI Product Owner & Climate-Tech',
       match: '88% Afinidad',
-      description: 'Canal Laser Blue: gemelos digitales 3D, telemetría IoT, APIs geoespaciales y agentes.',
+      description: 'Gemelos digitales 3D, telemetría IoT de suelos, APIs geoespaciales, Docker y agentes de IA.',
       targets: 'Startups de Clima en Berlín/Munich, Tecnalia, Euskadi Digital, Agrotech Europa'
     },
     'campaign-lead': {
       name: 'Director de Campañas & Grassroots',
       match: '95% Afinidad',
-      description: 'Canal Texas Red & Phyto-Lime: dirección de medios masivos (+700k), APR y territorio.',
+      description: 'Dirección de medios masivos (+700k), movilización campesina, comités de agua APR y territorio.',
       targets: 'Coaliciones Europeas (EPN), Fondos de Justicia Climática, Redes Territoriales'
     },
     'policy-advisor': {
       name: 'Consultor en Políticas & CSRD',
       match: '86% Afinidad',
-      description: 'Canal Cy5 Violet: directivas europeas (RED III, Suelo), auditoría y comparecencia.',
+      description: 'Directivas europeas (RED III, Suelo), auditoría corporativa, salvaguardias y comparecencia legislativa.',
       targets: 'Consultoras de Transición Energética, Agencias Ambientales Estatales, Think Tanks'
     }
   };
@@ -1079,7 +1076,7 @@ export const SkillTreeTab: React.FC = () => {
     <div className="space-y-5 text-[var(--text-primary)] font-sans animate-fadeIn select-none">
       
       {/* =========================================================================
-       * 1. TOP BANNER: CONFOCAL MICROSCOPY HUD & MULTI-CHANNEL SPECTROMETER
+       * 1. TOP BANNER: 7 DOMINIOS TRANSDISCIPLINARIOS DE DANIEL SANTANDER
        * ========================================================================= */}
       <div 
         className="p-5 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
@@ -1098,18 +1095,18 @@ export const SkillTreeTab: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-md bg-cyan-950/60 border border-cyan-400/40 text-cyan-300 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.3)]">
                 <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-                <span>CONFOCAL FLUORESCENCE SPECTROMETRY // 7 CANALES FLUORÓFOROS</span>
+                <span>MAPA DE COMPETENCIAS // 7 ÁREAS PROFESIONALES</span>
               </span>
               <span className="text-[11px] text-slate-400 font-mono">
-                {nodes.length} BOTONES SINÁPTICOS • SOMA MULTIPOLAR INCANDESCENTE
+                {nodes.length} COMPETENCIAS AUDITADAS • NÚCLEO TRANSDISCIPLINARIO
               </span>
             </div>
 
             <h1 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight flex items-center gap-2">
-              <span>Árbol de Aptitudes: Neurona Confocal Viva</span>
+              <span>Árbol de Aptitudes & Red Sináptica Viva</span>
             </h1>
             <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
-              Visualización microscópica inspirada en técnicas de <strong>dos fotones y fluorescencia confocal</strong>. El soma central irradia 7 troncos dendríticos con espinas y botones sinápticos activos, conectando <strong>Ciencia de la Tierra</strong>, <strong>Gemelos Digitales</strong>, <strong>Comunidades</strong> y <strong>Políticas</strong>.
+              Mapeo integral de tus 7 áreas profesionales: <strong>Geofísica & Sensores</strong>, <strong>Biogeoquímica & Suelos</strong>, <strong>Product Owner & Software</strong>, <strong>Gestión de Consorcios I+D</strong>, <strong>Grassroots & Territorio</strong>, <strong>Cultura & Políticas</strong>, y <strong>Comunicaciones & Prensa</strong>.
             </p>
           </div>
 
@@ -1125,7 +1122,7 @@ export const SkillTreeTab: React.FC = () => {
               <Compass className="h-6 w-6 animate-pulse" />
             </div>
             <div>
-              <div className="text-[9px] text-amber-400 font-mono font-bold uppercase tracking-wider">SOMA DE ALTA ENERGÍA</div>
+              <div className="text-[9px] text-amber-400 font-mono font-bold uppercase tracking-wider">NÚCLEO PROFESIONAL</div>
               <div className="text-xs font-black text-white">DANIEL SANTANDER URRUTIA</div>
               <div className="text-[9.5px] text-slate-400 font-mono">Doble M.Sc. Kiel/Poznań • Geofísica U. de Chile</div>
             </div>
@@ -1133,17 +1130,17 @@ export const SkillTreeTab: React.FC = () => {
         </div>
 
         {/* =====================================================================
-         * 2. ARCHETYPE MATRIX SIMULATOR (CALIBRACIÓN POR CANAL DE EMISIÓN)
+         * 2. ARCHETYPE MATRIX SIMULATOR (CALIBRACIÓN POR ROL PROFESIONAL)
          * ===================================================================== */}
         <div className="mt-4 pt-3.5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-[10px] font-mono text-slate-400 uppercase font-bold mr-1 flex items-center gap-1">
               <Target className="h-3 w-3 text-cyan-400" />
-              <span>SIMULADOR DE ROL:</span>
+              <span>SIMULADOR DE ROL PROFESIONAL:</span>
             </span>
 
             {[
-              { id: 'all', label: 'Todos los Canales', icon: '🌐' },
+              { id: 'all', label: 'Todas las Áreas', icon: '🌐' },
               { id: 'rd-scientist', label: 'Investigador I+D (Helmholtz/BC3)', icon: '🔬' },
               { id: 'ai-product', label: 'AI Product Owner & Climate-Tech', icon: '⚡' },
               { id: 'campaign-lead', label: 'Dirección de Campañas & Grassroots', icon: '📢' },
@@ -1166,7 +1163,7 @@ export const SkillTreeTab: React.FC = () => {
 
           {/* Dynamic Match readout badge */}
           <div className="flex items-center gap-2 self-start sm:self-auto font-mono text-[11px] px-2.5 py-1 rounded-lg bg-black/50 border border-white/10 shrink-0">
-            <span className="text-slate-400">Emisión Espectral:</span>
+            <span className="text-slate-400">Afinidad con Perfil:</span>
             <span className="text-amber-400 font-bold">{currentArchetypeInfo.match}</span>
           </div>
         </div>
@@ -1224,13 +1221,13 @@ export const SkillTreeTab: React.FC = () => {
                   : 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30'
               }`}
             >
-              <span>⚡ Vacíos (Sinapsis Silentes)</span>
+              <span>⚡ Brechas de Mercado (Skill Gaps)</span>
               <span className="px-1.5 py-0.2 rounded text-[10px] bg-rose-600 text-white font-extrabold">{gapsCount}</span>
             </button>
           </div>
 
           <div className="text-[10px] font-mono text-amber-400 italic hidden md:inline-block">
-            * Pasa el cursor por cualquier espina para ver la depolarización bioeléctrica hacia el soma
+            * Pasa el cursor por cualquier nodo para ver los puentes de sinergia entre disciplinas
           </div>
         </div>
       </div>
@@ -1248,9 +1245,9 @@ export const SkillTreeTab: React.FC = () => {
             borderColor: 'rgba(255, 255, 255, 0.12)' 
           }}
         >
-          {/* Confocal Filter Channel Pills */}
-          <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-white/10 pb-2 mb-2 text-[9px] font-mono">
-            <span className="text-slate-400 font-bold uppercase tracking-wider">7 CANALES FLUORÓFOROS (SPECTRAL EMISSION):</span>
+          {/* Areas Legend Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-white/10 pb-2 mb-2 text-[9.5px] font-mono">
+            <span className="text-slate-400 font-bold uppercase tracking-wider">7 ÁREAS PROFESIONALES:</span>
             <div className="flex flex-wrap items-center gap-2">
               {(Object.keys(branchStyles) as SkillBranch[]).map(b => (
                 <span 
@@ -1259,12 +1256,12 @@ export const SkillTreeTab: React.FC = () => {
                   style={{ color: branchStyles[b].color }}
                 >
                   <span className="h-1.5 w-1.5 rounded-full shadow-[0_0_6px_currentColor]" style={{ backgroundColor: branchStyles[b].color }} />
-                  <span>{branchStyles[b].fluorophore.split(' ')[0]}</span>
+                  <span>{branchStyles[b].icon} {branchStyles[b].shortLabel}</span>
                 </span>
               ))}
               <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/60 border border-rose-500/30 text-rose-400 font-bold">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />
-                <span>⚡ Gap</span>
+                <span>⚡ Brecha (Gap)</span>
               </span>
             </div>
           </div>
@@ -1534,6 +1531,9 @@ export const SkillTreeTab: React.FC = () => {
                     onMouseLeave={() => setHoveredNodeId(null)}
                     onClick={() => setSelectedNodeId(node.id)}
                   >
+                    {/* Invisible fixed hitbox that permanently captures mouse events without reflow jitter */}
+                    <circle cx={node.cx} cy={node.cy} r="18" fill="transparent" />
+
                     {/* Market Gap: Scarlet Red Pulsing Receptor Ring */}
                     {node.isMarketGap && (
                       <circle 
@@ -1544,7 +1544,7 @@ export const SkillTreeTab: React.FC = () => {
                         stroke="#ef4444" 
                         strokeWidth="1.2"
                         strokeDasharray="2 3"
-                        className="animate-spin"
+                        className="animate-spin pointer-events-none"
                         style={{ animationDuration: '5s' }}
                       />
                     )}
@@ -1560,6 +1560,7 @@ export const SkillTreeTab: React.FC = () => {
                         stroke={nodeColor}
                         strokeWidth={isSelected ? "2" : "1"}
                         filter="url(#confocalGlow)"
+                        className="pointer-events-none"
                       />
                     )}
 
@@ -1573,6 +1574,7 @@ export const SkillTreeTab: React.FC = () => {
                       strokeWidth={isSelected ? "2.4" : "1.8"} 
                       strokeDasharray={node.isMarketGap ? "2 2" : undefined}
                       filter="url(#confocalGlow)"
+                      className="pointer-events-none"
                     />
 
                     {/* Concentrated Vesicle Core (Dense Photonic Pip) */}
@@ -1581,6 +1583,7 @@ export const SkillTreeTab: React.FC = () => {
                       cy={node.cy} 
                       r={node.isMarketGap ? "2.8" : node.status === 'MASTERED' ? "3.2" : "2.2"} 
                       fill={node.isMarketGap ? "#ffffff" : node.status === 'MASTERED' ? "#ffffff" : nodeColor} 
+                      className="pointer-events-none"
                     />
 
                     {/* Micro Floating Label */}
@@ -1592,7 +1595,7 @@ export const SkillTreeTab: React.FC = () => {
                       fontFamily="sans-serif" 
                       textAnchor="middle"
                       fill={isSelected ? '#ffffff' : isHovered ? nodeColor : '#cbd5e1'}
-                      className="transition-colors drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+                      className="transition-colors drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] pointer-events-none"
                     >
                       {node.shortName}
                     </text>
@@ -1604,6 +1607,7 @@ export const SkillTreeTab: React.FC = () => {
                       fontFamily="monospace" 
                       textAnchor="middle"
                       fontWeight="bold"
+                      className="pointer-events-none"
                     >
                       {node.isMarketGap ? '⚡ GAP' : `Nvl ${node.level}/5`}
                     </text>
@@ -1630,12 +1634,12 @@ export const SkillTreeTab: React.FC = () => {
                 {selectedNode.isMarketGap ? (
                   <>
                     <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-                    <span className="text-rose-400 font-extrabold">SINAPSIS SILENTE / GAP DE MERCADO</span>
+                    <span className="text-rose-400 font-extrabold">BRECHA DE MERCADO DETECTADA</span>
                   </>
                 ) : (
                   <>
                     <span>{currentBranchStyle.icon}</span>
-                    <span>BOTÓN SINÁPTICO ACTIVO</span>
+                    <span>COMPETENCIA PROFESIONAL VERIFICADA</span>
                   </>
                 )}
               </span>
@@ -1655,7 +1659,7 @@ export const SkillTreeTab: React.FC = () => {
                   style={{ color: currentBranchStyle.color }}
                 >
                   <span>{currentBranchStyle.label}</span>
-                  <span className="text-[8px] opacity-75 font-mono">{currentBranchStyle.fluorophore}</span>
+                  <span className="text-[9px] opacity-90 font-mono font-bold">{currentBranchStyle.shortLabel}</span>
                 </div>
                 <h3 className="text-sm sm:text-base font-black text-white tracking-tight mt-0.5">
                   {selectedNode.name}
@@ -1752,14 +1756,14 @@ export const SkillTreeTab: React.FC = () => {
                   </div>
 
                   {/* Connected Synergy Bridges for this Node */}
-                  {activeSynergies.length > 0 && (
+                  {selectedSynergies.length > 0 && (
                     <div className="pt-2 border-t border-white/10 space-y-1.5">
                       <div className="text-[9.5px] font-mono font-bold text-amber-400 uppercase flex items-center gap-1.5">
                         <Layers className="h-3.5 w-3.5" />
-                        <span>AXONES COLATERALES & SINERGIAS ACTIVAS</span>
+                        <span>SINERGIAS TRANSDISCIPLINARIAS ACTIVAS</span>
                       </div>
                       <div className="space-y-1">
-                        {activeSynergies.map((s, idx) => (
+                        {selectedSynergies.map((s, idx) => (
                           <div 
                             key={idx}
                             className="p-1.5 rounded-lg border text-[10px] font-mono flex items-center justify-between text-amber-300 bg-amber-950/20 border-amber-500/25"
@@ -1813,7 +1817,7 @@ export const SkillTreeTab: React.FC = () => {
             <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
               <span className="text-[11px] font-bold uppercase text-white flex items-center gap-1.5">
                 <Target className="h-3.5 w-3.5 text-amber-400" />
-                <span>CANAL DIANA: {currentArchetypeInfo.name.toUpperCase()}</span>
+                <span>MERCADO OBJETIVO: {currentArchetypeInfo.name.toUpperCase()}</span>
               </span>
               <span className="text-[9px] font-mono text-emerald-400 font-bold">
                 {offers.length} OFERTAS ACTIVAS
