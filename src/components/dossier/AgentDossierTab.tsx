@@ -9,7 +9,8 @@ import {
   Printer,
   ShieldCheck,
   CheckCircle2,
-  FileText
+  FileText,
+  Nut
 } from 'lucide-react';
 import { MasterProfileTab } from '../profile/MasterProfileTab';
 import { CVStudioTab } from '../cvs/CVStudioTab';
@@ -23,13 +24,15 @@ interface AgentDossierTabProps {
   initialStudioOfferId?: string;
   initialStudioDocType?: 'cv' | 'cover_letter';
   onReturnToHub?: () => void;
+  onOpenSettings?: () => void;
 }
 
 export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({ 
   initialSubTab = 'showcase',
   initialStudioOfferId,
   initialStudioDocType,
-  onReturnToHub
+  onReturnToHub,
+  onOpenSettings
 }) => {
   const normalizedInitial = (initialSubTab === 'skills' ? 'showcase' : initialSubTab === 'cvs' ? 'studio' : initialSubTab) as 'showcase' | 'profile' | 'studio';
   const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'profile' | 'studio'>(normalizedInitial);
@@ -93,49 +96,70 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
           </div>
         </div>
 
-        {/* Sub-Tabs Switcher (Unified 3 core views) */}
-        <div 
-          className="flex items-center p-1 rounded-xl border gap-1 shrink-0 overflow-x-auto max-w-full"
-          style={{ 
-            backgroundColor: 'var(--panel-bg)', 
-            borderColor: 'var(--panel-border)' 
-          }}
-        >
-          <button
-            onClick={() => setActiveSubTab('showcase')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'showcase'
-                ? 'bg-sky-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
+        {/* Right side: Sub-Tabs Switcher & Perno / Settings Button */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Sub-Tabs Switcher (Unified 3 core views) */}
+          <div 
+            className="flex items-center p-1 rounded-xl border gap-1 shrink-0 overflow-x-auto max-w-full"
+            style={{ 
+              backgroundColor: 'var(--panel-bg)', 
+              borderColor: 'var(--panel-border)' 
+            }}
           >
-            <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Resumen & Competencias</span>
-          </button>
+            <button
+              onClick={() => setActiveSubTab('showcase')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                activeSubTab === 'showcase'
+                  ? 'bg-sky-600 text-white shadow font-black'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>Resumen & Competencias</span>
+            </button>
 
-          <button
-            onClick={() => setActiveSubTab('profile')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'profile'
-                ? 'bg-sky-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            <GraduationCap className="h-3.5 w-3.5" />
-            <span>Expediente Maestro</span>
-          </button>
+            <button
+              onClick={() => setActiveSubTab('profile')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                activeSubTab === 'profile'
+                  ? 'bg-sky-600 text-white shadow font-black'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              <GraduationCap className="h-3.5 w-3.5" />
+              <span>Expediente Maestro</span>
+            </button>
 
-          <button
-            onClick={() => setActiveSubTab('studio')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'studio'
-                ? 'bg-sky-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            <FileText className="h-3.5 w-3.5" />
-            <span>CV & Cartas Studio</span>
-          </button>
+            <button
+              onClick={() => setActiveSubTab('studio')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                activeSubTab === 'studio'
+                  ? 'bg-sky-600 text-white shadow font-black'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              <FileText className="h-3.5 w-3.5" />
+              <span>CV & Cartas Studio</span>
+            </button>
+          </div>
+
+          {/* Botón de Perno: Ajustes */}
+          {onOpenSettings && (
+            <button
+              onClick={onOpenSettings}
+              className="p-2 sm:px-3 sm:py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer shadow-sm group hover:border-sky-500 focus:outline-none shrink-0"
+              style={{
+                backgroundColor: 'var(--panel-bg)',
+                borderColor: 'var(--panel-border)',
+                color: 'var(--text-primary)'
+              }}
+              title="Ajustes del Sistema (IA, Alertas, Pipeline y Copias de Seguridad)"
+              aria-label="Ajustes del Sistema"
+            >
+              <Nut className="h-4 w-4 text-sky-500 group-hover:rotate-90 transition-transform duration-300 shrink-0" />
+              <span className="hidden sm:inline font-mono text-xs font-bold">Ajustes</span>
+            </button>
+          )}
         </div>
       </div>
 

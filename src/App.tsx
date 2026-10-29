@@ -364,6 +364,7 @@ export function App() {
                 initialStudioOfferId={studioOfferId}
                 initialStudioDocType={studioDocType}
                 onReturnToHub={() => handleNavigate('dashboard')}
+                onOpenSettings={() => handleNavigate('settings')}
               />
             )}
 
@@ -378,7 +379,7 @@ export function App() {
             {activeTab === 'settings' && (
               <SettingsTab
                 onRefreshData={handleRefreshData}
-                onReturnToHub={() => handleNavigate('dashboard')}
+                onReturnToHub={() => handleNavigate('agent_dossier')}
               />
             )}
           </main>

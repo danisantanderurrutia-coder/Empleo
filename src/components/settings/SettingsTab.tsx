@@ -84,10 +84,10 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onRetur
             <button
               onClick={onReturnToHub}
               className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 hover:border-cyan-500 transition flex items-center gap-1.5 cursor-pointer shadow"
-              title="Volver a la consola central Career"
+              title="Volver al Expediente y Perfil"
             >
               <ChevronLeft className="h-4 w-4 text-cyan-400" />
-              <span>« CAREER HUB</span>
+              <span>« VOLVER AL PERFIL</span>
             </button>
           )}
 
