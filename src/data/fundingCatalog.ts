@@ -14,11 +14,11 @@ export const FUNDING_CATALOG: FundingOpportunity[] = [
     deadline: '2026-11-15',
     deadlineDays: 45,
     status: 'open',
-    eligibility: ['Título de Máster (M.Sc.) concluido', 'Propuesta de investigación vinculada a universidad alemana', 'Alemán B1/B2 o Inglés C1'],
+    eligibility: ['Título de Máster (M.Sc.) concluido', 'Propuesta de investigación vinculada a universidad alemana', 'Alemán B1/B2 o Inglés C1/C2 (Daniel acreditado C2)'],
     targetDisciplines: ['Ciencias Ambientales', 'Biogeoquímica', 'Geociencias', 'Gestión de Cuencas'],
     officialUrl: 'https://www.daad.de/en/study-and-research-in-germany/scholarships/',
     description: 'Financiamiento individual para estancias de investigación y desarrollo doctoral en centros universitarios y de investigación federales en Alemania.',
-    strategicFit: 'Alta prioridad para vincular con CAU Kiel o centros Helmholtz (GFZ Potsdam, UFZ Leipzig).'
+    strategicFit: 'Alta prioridad para vincular con centros Helmholtz (GFZ Potsdam, UFZ Leipzig, PIK) o institutos federales.'
   },
   {
     id: 'f-dfg-walter-benjamin',

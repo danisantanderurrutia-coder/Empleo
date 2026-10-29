@@ -169,7 +169,7 @@ export const buildDefaultScientificDraft = (lang: CoverLetterLang, offer?: Cover
 
         `In allen drei Vorhaben übernahm ich die Rolle des Product Owners: von der Bedarfsanalyse und Datenmodellierung über das Anforderungsmanagement im Backlog bis hin zur Usability-Validierung im Gelände. Ergänzt wird diese Praxis durch Verhandlungssicherheit im öffentlichen Raum: als geladener Sachverständiger vor der Kommission für Katastrophenschutz der chilenischen Abgeordnetenkammer und als Hauptautor internationaler Fachanalysen zu Kohlenstoff- und Biomasse-Bilanzen (EPN & Global Forest Coalition, 2023).`,
 
-        `Als Absolvent einer deutschen Hochschule stehe ich dem Umweltbundesamt mit voller vertraglicher Verfügbarkeit (§20 AufenthG), verhandlungssicherem Englisch (C1), praxiserprobtem Deutsch (B1–B2) und hoher Einsatzbereitschaft für den Standort Leipzig sowie mobiles Arbeiten zur Verfügung. Für Rückfragen stehe ich Ihnen gerne zur Verfügung.`
+        `Als Absolvent einer deutschen Hochschule stehe ich dem Umweltbundesamt mit voller vertraglicher Verfügbarkeit (§20 AufenthG), verhandlungssicherem Englisch (C2), praxiserprobtem Deutsch (B1–B2) und hoher Einsatzbereitschaft für den Standort Leipzig sowie mobiles Arbeiten zur Verfügung. Für Rückfragen stehe ich Ihnen gerne zur Verfügung.`
       ];
     }
 
@@ -182,7 +182,7 @@ export const buildDefaultScientificDraft = (lang: CoverLetterLang, offer?: Cover
 
       `Im Rahmen meiner M.Sc.-Forschung an der CAU Kiel untersuche ich das wiedervernässte Moor Wallener Au (Schleswig-Holstein). Mein Schwerpunkt liegt auf der Quantifizierung von Treibhausgasflüssen (CO₂, CH₄) mittels geschlossener Hauben und Eddy-Covariance-Daten, der Paludikultur und der Bestimmung der Vorbelastung des Bodens (σp = 62,4 kPa), verknüpft mit reproduzierbaren Auswertungen in R (Wetland Monitor).`,
 
-      `Diese Verbindung aus geophysikalischer Feldanalytik, mikrometeorologischer Flussmessung und Datenprogrammierung bringe ich gezielt in die Vorhaben von ${company} ein. Als Absolvent einer deutschen Universität verfüge ich über volle vertragliche Verfügbarkeit nach §20 AufenthG sowie Arbeitsfähigkeit in Deutsch (B1–B2), Englisch (C1) und Spanisch (Muttersprache).`
+      `Diese Verbindung aus geophysikalischer Feldanalytik, mikrometeorologischer Flussmessung und Datenprogrammierung bringe ich gezielt in die Vorhaben von ${company} ein. Als Absolvent einer deutschen Universität verfüge ich über volle vertragliche Verfügbarkeit nach §20 AufenthG sowie Arbeitsfähigkeit in Deutsch (B1–B2), Englisch (C2) und Spanisch (Muttersprache).`
     ];
   }
 
@@ -200,7 +200,7 @@ export const buildDefaultScientificDraft = (lang: CoverLetterLang, offer?: Cover
 
         `Across all three applications, I acted as Product Owner: translating stakeholder needs and ecological metrics into user stories, managing backlog priorities, and conducting usability validation with field teams. This technical execution is complemented by institutional communication acumen: serving as an invited expert witness before Chile's Chamber of Deputies on wildfire risk and authoring international technical reports on carbon accounting frameworks (EPN & Global Forest Coalition, 2023).`,
 
-        `As a graduate of a German university, I offer immediate contractual readiness under Germany's §20 AufenthG framework, operational fluency in English (C1) and German (B1–B2), and full flexibility for on-site collaboration in Leipzig as well as hybrid mobile work. I remain available for any technical or formal inquiries.`
+        `As a graduate of a German university, I offer immediate contractual readiness under Germany's §20 AufenthG framework, operational fluency in English (C2) and German (B1–B2), and full flexibility for on-site collaboration in Leipzig as well as hybrid mobile work. I remain available for any technical or formal inquiries.`
       ];
     }
 
@@ -213,7 +213,7 @@ export const buildDefaultScientificDraft = (lang: CoverLetterLang, offer?: Cover
 
       `During my dual European Master of Science in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland), I have conducted direct quantitative field research on the rewetted peatland Wallener Au (Schleswig-Holstein). My work quantifies greenhouse gas fluxes (CO₂, CH₄) using closed chamber measurements and Eddy Covariance data, couples paludiculture implementation with soil mechanics (precompression stress σp = 62.4 kPa), and integrates reproducible spatial processing pipelines in R, including the development of Wetland Monitor.`,
 
-      `This combination of geophysical inversion, micro-meteorological flux analysis, and scientific application development provides direct empirical ground-truth for ${company}. I bring sustained resilience in demanding field environments, bilingual operational fluency (Spanish native, English C1, German B1–B2), and immediate contractual readiness under Germany's §20 AufenthG research and job-seeking framework as a German master's graduate.`
+      `This combination of geophysical inversion, micro-meteorological flux analysis, and scientific application development provides direct empirical ground-truth for ${company}. I bring sustained resilience in demanding field environments, bilingual operational fluency (Spanish native, English C2, German B1–B2), and immediate contractual readiness under Germany's §20 AufenthG research and job-seeking framework as a German master's graduate.`
     ];
   }
 
@@ -231,7 +231,7 @@ export const buildDefaultScientificDraft = (lang: CoverLetterLang, offer?: Cover
 
       `En los tres productos ejercí el rol de Product Owner: desde el levantamiento de especificaciones y arquitectura de datos hasta la priorización de historias de usuario y la validación con equipos de terreno. Esta solvencia técnica se complementa con capacidad probada de interlocución pública: perito invitado ante la Cámara de Diputadas y Diputados de Chile para la modelación de riesgo de incendios y autor principal de informes internacionales sobre balances de carbono y biomasa (EPN y Global Forest Coalition, 2023).`,
 
-      `Como graduado de una universidad alemana, dispongo de plena habilitación contractual (§20 AufenthG), inglés profesional (C1), alemán operativo (B1–B2) y total disposición para trabajar en Leipzig y en modalidad híbrida/remota. Quedo a su disposición para cualquier requerimiento técnico o formal.`
+      `Como graduado de una universidad alemana, dispongo de plena habilitación contractual (§20 AufenthG), inglés profesional (C2), alemán operativo (B1–B2) y total disposición para trabajar en Leipzig y en modalidad híbrida/remota. Quedo a su disposición para cualquier requerimiento técnico o formal.`
     ];
   }
 
@@ -244,7 +244,7 @@ export const buildDefaultScientificDraft = (lang: CoverLetterLang, offer?: Cover
 
     `En el marco de mi doble maestría en Manejo Ambiental (CAU Kiel, Alemania) y Protección Ambiental (AMU Poznań, Polonia), desarrollo investigación cuantitativa directa en la turbera rehumedecida Wallener Au (Schleswig-Holstein). Cuantifico flujos de gases de efecto invernadero (CO₂, CH₄) mediante cámaras cerradas y registros de Eddy Covariance, evaluando la tensión de preconsolidación del suelo orgánico (σp = 62,4 kPa), la paludicultura y gemelos digitales en R (aplicación Wetland Monitor).`,
 
-    `Esta integración de inversión geofísica, micro-meteorología de flujos y programación científica encaja de forma directa con las demandas analíticas de ${company}. Aporto resiliencia comprobada para campañas prolongadas de terreno, dominio lingüístico (español nativo, inglés C1 técnico-ejecutivo y alemán B1–B2) y disponibilidad contractual inmediata bajo el marco legal de graduado universitario europeo (§20 AufenthG / Ley 14/2013).`
+    `Esta integración de inversión geofísica, micro-meteorología de flujos y programación científica encaja de forma directa con las demandas analíticas de ${company}. Aporto resiliencia comprobada para campañas prolongadas de terreno, dominio lingüístico (español nativo, inglés C2 técnico-ejecutivo y alemán B1–B2) y disponibilidad contractual inmediata bajo el marco legal de graduado universitario europeo (§20 AufenthG / Ley 14/2013).`
   ];
 };
 

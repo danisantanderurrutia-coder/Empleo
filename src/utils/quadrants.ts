@@ -8,13 +8,18 @@ export const inferCompanyQuadrants = (comp: CompanyDossier): QuadrantType[] => {
   if (
     text.includes('alemania') || 
     text.includes('germany') || 
-    text.includes('kiel') || 
+    text.includes('berlin') || 
+    text.includes('berlín') || 
+    text.includes('münchen') || 
+    text.includes('munich') || 
     text.includes('potsdam') || 
     text.includes('braunschweig') || 
     text.includes('leipzig') || 
     text.includes('bonn') || 
     text.includes('colonia') || 
     text.includes('köln') || 
+    text.includes('essen') || 
+    text.includes('jülich') || 
     text.includes('dessau') || 
     text.includes('greifswald') || 
     text.includes('bremerhaven') || 

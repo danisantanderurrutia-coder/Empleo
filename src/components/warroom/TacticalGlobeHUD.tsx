@@ -112,7 +112,7 @@ const ATTRACTIVE_OFFERS: AttractiveOfferTarget[] = [
     matchScore: 94,
     framework: '🇪🇸 Ley 14/2013 • Licitaciones Banco Mundial / BID',
     salary: '42.000 € - 55.000 € / año',
-    requirements: ['Modelación Hidrológica', 'Salvaguardias Socioambientales', 'Inglés C1', 'Gestión Multiactor'],
+    requirements: ['Modelación Hidrológica', 'Salvaguardias Socioambientales', 'Inglés C2', 'Gestión Multiactor'],
     sectorKey: 'bilbao',
     color: '#059669',
     colorHex: 0x059669

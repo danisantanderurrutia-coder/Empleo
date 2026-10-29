@@ -388,7 +388,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
                 >
                   <div className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider group-hover:text-teal-400 transition">DACH</div>
                   <div className="text-2xl font-black text-teal-400 font-sans">{dachCompanies.length}</div>
-                  <div className="text-[9px] text-slate-400 font-mono mt-0.5 truncate">GFZ • CAU Kiel • Thünen</div>
+                  <div className="text-[9px] text-slate-400 font-mono mt-0.5 truncate">GFZ • UFZ Leipzig • Thünen</div>
                 </button>
 
                 <button 
@@ -596,7 +596,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           <span>SISTEMA OPERATIVO // PROSPECCIÓN DIRECTA:</span>
         </div>
         <div className="overflow-hidden truncate text-[11px] text-slate-400">
-          <span className="text-teal-400 font-bold">[DACH]</span> GFZ Potsdam, Greifswald y CAU Kiel mapeados • <span className="text-emerald-400 font-bold">[EUSKADI]</span> Centros BRTA (BC3, Tecnalia, Neiker) e Ikerbasque • <span className="text-sky-400 font-bold">[GLOBAL]</span> Consorcios y fondos Horizon Europe listos para co-diseño.
+          <span className="text-teal-400 font-bold">[DACH]</span> GFZ Potsdam, UFZ Leipzig y PIK Potsdam mapeados • <span className="text-emerald-400 font-bold">[EUSKADI]</span> Centros BRTA (BC3, Tecnalia, Neiker) e Ikerbasque • <span className="text-sky-400 font-bold">[GLOBAL]</span> Consorcios y fondos Horizon Europe listos para co-diseño.
         </div>
         <div className="text-[10px] text-slate-500 shrink-0 font-bold uppercase">
           100% DATOS LOCALES

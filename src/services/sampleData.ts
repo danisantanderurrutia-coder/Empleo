@@ -1093,38 +1093,38 @@ export const initialCompanies: CompanyDossier[] = [
     sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
-    id: 'comp-cau-kiel',
-    name: 'CAU Kiel - Coastal & Peatland Research Group',
-    website: 'https://www.uni-kiel.de/',
-    sector: 'Investigación Universitaria de Excelencia en Turberas y Ecosistemas Costeros',
-    size: '3.500+ investigadores y docentes',
-    headquarters: 'Kiel (Schleswig-Holstein, Alemania)',
-    description: 'Universidad de excelencia alemana con uno de los institutos de geociencias y ciencias ambientales más prestigiosos de Europa. Lidera la investigación en restauración de turberas, balances de GEI con eddy covariance y dinámica de cuencas en el Báltico y Mar del Norte.',
+    id: 'comp-pik',
+    name: 'PIK - Potsdam-Institut für Klimafolgenforschung',
+    website: 'https://www.pik-potsdam.de/',
+    sector: 'Investigación de Excelencia en Impacto Climático y Resiliencia Planetaria',
+    size: '400+ investigadores científicos',
+    headquarters: 'Potsdam (Brandeburgo / Berlín, Alemania)',
+    description: 'Instituto de investigación de referencia global miembro de la Asociación Leibniz, especializado en límites planetarios, modelación biofísica de puntos de inflexión (tipping points), dinámicas de sumideros de carbono y trayectorias de descarbonización para la formulación de políticas públicas en Alemania y la UE.',
     keyProjects: [
-      'Monitoreo continuo micrometeorológico de flujos de CO2 y CH4 en turberas restauradas (paludicultura)',
-      'Dinámica hidrogeoquímica y transporte de nutrientes en cuencas agrícolas del norte de Alemania',
-      'Modelado numérico de interacción océano-atmósfera y balance sedimentario costero'
+      'Modelación numérica de puntos de inflexión biofísicos y estabilidad de sumideros de carbono',
+      'Integración de teledetección satelital y flujos micrometeorológicos en balances globales',
+      'Asesoría técnica directa al gobierno federal alemán (BMUV/BMWK) y al IPCC'
     ],
     recentNews: [
       {
-        title: 'Ampliación de la red de torres de flujo micrometeorológico en turberas del norte de Alemania',
-        date: '2026-10-10',
-        snippet: 'Medición de alta frecuencia de balance de carbono para políticas de descarbonización de la UE.'
+        title: 'Evaluación del estado de los sumideros de carbono forestales y edáficos en Europa',
+        date: '2026-10-18',
+        snippet: 'Nuevo marco cuantitativo para modelar la degradación de sumideros naturales bajo estrés térmico e hidrológico.'
       }
     ],
     workCulture: [
-      'Máximo rigor académico y metodológico alemán',
-      'Laboratorios e instrumentación de campo de última generación',
-      'Publicación en revistas científicas de alto impacto (Nature, Global Change Biology)'
+      'Máximo rigor científico interdisciplinar en frontera del conocimiento',
+      'Convenio colectivo del sector público alemán (TV-L / TVöD Bund E13/E14)',
+      'Ambiente bilingüe de alta proyección internacional con vínculos directos con el IPCC y la Comisión Europea'
     ],
-    redFlags: ['Exige titulación oficial alemana o homologada para contratos de personal investigador (con la que Daniel cuenta)'],
+    redFlags: ['Procesos de selección altamente competitivos que exigen fundamentación física cuantitativa rigurosa y código reproducible'],
     interviewArguments: [
-      'Investigador activo en el laboratorio de turberas de CAU Kiel con experiencia práctica en torres eddy covariance y cámaras estáticas.',
-      'Doble titulación M.Sc. en Environmental Management por CAU Kiel con evaluación sobresaliente.',
-      'Dominio de tratamiento de datos crudos de alta frecuencia en R y modelación espacial.'
+      'Formación físico-matemática en Geofísica (U. de Chile) combinada con Doble M.Sc. europeo en modelación de balances biofísicos.',
+      'Experiencia directa en flujos micrometeorológicos de GEI (torres eddy covariance y cámaras) y programación en R/Python.',
+      'Capacidad probada de transferencia entre rigor empírico y gobernanza de políticas públicas ambientales.'
     ],
-    techStack: ['EddyPro', 'R', 'Python', 'Sensores Micrometeorológicos Licor', 'QGIS'],
-    lastResearched: '2026-10-14',
+    techStack: ['R', 'Python', 'Modelado Numérico Terrestre', 'QGIS', 'Copernicus Earth Observation', 'Linux HPC'],
+    lastResearched: '2026-10-24',
     quadrants: ['DACH'],
     sectorCluster: 'RD_PUBLIC'
   },

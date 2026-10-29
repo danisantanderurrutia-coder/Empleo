@@ -26,7 +26,7 @@ export type SkillBranch =
 
 export type ProfileArchetype = 
   | 'all'
-  | 'rd-scientist'   // Investigador Científico I+D (Helmholtz, CAU Kiel, BC3, AZTI)
+  | 'rd-scientist'   // Investigador Científico I+D (Helmholtz, UFZ, PIK, BC3, AZTI)
   | 'ai-product'     // AI Product Owner & Climate-Tech Architect
   | 'campaign-lead'  // Director de Campañas & Grassroots
   | 'policy-advisor'; // Consultor en Políticas Ambientales & CSRD
