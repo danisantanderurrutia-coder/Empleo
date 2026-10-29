@@ -63,6 +63,18 @@ export const DAILY_PORTALS: DailyPortal[] = [
     description: 'Convocatorias oficiales de institutos federales alemanes (Thünen-Institut, UBA, Bundesamt für Naturschutz, DWD).',
     iconName: 'Landmark'
   },
+  {
+    id: 'portal-dfg-gepris',
+    name: 'DFG GEPRIS & Research Explorer (Alemania)',
+    quadrant: 'DACH',
+    quadrantLabel: 'Alemania / DACH',
+    category: 'Científico / I+D',
+    directUrl: 'https://gepris.dfg.de/gepris/OCTOPUS?context=projekt&task=findKompakt&keywords=peatland+OR+carbon+OR+geophysics',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['Peatlands', 'Eddy Covariance', 'Soil Carbon', 'Moor', 'Biogeochemistry', 'SFB', 'Graduiertenkolleg'],
+    description: 'Sistema oficial de información de proyectos y PIs financiados por la DFG en universidades alemanas. Detecta cátedras con presupuesto activo para contratos TV-L E13.',
+    iconName: 'GraduationCap'
+  },
 
   // -------------------------------------------------------------
   // CUADRANTE EUSKADI / ESPAÑA

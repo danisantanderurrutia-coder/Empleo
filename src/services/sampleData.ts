@@ -285,6 +285,20 @@ export const initialSources: JobSource[] = [
     notes: 'Canal oficial con agregación RSS de ofertas del Estado Federal en ciencia, digitalización y administración ambiental.'
   },
   {
+    id: 'src-dfg-gepris',
+    name: 'DFG GEPRIS & Research Explorer (Alemania)',
+    type: 'research_center',
+    url: 'https://gepris.dfg.de/gepris/OCTOPUS?context=projekt&task=findKompakt&keywords=peatland+OR+carbon+OR+geophysics',
+    priority: 'Alta',
+    frequency: 'Semanal',
+    status: 'Activo',
+    lastScraped: '',
+    offersExtracted: 0,
+    region: 'Alemania / DACH',
+    notes: 'Base de datos oficial de proyectos financiados por la DFG en universidades e institutos alemanes. Detecta cátedras con presupuesto activo para contratos TV-L E13.',
+    countryFocus: 'Alemania (DACH)'
+  },
+  {
     id: 'src-bc3',
     name: 'BC3 Basque Centre for Climate Change (Bilbao / Leioa)',
     type: 'research_center',
@@ -1249,7 +1263,7 @@ export const initialCompanies: CompanyDossier[] = [
     lastResearched: '2026-10-25',
     quadrants: ['DACH'],
     sectorCluster: 'RD_PUBLIC',
-    fundingTies: ['f-dfg-walter-benjamin', 'f-helmholtz-postdoc']
+    fundingTies: ['f-dfg-walter-benjamin', 'f-dfg-sachbeihilfe-eigene-stelle', 'f-helmholtz-postdoc']
   },
   {
     id: 'comp-greifswald',
@@ -1286,7 +1300,7 @@ export const initialCompanies: CompanyDossier[] = [
     lastResearched: '2026-10-25',
     quadrants: ['DACH'],
     sectorCluster: 'RD_PUBLIC',
-    fundingTies: ['f-dfg-walter-benjamin', 'f-daad-research']
+    fundingTies: ['f-dfg-walter-benjamin', 'f-dfg-sachbeihilfe-eigene-stelle', 'f-dfg-graduiertenkolleg', 'f-daad-research']
   },
   {
     id: 'comp-ikerbasque',

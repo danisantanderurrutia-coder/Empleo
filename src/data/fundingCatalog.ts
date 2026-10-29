@@ -37,6 +37,38 @@ export const FUNDING_CATALOG: FundingOpportunity[] = [
     strategicFit: 'Excelente para proyectos de modelación de balances de carbono en turberas templadas alemanas.'
   },
   {
+    id: 'f-dfg-sachbeihilfe-eigene-stelle',
+    title: 'DFG Research Grants - Temporary Position as Principal Investigator (Eigene Stelle)',
+    organization: 'DFG (Deutsche Forschungsgemeinschaft)',
+    category: 'fellowship',
+    region: 'germany',
+    amount: 'Contrato TV-L E13 (~50.000 € - 56.000 € / año bruto) + Gastos directos de investigación',
+    deadline: 'Convocatoria Abierta Continua',
+    deadlineDays: -1,
+    status: 'rolling',
+    eligibility: ['Investigadores con Máster (M.Sc.) o Doctorado', 'Propuesta de investigación original', 'Declaración de acogida institucional en Alemania'],
+    targetDisciplines: ['Geociencias', 'Física del Suelo', 'Biogeoquímica', 'Teledetección', 'Mitigación Climática'],
+    officialUrl: 'https://www.dfg.de/en/research-funding/funding-opportunities/programmes/individual-grants/research-grants',
+    description: 'Módulo de la DFG ("Eigene Stelle") que permite al investigador financiar su propio contrato a tiempo completo durante un período de hasta 3 años para liderar un proyecto en cualquier universidad o centro de investigación alemán.',
+    strategicFit: 'Permite formular un proyecto independiente sobre monitoreo de carbono en turberas o balances de GEI respaldado por tu anfitrión en CAU Kiel u otra universidad asociada.'
+  },
+  {
+    id: 'f-dfg-graduiertenkolleg',
+    title: 'DFG Research Training Groups (Graduiertenkollegs - RTG)',
+    organization: 'DFG (Deutsche Forschungsgemeinschaft)',
+    category: 'grant',
+    region: 'germany',
+    amount: 'Contrato universitario TV-L E13 (65% - 100%, ~32.000 € - 50.000 € / año) + Formación doctoral estructurada',
+    deadline: 'Convocatorias según cohorte de cada RTG / Abiertas durante el año',
+    deadlineDays: -1,
+    status: 'rolling',
+    eligibility: ['Graduados con título de Máster científico (M.Sc. en Ciencias Ambientales, Geofísica o afines)'],
+    targetDisciplines: ['Modelación del Clima', 'Humedales y Turberas', 'Ciclos Biogeoquímicos', 'Geofísica Ambiental'],
+    officialUrl: 'https://www.dfg.de/en/research-funding/funding-opportunities/programmes/coordinated-programmes/research-training-groups',
+    description: 'Redes doctorales estructuradas de excelencia financiadas por la DFG en universidades alemanas. Publican plazas de investigador/a con financiación garantizada de 3 a 4 años.',
+    strategicFit: 'Vía prioritaria para acceder a un contrato universitario reglado TV-L E13 en Alemania con tu M.Sc. de CAU Kiel.'
+  },
+  {
     id: 'f-humboldt-postdoc',
     title: 'Humboldt Research Fellowship for Postdoctoral Researchers',
     organization: 'Alexander von Humboldt Foundation',
