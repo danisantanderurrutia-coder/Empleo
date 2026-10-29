@@ -219,15 +219,16 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
     <div className="space-y-4 text-[var(--text-primary)] font-sans animate-fadeIn">
       
       {/* =========================================================================
-       * 1. SLIM & PROFESSIONAL HUD HEADER
+       * UNIFIED ACADEMY CONSOLE (HUD HEADER + METRICS + RADAR FILTER BAR)
        * ========================================================================= */}
       <div 
-        className="p-4 sm:p-5 rounded-2xl border shadow-md relative overflow-hidden transition-colors"
+        className="p-4 sm:p-5 rounded-2xl border shadow-md relative overflow-hidden transition-colors space-y-4"
         style={{ 
           backgroundColor: 'var(--card-bg)', 
           borderColor: 'var(--card-border)' 
         }}
       >
+        {/* Top Header Row with Title & Quick Metrics Bar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             {onNavigateToSkillTree && (
@@ -295,7 +296,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
         </div>
 
         {/* Global Progress Track */}
-        <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-mono">
+        <div className="pt-2.5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-2 text-[var(--text-secondary)]">
             <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
             <span>Capacitación en Curso: <strong className="text-[var(--text-primary)]">{inProgressCount} activas</strong> • <strong className="text-emerald-500">{completedCount} certificadas</strong></span>
@@ -304,156 +305,148 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
             {Math.round(((completedCount * 1.0 + inProgressCount * 0.4) / totalCourses) * 100)}% de avance formativo global
           </div>
         </div>
-      </div>
 
-      {/* =========================================================================
-       * 2. DISCIPLINE PILL FILTER BAR (7 ÁREAS DEL ÁRBOL + BRECHAS)
-       * ========================================================================= */}
-      <div 
-        className="p-3 sm:p-4 rounded-2xl border shadow-xs space-y-3 transition-colors"
-        style={{ 
-          backgroundColor: 'var(--panel-bg)', 
-          borderColor: 'var(--panel-border)' 
-        }}
-      >
-        {/* Branch Pills Row */}
-        <div>
-          <div className="text-[10.5px] font-mono uppercase font-bold text-[var(--text-muted)] mb-2 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <Filter className="h-3.5 w-3.5 text-cyan-500" />
-              <span>SELECCIONA TU ÁREA DE ESPECIALIZACIÓN O ENFOQUE:</span>
-            </span>
-            {(selectedBranchFilter !== 'ALL' || selectedCostFilter !== 'ALL' || selectedStatusFilter !== 'ALL' || searchQuery || activeGapFilter) && (
-              <button
-                onClick={() => {
-                  setSelectedBranchFilter('ALL');
-                  setSelectedCostFilter('ALL');
-                  setSelectedStatusFilter('ALL');
-                  setSearchQuery('');
-                  setActiveGapFilter(undefined);
-                }}
-                className="text-[10px] text-rose-500 hover:text-rose-400 font-bold flex items-center gap-1 cursor-pointer"
-              >
-                <X className="h-3 w-3" />
-                <span>Restablecer Filtros</span>
-              </button>
-            )}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-1.5">
-            {/* 1. All Button */}
-            <button
-              onClick={() => { setSelectedBranchFilter('ALL'); setActiveGapFilter(undefined); }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
-                selectedBranchFilter === 'ALL' && !activeGapFilter
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-black'
-                  : 'bg-black/5 dark:bg-black/30 border border-slate-200 dark:border-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              <span>🌐 Todas las Áreas</span>
-              <span className="text-[10px] opacity-75 font-normal">({branchCounts.ALL})</span>
-            </button>
-
-            {/* 2. Only Gaps Button */}
-            <button
-              onClick={() => { setSelectedBranchFilter('ONLY_GAPS'); setActiveGapFilter(undefined); }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
-                selectedBranchFilter === 'ONLY_GAPS'
-                  ? 'bg-rose-600 text-white font-black'
-                  : 'bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20'
-              }`}
-            >
-              <span>⚡ Brechas Prioritarias</span>
-              <span className="text-[10px] opacity-75 font-normal">({branchCounts.ONLY_GAPS})</span>
-            </button>
-
-            {/* 3. The 7 Authentic Disciplines + Languages */}
-            {(Object.keys(BRANCH_CONFIG) as AcademyBranch[]).map(branchKey => {
-              const conf = BRANCH_CONFIG[branchKey];
-              const isSelected = selectedBranchFilter === branchKey;
-              const count = branchCounts[branchKey] || 0;
-
-              return (
+        {/* Discipline Pill Filter & Search (Integrated Section) */}
+        <div className="pt-3 border-t border-slate-200 dark:border-white/10 space-y-3">
+          {/* Branch Pills Row */}
+          <div>
+            <div className="text-[10.5px] font-mono uppercase font-bold text-[var(--text-muted)] mb-2 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-cyan-500" />
+                <span>SELECCIONA TU ÁREA DE ESPECIALIZACIÓN O ENFOQUE:</span>
+              </span>
+              {(selectedBranchFilter !== 'ALL' || selectedCostFilter !== 'ALL' || selectedStatusFilter !== 'ALL' || searchQuery || activeGapFilter) && (
                 <button
-                  key={branchKey}
-                  onClick={() => { setSelectedBranchFilter(branchKey); setActiveGapFilter(undefined); }}
-                  className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs border ${
-                    isSelected
-                      ? 'text-white font-black shadow-md'
-                      : 'bg-black/5 dark:bg-black/30 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                  }`}
-                  style={{
-                    backgroundColor: isSelected ? conf.color : undefined,
-                    borderColor: isSelected ? conf.color : 'var(--card-border)'
+                  onClick={() => {
+                    setSelectedBranchFilter('ALL');
+                    setSelectedCostFilter('ALL');
+                    setSelectedStatusFilter('ALL');
+                    setSearchQuery('');
+                    setActiveGapFilter(undefined);
                   }}
+                  className="text-[10px] text-rose-500 hover:text-rose-400 font-bold flex items-center gap-1 cursor-pointer"
                 >
-                  <span>{conf.icon}</span>
-                  <span className="hidden sm:inline">{conf.shortLabel}</span>
-                  <span className="sm:hidden">{conf.shortLabel.slice(0, 10)}</span>
-                  <span className="text-[10px] opacity-75 font-normal">({count})</span>
+                  <X className="h-3 w-3" />
+                  <span>Restablecer Filtros</span>
                 </button>
-              );
-            })}
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-1.5">
+              {/* 1. All Button */}
+              <button
+                onClick={() => { setSelectedBranchFilter('ALL'); setActiveGapFilter(undefined); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
+                  selectedBranchFilter === 'ALL' && !activeGapFilter
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-black'
+                    : 'bg-black/5 dark:bg-black/30 border border-slate-200 dark:border-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                }`}
+              >
+                <span>🌐 Todas las Áreas</span>
+                <span className="text-[10px] opacity-75 font-normal">({branchCounts.ALL})</span>
+              </button>
+
+              {/* 2. Only Gaps Button */}
+              <button
+                onClick={() => { setSelectedBranchFilter('ONLY_GAPS'); setActiveGapFilter(undefined); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
+                  selectedBranchFilter === 'ONLY_GAPS'
+                    ? 'bg-rose-600 text-white font-black'
+                    : 'bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20'
+                }`}
+              >
+                <span>⚡ Brechas Prioritarias</span>
+                <span className="text-[10px] opacity-75 font-normal">({branchCounts.ONLY_GAPS})</span>
+              </button>
+
+              {/* 3. The 7 Authentic Disciplines + Languages */}
+              {(Object.keys(BRANCH_CONFIG) as AcademyBranch[]).map(branchKey => {
+                const conf = BRANCH_CONFIG[branchKey];
+                const isSelected = selectedBranchFilter === branchKey;
+                const count = branchCounts[branchKey] || 0;
+
+                return (
+                  <button
+                    key={branchKey}
+                    onClick={() => { setSelectedBranchFilter(branchKey); setActiveGapFilter(undefined); }}
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs border ${
+                      isSelected
+                        ? 'text-white font-black shadow-md'
+                        : 'bg-black/5 dark:bg-black/30 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                    style={{
+                      backgroundColor: isSelected ? conf.color : undefined,
+                      borderColor: isSelected ? conf.color : 'var(--card-border)'
+                    }}
+                  >
+                    <span>{conf.icon}</span>
+                    <span className="hidden sm:inline">{conf.shortLabel}</span>
+                    <span className="sm:hidden">{conf.shortLabel.slice(0, 10)}</span>
+                    <span className="text-[10px] opacity-75 font-normal">({count})</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Search & Sub-dropdowns row */}
-        <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-200 dark:border-white/10 items-center justify-between text-xs">
-          
-          {/* Search box */}
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[var(--text-muted)]" />
-            <input 
-              type="text"
-              placeholder="Buscar curso, temario, software o institución..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border text-xs font-mono focus:outline-none focus:border-cyan-500 transition-colors"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                borderColor: 'var(--card-border)',
-                color: 'var(--text-primary)'
-              }}
-            />
-          </div>
+          {/* Search & Sub-dropdowns row */}
+          <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-200 dark:border-white/10 items-center justify-between text-xs">
+            
+            {/* Search box */}
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[var(--text-muted)]" />
+              <input 
+                type="text"
+                placeholder="Buscar curso, temario, software o institución..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-8 pr-3 py-1.5 rounded-xl border text-xs font-mono focus:outline-none focus:border-cyan-500 transition-colors"
+                style={{
+                  backgroundColor: 'var(--panel-bg)',
+                  borderColor: 'var(--card-border)',
+                  color: 'var(--text-primary)'
+                }}
+              />
+            </div>
 
-          {/* Quick Filters: Cost & Status */}
-          <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-xs">
-            <select
-              value={selectedCostFilter}
-              onChange={(e) => setSelectedCostFilter(e.target.value)}
-              className="px-2.5 py-1.5 rounded-xl border text-xs cursor-pointer focus:outline-none focus:border-cyan-500"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                borderColor: 'var(--card-border)',
-                color: 'var(--text-primary)'
-              }}
-            >
-              <option value="ALL">Coste: Todos</option>
-              <option value="FREE">100% Gratuito</option>
-              <option value="FREE_AUDIT">Auditoría Libre / Financial Aid</option>
-              <option value="OFFICIAL_EXAM">Examen Oficial</option>
-            </select>
+            {/* Quick Filters: Cost & Status */}
+            <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-xs">
+              <select
+                value={selectedCostFilter}
+                onChange={(e) => setSelectedCostFilter(e.target.value)}
+                className="px-2.5 py-1.5 rounded-xl border text-xs cursor-pointer focus:outline-none focus:border-cyan-500"
+                style={{
+                  backgroundColor: 'var(--panel-bg)',
+                  borderColor: 'var(--card-border)',
+                  color: 'var(--text-primary)'
+                }}
+              >
+                <option value="ALL">Coste: Todos</option>
+                <option value="FREE">100% Gratuito</option>
+                <option value="FREE_AUDIT">Auditoría Libre / Financial Aid</option>
+                <option value="OFFICIAL_EXAM">Examen Oficial</option>
+              </select>
 
-            <select
-              value={selectedStatusFilter}
-              onChange={(e) => setSelectedStatusFilter(e.target.value)}
-              className="px-2.5 py-1.5 rounded-xl border text-xs cursor-pointer focus:outline-none focus:border-cyan-500"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                borderColor: 'var(--card-border)',
-                color: 'var(--text-primary)'
-              }}
-            >
-              <option value="ALL">Estado: Todos</option>
-              <option value="AVAILABLE">Disponible</option>
-              <option value="IN_PROGRESS">En Curso</option>
-              <option value="COMPLETED">Certificado</option>
-            </select>
+              <select
+                value={selectedStatusFilter}
+                onChange={(e) => setSelectedStatusFilter(e.target.value)}
+                className="px-2.5 py-1.5 rounded-xl border text-xs cursor-pointer focus:outline-none focus:border-cyan-500"
+                style={{
+                  backgroundColor: 'var(--panel-bg)',
+                  borderColor: 'var(--card-border)',
+                  color: 'var(--text-primary)'
+                }}
+              >
+                <option value="ALL">Estado: Todos</option>
+                <option value="AVAILABLE">Disponible</option>
+                <option value="IN_PROGRESS">En Curso</option>
+                <option value="COMPLETED">Certificado</option>
+              </select>
 
-            <span className="text-[11px] text-[var(--text-muted)] hidden md:inline ml-1">
-              <strong>{filteredCourses.length}</strong> cursos
-            </span>
+              <span className="text-[11px] text-[var(--text-muted)] hidden md:inline ml-1">
+                <strong>{filteredCourses.length}</strong> cursos
+              </span>
+            </div>
           </div>
         </div>
       </div>
