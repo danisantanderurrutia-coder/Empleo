@@ -56,6 +56,18 @@ describe('Gap-Closer Academy · Catálogo Curado & Verificación', () => {
     });
   });
 
+  it('integra cursos oficiales de EU Academy con enlaces a academy.europa.eu y data-digital-technology', () => {
+    const euCourses = ACADEMY_COURSES.filter(c => c.url.includes('academy.europa.eu') || c.provider.includes('EU Academy'));
+    expect(euCourses.length).toBeGreaterThanOrEqual(5);
+    euCourses.forEach(c => {
+      expect(c.url).toContain('https://academy.europa.eu');
+      expect(c.costType).toBe('FREE');
+    });
+
+    const digitalTechCourses = euCourses.filter(c => c.url.includes('topics/data-digital-technology'));
+    expect(digitalTechCourses.length).toBeGreaterThanOrEqual(3);
+  });
+
   it('todos los cursos tienen URLs válidas HTTPS oficiales y campos requeridos', () => {
     expect(ACADEMY_COURSES.length).toBeGreaterThanOrEqual(10);
 
