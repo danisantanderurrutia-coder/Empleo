@@ -10,6 +10,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { getStoredOffers } from '../../services/db';
+import { resolveAsset } from '../../utils/assets';
 
 export type SkillBranch = 
   | 'geophysics'   // 1. Geofísica & Sensores Remotos (GFP Emerald)
@@ -1239,20 +1240,43 @@ export const SkillTreeTab: React.FC = () => {
         
         {/* LEFT CANVAS: CONFOCAL FLUORESCENCE STAGE (8 COLS) */}
         <div 
-          className="lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors backdrop-blur-xl"
+          className="lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
           style={{ 
-            backgroundColor: 'rgba(3, 7, 18, 0.72)', 
-            borderColor: 'rgba(255, 255, 255, 0.12)' 
+            backgroundColor: '#020409', 
+            borderColor: 'rgba(255, 255, 255, 0.15)' 
           }}
         >
+          {/* Cosmic-Neural Deep Space Wallpaper (Universe meets Neurons - High-Def Art) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img
+              src={resolveAsset('backgrounds/cosmic-neural-bg.jpg')}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover object-center select-none filter contrast-125 brightness-105 opacity-80"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.endsWith('.png')) {
+                  target.src = resolveAsset('backgrounds/cosmic-neural-bg.png');
+                }
+              }}
+            />
+            {/* Cinematic dark vignette over the edges of the microscope stage */}
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle at 50% 50%, rgba(3, 7, 18, 0.25) 0%, rgba(2, 4, 9, 0.85) 90%)',
+              }}
+            />
+          </div>
+
           {/* Areas Legend Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-white/10 pb-2 mb-2 text-[9.5px] font-mono">
-            <span className="text-slate-400 font-bold uppercase tracking-wider">7 ÁREAS PROFESIONALES:</span>
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-1.5 border-b border-white/10 pb-2 mb-2 text-[9.5px] font-mono backdrop-blur-sm bg-black/40 px-2 py-1.5 rounded-lg">
+            <span className="text-slate-300 font-bold uppercase tracking-wider">7 ÁREAS PROFESIONALES:</span>
             <div className="flex flex-wrap items-center gap-2">
               {(Object.keys(branchStyles) as SkillBranch[]).map(b => (
                 <span 
                   key={b} 
-                  className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-black/40 border border-white/5 font-bold"
+                  className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-black/50 border border-white/10 font-bold"
                   style={{ color: branchStyles[b].color }}
                 >
                   <span className="h-1.5 w-1.5 rounded-full shadow-[0_0_6px_currentColor]" style={{ backgroundColor: branchStyles[b].color }} />
@@ -1267,13 +1291,20 @@ export const SkillTreeTab: React.FC = () => {
           </div>
 
           {/* SVG Biological Confocal Microscope Stage */}
-          <div className="relative w-full overflow-x-auto">
+          <div className="relative z-10 w-full overflow-x-auto">
             <svg 
               viewBox="0 0 880 540" 
               className="w-full min-w-[780px] h-auto select-none rounded-xl"
-              style={{ backgroundColor: '#020408' }}
+              style={{ backgroundColor: 'transparent' }}
             >
               <defs>
+                {/* Embedded Confocal Vignette Gradient */}
+                <radialGradient id="confocalVignette" cx="50%" cy="50%" r="65%">
+                  <stop offset="0%" stopColor="#000000" stopOpacity="0" />
+                  <stop offset="65%" stopColor="#020408" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#020408" stopOpacity="0.82" />
+                </radialGradient>
+
                 {/* Incandescent Soma Thermal Bloom (White-Hot Center -> Orange Corona -> Outer Fog) */}
                 <radialGradient id="somaThermalCore" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -1307,6 +1338,24 @@ export const SkillTreeTab: React.FC = () => {
                   <path d="M 20 0 Q 0 20 20 40 T 20 80" fill="none" stroke="#06b6d4" strokeWidth="0.3" strokeOpacity="0.06" />
                 </pattern>
               </defs>
+
+              {/* High-Definition SVG Cosmic Neural Web (locked 1:1 to coordinate viewBox) */}
+              <image 
+                href={resolveAsset('backgrounds/cosmic-neural-bg.jpg')} 
+                x="0" 
+                y="0" 
+                width="880" 
+                height="540" 
+                preserveAspectRatio="xMidYMid slice" 
+                opacity="0.6" 
+              />
+              <rect 
+                x="0" 
+                y="0" 
+                width="880" 
+                height="540" 
+                fill="url(#confocalVignette)" 
+              />
 
               {/* Background Neuropil Mesh Layer */}
               <rect x="0" y="0" width="880" height="540" fill="url(#neuropilMesh)" />
