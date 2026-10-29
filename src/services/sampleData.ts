@@ -512,7 +512,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Dominio demostrado de R para análisis estadístico y modelado de datos de campo.'
     ],
     techStack: ['R', 'RootBox', 'Isotopenanalytik', 'TVöD Bund', 'GIS', 'Python'],
-    lastResearched: '2026-10-21'
+    lastResearched: '2026-10-21',
+    quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-uba',
@@ -546,7 +548,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Perfil MINT riguroso con base analítica en geofísica y máster europeo en protección ambiental.'
     ],
     techStack: ['Scrum / Kanban', 'AI / Machine Learning', 'OpenProject', 'MS Project', 'Python', 'GIS'],
-    lastResearched: '2026-10-21'
+    lastResearched: '2026-10-21',
+    quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-bc3',
@@ -580,7 +584,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Base sólida en geofísica matemática (U. de Chile) complementada con visión de políticas europeas de sostenibilidad.'
     ],
     techStack: ['R', 'Python', 'QGIS', 'Google Earth Engine', 'k.LAB / ARIES', 'EddyPro'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-tecnalia',
@@ -614,7 +620,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Experiencia de trabajo trilingüe y adaptación inmediata a consorcios europeos.'
     ],
     techStack: ['Python', 'QGIS', 'IoT Sensor Networks', 'ArcGIS', 'R'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-neiker',
@@ -648,7 +656,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Capacidad de muestreo riguroso y análisis estadístico robusto de variables edáficas.'
     ],
     techStack: ['R', 'QGIS', 'Muestreo Edáfico', 'Sensores de Humedad TDR', 'Cámaras de Flujo'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-idom',
@@ -682,7 +692,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Bilingüe español/inglés con soltura para interactuar con clientes multilaterales.'
     ],
     techStack: ['HEC-RAS', 'Iber', 'QGIS', 'Python', 'AutoCAD Civil 3D'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
   },
   {
     id: 'comp-azti',
@@ -716,7 +728,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Compromiso demostrado con la conservación de humedales costeros y zonas de transición.'
     ],
     techStack: ['Python', 'Matlab / Octave', 'QGIS', 'Copernicus Marine Data', 'Series Temporales'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-ihobe',
@@ -750,7 +764,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Residencia e implicación directa en Bilbao/Bizkaia con interés a largo plazo en el territorio.'
     ],
     techStack: ['GIS', 'Inventarios GEI', 'Métricas ESG', 'Evaluación de Impacto'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-aclima',
@@ -784,7 +800,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Habilidad demostrada para dinamizar mesas de trabajo multiactor y sintetizar datos complejos.'
     ],
     techStack: ['Gestión de Proyectos', 'Inteligencia de Mercado', 'Análisis de Redes de Clúster'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-cic-energigune',
@@ -818,7 +836,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Experiencia en redacción y justificación de proyectos europeos.'
     ],
     techStack: ['Python', 'LCA OpenLCA / SimaPro', 'Modelación Térmica', 'Análisis de Datos'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-cristina-enea',
@@ -852,7 +872,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Habilidad pedagógica para traducir datos biofísicos complejos a narrativas transformadoras.'
     ],
     techStack: ['Divulgación Científica', 'Ciencia Ciudadana', 'Facilitación Participativa', 'QGIS'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-ecodes',
@@ -886,7 +908,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Alineamiento ético total con los principios de transición justa y equidad territorial.'
     ],
     techStack: ['Gobernanza Ambiental', 'Inventarios de Emisiones', 'Gestión de Cuencas', 'Incidencia Política'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-alboan',
@@ -920,7 +944,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Competencias en diseño permacultural, agroecología y mediación comunitaria.'
     ],
     techStack: ['Formulación de Proyectos UE/AECID', 'Enfoque de Marco Lógico', 'Salvaguardias Socioambientales'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-mundubat',
@@ -954,7 +980,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Conexión vivencial y política con las luchas socioambientales latinoamericanas.'
     ],
     techStack: ['Agroecología', 'Facilitación Comunitaria', 'Gestión de Subvenciones AVCD/Gobierno Vasco'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-elankidetza',
@@ -988,7 +1016,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Conocimiento exhaustivo del contexto latinoamericano y de la cooperación descentralizada.'
     ],
     techStack: ['Evaluación de Impacto', 'Marco Lógico', 'Directrices de Cooperación Vasca', 'Auditoría Técnica'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-epn',
@@ -1022,7 +1052,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Red de contactos activa en Alemania, Europa y América Latina.'
     ],
     techStack: ['Contabilidad de Carbono', 'Análisis Satelital GIS', 'Redacción de Informes Técnicos', 'Incidencia Política'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['DACH', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-gfc',
@@ -1056,7 +1088,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Compromiso genuino con los derechos colectivos de las comunidades guardianas de ecosistemas.'
     ],
     techStack: ['Gobernanza de la Biodiversidad', 'Políticas ONU', 'Análisis Socioambiental', 'Comunicaciones Estratégicas'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['UK_NL', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
   },
   {
     id: 'comp-cau-kiel',
@@ -1090,7 +1124,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Dominio de tratamiento de datos crudos de alta frecuencia en R y modelación espacial.'
     ],
     techStack: ['EddyPro', 'R', 'Python', 'Sensores Micrometeorológicos Licor', 'QGIS'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC'
   },
   {
     id: 'comp-iberdrola',
@@ -1124,7 +1160,9 @@ export const initialCompanies: CompanyDossier[] = [
       'Dominio de herramientas SIG para optimización del emplazamiento de activos renovables.'
     ],
     techStack: ['GIS', 'Python', 'Modelos Meteorológicos', 'ESG Reporting', 'Estudios de Impacto'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
   },
   {
     id: 'comp-siemens-gamesa',
@@ -1159,7 +1197,8 @@ export const initialCompanies: CompanyDossier[] = [
     ],
     techStack: ['Python', 'WAsP / WindPRO', 'QGIS', 'Análisis Micrometeorológico', 'LCA'],
     lastResearched: '2026-10-14',
-    quadrants: ['EUSKADI', 'DACH', 'GLOBAL']
+    quadrants: ['EUSKADI', 'DACH', 'GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
   },
   {
     id: 'comp-gfz',
@@ -1195,6 +1234,7 @@ export const initialCompanies: CompanyDossier[] = [
     techStack: ['Python', 'QGIS', 'Copernicus / Sentinel', 'GRACE', 'R', 'Linux HPC'],
     lastResearched: '2026-10-25',
     quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC',
     fundingTies: ['f-dfg-walter-benjamin', 'f-helmholtz-postdoc']
   },
   {
@@ -1231,6 +1271,7 @@ export const initialCompanies: CompanyDossier[] = [
     techStack: ['EddyPro', 'R', 'QGIS', 'Licor Eddy Covariance', 'Python'],
     lastResearched: '2026-10-25',
     quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC',
     fundingTies: ['f-dfg-walter-benjamin', 'f-daad-research']
   },
   {
@@ -1634,6 +1675,1146 @@ export const initialCompanies: CompanyDossier[] = [
     lastResearched: '2026-10-28',
     quadrants: ['CANADA_GLOBAL', 'GLOBAL'],
     sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-pachama',
+    name: "Pachama",
+    website: 'https://pachama.com/',
+    sector: "Verificación Satelital & AI para Proyectos Forestales de Carbono (MRV)",
+    size: "90+ ingenieros de teledetección, científicos forestales y de machine learning",
+    headquarters: "San Francisco (EE.UU.) / Equipo Remoto Global y Europa",
+    description: "Pionero mundial en teledetección satelital, LiDAR y visión computacional para la verificación de integridad y monitoreo continuo de proyectos de secuestro de carbono en biomasa forestal.",
+    keyProjects: [
+          "Plataforma Pachama Originals de monitoreo dinámico de biomasa mediante satélite",
+          "Modelos de estimación de adición y deforestación evitada con series temporales Landsat y Sentinel",
+          "Integración de LiDAR aerotransportado con modelos de Machine Learning para alometría forestal"
+    ],
+    recentNews: [
+      {
+        title: "Despliegue de modelos de reforestación digital y alianzas con fondos climáticos globales",
+        date: "2026-09-18",
+        snippet: "Consolidación de estándares digitales para verificación y venta de créditos con base biológica."
+      }
+    ],
+    workCulture: [
+          "Cultura 100% remota y global orientada a producto científico",
+          "Enfoque de headmaster en rigor metodológico y revisión por pares",
+          "Compensación competitiva en equity y salarios tecnológicos internacionales"
+    ],
+    redFlags: [
+          "Ritmo exigente de scale-up y alta dependencia del ciclo de volatilidad de los mercados voluntarios de carbono"
+    ],
+    interviewArguments: [
+          "Geofísico computacional con base en teledetección satelital (Google Earth Engine, Sentinel) y validación empírica.",
+          "Experiencia directa en desarrollo de aplicaciones científicas geoespaciales (Wetland Monitor).",
+          "Criterio cuantitativo estricto frente al greenwashing en métricas de adición."
+    ],
+    techStack: ["Python","Google Earth Engine","Sentinel-2","LiDAR","PyTorch","GIS"],
+    lastResearched: '2026-10-29',
+    quadrants: ['GLOBAL','CANADA_GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-space-intelligence',
+    name: "Space Intelligence",
+    website: 'https://www.space-intelligence.com/',
+    sector: "Cartografía Satelital Auditada de Carbono Forestal y Turberas",
+    size: "60+ científicos de teledetección, ecólogos espaciales y analistas GIS",
+    headquarters: "Edimburgo (Escocia, Reino Unido)",
+    description: "Empresa escocesa de inteligencia geoespacial fundada por profesores universitarios de Edimburgo. Especializada en mapas auditados de cobertura del suelo, biomasa y dinámica de turberas para desarrolladores de créditos de carbono de alta integridad.",
+    keyProjects: [
+          "Mapeo de alta resolución de turberas templadas y tropicales para proyectos de conservación",
+          "Auditoría satelital de cambios de biomasa y degradación forestal para estándares Verra y Gold Standard",
+          "Modelos de predicción de pérdida de carbono edáfico ante drenaje de humedales"
+    ],
+    recentNews: [
+      {
+        title: "Alianza estratégica con corporaciones globales para auditoría satelital de turberas en Europa y Sudeste Asiático",
+        date: "2026-10-10",
+        snippet: "Despliegue de cartografía de estratos de vegetación y humedad edáfica a 10 metros de resolución."
+      }
+    ],
+    workCulture: [
+          "ADN académico derivado de la Universidad de Edimburgo con rigurosidad científica británica",
+          "Trabajo híbrido en Edimburgo con apertura a perfiles europeos transdisciplinarios",
+          "Fuerte énfasis en publicaciones científicas y validación de incertidumbre estadística"
+    ],
+    redFlags: [
+          "Crecimiento selectivo que exige demostración exhaustiva de solvencia técnica en teledetección"
+    ],
+    interviewArguments: [
+          "Tesis en dinámica de turberas y balance de gases de efecto invernadero (CAU Kiel / Wallener Au).",
+          "Formación europea M.Sc. con dominio de teledetección satelital e hidrogeofísica.",
+          "Capacidad de interlocución técnica en inglés C1 en el ecosistema británico de Edinburgh Climate Tech."
+    ],
+    techStack: ["Python","SAR","Sentinel-1/2","R","QGIS","Earth Engine"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-soil-capital',
+    name: "Soil Capital",
+    website: 'https://www.soilcapital.com/',
+    sector: "MRV de Carbono Edáfico en Agricultura Regenerativa & Certificación Agraria",
+    size: "70+ agrónomos, edafólogos y desarrolladores de software",
+    headquarters: "Bruselas (Bélgica) / París / Londres",
+    description: "Primera plataforma europea certificada por terceros (Norma ISO 14064-3) que remunera a los agricultores por el secuestro de carbono en el suelo y la reducción de emisiones de GEI mediante prácticas agroecológicas regenerativas.",
+    keyProjects: [
+          "Programa de certificación y auditoría de carbono edáfico en más de 350.000 hectáreas europeas",
+          "Cálculo de balances de carbono en finca combinando modelos empíricos (Cool Farm Tool) y mediciones analíticas",
+          "Monitoreo de almacenamiento de materia orgánica y compactación del suelo"
+    ],
+    recentNews: [
+      {
+        title: "Expansión de programas de carbono edáfico en Francia, Bélgica y Reino Unido superando 1.000 explotaciones asociadas",
+        date: "2026-09-25",
+        snippet: "Pago de primas récord a agricultores por secuestro medido de carbono en horizontes superficiales."
+      }
+    ],
+    workCulture: [
+          "Empresa con certificación B-Corp orientada al impacto territorial tangible en el campo europeo",
+          "Equipo multicultural francófono, anglófono y europeo con sedes en Bruselas y París",
+          "Fusión de rigor agronómico con plataformas digitales ágiles"
+    ],
+    redFlags: [
+          "Sensibilidad a los cambios de la Política Agrícola Común (PAC) de la Unión Europea"
+    ],
+    interviewArguments: [
+          "Especialista en física de suelos, resistencia mecánica (tensión de preconsolidación) y dinámica de materia orgánica.",
+          "Conocimiento del marco regulatorio de suelos de la Unión Europea y directivas de descarbonización.",
+          "Perfil transdisciplinario capaz de conectar datos edáficos cuantitativos con interfaces para decisores."
+    ],
+    techStack: ["Python","Modelos Cool Farm Tool","Edafológicos","GIS","PostgreSQL"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-carboculture',
+    name: "Carboculture",
+    website: 'https://www.carboculture.com/',
+    sector: "Biochar de Alta Temperatura & Remoción de Carbono Certificada (CDR)",
+    size: "35+ ingenieros químicos, científicos de materiales y especialistas en MRV",
+    headquarters: "Helsinki (Finlandia)",
+    description: "Scale-up climática nórdica que convierte residuos de biomasa leñosa en biocarbón funcional de alta estabilidad mediante pirólisis flash a alta temperatura, logrando remoción de carbono permanente certificada en registros europeos (Puro.earth).",
+    keyProjects: [
+          "Instalación industrial R-1000 en Helsinki para producción de biochar y captura permanente de carbono",
+          "Metodología MRV de durabilidad de carbono en suelos agrícolas y sustratos urbanos (> 1.000 años de estabilidad)",
+          "Aprovechamiento del calor residual de pirólisis para inyección en redes de calefacción urbana nórdicas"
+    ],
+    recentNews: [
+      {
+        title: "Operación continua de su planta piloto industrial en Helsinki y venta anticipada de créditos CDR de alta calidad",
+        date: "2026-10-02",
+        snippet: "Validación por laboratorios independientes de la tasa de mineralización del carbono fijo."
+      }
+    ],
+    workCulture: [
+          "Ecosistema tecnológico nórdico de innovación profunda (Deep Tech) en Helsinki",
+          "Enfoque de ingeniería pragmática, cultura abierta y horizontal finlandesa con inglés como idioma oficial",
+          "Proyectos piloto respaldados por fondos de innovación de la Unión Europea (Horizon Europe / EIC)"
+    ],
+    redFlags: [
+          "Retos de escalabilidad industrial en la construcción de reactores de gran tonelaje"
+    ],
+    interviewArguments: [
+          "Conocimiento de la interacción entre enmiendas orgánicas pirogénicas, humedad y microestructura del suelo.",
+          "Máster europeo en Gestión y Protección Ambiental en el eje báltico (Kiel - Poznań).",
+          "Capacidad de evaluar la durabilidad del carbono y protocolos MRV para créditos CDR en Finlandia."
+    ],
+    techStack: ["Python","MRV Puro.earth","Análisis Termoquímico","LCA","Sensor Networks"],
+    lastResearched: '2026-10-29',
+    quadrants: ['NORDICS'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-carbonspace',
+    name: "CarbonSpace",
+    website: 'https://carbonspace.tech/',
+    sector: "Monitoreo Satelital de Huella de Carbono y Flujos de GEI a Nivel Parcela",
+    size: "25+ físicos de la atmósfera, analistas satelitales y modeladores",
+    headquarters: "Dublín (Irlanda) / Hub Remoto Europa",
+    description: "Plataforma SaaS que calcula la huella de carbono y los flujos netos de CO2 en agricultura, silvicultura y proyectos de uso del suelo combinando datos satelitales ópticos y térmicos con mediciones de estaciones Eddy Covariance a escala global.",
+    keyProjects: [
+          "Algoritmo de estimación de absorción neta de CO2 (NEE) a nivel de píxel sin necesidad de sensores locales",
+          "Monitoreo de carbono para cadenas de suministro agroalimentarias de grandes corporaciones europeas",
+          "Calibración de modelos espaciales utilizando torres de flujo ICOS y Ameriflux"
+    ],
+    recentNews: [
+      {
+        title: "Cierre de ronda de financiación semilla y expansión de clientes corporativos en la Unión Europea",
+        date: "2026-08-29",
+        snippet: "Validación cruzada de su algoritmo satelital contra 80 torres de Eddy Covariance en todo el mundo."
+      }
+    ],
+    workCulture: [
+          "Startup ágil de analítica geoespacial con equipo distribuido en Europa",
+          "Fuerte foco en modelado biofísico y procesamiento masivo de imágenes satelitales",
+          "Ritmo de desarrollo rápido y cultura orientada a resultados técnicos medibles"
+    ],
+    redFlags: [
+          "Tamaño reducido del equipo que exige versatilidad en roles técnicos y científicos"
+    ],
+    interviewArguments: [
+          "Experiencia directa en estaciones micrometeorológicas de Eddy Covariance y balance de GEI (CO2/CH4).",
+          "Manejo de programación científica para correlacionar torres de flujo terrestres con series temporales satelitales.",
+          "Comprensión rigurosa de las incertidumbres en la estimación de NEE y respiración ecosistémica."
+    ],
+    techStack: ["Python","Google Earth Engine","Eddy Covariance Calibration","Sentinel-2","MODIS"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-ctrees',
+    name: "CTrees",
+    website: 'https://ctrees.org/',
+    sector: "Plataforma Global Satelital de Contabilidad de Carbono en Bosques y Turberas",
+    size: "45+ investigadores de teledetección y modelado de biomasa",
+    headquarters: "Pasadena (California) / Remoto Internacional",
+    description: "Organización científica sin ánimo de lucro fundada por científicos de la NASA JPL, UCLA y universidades internacionales. Ofrece datos abiertos y de alta precisión sobre almacenamiento de carbono en todos los bosques y ecosistemas leñosos del planeta.",
+    keyProjects: [
+          "Herramienta Land Use Change Carbon Accounting para gobiernos y tratados internacionales",
+          "Monitoreo operacional de pérdidas de carbono por incendios forestales y degradación selectiva",
+          "Integración de misiones espaciales GEDI (LiDAR), NISAR (radar) y Sentinel para biomasa aérea"
+    ],
+    recentNews: [
+      {
+        title: "Publicación de datasets globales de carbono forestal actualizados cada 15 días en la COP",
+        date: "2026-09-14",
+        snippet: "Provisión de métricas independientes a delegaciones gubernamentales para sus inventarios nacionales NDC."
+      }
+    ],
+    workCulture: [
+          "Ambiente de investigación científica rigurosa heredado del JPL y la academia de élite",
+          "Transparencia metodológica absoluta con algoritmos abiertos y auditables",
+          "Colaboración estrecha con organismos de Naciones Unidas y ministerios de medio ambiente"
+    ],
+    redFlags: [
+          "Financiación dependiente de donaciones filantrópicas y subvenciones de investigación internacional"
+    ],
+    interviewArguments: [
+          "Base sólida en geofísica matemática y física de la teledetección (radar, óptico e infrarrojo).",
+          "Experiencia en comunicación técnica ante organismos legislativos y gubernamentales.",
+          "Compromiso demostrado con la integridad de los datos climáticos sin servidumbre comercial."
+    ],
+    techStack: ["Python","GEDI LiDAR","NISAR","Earth Engine","Machine Learning","Docker"],
+    lastResearched: '2026-10-29',
+    quadrants: ['GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-munich-re',
+    name: "Munich Re (Geo Risks Research & Climate Solutions)",
+    website: 'https://www.munichre.com/',
+    sector: "Reaseguro Global, Modelación de Riesgos Geofísicos y Soluciones Climáticas",
+    size: "40.000+ empleados globales (división Geo Risks: 120+ geofísicos, climatólogos e hidrólogos)",
+    headquarters: "Múnich (Baviera, Alemania)",
+    description: "El mayor reasegurador del mundo y la entidad pionera global en investigación de catástrofes naturales y cambio climático desde 1974. Su unidad de Geo Risks Research modela amenazas geofísicas, hidrológicas y climáticas extremas para la suscripción de carteras de billones de euros.",
+    keyProjects: [
+          "Base de datos mundial NatCatSERVICE para el análisis cuantitativo de siniestros por desastres naturales",
+          "Modelación física de sequías extremas, olas de calor y estrés hídrico en activos agrícolas e industriales",
+          "Desarrollo de seguros paramétricos de resiliencia frente a incendios forestales e inundaciones"
+    ],
+    recentNews: [
+      {
+        title: "Informe semestral de catástrofes naturales mundiales y alerta por pérdidas récord debidas a eventos convectivos severos",
+        date: "2026-07-28",
+        snippet: "La entidad destaca la necesidad de modelos probabilísticos avanzados que integren la dinámica de cambio de uso de suelo."
+      }
+    ],
+    workCulture: [
+          "Estándar de oro corporativo global con sede central histórica en Múnich",
+          "Alta concentración de doctores y científicos de la tierra trabajando codo a codo con actuarios",
+          "Paquetes salariales de primer nivel europeo, beneficios sociales completos y estabilidad a largo plazo"
+    ],
+    redFlags: [
+          "Procesos de selección muy rigurosos y estructuras jerárquicas corporativas de gran escala"
+    ],
+    interviewArguments: [
+          "Geofísico cuantitativo con formación en Alemania (CAU Kiel) y comprensión del ecosistema DACH.",
+          "Especialista en modelación física de incendios forestales, balance hídrico y series hidrológicas extremas.",
+          "Capacidad analítica bilingüe en alemán e inglés para interactuar con sus equipos técnicos en Múnich."
+    ],
+    techStack: ["Python","R","Cat Modeling (RMS/AIR)","GIS","SQL","Análisis Probabilístico"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH','GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-swiss-re',
+    name: "Swiss Re (Cat Perils & Climate Resilience)",
+    website: 'https://www.swissre.com/',
+    sector: "Modelación de Peligros Naturales (Cat Perils) y Reaseguros Paramétricos",
+    size: "14.000+ empleados globales (división Cat Perils: 150+ modeladores de riesgo)",
+    headquarters: "Zúrich (Suiza) / Hubs en Múnich, Londres y Madrid",
+    description: "Líder global en reaseguro y gestión de riesgos. Su equipo interno Cat Perils desarrolla modelos propietarios de catástrofes naturales basados en la física del clima para estimar pérdidas potenciales y diseñar coberturas paramétricas gubernamentales y corporativas.",
+    keyProjects: [
+          "Plataforma propietaria CatNet® para evaluación global de exposición a peligros naturales hiperlocales",
+          "Modelos de riesgo físico de incendios forestales en Europa meridional y cuencas mediterráneas",
+          "Estructuración de bonos de catástrofe (Cat Bonds) vinculados a índices climáticos empíricos"
+    ],
+    recentNews: [
+      {
+        title: "Lanzamiento de nuevas soluciones paramétricas de sequía y déficit hídrico para agricultura europea",
+        date: "2026-09-08",
+        snippet: "Pagos automáticos gatillados por índices satelitales de humedad de suelo sin peritaje presencial."
+      }
+    ],
+    workCulture: [
+          "Cultura suiza multilingüe, altamente técnica, analítica y orientada a la excelencia cuantitativa",
+          "Ambiente de trabajo flexible con políticas híbridas consolidadas (Own The Way You Work)",
+          "Excelente compensación en francos suizos / euros y movilidad interna internacional"
+    ],
+    redFlags: [
+          "Alto nivel de exigencia cuantitativa y requisitos matemáticos y estadísticos estrictos"
+    ],
+    interviewArguments: [
+          "Formación geofísica con física de medios continuos y estadística espacial.",
+          "Conocimiento directo de dinámicas de degradación de cuencas e incendios forestales.",
+          "Alineación perfecta con su modelo de reaseguros paramétricos basados en satélites y sensores de superficie."
+    ],
+    techStack: ["Python","CatNet","Modelos Climáticos Propietarios","R","GIS","Cloud Computing"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH','GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-moodys-rms',
+    name: "Moody's RMS (Risk Management Solutions)",
+    website: 'https://www.rms.com/',
+    sector: "Software y Modelos Cuantitativos de Catástrofes Naturales (Cat Modeling)",
+    size: "1.200+ ingenieros de software, físicos y meteorólogos",
+    headquarters: "Londres (Reino Unido) / Oficinas en Zúrich y EE.UU.",
+    description: "El proveedor de modelos de riesgo de catástrofe más utilizado del planeta. Sus modelos hidrológicos, sísmicos, de tormentas e incendios forestales son el estándar que emplean reaseguradores, bancos y agencias gubernamentales para calcular capital de solvencia (Solvencia II).",
+    keyProjects: [
+          "Modelo RMS Europe Wildfire HD para simulación probabilística de propagación del fuego e ignición",
+          "Plataforma Moody's Intelligent Risk Platform para cálculo de pérdidas máximas probables (PML)",
+          "Módulos de riesgo climático físico bajo escenarios del IPCC (SSP1-2.6 a SSP5-8.5)"
+    ],
+    recentNews: [
+      {
+        title: "Actualización del modelo de riesgo de inundación fluvial y pluvial en Europa con datos climáticos de alta resolución",
+        date: "2026-10-12",
+        snippet: "Simulación de escenarios de precipitación extrema y capacidad de infiltración edáfica en cuencas urbanizadas."
+      }
+    ],
+    workCulture: [
+          "Ambiente tecnológico corporativo centrado en la modelación matemática y la ingeniería de software",
+          "Grandes oficinas en el centro financiero de Londres con centros técnicos en Zúrich",
+          "Oportunidades constantes de capacitación en metodologías avanzadas de Cat Modeling"
+    ],
+    redFlags: [
+          "Enfoque muy corporativo y dependiente de los ciclos de entrega de software de gran escala"
+    ],
+    interviewArguments: [
+          "Geofísico con sólidos fundamentos de física matemática, propagación de ondas y balance hídrico.",
+          "Experiencia en investigación de incendios forestales en Chile y dinámicas edáficas en Alemania.",
+          "Perfil ideal para trabajar como Cat Model Developer o Exposure Risk Analyst en el polo de Londres."
+    ],
+    techStack: ["Python","C++","SQL Server","ArcGIS Pro","HPC Clusters","RMS RiskLink"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','DACH','GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-guy-carpenter',
+    name: "Guy Carpenter (División Analítica de Marsh McLennan)",
+    website: 'https://www.guycarp.com/',
+    sector: "Intermediación de Reaseguro y Análisis Cuantitativo de Catástrofes Naturales",
+    size: "3.500+ actuarios, modeladores geofísicos y especialistas de riesgo",
+    headquarters: "Londres (Reino Unido) / Presencia en Madrid y Bilbao",
+    description: "Líder mundial en intermediación de reaseguro y consultoría de riesgos catastróficos. Su equipo GC Analytics asesora a aseguradoras de toda Europa en la optimización de carteras frente a eventos extremos climáticos mediante modelos catastróficos avanzados.",
+    keyProjects: [
+          "Modelación probabilística y pruebas de estrés ante incendios e inundaciones en la Península Ibérica y Europa central",
+          "Herramientas analíticas GC AdvantagePoint para geolocalización de activos y acumulación de riesgos",
+          "Diseño de estructuras de transferencia de riesgo para consorcios públicos y aseguradoras privadas"
+    ],
+    recentNews: [
+      {
+        title: "Publicación de análisis estratégico sobre el impacto del cambio climático en las renovaciones de reaseguro europeas",
+        date: "2026-09-20",
+        snippet: "Crecimiento de la demanda de científicos de la tierra para parametrizar riesgos climáticos secundarios."
+      }
+    ],
+    workCulture: [
+          "Cultura financiera de alto rendimiento en el corazón de la City de Londres y redes en Madrid",
+          "Trabajo multidisciplinar entre científicos de datos, geocientíficos e intermediarios de reaseguro",
+          "Acceso al ecosistema global del grupo Marsh McLennan con recursos formativos punteros"
+    ],
+    redFlags: [
+          "Picos intensos de trabajo en las épocas de renovación de contratos de reaseguro (otoño/invierno)"
+    ],
+    interviewArguments: [
+          "Formación cuantitativa sólida en geofísica con capacidad de traducción analítica de riesgos naturales.",
+          "Conexión entre el mercado asegurador español (vía de nacionalidad 2 años) y el mercado británico (Londres).",
+          "Dominio bilingüe inglés-español con soltura en Python y análisis estadístico."
+    ],
+    techStack: ["Python","R","RMS","AIR Touchstone","GIS","Excel/VBA Avanzado"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','EUSKADI','GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-kettle',
+    name: "Kettle",
+    website: 'https://ourkettle.com/',
+    sector: "Reaseguro Paramétrico de Incendios Forestales basado en Física y Machine Learning",
+    size: "40+ modeladores de fuego, geocientíficos computacionales y analistas",
+    headquarters: "San Francisco (EE.UU.) / Remoto Global",
+    description: "Agencia de suscripción de reaseguro insurtech que reinventa la modelación del riesgo de incendios forestales. Utiliza redes neuronales de aprendizaje profundo combinadas con física de transferencia de calor y datos satelitales hiperlocales para predecir siniestros con precisión inédita.",
+    keyProjects: [
+          "Modelo predictivo de propagación de incendios entrenado con más de 14 años de datos satelitales",
+          "Pólizas paramétricas de reaseguro para compañías de servicios públicos y propietarios forestales",
+          "Evaluación de humedad de combustible y riesgo de ignición con series de tiempo climáticas"
+    ],
+    recentNews: [
+      {
+        title: "Ampliación de su capacidad de suscripción de reaseguro respaldada por sindicatos de Lloyd's de Londres",
+        date: "2026-08-15",
+        snippet: "Validación empírica de su ratio de precisión en la predicción de pérdidas por incendios catastróficos."
+      }
+    ],
+    workCulture: [
+          "Insurtech de Silicon Valley con cultura remota, ágil y centrada en la ciencia de datos aplicada",
+          "Mentalidad de disrupción frente a los modelos actuariales tradicionales obsoletos",
+          "Compensación atractiva con stock options y proyectos de alto impacto tecnológico"
+    ],
+    redFlags: [
+          "Exposición a temporadas de incendios de gravedad extrema que ponen a prueba los modelos"
+    ],
+    interviewArguments: [
+          "Investigador en modelación física de incendios forestales en cuencas de Chile y dinámica de combustible vegetal.",
+          "Programación científica en Python con experiencia en datos geoespaciales y teledetección.",
+          "Perfil idóneo para calibrar modelos de propagación de fuego en ecosistemas de interfaz urbano-forestal."
+    ],
+    techStack: ["Python","PyTorch","Simuladores de Fuego (FARSITE/Behave)","AWS","Earth Observation"],
+    lastResearched: '2026-10-29',
+    quadrants: ['GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-fathom',
+    name: "Fathom Global",
+    website: 'https://www.fathom.global/',
+    sector: "Modelación Hidrológica de Inundaciones y Mapas Satelitales de Riesgo Físico",
+    size: "80+ hidrólogos, geógrafos cuantitativos y científicos de datos",
+    headquarters: "Bristol (Reino Unido)",
+    description: "Spinoff de investigación de la Universidad de Bristol especializada en la modelación hidrodinámica global de inundaciones fluviales, pluviales y costeras a nivel submétrico para el sector asegurador, financiero y humanitario.",
+    keyProjects: [
+          "Fathom Global Flood Map: Mapa hidrográfico mundial de inundaciones bajo escenarios de cambio climático",
+          "Modelación de eventos de precipitaciones torrenciales y capacidad de drenaje en cuencas hidrográficas",
+          "Integración con el Banco Mundial y reaseguradores para cálculo de exposición ante desastres"
+    ],
+    recentNews: [
+      {
+        title: "Integración de sus modelos de inundación en las principales plataformas de software asegurador internacional",
+        date: "2026-09-30",
+        snippet: "Publicación de nuevos mapas que cubren el 100% de la masa terrestre con datos climáticos actualizados."
+      }
+    ],
+    workCulture: [
+          "Origen universitario con vocación de excelencia científica en Bristol (hub ambiental de UK)",
+          "Equipos de desarrollo hidrológico rigurosos con publicaciones constantes en Nature Climate Change",
+          "Ambiente de trabajo colaborativo, flexible y orientado a la precisión cuantitativa"
+    ],
+    redFlags: [
+          "Competencia creciente en modelos de inundación satelital abierta"
+    ],
+    interviewArguments: [
+          "Geofísico con dominio de hidrología de cuencas, escorrentía superficial y balance hídrico.",
+          "Experiencia en modelación hidrogeofísica y desarrollo de herramientas web interactivas.",
+          "Excelente nivel de inglés técnico para incorporarse al polo de hidrología cuantitativa de Bristol."
+    ],
+    techStack: ["Python","Modelos Hidrodinámicos 2D","GIS","C++","HPC","Datos Satelitales"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-luke',
+    name: "LUKE - Natural Resources Institute Finland (Luonnonvarakeskus)",
+    website: 'https://www.luke.fi/en',
+    sector: "Investigación Federal en Bosques Boreales, Turberas y Balances de Carbono",
+    size: "1.300+ investigadores y personal técnico",
+    headquarters: "Helsinki / Joensuu / Oulu (Finlandia)",
+    description: "Organismo público de investigación federal de Finlandia bajo el Ministerio de Agricultura y Silvicultura. Líder mundial indiscutido en investigación de turberas boreales drenadas y rehumedecidas, balances de carbono forestal y edáfico, y contabilidad nacional de GEI para la CMNUCC.",
+    keyProjects: [
+          "Red nacional finlandesa de monitoreo de emisiones de CO2 y CH4 en turberas y suelos forestales",
+          "Ensayos de campo sobre silvicultura de cobertura continua en suelos turbosos para mitigar emisiones",
+          "Desarrollo de modelos biogeoquímicos de transporte de carbono en cuencas boreales"
+    ],
+    recentNews: [
+      {
+        title: "Lanzamiento del programa de investigación nacional sobre rehumedecimiento de turberas de extracción y silvícolas",
+        date: "2026-10-14",
+        snippet: "Evaluación del impacto del restablecimiento de la tabla de agua en la reducción neta de GEI y biodiversidad."
+      }
+    ],
+    workCulture: [
+          "Institución pública finlandesa con condiciones laborales excelentes y alta conciliación",
+          "Convenio colectivo del sector público finlandés con financiación de investigación sólida y estable",
+          "Instalaciones de campo e instrumentación analítica de vanguardia mundial en Joensuu y Oulu"
+    ],
+    redFlags: [
+          "El finlandés es útil para trámites administrativos internos, aunque el inglés es el idioma de investigación"
+    ],
+    interviewArguments: [
+          "Tesis de maestría centrada específicamente en la restauración y rehumedecimiento de turberas y flujos de GEI.",
+          "Experiencia directa con instrumentación micrometeorológica, cámaras de gases y parámetros mecánicos del suelo.",
+          "Doble M.Sc. en CAU Kiel y AMU Poznań con experiencia en el contexto ecológico del norte de Europa."
+    ],
+    techStack: ["R","Eddy Covariance","Cámaras Cerradas","Modelos Biogeoquímicos","GIS","Python"],
+    lastResearched: '2026-10-29',
+    quadrants: ['NORDICS'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-vtt',
+    name: "VTT Technical Research Centre of Finland",
+    website: 'https://www.vttresearch.com/en',
+    sector: "Investigación Tecnológica Aplicada, Sensórica y Transición Ecológica",
+    size: "2.100+ científicos e ingenieros",
+    headquarters: "Espoo (Finlandia) / Nodos en Oulu y Tampere",
+    description: "La mayor organización de investigación y tecnología aplicada del norte de Europa, propiedad del Estado finlandés. Desarrolla soluciones tecnológicas avanzadas en sensores ambientales, bioeconomía circular, gemelos digitales y teledetección para la descarbonización industrial.",
+    keyProjects: [
+          "Desarrollo de sensores miniaturizados para monitoreo de humedad de suelo y emisiones gaseosas en campo",
+          "Gemelos digitales de cuencas hidrográficas y uso del suelo para simulación de escenarios climáticos",
+          "Materiales avanzados y biorrefinerías a partir de biomasa sostenible"
+    ],
+    recentNews: [
+      {
+        title: "Despliegue del programa de investigación en gemelos digitales y sistemas ciberfísicos para el clima nórdico",
+        date: "2026-09-19",
+        snippet: "Integración de computación cuántica y sensórica satelital para predicción de resiliencia ecológica."
+      }
+    ],
+    workCulture: [
+          "Uno de los centros de I+D más prestigiosos de Europa con mentalidad orientada a la transferencia tecnológica",
+          "Inglés como idioma corporativo diario en su campus central de Otaniemi (Espoo)",
+          "Cultura nórdica basada en la confianza, autonomía profesional y balance de vida personal"
+    ],
+    redFlags: [
+          "Orientación más tecnológica/ingenieril que puramente de ciencia básica de campo"
+    ],
+    interviewArguments: [
+          "Creador de soluciones de software científico y gemelos digitales (AgriTwin, Wetland Monitor).",
+          "Geofísico con sólida base matemática, desarrollo en Python y manejo de sensores de campo.",
+          "Encaje directo en sus consorcios europeos Horizon Europe en gestión ambiental y sensórica."
+    ],
+    techStack: ["Python","Digital Twins","IoT / Sensórica","Machine Learning","GIS","C++"],
+    lastResearched: '2026-10-29',
+    quadrants: ['NORDICS'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-ufz',
+    name: "Helmholtz-Zentrum für Umweltforschung (UFZ)",
+    website: 'https://www.ufz.de/',
+    sector: "Investigación Ambiental de la Asociación Helmholtz: Sequías, Suelos y Cuencas",
+    size: "1.100+ científicos",
+    headquarters: "Leipzig (Sajonia, Alemania) / Sedes en Halle y Magdeburg",
+    description: "Centro de investigación ambiental de la Asociación Helmholtz dedicado a la sostenibilidad de los recursos naturales. Creadores y operadores del Dürremonitor Deutschland (Monitor de Sequía de Alemania) y referentes mundiales en modelación hidrológica de mesoescala (mHM) y física de suelos.",
+    keyProjects: [
+          "Dürremonitor Deutschland: Simulación diaria del estado de humedad del suelo en toda Alemania a 4 km de resolución",
+          "Observatorio de cuencas hidrológicas y ecosistemas terrestres TERENO (Harz / Central German Lowland)",
+          "Investigación sobre la física de transporte de agua en la zona vadosa y recarga de acuíferos"
+    ],
+    recentNews: [
+      {
+        title: "Actualización del modelo mHM integrando datos de satélites gravimétricos y penetrómetros de campo",
+        date: "2026-08-11",
+        snippet: "Alerta sobre el déficit persistente de humedad en horizontes edáficos profundos en el este de Alemania."
+      }
+    ],
+    workCulture: [
+          "Investigación de élite de la Asociación Helmholtz (condiciones TVöD Bund E13 / E14)",
+          "Excelente infraestructura de computación científica (HPC) y observatorios de campo permanentes",
+          "Sede principal en Leipzig, una de las ciudades con mayor calidad de vida y vitalidad cultural de Alemania"
+    ],
+    redFlags: [
+          "Contratos postdoctorales mayoritariamente sujetos a proyectos con plazos temporales delimitados"
+    ],
+    interviewArguments: [
+          "Geofísico con sólida formación en física de suelos, tensión de preconsolidación e hidrogeología.",
+          "Experiencia académica previa en el sistema universitario alemán (CAU Kiel) con dominio de R y Python.",
+          "Alineación exacta con sus líneas de monitoreo de sequías y física de horizontes de suelo."
+    ],
+    techStack: ["mHM","Python","R","Fortran","GIS","Simulación Numérica de Suelos"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-juelich',
+    name: "Forschungszentrum Jülich (IBG-3 Agrosphere)",
+    website: 'https://www.fz-juelich.de/en/ibg/ibg-3',
+    sector: "Hidrogeofísica, Modelación de Sistemas Suelo-Vegetación y Red TERENO",
+    size: "800+ científicos (IBG-3: 110+ investigadores)",
+    headquarters: "Jülich (Renania del Norte-Westfalia, Alemania)",
+    description: "Uno de los mayores centros de investigación interdisciplinar de Europa. Su instituto IBG-3 (Agrosphere) es el referente europeo absoluto en hidrogeofísica aplicada (georradar, tomografía eléctrica, inducción electromagnética) y modelación de procesos en el continuum suelo-planta-atmósfera.",
+    keyProjects: [
+          "Observatorio del Terreno Terrestre (TERENO) Eifel/Lower Rhine Valley para flujos de agua y carbono",
+          "Modelado integrado ParFlow-CLM para simulación acoplada de agua subterránea, suelo y atmósfera",
+          "Uso de geofísica de superficie para cartografiar la heterogeneidad de la conductividad hidráulica del suelo"
+    ],
+    recentNews: [
+      {
+        title: "Publicación de avances en caracterización geofísica 3D de raíces y humedad edáfica mediante resonancia magnética y georradar",
+        date: "2026-09-05",
+        snippet: "Nuevos métodos no invasivos para monitorizar la absorción hídrica de cultivos bajo estrés."
+      }
+    ],
+    workCulture: [
+          "Instalaciones científicas monumentales en un campus de investigación cerrado de nivel mundial en Jülich",
+          "Condiciones laborales reguladas por el convenio federal TVöD Bund con acceso a supercomputadores",
+          "Cultura científica altamente internacional y colaborativa con universidades de Bonn y Colonia"
+    ],
+    redFlags: [
+          "Ubicación en un campus aislado en Jülich que suele requerir vivir en Aquisgrán, Colonia o Düren"
+    ],
+    interviewArguments: [
+          "Título de Geofísico de la Universidad de Chile con formación matemática y física de métodos electromagnéticos.",
+          "Máster europeo en Gestión Ambiental con trabajo en suelos, tensión edáfica y aplicaciones biofísicas.",
+          "Capacidad demostrada para integrar instrumentación de campo con modelado numérico avanzado."
+    ],
+    techStack: ["ParFlow","Hydrogeophysics","GPR","ERT","Python","R","Supercomputación JURECA"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-nilu',
+    name: "NILU - Norwegian Institute for Air Research",
+    website: 'https://nilu.com/',
+    sector: "Monitoreo de Gases Atmosféricos, Balance de GEI y Quimiometría",
+    size: "175+ científicos e ingenieros ambientales",
+    headquarters: "Kjeller (Oslo, Noruega) / Observatorio en Tromsø y Svalbard",
+    description: "Fundación de investigación independiente noruega especializada en química de la atmósfera, transporte de contaminantes y monitoreo de gases de efecto invernadero. Opera los observatorios de referencia de Zeppelin en Svalbard y Birkenes en el sur de Noruega.",
+    keyProjects: [
+          "Monitoreo continuo de concentraciones de fondo de CO2, metano y halocarbonos en el Ártico y Europa",
+          "Modelos de dispersión atmosférica y transporte inverso (FLEXPART) para localizar fuentes de emisión de GEI",
+          "Estudios de deposición de microplásticos y contaminantes orgánicos persistentes en suelos y turberas nórdicas"
+    ],
+    recentNews: [
+      {
+        title: "Publicación del informe anual de gases de efecto invernadero para la Agencia Noruega de Medio Ambiente",
+        date: "2026-06-25",
+        snippet: "Aceleración del incremento de metano en el Ártico y correlación con el deshielo del permafrost y turberas."
+      }
+    ],
+    workCulture: [
+          "Ambiente de investigación noruego con excelentes estándares de conciliación y respeto al tiempo personal",
+          "Financiación pública estable y participación en proyectos espaciales de la ESA y Copernicus",
+          "Sede moderna a las afueras de Oslo con laboratorios analíticos certificados"
+    ],
+    redFlags: [
+          "Costo de vida elevado en la región metropolitana de Oslo"
+    ],
+    interviewArguments: [
+          "Formación geofísica con física de la atmósfera y experiencia práctica en balances de CO2 y CH4.",
+          "Manejo de modelos de transporte de masas y series temporales continuas de datos micrometeorológicos.",
+          "Perfil idóneo para operar con el modelo FLEXPART y colaborar en la red europea de monitoreo de GEI."
+    ],
+    techStack: ["Python","FLEXPART","Eddy Covariance Data","R","Espectrometría Picarro","NetCDF"],
+    lastResearched: '2026-10-29',
+    quadrants: ['NORDICS'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-creaf',
+    name: "CREAF - Centro de Investigación Ecológica y Aplicaciones Forestales",
+    website: 'https://www.creaf.cat/es',
+    sector: "Dinámica de Incendios Forestales, Teledetección y Carbono Edáfico",
+    size: "200+ investigadores y técnicos",
+    headquarters: "Cerdanyola del Vallès (Barcelona, España)",
+    description: "Consorcio público de investigación de excelencia acreditado con el sello Severo Ochoa. Referente del sur de Europa en dinámica de incendios forestales, balance hídrico de cuencas mediterráneas, teledetección satelital ecológica y secuestro de carbono en suelos y bosques.",
+    keyProjects: [
+          "Laboratorio de Incendios Forestales y Modelado de Comportamiento del Fuego en paisajes mediterráneos",
+          "Plataforma de monitoreo de sequías y estrés hídrico de la vegetación con imágenes Sentinel y drones",
+          "Inventarios de carbono orgánico en suelos forestales y agrícolas de la Península Ibérica"
+    ],
+    recentNews: [
+      {
+        title: "Liderazgo de consorcios europeos en gestión adaptativa del territorio para prevenir megaincendios forestales",
+        date: "2026-09-22",
+        snippet: "Propuesta de directrices silvícolas basadas en la física de la biomasa para reducir la continuidad de combustible."
+      }
+    ],
+    workCulture: [
+          "Centro de excelencia científica de vanguardia en el campus de la UAB (Barcelona)",
+          "Ambiente interdisciplinar de ecólogos, físicos, ingenieros de montes y geógrafos de todo el mundo",
+          "Condiciones salariales del sistema científico español con acceso a proyectos europeos Horizon"
+    ],
+    redFlags: [
+          "Retos habituales de estabilización laboral a largo plazo en la investigación española"
+    ],
+    interviewArguments: [
+          "Investigador con tesis geofísica en dinámica de incendios forestales y afección a cuencas hidrográficas.",
+          "Nacionalidad chilena con acceso directo a la nacionalidad española por residencia de 2 años.",
+          "Doble máster europeo en gestión ambiental con dominio de teledetección satelital y GIS."
+    ],
+    techStack: ["R","Python","Sentinel-2","Google Earth Engine","Modelos de Fuego","GIS"],
+    lastResearched: '2026-10-29',
+    quadrants: ['EUSKADI','GLOBAL'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-smhi',
+    name: "SMHI (Swedish Meteorological and Hydrological Institute)",
+    website: 'https://www.smhi.se/en',
+    sector: "Hidrología de Cuencas, Climatología Nórdica y Modelado de Ecosistemas",
+    size: "650+ meteorólogos, hidrólogos y climatólogos",
+    headquarters: "Norrköping (Suecia)",
+    description: "Agencia gubernamental sueca de meteorología e hidrología bajo el Ministerio de Clima y Empresa. Creadores del célebre modelo hidrológico HYPE (utilizado en toda Europa para pronóstico de caudales) y centro de investigación pionero en modelado regional del clima (Rossby Centre).",
+    keyProjects: [
+          "E-HYPE: Modelo hidrológico pan-europeo para predicción de crecidas, sequías y transporte de nutrientes",
+          "Rossby Centre Regional Climate Models: Simulaciones de alta resolución de eventos climáticos nórdicos",
+          "Evaluación del impacto del cambio climático en el almacenamiento de agua en turberas y lagos escandinavos"
+    ],
+    recentNews: [
+      {
+        title: "Despliegue operacional del sistema Copernicus Climate Change Service para hidrología europea",
+        date: "2026-10-05",
+        snippet: "Provisión de alertas tempranas de sequía y caudales fluviales a organismos de cuenca de toda Europa."
+      }
+    ],
+    workCulture: [
+          "Institución pública sueca ejemplar con horario laboral de 38,5 horas y fuerte cultura de conciliación",
+          "Sede moderna en la ciudad fluvial de Norrköping con fácil acceso en tren a Estocolmo",
+          "Inglés como idioma de trabajo habitual en las divisiones de I+D hidrológico y climatológico"
+    ],
+    redFlags: [
+          "Inviernos con poca luz solar característicos del sur de Escandinavia"
+    ],
+    interviewArguments: [
+          "Formación geofísica con sólida base en ecuaciones de conservación de masa, balance hidrológico y cuencas.",
+          "Experiencia en programación científica y manejo de grandes volúmenes de datos espaciales y climáticos.",
+          "Alineación con el modelado hidrológico HYPE y las directivas de cuenca europeas."
+    ],
+    techStack: ["HYPE Model","Python","Fortran","NetCDF","GIS","Linux HPC"],
+    lastResearched: '2026-10-29',
+    quadrants: ['NORDICS'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-unccd',
+    name: "UNCCD - Convención de la ONU para la Lucha contra la Desertificación",
+    website: 'https://www.unccd.int/',
+    sector: "Órgano Multilateral de la ONU para la Neutralidad de la Degradación de Tierras y Sequías",
+    size: "120+ oficiales de políticas, científicos y analistas de tierras",
+    headquarters: "Bonn (Campus de la ONU, Alemania)",
+    description: "Uno de los tres tratados de la Cumbre de la Tierra de Río (junto con la CMNUCC y el CDB). Su secretaría mundial en el Campus de la ONU en Bonn lidera la iniciativa global de Neutralidad en la Degradación de las Tierras (LDN), resiliencia a la sequía y salud edáfica en 197 países.",
+    keyProjects: [
+          "Marco Global de Políticas de Neutralidad de Degradación de Tierras (Land Degradation Neutrality - LDN)",
+          "Iniciativa Global de Resiliencia ante la Sequía y Observatorio Mundial de Suelos",
+          "Mapeo de sinergias entre restauración de turberas, cuencas hídricas y mitigación climática en países en desarrollo"
+    ],
+    recentNews: [
+      {
+        title: "Preparación de la COP16 de la UNCCD con foco en la movilización de financiación para restauración de cuencas degradadas",
+        date: "2026-09-28",
+        snippet: "Llamamiento a expertos científicos para traducir datos biofísicos de suelos a marcos normativos vinculantes."
+      }
+    ],
+    workCulture: [
+          "Ecosistema diplomático y técnico de Naciones Unidas en el Campus de la ONU en Bonn (Alemania)",
+          "Ambiente multicultural con diplomáticos, científicos y negociadores de los cinco continentes",
+          "Condiciones laborales del baremo de Naciones Unidas (salarios exentos de impuestos P2/P3/P4)"
+    ],
+    redFlags: [
+          "Procesos de selección diplomática competitivos regulados por cuotas geográficas internacionales"
+    ],
+    interviewArguments: [
+          "Experiencia real testificando como experto científico ante el Senado y la Cámara de Diputados de Chile en leyes de aguas e incendios.",
+          "Especialista en ciencias del suelo, hidrogeofísica y degradación de cuencas formado en Chile y Alemania (CAU Kiel).",
+          "Dominio bilingüe inglés-español y capacidad de residencia inmediata en Alemania con visa de post-estudio."
+    ],
+    techStack: ["Políticas Públicas ONU","GIS","Indicadores LDN","Análisis de Datos Ambientales","Redacción Diplomática"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH','GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-unep-wcmc',
+    name: "UNEP-WCMC (World Conservation Monitoring Centre)",
+    website: 'https://www.unep-wcmc.org/',
+    sector: "Evaluación Global de Biodiversidad, Ecosistemas y Políticas de Carbono Natural",
+    size: "180+ especialistas en gobernanza, SIG y políticas ambientales",
+    headquarters: "Cambridge (Reino Unido)",
+    description: "Centro de colaboración estratégica entre el Programa de las Naciones Unidas para el Medio Ambiente (PNUMA) y WCMC. Ofrece asesoramiento científico y de políticas ambientales de vanguardia para la toma de decisiones sobre biodiversidad, carbono en humedales y capital natural.",
+    keyProjects: [
+          "Mapeo mundial de reservas irreemplazables de carbono en turberas y ecosistemas de alta integridad",
+          "Desarrollo de herramientas de soporte a la decisión para salvaguardias en planes nacionales de transición",
+          "Asesoramiento a delegaciones gubernamentales para la implementación del Marco Global de Biodiversidad"
+    ],
+    recentNews: [
+      {
+        title: "Publicación del mapa mundial de densidades de carbono en humedales para orientar la financiación climática global",
+        date: "2026-10-08",
+        snippet: "Identificación de áreas prioritarias donde la degradación provocaría emisiones de carbono masivas e irreversibles."
+      }
+    ],
+    workCulture: [
+          "Sinergia única entre el ecosistema académico de la Universidad de Cambridge y el mandato de la ONU",
+          "Ambiente intelectualmente estimulante con investigadores y analistas de políticas de primer nivel",
+          "Trabajo híbrido con sede en la ciudad universitaria de Cambridge"
+    ],
+    redFlags: [
+          "Requisitos burocráticos de visado en Reino Unido para perfiles extracomunitarios (salvo sponsorship)"
+    ],
+    interviewArguments: [
+          "Geofísico con investigación empírica en flujos de carbono en turberas y humedales de Europa y Chile.",
+          "Autor de informes técnicos y publicaciones sobre cuencas hídricas y conservación ecosistémica.",
+          "Inglés C1 fluido y capacidad demostrada para sintetizar datos científicos complejos en recomendaciones de política pública."
+    ],
+    techStack: ["GIS Espacial","Python","Indicadores de Biodiversidad","R","Policy Briefs ONU"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-wri-europe',
+    name: "WRI Europe (World Resources Institute)",
+    website: 'https://www.wri.org/wri-europe',
+    sector: "Think Tank Global de Políticas de Agua, Clima, Suelos y Bosques",
+    size: "1.400+ investigadores globales (sede europea: 120+ analistas)",
+    headquarters: "La Haya (Países Bajos) / Oficina en Londres",
+    description: "Think tank global de investigación de referencia en sostenibilidad. Su oficina europea en La Haya traduce datos biofísicos rigurosos en acciones de política pública para instituciones de la Unión Europea, gobiernos nacionales y corporaciones multinacionales.",
+    keyProjects: [
+          "Plataforma Aqueduct Water Risk Atlas para evaluación global de estrés hídrico y sequías",
+          "Global Forest Watch y Land & Carbon Lab para monitoreo transparente de cadenas de suministro",
+          "Iniciativa de Transición Justa y descarbonización del uso de la tierra en la Unión Europea"
+    ],
+    recentNews: [
+      {
+        title: "Presentación de recomendaciones técnicas para la Directiva de Monitoreo del Suelo de la Unión Europea",
+        date: "2026-09-17",
+        snippet: "Propuesta de indicadores de salud edáfica armonizados para todos los Estados miembros de la UE."
+      }
+    ],
+    workCulture: [
+          "Organización no gubernamental global de gran prestigio y rigor metodológico \"Science-to-Action\"",
+          "Ambiente cosmopolita en La Haya (ciudad de la paz y la justicia internacional)",
+          "Equipos multiculturales con inglés como idioma principal de trabajo y políticas de teletrabajo flexibles"
+    ],
+    redFlags: [
+          "Alta exigencia en comunicación escrita ejecutiva y síntesis para líderes políticos"
+    ],
+    interviewArguments: [
+          "Trayectoria demostrada en la interfaz ciencia-política (comparecencia ante comisiones del Congreso Nacional de Chile).",
+          "Formación europea en Ciencias del Suelo y Manejo Ambiental en CAU Kiel (Alemania).",
+          "Dominio de herramientas de análisis geoespacial y visión integral de los ciclos del agua y del carbono."
+    ],
+    techStack: ["Python","GIS","Policy Analysis","Earth Engine","Visualización de Datos"],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL','GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-e3g',
+    name: "E3G (Third Generation Environmentalism)",
+    website: 'https://www.e3g.org/',
+    sector: "Think Tank de Geopolítica Climática, Transición Justa y Diplomacia",
+    size: "110+ estrategas de política pública, economistas y científicos",
+    headquarters: "Berlín (Alemania) / Oficinas en Bruselas y Londres",
+    description: "Think tank europeo independiente líder en diplomacia climática y geopolítica de la transición ecológica. Asesora a cancillerías europeas, ministerios de economía y organismos multilaterales sobre cómo acelerar la descarbonización con salvaguardias sociales.",
+    keyProjects: [
+          "Observatorio de Diplomacia Climática del G7 y G20 para financiamiento de pérdidas y daños",
+          "Estrategias de transición justa en cuencas carboníferas e industriales de Europa central y oriental",
+          "Arquitectura de reforma de los bancos multilaterales de desarrollo (Banco Mundial, BEI) para clima"
+    ],
+    recentNews: [
+      {
+        title: "Informe sobre la reconfiguración de la diplomacia climática europea ante las tensiones comerciales globales",
+        date: "2026-10-01",
+        snippet: "Propuesta de mecanismos de ajuste fronterizo de carbono y cooperación tecnológica con América Latina."
+      }
+    ],
+    workCulture: [
+          "Think tank de alto impacto político con acceso directo a ministerios en Berlín, Bruselas y Londres",
+          "Cultura analítica, rápida y orientada a la influencia estratégica en políticas públicas en tiempo real",
+          "Oficinas en el centro de Berlín (Friedrichstraße) con excelentes conexiones europeas"
+    ],
+    redFlags: [
+          "Ritmo intenso condicionado por la agenda política y los calendarios legislativos comunitarios"
+    ],
+    interviewArguments: [
+          "Conocimiento del marco político e institucional tanto europeo (Kiel/Poznań) como latinoamericano (Chile/cuencas).",
+          "Experiencia en asesoramiento técnico parlamentario y comunicación pública estratégica.",
+          "Capacidad de interlocución técnica en alemán, inglés y español."
+    ],
+    techStack: ["Policy Briefs","Análisis Geopolítico","Economía Climática","Modelado de Escenarios"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH','UK_NL','GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-iddri',
+    name: "IDDRI - Institut du Développement Durable et des Relations Internationales",
+    website: 'https://www.iddri.org/',
+    sector: "Instituto de Investigación y Diálogo de Políticas Internacionales sobre Clima y Biodiversidad",
+    size: "60+ investigadores de políticas públicas y gobernanza",
+    headquarters: "París (Francia) / Enlaces con Bruselas",
+    description: "Instituto independiente de investigación de políticas públicas con sede en Sciences Po París. Clave en la gestación del Acuerdo de París, analiza los mecanismos multilaterales de descarbonización, gobernanza de los océanos y salvaguardias en el uso de la tierra.",
+    keyProjects: [
+          "Mecanismos de ambición y balance global (Global Stocktake) en el marco de la CMNUCC",
+          "Transición agroecológica y política alimentaria en la Unión Europea",
+          "Diálogo de políticas UE-América Latina en conservación de bosques y minerales críticos para la transición"
+    ],
+    recentNews: [
+      {
+        title: "Publicación de análisis sobre la integración de salvaguardias ambientales en acuerdos de comercio de materias primas",
+        date: "2026-09-12",
+        snippet: "Recomendaciones para armonizar estándares de huella ambiental entre la Unión Europea y el Cono Sur."
+      }
+    ],
+    workCulture: [
+          "Ambiente intelectual de ciencias políticas y economía ecológica en París",
+          "Fuerte proyección internacional con misiones en cumbres de la ONU y foros de la OCDE",
+          "Enfoque de deliberación rigurosa y publicación en revistas de políticas públicas"
+    ],
+    redFlags: [
+          "El francés suele ser idioma de trabajo interno predominante junto con el inglés"
+    ],
+    interviewArguments: [
+          "Perspectiva dual América Latina - Europa con formación científica de base en geofísica y gestión ambiental.",
+          "Experiencia contrastada en comisiones legislativas y elaboración de informes para tomadores de decisiones.",
+          "Perfil idóneo para proyectos de gobernanza hídrica, cuencas y mitigación climática internacional."
+    ],
+    techStack: ["Policy Design","Gobernanza Ambiental","Análisis Multilateral","Redacción Estratégica"],
+    lastResearched: '2026-10-29',
+    quadrants: ['GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-telur',
+    name: "Telur Geotermia y Agua S.A.",
+    website: 'https://www.telur.es/',
+    sector: "Consultoría Especializada en Geotermia, Hidrogeología y Geofísica del Subsuelo",
+    size: "30-50 hidrogeólogos, geofísicos y perforadores técnicos",
+    headquarters: "Elorrio / Bilbao (Bizkaia, Euskadi)",
+    description: "Empresa consultora pionera y referente absoluto en Euskadi y el norte de España en el diseño, prospección geofísica, simulación térmica y ejecución de instalaciones geotérmicas de baja y media entalpía para climatización urbana e industrial.",
+    keyProjects: [
+          "Prospección hidrogeofísica y sondeos geotérmicos en el País Vasco y norte de España",
+          "Modelos de respuesta térmica del terreno (TRT) y simulación por elementos finitos de campos de captación",
+          "Aprovechamiento hidrogeotérmico en minas inundadas y acuíferos profundos de Bizkaia y Gipuzkoa"
+    ],
+    recentNews: [
+      {
+        title: "Desarrollo de proyectos de redes de calor geotérmico para distritos urbanos en consorcio con el EVE (Ente Vasco de la Energía)",
+        date: "2026-10-09",
+        snippet: "Ejecución de sondeos profundos y ensayos de respuesta térmica con monitorización geofísica continua."
+      }
+    ],
+    workCulture: [
+          "Empresa arraigada en Bizkaia con un ambiente cercano, técnico y de alta solvencia en ingeniería del subsuelo",
+          "Combinación directa de trabajo de gabinete con instrumentación y supervisión en terreno",
+          "Excelente integración en el clúster energético y ambiental vasco (Aclima / Clúster de Energía)"
+    ],
+    redFlags: [
+          "Estructura de tamaño mediano que requiere autonomía técnica polivalente"
+    ],
+    interviewArguments: [
+          "Geofísico de la Universidad de Chile con base rigurosa en métodos potenciales, resistividad eléctrica y termodinámica.",
+          "Residencia en Bilbao con total disponibilidad y alineación con la vía de regularización vasca.",
+          "Capacidad para realizar ensayos de respuesta térmica, modelado hidrogeológico y supervisión de sondeos."
+    ],
+    techStack: ["TRT (Thermal Response Test)","EED (Earth Energy Designer)","Hydrogeophysics","FEFLOW","GIS"],
+    lastResearched: '2026-10-29',
+    quadrants: ['EUSKADI'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
+  },
+  {
+    id: 'comp-dmt',
+    name: "DMT GmbH & Co. KG",
+    website: 'https://www.dmt-group.com/',
+    sector: "Servicios Geofísicos Globales, Sismología de Exploración y Reservorios Geotérmicos",
+    size: "1.100+ geofísicos, geólogos e ingenieros de minas y subsuelo",
+    headquarters: "Essen (Renania del Norte-Westfalia, Alemania)",
+    description: "Grupo global de servicios de ingeniería y geofísica perteneciente al TÜV NORD GROUP. Líder europeo en campañas sísmicas 2D/3D, caracterización geofísica de reservorios geotérmicos profundos, gravimetría, magnetotelúrica y monitoreo micro-sísmico inducido.",
+    keyProjects: [
+          "Campañas de sísmica de reflexión urbana para exploración de proyectos de geotermia profunda en Alemania",
+          "Monitoreo micro-sísmico en tiempo real de operaciones de inyección hidráulica y geotermia en Europa",
+          "Caracterización estructural del subsuelo para almacenamiento geológico de energía y CO2"
+    ],
+    recentNews: [
+      {
+        title: "Finalización de la mayor campaña sísmica 3D de exploración geotérmica urbana en el área metropolitana de Múnich",
+        date: "2026-08-30",
+        snippet: "Mapeo de fallas profundas en la formación Malm con resolución milimétrica para evitar sismicidad inducida."
+      }
+    ],
+    workCulture: [
+          "Tradición técnica alemana de ingeniería del subsuelo con sede en el histórico polo minero y energético de Essen",
+          "Cultura corporativa sólida con estándares de seguridad industrial alemanes (TÜV NORD)",
+          "Equipos de campo e interpretación geofísica que trabajan en proyectos de toda Europa y América"
+    ],
+    redFlags: [
+          "Campañas de campo que pueden requerir desplazamientos temporales para supervisión de adquisiciones sísmicas"
+    ],
+    interviewArguments: [
+          "Título universitario superior de Geofísico (Universidad de Chile, 5 años) con base en sismología y prospección geofísica.",
+          "Doble maestría en Alemania (CAU Kiel) con conocimiento de normativas y cultura técnica alemana.",
+          "Bilingüe español-inglés con capacidad operativa en alemán B1-B2 para proyectos del grupo en el DACH."
+    ],
+    techStack: ["Seismic Processing (ProMAX/Omega)","Python","Gravity/Magnetics","SeisSpace","GIS","Microseismic Monitoring"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH','GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
+  },
+  {
+    id: 'comp-eavor',
+    name: "Eavor Technologies Inc.",
+    website: 'https://eavor.com/',
+    sector: "Geotermia Profunda de Circuito Cerrado (Advanced Geothermal Systems - Eavor-Loop™)",
+    size: "140+ geofísicos de reservorios, ingenieros de perforación y modeladores térmicos",
+    headquarters: "Calgary (Alberta, Canadá) / Subsidiaria europea en Düsseldorf (Alemania)",
+    description: "Scale-up canadiense pionera mundial en sistemas geotérmicos avanzados (AGS). Su tecnología patentada Eavor-Loop™ crea un radiador subterráneo de circuito cerrado de varios kilómetros de profundidad que extrae calor por conducción pura sin necesidad de fracturación ni agua del subsuelo.",
+    keyProjects: [
+          "Proyecto Eavor-Loop™ Geretsried (Baviera, Alemania): El mayor proyecto de geotermia profunda de circuito cerrado del mundo",
+          "Modelación termohidráulica de transporte de calor en formaciones cristalinas y sedimentarias profundas",
+          "Expansión de proyectos de calefacción urbana limpia en Alemania, Austria y Norteamérica"
+    ],
+    recentNews: [
+      {
+        title: "Completado con éxito el primer circuito lateral profundo a más de 4.500 metros en su planta de Geretsried en Baviera",
+        date: "2026-09-15",
+        snippet: "Inyección de fondos de innovación de la Unión Europea para acelerar el despliegue del sistema Eavor-Loop."
+      }
+    ],
+    workCulture: [
+          "Cultura innovadora canadiense de Calgary que combina la destreza de perforación del petróleo con la transición limpia",
+          "Operaciones activas en Alemania (Düsseldorf y Baviera) con ambiente de trabajo anglófono y germano",
+          "Acceso a visados de trabajo Canadá-Chile (IEC) y permisos de investigación europeos"
+    ],
+    redFlags: [
+          "Alto nivel de escrutinio técnico e inversión de capital intensivo en sus primeros proyectos comerciales"
+    ],
+    interviewArguments: [
+          "Geofísico cuantitativo chileno con acceso al tratado bilateral IEC Canadá-Chile (hasta 35 años).",
+          "Formación europea en Alemania (CAU Kiel) y comprensión directa del contexto energético y geológico bávaro.",
+          "Conocimiento de modelado geofísico de transferencia térmica y física de medios porosos."
+    ],
+    techStack: ["Thermal Modeling","Python","Reservoir Simulation","Well Logging","Subsurface Mapping"],
+    lastResearched: '2026-10-29',
+    quadrants: ['CANADA_GLOBAL','DACH'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
+  },
+  {
+    id: 'comp-storengy',
+    name: "Storengy (Grupo ENGIE)",
+    website: 'https://www.storengy.de/',
+    sector: "Almacenamiento Térmico Subterráneo (ATES) y Geotermia Profunda para Calefacción",
+    size: "900+ especialistas en subsuelo y transición térmica",
+    headquarters: "Berlín (Alemania) / Oficinas en París",
+    description: "Filial del gigante energético ENGIE especializada en el desarrollo del subsuelo: almacenamiento subterráneo de energía térmica (Aquifer Thermal Energy Storage - ATES), geotermia hidrotermal y almacenamiento geológico de hidrógeno en Alemania y Francia.",
+    keyProjects: [
+          "Desarrollo de proyectos de geotermia profunda para inyección en redes de calefacción urbana de Berlín y Brandeburgo",
+          "Sistemas ATES para almacenamiento estacional de calor y frío en acuíferos someros y medios",
+          "Estudios geológicos y geofísicos de viabilidad de cavernas salinas para almacenamiento de gases renovables"
+    ],
+    recentNews: [
+      {
+        title: "Inicio de la perforación de pozos de exploración geotérmica en la cuenca de Berlín para descarbonización urbana",
+        date: "2026-10-18",
+        snippet: "Acuerdo con el Senado de Berlín para suministrar energía térmica renovable a más de 20.000 hogares."
+      }
+    ],
+    workCulture: [
+          "Gran corporación energética europea con sólidos convenios colectivos y estabilidad laboral en Alemania",
+          "Oficinas en Berlín y proyectos en todo el territorio alemán con fuerte compromiso de descarbonización",
+          "Excelente integración entre geólogos de exploración, ingenieros de reservorios y analistas regulatorios"
+    ],
+    redFlags: [
+          "Procesos de toma de decisiones corporativos que requieren aprobaciones multicapa"
+    ],
+    interviewArguments: [
+          "Geofísico con sólida formación en termodinámica del subsuelo, hidrogeología y caracterización física.",
+          "Máster europeo en Gestión Ambiental (CAU Kiel) con conocimiento de la transición térmica alemana (Wärmewende).",
+          "Competencia en análisis de datos espaciales y modelación de transporte de calor en acuíferos."
+    ],
+    techStack: ["Python","Subsurface Modeling","GIS","Hydrogeology Software","Eclipse/Petrel"],
+    lastResearched: '2026-10-29',
+    quadrants: ['DACH','GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
+  },
+  {
+    id: 'comp-deep-earth',
+    name: "DEEP Earth Energy Production",
+    website: 'https://deepcorp.ca/',
+    sector: "Desarrollo de Energía Geotérmica Profunda en Cuencas Sedimentarias",
+    size: "35+ ingenieros de yacimientos, geólogos y geofísicos",
+    headquarters: "Calgary / Saskatoon (Saskatchewan, Canadá)",
+    description: "Empresa canadiense pionera en el desarrollo de la primera instalación de energía geotérmica a escala comercial de Canadá, aprovechando los acuíferos de salmuera caliente de la cuenca sedimentaria de Williston a más de 3.000 metros de profundidad.",
+    keyProjects: [
+          "Proyecto Geotérmico Williston Basin: Perforación de pozos horizontales profundos para producción de 25 MW de potencia base limpia",
+          "Modelado de dinámica de fluidos y respuesta de permeabilidad en acuíferos sedimentarios profundos",
+          "Aprovechamiento del calor residual para complejos agrícolas de invernaderos de alta eficiencia"
+    ],
+    recentNews: [
+      {
+        title: "Completado con éxito el primer tramo de pozos horizontales geotérmicos en Saskatchewan con temperaturas de fondo superiores a 120°C",
+        date: "2026-07-19",
+        snippet: "Validación del flujo continuo de salmuera para generación de electricidad de carga base continua."
+      }
+    ],
+    workCulture: [
+          "Pioneros de la transición geotérmica canadiense en las provincias de las praderas (Alberta y Saskatchewan)",
+          "Equipo compacto y altamente especializado donde cada geocientífico tiene un impacto directo y visible",
+          "Cultura de innovación técnica, flexibilidad laboral y espíritu emprendedor de los recursos del subsuelo"
+    ],
+    redFlags: [
+          "Foco geográfico centrado en el oeste de Canadá"
+    ],
+    interviewArguments: [
+          "Geofísico chileno elegible para el programa de movilidad juvenil Working Holiday / Young Professionals de Canadá (IEC).",
+          "Formación analítica rigurosa en estratigrafía, métodos potenciales e hidrogeología profunda.",
+          "Interés probado en descarbonización de carga base mediante energía geotérmica de ciclo binario."
+    ],
+    techStack: ["Geothermal Reservoir Modeling","Well Logs","Python","Petrel","GIS"],
+    lastResearched: '2026-10-29',
+    quadrants: ['CANADA_GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
+  },
+  {
+    id: 'comp-fervo',
+    name: "Fervo Energy",
+    website: 'https://fervoenergy.com/',
+    sector: "Geotermia Avanzada de Próxima Generación (EGS) y Monitoreo Sísmico de Yacimientos",
+    size: "100+ ingenieros de subsuelo, sismólogos y geocientíficos",
+    headquarters: "Houston (Texas, EE.UU.) / Proyectos en Nevada y Utah",
+    description: "La empresa líder mundial en sistemas geotérmicos mejorados de nueva generación (Next-Gen EGS). Aplica técnicas de perforación horizontal multietapa y estimulación de yacimientos del sector energético para desbloquear calor geotérmico continuo en formaciones de roca impermeable.",
+    keyProjects: [
+          "Proyecto Cape Station (Utah): Desarrollo de una planta geotérmica de 400 MW de potencia base limpia",
+          "Monitoreo micro-sísmico en tiempo real con sensores de fibra óptica y geófonos distribuidos",
+          "Alianza con empresas tecnológicas globales (Google) para alimentar centros de datos con energía geotérmica 24/7"
+    ],
+    recentNews: [
+      {
+        title: "Firma de contratos históricos de compra de energía limpia (PPA) con utilities y empresas de tecnología en EE.UU.",
+        date: "2026-09-10",
+        snippet: "Demostración de una reducción del 70% en los tiempos de perforación geotérmica profunda."
+      }
+    ],
+    workCulture: [
+          "Líder indiscutible de la nueva ola de climate-tech geotérmica con respaldo de los principales fondos mundiales (Breakthrough Energy)",
+          "Fuerte cultura científica, computacional y de modelado cuantitativo de fracturas y sismicidad inducida",
+          "Ritmo ágil y posibilidades de colaboración remota en análisis geofísico y de datos de reservorio"
+    ],
+    redFlags: [
+          "Exigencia técnica de élite y competencia con las mejores empresas de NewSpace y energía limpia"
+    ],
+    interviewArguments: [
+          "Geofísico con rigurosa base físico-matemática en mecánica de medios continuos, sismología y métodos potenciales.",
+          "Capacidad para procesar datos sísmicos continuos, correlación de eventos y monitoreo de micro-sismicidad inducida.",
+          "Perfil ideal para los equipos de caracterización de reservorios y analítica de datos geofísicos."
+    ],
+    techStack: ["Distributed Acoustic Sensing (DAS)","Microseismic Monitoring","Python","Reservoir Geomechanics","Cloud HPC"],
+    lastResearched: '2026-10-29',
+    quadrants: ['GLOBAL'],
+    sectorCluster: 'GEOTHERMAL_ENERGY'
   }
 ];
 

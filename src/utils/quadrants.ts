@@ -118,66 +118,87 @@ export const inferCompanyQuadrants = (comp: CompanyDossier): QuadrantType[] => {
 
 export const inferCompanySectorCluster = (comp: CompanyDossier): CompanySectorCluster => {
   if (comp.sectorCluster && comp.sectorCluster !== 'ALL') return comp.sectorCluster;
-  const text = `${comp.name} ${comp.sector} ${comp.description} ${comp.keyProjects.join(' ')}`.toLowerCase();
+  const text = `${comp.name} ${comp.sector} ${comp.description} ${(comp.keyProjects || []).join(' ')}`.toLowerCase();
 
-  if (
-    text.includes('carbon-tech') || 
-    text.includes('calificación de carbono') || 
-    text.includes('rating') || 
-    text.includes('mrv') || 
-    text.includes('créditos de carbono') || 
-    text.includes('carbon accounting') || 
-    text.includes('sylvera') || 
-    text.includes('bezero') || 
-    text.includes('agreena') || 
-    text.includes('pachama') || 
-    text.includes('ghgsat')
-  ) {
-    return 'CARBON_TECH_MRV';
-  }
-
-  if (
-    text.includes('cat risk') || 
-    text.includes('reaseguro') || 
-    text.includes('seguro') || 
-    text.includes('paramétrico') || 
-    text.includes('riesgo físico') || 
-    text.includes('desastres') || 
-    text.includes('catástrofes') || 
-    text.includes('incendios forestales') || 
-    text.includes('mitiga') || 
-    text.includes('descartes') || 
-    text.includes('munich re')
-  ) {
-    return 'CAT_RISK_INSURANCE';
-  }
-
-  if (
-    text.includes('multilateral') || 
-    text.includes('giz') || 
-    text.includes('unfccc') || 
-    text.includes('onu') || 
-    text.includes('política climática') || 
-    text.includes('salvaguardias') || 
-    text.includes('litigio climático') || 
-    text.includes('clientearth') || 
-    text.includes('think tank') || 
-    text.includes('banco de desarrollo')
-  ) {
-    return 'MULTILATERAL_POLICY';
-  }
-
+  // 1. Geotermia & Geofísica del Subsuelo
   if (
     text.includes('geotermia') || 
     text.includes('geotérmic') || 
     text.includes('subsuelo profundo') || 
     text.includes('almacenamiento térmico') || 
     text.includes('geofísica aplicada') || 
+    text.includes('eavor') || 
     text.includes('telur') || 
-    text.includes('dmt')
+    text.includes('dmt') || 
+    text.includes('fervo')
   ) {
     return 'GEOTHERMAL_ENERGY';
   }
 
+  // 2. Carbon-Tech & Calificación MRV
+  if (
+    text.includes('carbon-tech') || 
+    text.includes('calificación de carbono') || 
+    text.includes('rating de carbono') || 
+    text.includes('créditos de carbono') || 
+    text.includes('carbon accounting') || 
+    text.includes('carbon removal') || 
+    text.includes('sylvera') || 
+    text.includes('bezero') || 
+    text.includes('agreena') || 
+    text.includes('pachama') || 
+    text.includes('ghgsat') || 
+    text.includes('carboculture') || 
+    text.includes('space intelligence') || 
+    (text.includes('mrv') && !text.includes('universidad'))
+  ) {
+    return 'CARBON_TECH_MRV';
+  }
+
+  // 3. Cat Risk & Seguros Climáticos / Reaseguro
+  if (
+    text.includes('cat risk') || 
+    text.includes('cat modeling') || 
+    text.includes('reaseguro') || 
+    text.includes('reinsurance') || 
+    text.includes('seguro paramétrico') || 
+    text.includes('parametric') || 
+    text.includes('mitiga') || 
+    text.includes('descartes underwriting') || 
+    text.includes('munich re') || 
+    text.includes('swiss re') || 
+    text.includes('kettle') || 
+    text.includes('guy carpenter') || 
+    text.includes('fathom')
+  ) {
+    return 'CAT_RISK_INSURANCE';
+  }
+
+  // 4. Organismos Multilaterales & Políticas
+  if (
+    text.includes('multilateral') || 
+    text.includes('giz') || 
+    text.includes('unfccc') || 
+    text.includes('unccd') || 
+    text.includes('naciones unidas') || 
+    text.includes('united nations') || 
+    text.includes('política climática') || 
+    text.includes('salvaguardias') || 
+    text.includes('litigio climático') || 
+    text.includes('clientearth') || 
+    text.includes('think tank') || 
+    text.includes('banco de desarrollo') || 
+    text.includes('ongd') || 
+    text.includes('cooperación internacional') || 
+    text.includes('sociedad pública de gestión') || 
+    text.includes('ihobe') || 
+    text.includes('aclima') || 
+    text.includes('e3g') || 
+    text.includes('iddri')
+  ) {
+    return 'MULTILATERAL_POLICY';
+  }
+
+  // 5. I+D Público & Centros Científicos (Default natural)
   return 'RD_PUBLIC';
 };

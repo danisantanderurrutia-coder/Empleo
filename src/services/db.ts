@@ -211,7 +211,29 @@ export const getStoredCompanies = (): CompanyDossier[] => {
   });
   if (migrated) saveStoredCompanies(list);
 
-  // Ensure all 18 authentic institutions & enterprises are populated without overwriting user customizations
+  // Sincronizar cuadrantes canónicos y clúster sectorial de initialCompanies si faltan o cambiaron
+  const canonicalMap = new Map(initialCompanies.map(c => [c.id, c]));
+  let enriched = false;
+  list = list.map(c => {
+    const canonical = canonicalMap.get(c.id);
+    if (!canonical) return c;
+    const quadsChanged = JSON.stringify(c.quadrants || []) !== JSON.stringify(canonical.quadrants || []);
+    const clusterChanged = c.sectorCluster !== canonical.sectorCluster;
+    if (quadsChanged || clusterChanged || !c.website) {
+      enriched = true;
+      return {
+        ...c,
+        quadrants: canonical.quadrants,
+        sectorCluster: canonical.sectorCluster,
+        website: c.website || canonical.website,
+        headquarters: c.headquarters || canonical.headquarters
+      };
+    }
+    return c;
+  });
+  if (enriched) saveStoredCompanies(list);
+
+  // Ensure all authentic institutions & enterprises are populated without overwriting user customizations
   const existingIds = new Set(list.map(c => c.id));
   const existingNames = new Set(list.map(c => c.name.trim().toLowerCase()));
   const missing = initialCompanies.filter(c => !existingIds.has(c.id) && !existingNames.has(c.name.trim().toLowerCase()));

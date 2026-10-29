@@ -12,13 +12,13 @@ import {
 import { getStoredOffers } from '../../services/db';
 
 export type SkillBranch = 
-  | 'geophysics'   // 1. Geofísica & Sensores Remotos
-  | 'biogeo'       // 2. Biogeoquímica, Suelos & Agua
-  | 'comms'        // 3. Comunicaciones, Prensa & Campañas
-  | 'culture'      // 4. Cultura, Comunidades & Políticas
-  | 'grassroots'   // 5. Grassroots, Territorio & Regeneración
-  | 'pm'           // 6. Gestión de Proyectos, I+D & Cooperación
-  | 'software';    // 7. Product Owner, Software & IA
+  | 'geophysics'   // 1. Geofísica & Sensores Remotos (GFP Emerald)
+  | 'biogeo'       // 2. Biogeoquímica, Suelos & Agua (CFP Cyan)
+  | 'comms'        // 3. Comunicaciones, Prensa & Campañas (Texas Red / mCherry)
+  | 'culture'      // 4. Cultura, Comunidades & Políticas (Cy5 Violet)
+  | 'grassroots'   // 5. Grassroots, Territorio & Regeneración (Phyto-Lime YFP)
+  | 'pm'           // 6. Gestión de Proyectos, I+D & Cooperación (Lucifer Amber)
+  | 'software';    // 7. Product Owner, Software & IA (Laser Electric Blue)
 
 export type ProfileArchetype = 
   | 'all'
@@ -44,11 +44,12 @@ export interface CapabilityNode {
   xp: number;
   cx: number;
   cy: number;
+  spineOrigin: { x: number; y: number }; // Punto de inserción en la dendrita nodriza
   description: string;
   evidenceTitle: string;
   evidenceAnchor: string;
   archetypes: ProfileArchetype[];
-  synergies?: string[]; // IDs of connected nodes
+  synergies?: string[];
   isMarketGap?: boolean;
   gapDemand?: string;
   gapImpact?: string;
@@ -64,14 +65,99 @@ export const SkillTreeTab: React.FC = () => {
   // Selected Archetype Simulator
   const [selectedArchetype, setSelectedArchetype] = useState<ProfileArchetype>('all');
 
-  // Hovered node for synapsis lighting
+  // Hovered node for action potential lighting
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
   // Selected node for technical inspector
   const [selectedNodeId, setSelectedNodeId] = useState<string>('n7-wetland');
 
   // --------------------------------------------------------------------------
-  // PUENTES DE SINERGIA TRANSDISCIPLINARIOS (CABLES BIOLUMINISCENTES)
+  // CANALES DE FLUORESCENCIA CONFOCAL (PALETA OPCIÓN A: SPECTRAL BIOMARKERS)
+  // --------------------------------------------------------------------------
+  const branchStyles: Record<SkillBranch, { 
+    fluorophore: string;
+    channelName: string;
+    color: string; 
+    glow: string; 
+    label: string; 
+    icon: string;
+    bg: string; 
+    border: string;
+  }> = {
+    geophysics: { 
+      fluorophore: 'GFP Emerald',
+      channelName: 'Canal 510 nm (Teledetección & Subsuelo)',
+      color: '#10b981', 
+      glow: 'rgba(16,185,129,0.5)', 
+      label: 'GEOFÍSICA & SENSORES REMOTOS', 
+      icon: '🛰️',
+      bg: 'bg-emerald-950/30', 
+      border: 'border-emerald-500/40' 
+    },
+    biogeo: { 
+      fluorophore: 'CFP Cyan / Alexa 488',
+      channelName: 'Canal 488 nm (Flujos de Carbono & Hidrología)',
+      color: '#06b6d4', 
+      glow: 'rgba(6,182,212,0.5)', 
+      label: 'BIOGEOQUÍMICA, SUELOS & AGUA', 
+      icon: '💧',
+      bg: 'bg-cyan-950/30', 
+      border: 'border-cyan-500/40' 
+    },
+    comms: { 
+      fluorophore: 'Texas Red / mCherry',
+      channelName: 'Canal 590 nm (Medios Masivos & Campañas)',
+      color: '#f97316', 
+      glow: 'rgba(249,115,22,0.5)', 
+      label: 'COMUNICACIONES, PRENSA & CAMPAÑAS', 
+      icon: '📢',
+      bg: 'bg-orange-950/30', 
+      border: 'border-orange-500/40' 
+    },
+    culture: { 
+      fluorophore: 'Cy5 Violet / Alexa 647',
+      channelName: 'Canal 650 nm (Comunidades, Políticas & Diplomacia)',
+      color: '#c084fc', 
+      glow: 'rgba(192,132,252,0.5)', 
+      label: 'CULTURA, COMUNIDADES & POLÍTICAS', 
+      icon: '🏛️',
+      bg: 'bg-purple-950/30', 
+      border: 'border-purple-500/40' 
+    },
+    grassroots: { 
+      fluorophore: 'Phyto-Lime / YFP',
+      channelName: 'Canal 535 nm (Territorio, APR & Regeneración)',
+      color: '#a3e635', 
+      glow: 'rgba(163,230,53,0.5)', 
+      label: 'GRASSROOTS, TERRITORIO & REGENERACIÓN', 
+      icon: '🌱',
+      bg: 'bg-lime-950/30', 
+      border: 'border-lime-500/40' 
+    },
+    pm: { 
+      fluorophore: 'Lucifer Amber',
+      channelName: 'Canal 560 nm (Consorcios I+D & Fondos UE)',
+      color: '#fbbf24', 
+      glow: 'rgba(251,191,36,0.5)', 
+      label: 'GESTIÓN DE PROYECTOS, I+D & COOPERACIÓN', 
+      icon: '🧭',
+      bg: 'bg-amber-950/30', 
+      border: 'border-amber-500/40' 
+    },
+    software: { 
+      fluorophore: 'Laser Electric Blue / Hoechst',
+      channelName: 'Canal 450 nm (Software, Gemelos Digitales & IA)',
+      color: '#60a5fa', 
+      glow: 'rgba(96,165,250,0.5)', 
+      label: 'PRODUCT OWNER, SOFTWARE & IA', 
+      icon: '⚡',
+      bg: 'bg-blue-950/30', 
+      border: 'border-blue-500/40' 
+    }
+  };
+
+  // --------------------------------------------------------------------------
+  // PUENTES DE SINERGIA TRANSDISCIPLINARIOS (AXONES COLATERALES)
   // --------------------------------------------------------------------------
   const synergyBridges: SynergyBridge[] = [
     { from: 'n7-agritwin', to: 'n1-sentinel', label: 'IoT LoRaWAN + NDVI Sentinel-2' },
@@ -92,12 +178,12 @@ export const SkillTreeTab: React.FC = () => {
   ];
 
   // --------------------------------------------------------------------------
-  // CATÁLOGO DE 40+ NODOS DISTRIBUIDOS EN 7 POLOS BIOLUMINISCENTES
-  // Centro: (430, 260)
+  // BOTONES SINÁPTICOS & ESPINAS DENDRÍTICAS (40+ NODOS VIVOS)
+  // Centro Soma: (440, 270)
   // --------------------------------------------------------------------------
   const nodes: CapabilityNode[] = [
     // ========================================================================
-    // POLO 1: GEOFÍSICA & SENSORES REMOTOS (Top, Esmeralda Neón)
+    // DENDRITA 1: GEOFÍSICA & SENSORES REMOTOS (GFP Emerald, Top)
     // ========================================================================
     {
       id: 'n1-geo-math',
@@ -108,8 +194,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'geophysics',
       xp: 1000,
-      cx: 375,
-      cy: 120,
+      cx: 385,
+      cy: 130,
+      spineOrigin: { x: 425, y: 165 },
       archetypes: ['rd-scientist', 'ai-product'],
       description: 'Automatización de pipelines espaciales (GeoPandas, Rasterio, GDAL), análisis estadístico multivariable y series temporales biofísicas.',
       evidenceTitle: 'Lámina 002: Smart Food Parks & Teledetección',
@@ -124,8 +211,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'geophysics',
       xp: 1000,
-      cx: 430,
-      cy: 95,
+      cx: 440,
+      cy: 90,
+      spineOrigin: { x: 440, y: 135 },
       archetypes: ['rd-scientist'],
       description: 'Sondeos Eléctricos Verticales (SEV) y Tomografía de Resistividad Eléctrica con Iris Instruments. Detección de nivel freático y acuíferos en U. de Chile.',
       evidenceTitle: 'Lámina 007: Licenciatura en Geofísica (Distinción)',
@@ -140,8 +228,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'geophysics',
       xp: 980,
-      cx: 485,
-      cy: 120,
+      cx: 495,
+      cy: 130,
+      spineOrigin: { x: 455, y: 165 },
       archetypes: ['rd-scientist', 'policy-advisor'],
       description: 'Integración multicriterio de coberturas de suelo, DEMs LiDAR, pendientes topográficas, delimitación de cuencas y riesgo de incendios.',
       evidenceTitle: 'Lámina 003: Modelos Hidrológicos ante Congreso',
@@ -156,8 +245,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'geophysics',
       xp: 880,
-      cx: 400,
-      cy: 50,
+      cx: 405,
+      cy: 48,
+      spineOrigin: { x: 428, y: 88 },
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n7-agritwin'],
       description: 'Monitoreo multiespectral de reflectancia de dosel, índices NDVI/NDRE, cálculo de estrés hídrico de vegetación y cicatrices de quema.',
@@ -173,8 +263,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'geophysics',
       xp: 850,
-      cx: 460,
+      cx: 475,
       cy: 45,
+      spineOrigin: { x: 452, y: 88 },
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n7-docker'],
       description: 'Procesamiento masivo de petabytes de datos planetarios en la nube para detección de cambios ambientales y balances hídricos territoriales.',
@@ -190,8 +281,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'geophysics',
       xp: 400,
-      cx: 525,
+      cx: 545,
       cy: 65,
+      spineOrigin: { x: 480, y: 92 },
       archetypes: ['rd-scientist'],
       isMarketGap: true,
       gapDemand: '42% vacantes de modelación de cuencas en DACH (LUBW, BfG) y Euskadi (URA)',
@@ -207,7 +299,7 @@ export const SkillTreeTab: React.FC = () => {
     },
 
     // ========================================================================
-    // POLO 2: BIOGEOQUÍMICA, SUELOS & AGUA (Top-Right, Cian Hídrico)
+    // DENDRITA 2: BIOGEOQUÍMICA, SUELOS & AGUA (CFP Cyan, Top-Right)
     // ========================================================================
     {
       id: 'n2-peatlands',
@@ -218,8 +310,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'biogeo',
       xp: 1000,
-      cx: 550,
-      cy: 155,
+      cx: 565,
+      cy: 165,
+      spineOrigin: { x: 505, y: 215 },
       archetypes: ['rd-scientist', 'policy-advisor'],
       synergies: ['n7-wetland', 'n6-consorcios'],
       description: 'Tesis de M.Sc. en CAU Kiel: sumideros de carbono, transición sumidero-fuente de CH4, paludicultura y tensión de preconsolidación edáfica (62,4 kPa).',
@@ -235,8 +328,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'biogeo',
       xp: 970,
-      cx: 620,
-      cy: 125,
+      cx: 640,
+      cy: 135,
+      spineOrigin: { x: 575, y: 175 },
       archetypes: ['rd-scientist'],
       synergies: ['n7-wetland'],
       description: 'Operación de torres de flujo micrometeorológico con analizadores infrarrojos LI-COR LI-7500/LI-7700 y cámaras de respiración de suelo cerradas.',
@@ -246,14 +340,15 @@ export const SkillTreeTab: React.FC = () => {
     {
       id: 'n2-hydro',
       name: 'Balances Hidrológicos & Limnología (Poznań)',
-      shortName: 'Hidrología Cuencas',
+      shortName: 'Hidrología Poznań',
       level: 4,
       maxLevel: 5,
       status: 'ACTIVE',
       branch: 'biogeo',
       xp: 890,
-      cx: 600,
-      cy: 180,
+      cx: 615,
+      cy: 195,
+      spineOrigin: { x: 550, y: 210 },
       archetypes: ['rd-scientist'],
       synergies: ['n5-permaculture'],
       description: 'Modelación cuantitativa de escorrentía, balance de fósforo/nitrógeno y dinámica trófica en los lagos Góreckie y Durowskie (Polonia).',
@@ -269,8 +364,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'biogeo',
       xp: 850,
-      cx: 675,
-      cy: 140,
+      cx: 695,
+      cy: 155,
+      spineOrigin: { x: 635, y: 170 },
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n7-agritwin'],
       description: 'Ensayos de compresión edáfica, retención hídrica (curvas pF), carbono orgánico total (TOC) y sondeos con barrenas Edelman.',
@@ -286,8 +382,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'biogeo',
       xp: 860,
-      cx: 695,
-      cy: 95,
+      cx: 715,
+      cy: 105,
+      spineOrigin: { x: 655, y: 135 },
       archetypes: ['rd-scientist', 'policy-advisor'],
       description: 'Evaluación del estado ecológico de masas de agua continentales bajo estándares WFD de la Unión Europea y macroinvertebrados.',
       evidenceTitle: 'Lámina 001: Ecosistemas Acuáticos Poznań',
@@ -302,8 +399,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'biogeo',
       xp: 450,
-      cx: 750,
-      cy: 130,
+      cx: 775,
+      cy: 145,
+      spineOrigin: { x: 705, y: 160 },
       archetypes: ['policy-advisor', 'rd-scientist'],
       isMarketGap: true,
       gapDemand: '48% centros de investigación ambiental y consultorías del Green Deal',
@@ -319,7 +417,7 @@ export const SkillTreeTab: React.FC = () => {
     },
 
     // ========================================================================
-    // POLO 3: COMUNICACIONES, PRENSA & CAMPAÑAS (Mid-Right, Naranja Fuego)
+    // DENDRITA 3: COMUNICACIONES & PRENSA (Texas Red / mCherry, Mid-Right)
     // ========================================================================
     {
       id: 'n3-plp',
@@ -330,8 +428,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'comms',
       xp: 1000,
-      cx: 615,
-      cy: 260,
+      cx: 635,
+      cy: 265,
+      spineOrigin: { x: 550, y: 275 },
       archetypes: ['campaign-lead'],
       synergies: ['n4-congreso'],
       description: 'Fundador y director de medio digital independiente con más de 700.000 seguidores orgánicos. Reportajes de investigación y coberturas en tiempo real.',
@@ -347,8 +446,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'comms',
       xp: 990,
-      cx: 680,
-      cy: 240,
+      cx: 705,
+      cy: 245,
+      spineOrigin: { x: 625, y: 268 },
       archetypes: ['campaign-lead'],
       synergies: ['n5-apr'],
       description: 'Dirección general de campaña transmedia de alcance nacional: movilización campesina, webinars cívicos masivos y combate a la desinformación en el agro.',
@@ -364,8 +464,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'comms',
       xp: 940,
-      cx: 665,
-      cy: 305,
+      cx: 685,
+      cy: 315,
+      spineOrigin: { x: 620, y: 288 },
       archetypes: ['campaign-lead', 'policy-advisor'],
       synergies: ['n4-congreso', 'n6-epn-lead'],
       description: 'Autor técnico principal del informe "Spotlight on Burning Biomass" para Environmental Paper Network y Global Forest Coalition sobre vacíos en RED III.',
@@ -381,8 +482,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'comms',
       xp: 880,
-      cx: 740,
-      cy: 275,
+      cx: 765,
+      cy: 280,
+      spineOrigin: { x: 690, y: 282 },
       archetypes: ['campaign-lead'],
       description: 'Locución en vivo, vocería técnica y diseño de la plataforma digital para alertas tempranas de emergencia rural y noticias locales.',
       evidenceTitle: 'Red de Medios Comunitaria Maule Sur',
@@ -397,8 +499,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'comms',
       xp: 420,
-      cx: 785,
-      cy: 325,
+      cx: 810,
+      cy: 335,
+      spineOrigin: { x: 745, y: 315 },
       archetypes: ['campaign-lead', 'policy-advisor'],
       isMarketGap: true,
       gapDemand: '35% ONGs internacionales y consorcios de incidencia en Bruselas y Berlín',
@@ -414,7 +517,7 @@ export const SkillTreeTab: React.FC = () => {
     },
 
     // ========================================================================
-    // POLO 4: CULTURA, COMUNIDADES & POLÍTICAS (Bottom-Right, Púrpura)
+    // DENDRITA 4: CULTURA, COMUNIDADES & POLÍTICAS (Cy5 Violet, Bottom-Right)
     // ========================================================================
     {
       id: 'n4-congreso',
@@ -425,8 +528,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'culture',
       xp: 1000,
-      cx: 555,
-      cy: 375,
+      cx: 575,
+      cy: 385,
+      spineOrigin: { x: 505, y: 325 },
       archetypes: ['policy-advisor', 'campaign-lead'],
       synergies: ['n5-incendios', 'n3-plp', 'n3-epn-report'],
       description: 'Exposición como perito técnico ante la Comisión de Emergencia, Desastres y Bomberos de la Cámara de Diputadas y Diputados de Chile.',
@@ -442,8 +546,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'culture',
       xp: 970,
-      cx: 625,
-      cy: 395,
+      cx: 645,
+      cy: 405,
+      spineOrigin: { x: 565, y: 360 },
       archetypes: ['campaign-lead', 'ai-product'],
       synergies: ['n7-ai-agents'],
       description: 'Arquitectura de comunidad digital en Discord y Twitch durante la pandemia: +12.000 miembros activos en 8 países, bots de matchmaking y baja latencia de audio.',
@@ -459,8 +564,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'culture',
       xp: 950,
-      cx: 580,
-      cy: 445,
+      cx: 600,
+      cy: 455,
+      spineOrigin: { x: 535, y: 395 },
       archetypes: ['campaign-lead'],
       description: 'Producción de eventos en vivo, ingeniería de sonido en anfiteatros de la Universidad de Chile, gestión de auspicios y ligas universitarias de hip-hop.',
       evidenceTitle: 'Producción Cultural: Rap Beauchef U. de Chile',
@@ -475,8 +581,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'culture',
       xp: 980,
-      cx: 655,
-      cy: 455,
+      cx: 675,
+      cy: 465,
+      spineOrigin: { x: 595, y: 415 },
       archetypes: ['rd-scientist', 'policy-advisor', 'campaign-lead'],
       description: 'Español nativo (oratoria parlamentaria), Inglés científico C1 (CEMS, ponencias en Bonn/Oslo/Davos) y Alemán académico B1-B2 (§20 AufenthG).',
       evidenceTitle: 'Lámina 005: Conferencias Bonn, Oslo y Bogotá',
@@ -485,14 +592,15 @@ export const SkillTreeTab: React.FC = () => {
     {
       id: 'n4-artivismo',
       name: 'Agitación Gráfica & Xilografía Popular',
-      shortName: 'Xilografía & Murale',
+      shortName: 'Xilografía & Murales',
       level: 4,
       maxLevel: 5,
       status: 'ACTIVE',
       branch: 'culture',
       xp: 880,
-      cx: 515,
-      cy: 460,
+      cx: 535,
+      cy: 470,
+      spineOrigin: { x: 485, y: 405 },
       archetypes: ['campaign-lead'],
       description: 'Grabado en linóleo, cartelería de memoria histórica y muralismo con la Brigada Paulina Aguirre por la defensa de los derechos del agua y la tierra.',
       evidenceTitle: 'Artivismo & Memoria Popular',
@@ -507,8 +615,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'culture',
       xp: 620,
-      cx: 715,
-      cy: 480,
+      cx: 735,
+      cy: 490,
+      spineOrigin: { x: 655, y: 445 },
       archetypes: ['rd-scientist', 'policy-advisor'],
       isMarketGap: true,
       gapDemand: '60% plazas públicas permanentes en DACH (BfG, UBA, LfU)',
@@ -531,8 +640,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'culture',
       xp: 550,
-      cx: 610,
-      cy: 495,
+      cx: 630,
+      cy: 505,
+      spineOrigin: { x: 575, y: 440 },
       archetypes: ['policy-advisor'],
       isMarketGap: true,
       gapDemand: '50% ofertas de consultoría ambiental en Euskadi y DACH',
@@ -548,7 +658,7 @@ export const SkillTreeTab: React.FC = () => {
     },
 
     // ========================================================================
-    // POLO 5: GRASSROOTS, TERRITORIO & REGENERACIÓN (Bottom-Left, Lima/Tierra)
+    // DENDRITA 5: GRASSROOTS, TERRITORIO & REGENERACIÓN (Phyto-Lime, Bottom-Left)
     // ========================================================================
     {
       id: 'n5-incendios',
@@ -559,8 +669,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'grassroots',
       xp: 1000,
-      cx: 305,
-      cy: 375,
+      cx: 315,
+      cy: 385,
+      spineOrigin: { x: 375, y: 325 },
       archetypes: ['campaign-lead'],
       synergies: ['n4-congreso'],
       description: 'Despliegue territorial directo en la zona centro-sur (Maule y Biobío): articulación de brigadas comunitarias, centros de acopio y ayuda mutua.',
@@ -576,8 +687,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'grassroots',
       xp: 970,
-      cx: 235,
-      cy: 395,
+      cx: 245,
+      cy: 405,
+      spineOrigin: { x: 325, y: 350 },
       archetypes: ['campaign-lead', 'policy-advisor'],
       synergies: ['n3-apruebo-rural'],
       description: 'Acompañamiento técnico a asambleas hídricas campesinas frente a la sequía, el desvío de cauces y el impacto de las plantaciones forestales.',
@@ -593,8 +705,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'grassroots',
       xp: 920,
-      cx: 280,
-      cy: 445,
+      cx: 290,
+      cy: 455,
+      spineOrigin: { x: 345, y: 395 },
       archetypes: ['rd-scientist', 'campaign-lead'],
       synergies: ['n2-hydro'],
       description: 'Certificación oficial de diseño regenerativo: zonificación biofísica, captura hídrica pasiva, agroforestería sintrópica y suelos vivos.',
@@ -610,8 +723,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'grassroots',
       xp: 890,
-      cx: 205,
-      cy: 455,
+      cx: 215,
+      cy: 465,
+      spineOrigin: { x: 285, y: 415 },
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n7-agritwin'],
       description: 'Ingeniería de líneas clave topográficas para redistribución de agua de escorrentía hacia laderas secas y recarga natural de acuíferos.',
@@ -627,8 +741,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'grassroots',
       xp: 870,
-      cx: 345,
-      cy: 460,
+      cx: 355,
+      cy: 470,
+      spineOrigin: { x: 395, y: 405 },
       archetypes: ['rd-scientist', 'policy-advisor'],
       synergies: ['n7-rewilding-suite'],
       description: 'Estrategias de regeneración biofísica en cuencas mediterráneas portuguesas: mosaicos nativos cortafuegos y reducción de combustible forestal.',
@@ -644,8 +759,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'grassroots',
       xp: 440,
-      cx: 145,
-      cy: 480,
+      cx: 155,
+      cy: 490,
+      spineOrigin: { x: 235, y: 445 },
       archetypes: ['campaign-lead'],
       isMarketGap: true,
       gapDemand: '40% redes de solidaridad climática y fondos de justicia ambiental',
@@ -661,7 +777,7 @@ export const SkillTreeTab: React.FC = () => {
     },
 
     // ========================================================================
-    // POLO 6: GESTIÓN DE PROYECTOS, I+D & COOPERACIÓN (Mid-Left, Ámbar)
+    // DENDRITA 6: GESTIÓN DE PROYECTOS, I+D & COOPERACIÓN (Lucifer Amber, Mid-Left)
     // ========================================================================
     {
       id: 'n6-consorcios',
@@ -673,7 +789,8 @@ export const SkillTreeTab: React.FC = () => {
       branch: 'pm',
       xp: 1000,
       cx: 245,
-      cy: 260,
+      cy: 265,
+      spineOrigin: { x: 335, y: 275 },
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n2-peatlands'],
       description: 'Liderazgo y articulación de proyectos de investigación entre instituciones de Alemania (CAU Kiel), Polonia (AMU Poznań) y Chile (U. de Chile).',
@@ -689,8 +806,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'pm',
       xp: 960,
-      cx: 180,
-      cy: 240,
+      cx: 175,
+      cy: 245,
+      spineOrigin: { x: 265, y: 268 },
       archetypes: ['rd-scientist', 'policy-advisor', 'campaign-lead'],
       synergies: ['n3-epn-report'],
       description: 'Gestión de investigación transnacional con la coalición global Environmental Paper Network: coordinación de autores, revisión por pares y publicación.',
@@ -707,7 +825,8 @@ export const SkillTreeTab: React.FC = () => {
       branch: 'pm',
       xp: 880,
       cx: 195,
-      cy: 305,
+      cy: 315,
+      spineOrigin: { x: 260, y: 288 },
       archetypes: ['rd-scientist', 'ai-product'],
       description: 'Control riguroso de cronogramas, aseguramiento de calidad de datos experimentales de campo y presentación ante comités evaluadores.',
       evidenceTitle: 'Lámina 006: Liderazgo e Innovación Científica',
@@ -722,8 +841,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'pm',
       xp: 430,
-      cx: 120,
-      cy: 275,
+      cx: 115,
+      cy: 285,
+      spineOrigin: { x: 190, y: 282 },
       archetypes: ['rd-scientist', 'ai-product'],
       isMarketGap: true,
       gapDemand: '55% puestos de Project Manager en consorcios europeos y centros tecnológicos',
@@ -746,8 +866,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'pm',
       xp: 460,
-      cx: 75,
-      cy: 325,
+      cx: 70,
+      cy: 335,
+      spineOrigin: { x: 135, y: 315 },
       archetypes: ['rd-scientist'],
       isMarketGap: true,
       gapDemand: '62% institutos de investigación (Helmholtz, Max Planck, Tecnalia, BC3)',
@@ -763,7 +884,7 @@ export const SkillTreeTab: React.FC = () => {
     },
 
     // ========================================================================
-    // POLO 7: PRODUCT OWNER, SOFTWARE & IA (Top-Left, Violeta Neón)
+    // DENDRITA 7: PRODUCT OWNER, SOFTWARE & IA (Laser Electric Blue, Top-Left)
     // ========================================================================
     {
       id: 'n7-wetland',
@@ -774,8 +895,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'software',
       xp: 1000,
-      cx: 310,
-      cy: 155,
+      cx: 315,
+      cy: 165,
+      spineOrigin: { x: 375, y: 215 },
       archetypes: ['ai-product', 'rd-scientist'],
       synergies: ['n2-peatlands', 'n2-ghg'],
       description: 'Arquitectura y desarrollo de aplicación web 3D interactiva que simula la hidrología y los flujos de GEI de Wallener Au en tiempo real.',
@@ -792,7 +914,8 @@ export const SkillTreeTab: React.FC = () => {
       branch: 'software',
       xp: 990,
       cx: 240,
-      cy: 125,
+      cy: 135,
+      spineOrigin: { x: 305, y: 175 },
       archetypes: ['ai-product'],
       synergies: ['n1-sentinel', 'n2-soil-lab', 'n5-keyline'],
       description: 'Plataforma que integra telemetría de suelo LoRaWAN con índices satelitales Sentinel-2 (NDVI/NDRE) para prevención de estrés hídrico en viñedos.',
@@ -808,8 +931,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MASTERED',
       branch: 'software',
       xp: 960,
-      cx: 260,
-      cy: 180,
+      cx: 265,
+      cy: 195,
+      spineOrigin: { x: 330, y: 210 },
       archetypes: ['ai-product', 'rd-scientist'],
       synergies: ['n5-rewilding'],
       description: 'PWA de campo con almacenamiento local sin conexión (IndexedDB), capas GIS integradas y cálculo de biomasa para rewilding en Aljezur (Portugal).',
@@ -826,7 +950,8 @@ export const SkillTreeTab: React.FC = () => {
       branch: 'software',
       xp: 880,
       cx: 185,
-      cy: 140,
+      cy: 155,
+      spineOrigin: { x: 245, y: 170 },
       archetypes: ['ai-product'],
       description: 'Desarrollo de microservicios asíncronos REST para consulta espacial indexada, filtrado poligonal y servicio de capas GeoTIFF y GeoJSON.',
       evidenceTitle: 'Stack de Programación & Software Espacial (Portafolio)',
@@ -842,7 +967,8 @@ export const SkillTreeTab: React.FC = () => {
       branch: 'software',
       xp: 940,
       cx: 165,
-      cy: 95,
+      cy: 105,
+      spineOrigin: { x: 225, y: 135 },
       archetypes: ['ai-product', 'rd-scientist'],
       synergies: ['n1-gee'],
       description: 'Microservicios reproducibles, imágenes CI/CD automatizadas en GitHub Actions y contenedorización de modelos numéricos y teledetección.',
@@ -858,8 +984,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'ACTIVE',
       branch: 'software',
       xp: 900,
-      cx: 210,
-      cy: 50,
+      cx: 215,
+      cy: 60,
+      spineOrigin: { x: 275, y: 115 },
       archetypes: ['ai-product'],
       synergies: ['n4-cuarentena-rap'],
       description: 'Diseño de agentes de inteligencia corporativa, parsers locales de expedientes y algoritmos de cruce curricular con privacidad total (localStorage).',
@@ -875,8 +1002,9 @@ export const SkillTreeTab: React.FC = () => {
       status: 'MARKET_GAP',
       branch: 'software',
       xp: 450,
-      cx: 110,
-      cy: 130,
+      cx: 105,
+      cy: 145,
+      spineOrigin: { x: 175, y: 160 },
       archetypes: ['ai-product'],
       isMarketGap: true,
       gapDemand: '58% startups de Climate-Tech y agencias de software de IA en DACH y Euskadi',
@@ -891,75 +1019,6 @@ export const SkillTreeTab: React.FC = () => {
       ]
     }
   ];
-
-  // --------------------------------------------------------------------------
-  // ESTILOS VISUALES DE LOS 7 DOMINIOS BIOLUMINISCENTES
-  // --------------------------------------------------------------------------
-  const branchStyles: Record<SkillBranch, { 
-    color: string; 
-    glow: string; 
-    label: string; 
-    icon: string;
-    bg: string; 
-    border: string;
-  }> = {
-    geophysics: { 
-      color: '#10b981', 
-      glow: 'rgba(16,185,129,0.3)', 
-      label: 'GEOFÍSICA & SENSORES REMOTOS', 
-      icon: '🛰️',
-      bg: 'bg-emerald-500/10', 
-      border: 'border-emerald-500/40' 
-    },
-    biogeo: { 
-      color: '#06b6d4', 
-      glow: 'rgba(6,182,212,0.3)', 
-      label: 'BIOGEOQUÍMICA, SUELOS & AGUA', 
-      icon: '💧',
-      bg: 'bg-cyan-500/10', 
-      border: 'border-cyan-500/40' 
-    },
-    comms: { 
-      color: '#f97316', 
-      glow: 'rgba(249,115,22,0.3)', 
-      label: 'COMUNICACIONES, PRENSA & CAMPAÑAS', 
-      icon: '📢',
-      bg: 'bg-orange-500/10', 
-      border: 'border-orange-500/40' 
-    },
-    culture: { 
-      color: '#a855f7', 
-      glow: 'rgba(168,85,247,0.3)', 
-      label: 'CULTURA, COMUNIDADES & POLÍTICAS', 
-      icon: '🏛️',
-      bg: 'bg-purple-500/10', 
-      border: 'border-purple-500/40' 
-    },
-    grassroots: { 
-      color: '#84cc16', 
-      glow: 'rgba(132,204,22,0.3)', 
-      label: 'GRASSROOTS, TERRITORIO & REGENERACIÓN', 
-      icon: '🌱',
-      bg: 'bg-lime-500/10', 
-      border: 'border-lime-500/40' 
-    },
-    pm: { 
-      color: '#f59e0b', 
-      glow: 'rgba(245,158,11,0.3)', 
-      label: 'GESTIÓN DE PROYECTOS, I+D & COOPERACIÓN', 
-      icon: '🧭',
-      bg: 'bg-amber-500/10', 
-      border: 'border-amber-500/40' 
-    },
-    software: { 
-      color: '#6366f1', 
-      glow: 'rgba(99,102,241,0.35)', 
-      label: 'PRODUCT OWNER, SOFTWARE & IA', 
-      icon: '⚡',
-      bg: 'bg-indigo-500/10', 
-      border: 'border-indigo-500/40' 
-    }
-  };
 
   const selectedNode = nodes.find(n => n.id === selectedNodeId) || nodes[0];
   const currentBranchStyle = branchStyles[selectedNode.branch];
@@ -985,31 +1044,31 @@ export const SkillTreeTab: React.FC = () => {
     all: {
       name: 'Todos los Dominios',
       match: '100% Cobertura',
-      description: 'Vista holística transdisciplinaria de los 7 polos de conocimiento y sus sinergias.',
+      description: 'Vista confocal multi-canal de los 7 troncos dendríticos y su árbol sináptico.',
       targets: 'Institutos de I+D, Centros Tecnológicos, Startups de Impacto, Agencias Públicas'
     },
     'rd-scientist': {
       name: 'Investigador Científico I+D',
       match: '92% Afinidad',
-      description: 'Perfil centrado en física de la Tierra, flujos de carbono, modelación numérica y publicaciones.',
+      description: 'Canal GFP & CFP: flujos de carbono, prospección ERT, limnología y publicaciones.',
       targets: 'Helmholtz GFZ, CAU Kiel, BC3 Basque Centre, AZTI, Thünen Institut'
     },
     'ai-product': {
       name: 'AI Product Owner & Climate-Tech',
       match: '88% Afinidad',
-      description: 'Ingeniería de producto, gemelos digitales, IoT agrícola, APIs geoespaciales y agentes de IA.',
+      description: 'Canal Laser Blue: gemelos digitales 3D, telemetría IoT, APIs geoespaciales y agentes.',
       targets: 'Startups de Clima en Berlín/Munich, Tecnalia, Euskadi Digital, Agrotech Europa'
     },
     'campaign-lead': {
       name: 'Director de Campañas & Grassroots',
       match: '95% Afinidad',
-      description: 'Dirección de medios de gran alcance (+700k), movilización campesina, vocería y comunidades.',
+      description: 'Canal Texas Red & Phyto-Lime: dirección de medios masivos (+700k), APR y territorio.',
       targets: 'Coaliciones Europeas (EPN), Fondos de Justicia Climática, Redes Territoriales'
     },
     'policy-advisor': {
       name: 'Consultor en Políticas & CSRD',
       match: '86% Afinidad',
-      description: 'Articulación de directivas europeas (RED III, Directiva del Suelo), auditoría y comparecencia legislativa.',
+      description: 'Canal Cy5 Violet: directivas europeas (RED III, Suelo), auditoría y comparecencia.',
       targets: 'Consultoras de Transición Energética, Agencias Ambientales Estatales, Think Tanks'
     }
   };
@@ -1020,70 +1079,71 @@ export const SkillTreeTab: React.FC = () => {
     <div className="space-y-5 text-[var(--text-primary)] font-sans animate-fadeIn select-none">
       
       {/* =========================================================================
-       * 1. TOP BANNER: NEURAL BIO-CONSTELLATION & HEPTAGONAL MATRIX
+       * 1. TOP BANNER: CONFOCAL MICROSCOPY HUD & MULTI-CHANNEL SPECTROMETER
        * ========================================================================= */}
       <div 
         className="p-5 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
         style={{ 
-          backgroundColor: 'var(--card-bg)', 
-          borderColor: 'var(--card-border)' 
+          backgroundColor: '#03050c', 
+          borderColor: 'rgba(255, 255, 255, 0.12)' 
         }}
       >
-        {/* Subtle background ambient pulse */}
-        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+        {/* Soft bioluminescent optical background fog */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-cyan-500/10 blur-[90px] pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-purple-500/10 blur-[90px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-amber-500/5 blur-[80px] pointer-events-none" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 border border-cyan-500/40 text-cyan-400 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.2)]">
-                <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-spin" style={{ animationDuration: '8s' }} />
-                <span>NEURAL BIO-CONSTELLATION // 7 POLOS TRANSDISCIPLINARIOS</span>
+              <span className="px-2.5 py-0.5 rounded-md bg-cyan-950/60 border border-cyan-400/40 text-cyan-300 text-[11px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.3)]">
+                <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+                <span>CONFOCAL FLUORESCENCE SPECTROMETRY // 7 CANALES FLUORÓFOROS</span>
               </span>
-              <span className="text-[11px] text-[var(--text-muted)] font-mono">
-                {nodes.length} NODOS AUDITADOS • 7 VACÍOS ESTRATÉGICOS DETECTADOS
+              <span className="text-[11px] text-slate-400 font-mono">
+                {nodes.length} BOTONES SINÁPTICOS • SOMA MULTIPOLAR INCANDESCENTE
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] uppercase tracking-tight flex items-center gap-2">
-              <span>Árbol de Aptitudes & Red Sináptica Viva</span>
+            <h1 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight flex items-center gap-2">
+              <span>Árbol de Aptitudes: Neurona Confocal Viva</span>
             </h1>
-            <p className="text-xs text-[var(--text-secondary)] max-w-3xl leading-relaxed">
-              Mapeo integral que articula <strong>Ciencia Biofísica</strong> (Geofísica, Biogeoquímica, Suelos), <strong>Ingeniería de Software & IA</strong> (Gemelos Digitales, IoT), <strong>Gestión de Consorcios</strong> y <strong>Acción Comunitaria</strong> (Grassroots, Medios +700k y Políticas).
+            <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
+              Visualización microscópica inspirada en técnicas de <strong>dos fotones y fluorescencia confocal</strong>. El soma central irradia 7 troncos dendríticos con espinas y botones sinápticos activos, conectando <strong>Ciencia de la Tierra</strong>, <strong>Gemelos Digitales</strong>, <strong>Comunidades</strong> y <strong>Políticas</strong>.
             </p>
           </div>
 
-          {/* Academic & Professional Core Badge */}
+          {/* Incandescent Core Telemetry Badge */}
           <div 
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl border shrink-0 backdrop-blur-md shadow-lg"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl border shrink-0 backdrop-blur-md shadow-2xl"
             style={{ 
-              backgroundColor: 'var(--panel-bg)', 
-              borderColor: 'var(--panel-border)' 
+              backgroundColor: '#060a17', 
+              borderColor: 'rgba(251, 191, 36, 0.4)' 
             }}
           >
-            <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+            <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-amber-400/30 to-red-500/30 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.4)]">
               <Compass className="h-6 w-6 animate-pulse" />
             </div>
             <div>
-              <div className="text-[9px] text-[var(--text-muted)] font-mono font-bold uppercase tracking-wider">NÚCLEO TRANSDISCIPLINARIO</div>
-              <div className="text-xs font-black text-[var(--text-primary)]">DANIEL SANTANDER URRUTIA</div>
-              <div className="text-[9.5px] text-cyan-400 font-mono">Doble M.Sc. Kiel/Poznań • Geofísica U. de Chile</div>
+              <div className="text-[9px] text-amber-400 font-mono font-bold uppercase tracking-wider">SOMA DE ALTA ENERGÍA</div>
+              <div className="text-xs font-black text-white">DANIEL SANTANDER URRUTIA</div>
+              <div className="text-[9.5px] text-slate-400 font-mono">Doble M.Sc. Kiel/Poznań • Geofísica U. de Chile</div>
             </div>
           </div>
         </div>
 
         {/* =====================================================================
-         * 2. ARCHETYPE MATRIX SIMULATOR (CALIBRACIÓN POR ROL PROFESIONAL)
+         * 2. ARCHETYPE MATRIX SIMULATOR (CALIBRACIÓN POR CANAL DE EMISIÓN)
          * ===================================================================== */}
-        <div className="mt-4 pt-3.5 border-t border-[var(--panel-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mt-4 pt-3.5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold mr-1 flex items-center gap-1">
+            <span className="text-[10px] font-mono text-slate-400 uppercase font-bold mr-1 flex items-center gap-1">
               <Target className="h-3 w-3 text-cyan-400" />
               <span>SIMULADOR DE ROL:</span>
             </span>
 
             {[
-              { id: 'all', label: 'Todos los Polos', icon: '🌐' },
+              { id: 'all', label: 'Todos los Canales', icon: '🌐' },
               { id: 'rd-scientist', label: 'Investigador I+D (Helmholtz/BC3)', icon: '🔬' },
               { id: 'ai-product', label: 'AI Product Owner & Climate-Tech', icon: '⚡' },
               { id: 'campaign-lead', label: 'Dirección de Campañas & Grassroots', icon: '📢' },
@@ -1094,8 +1154,8 @@ export const SkillTreeTab: React.FC = () => {
                 onClick={() => setSelectedArchetype(arch.id as ProfileArchetype)}
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
                   selectedArchetype === arch.id
-                    ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-md shadow-cyan-500/20 border border-cyan-400'
-                    : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                    ? 'bg-gradient-to-r from-amber-500 to-rose-600 text-black shadow-lg shadow-amber-500/30 border border-amber-300 font-black'
+                    : 'bg-white/5 text-slate-300 hover:text-white border border-white/10 hover:bg-white/10'
                 }`}
               >
                 <span>{arch.icon}</span>
@@ -1105,28 +1165,28 @@ export const SkillTreeTab: React.FC = () => {
           </div>
 
           {/* Dynamic Match readout badge */}
-          <div className="flex items-center gap-2 self-start sm:self-auto font-mono text-[11px] px-2.5 py-1 rounded-lg bg-black/30 border border-white/10 shrink-0">
-            <span className="text-[var(--text-muted)]">Afinidad con Perfil:</span>
-            <span className="text-emerald-400 font-bold">{currentArchetypeInfo.match}</span>
+          <div className="flex items-center gap-2 self-start sm:self-auto font-mono text-[11px] px-2.5 py-1 rounded-lg bg-black/50 border border-white/10 shrink-0">
+            <span className="text-slate-400">Emisión Espectral:</span>
+            <span className="text-amber-400 font-bold">{currentArchetypeInfo.match}</span>
           </div>
         </div>
 
         {/* Filter Pills Bar (Mastered / Training / Gaps) */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2.5 border-t border-[var(--panel-border)]/60 text-[11px]">
+        <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2.5 border-t border-white/10 text-[11px]">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase font-bold mr-1">
+            <span className="text-[10px] font-mono text-slate-400 uppercase font-bold mr-1">
               FILTRAR ESTADO:
             </span>
             <button
               onClick={() => setFilterMode('all')}
               className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
                 filterMode === 'all'
-                  ? 'bg-sky-600 text-white shadow'
-                  : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                  ? 'bg-cyan-600 text-white shadow'
+                  : 'bg-white/5 text-slate-300 hover:text-white border border-white/10'
               }`}
             >
               <span>Todas</span>
-              <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/20">{totalCount}</span>
+              <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/30">{totalCount}</span>
             </button>
 
             <button
@@ -1134,11 +1194,11 @@ export const SkillTreeTab: React.FC = () => {
               className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
                 filterMode === 'mastered'
                   ? 'bg-emerald-600 text-white shadow'
-                  : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                  : 'bg-white/5 text-slate-300 hover:text-white border border-white/10'
               }`}
             >
               <span>Dominadas (Senior)</span>
-              <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/20">{masteredCount}</span>
+              <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/30">{masteredCount}</span>
             </button>
 
             <button
@@ -1146,11 +1206,11 @@ export const SkillTreeTab: React.FC = () => {
               className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
                 filterMode === 'training'
                   ? 'bg-amber-600 text-white shadow'
-                  : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--card-border)]'
+                  : 'bg-white/5 text-slate-300 hover:text-white border border-white/10'
               }`}
             >
               <span>En Desarrollo</span>
-              <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/20">{trainingCount}</span>
+              <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/30">{trainingCount}</span>
             </button>
 
             <button
@@ -1160,99 +1220,117 @@ export const SkillTreeTab: React.FC = () => {
               }}
               className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 ${
                 filterMode === 'gaps'
-                  ? 'bg-rose-600 text-white shadow ring-2 ring-rose-500/40'
-                  : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 border border-rose-500/30'
+                  ? 'bg-rose-600 text-white shadow ring-2 ring-rose-500/50'
+                  : 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30'
               }`}
             >
-              <span>⚡ Vacíos de Mercado</span>
+              <span>⚡ Vacíos (Sinapsis Silentes)</span>
               <span className="px-1.5 py-0.2 rounded text-[10px] bg-rose-600 text-white font-extrabold">{gapsCount}</span>
             </button>
           </div>
 
-          <div className="text-[10px] font-mono text-[var(--text-muted)] italic hidden md:inline-block">
-            * Pasa el ratón sobre un nodo para iluminar sus cables de sinergia entre disciplinas
+          <div className="text-[10px] font-mono text-amber-400 italic hidden md:inline-block">
+            * Pasa el cursor por cualquier espina para ver la depolarización bioeléctrica hacia el soma
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-       * 3. MAIN STAGE: THE NEURAL BIO-CONSTELLATION CANVAS & DOSSIER DRAWER
+       * 3. MAIN MICROSCOPY CANVAS: THE LIVING CONFOCAL NEURON
        * ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
-        {/* LEFT CANVAS: THE NEURAL CONSTELLATION GRAPH (8 COLS) */}
+        {/* LEFT CANVAS: CONFOCAL FLUORESCENCE STAGE (8 COLS) */}
         <div 
-          className="lg:col-span-8 p-4 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
+          className="lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
           style={{ 
-            backgroundColor: 'var(--card-bg)', 
-            borderColor: 'var(--card-border)' 
+            backgroundColor: '#020408', 
+            borderColor: 'rgba(255, 255, 255, 0.12)' 
           }}
         >
-          {/* 7 Domains Legend Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-[var(--panel-border)] pb-2.5 mb-2.5 text-[9.5px] font-mono">
-            <span className="text-[var(--text-muted)] font-bold uppercase">7 POLOS BIOLUMINISCENTES:</span>
-            <div className="flex flex-wrap items-center gap-2.5">
+          {/* Confocal Filter Channel Pills */}
+          <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-white/10 pb-2 mb-2 text-[9px] font-mono">
+            <span className="text-slate-400 font-bold uppercase tracking-wider">7 CANALES FLUORÓFOROS (SPECTRAL EMISSION):</span>
+            <div className="flex flex-wrap items-center gap-2">
               {(Object.keys(branchStyles) as SkillBranch[]).map(b => (
                 <span 
                   key={b} 
-                  className="flex items-center gap-1 font-semibold"
+                  className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-black/40 border border-white/5 font-bold"
                   style={{ color: branchStyles[b].color }}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: branchStyles[b].color }} />
-                  <span>{branchStyles[b].icon} {branchStyles[b].label.split('&')[0].trim()}</span>
+                  <span className="h-1.5 w-1.5 rounded-full shadow-[0_0_6px_currentColor]" style={{ backgroundColor: branchStyles[b].color }} />
+                  <span>{branchStyles[b].fluorophore.split(' ')[0]}</span>
                 </span>
               ))}
-              <span className="flex items-center gap-1 text-rose-500 font-bold">
+              <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/60 border border-rose-500/30 text-rose-400 font-bold">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />
                 <span>⚡ Gap</span>
               </span>
             </div>
           </div>
 
-          {/* SVG Neural Bio-Constellation Visualizer */}
+          {/* SVG Biological Confocal Microscope Stage */}
           <div className="relative w-full overflow-x-auto">
             <svg 
-              viewBox="0 0 860 520" 
-              className="w-full min-w-[750px] h-auto select-none rounded-xl"
-              style={{ backgroundColor: '#060913' }}
+              viewBox="0 0 880 540" 
+              className="w-full min-w-[780px] h-auto select-none rounded-xl"
+              style={{ backgroundColor: '#020408' }}
             >
               <defs>
-                {/* Central Celestial Nebula Glow */}
-                <radialGradient id="centerNebula" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.25" />
-                  <stop offset="35%" stopColor="#6366f1" stopOpacity="0.15" />
-                  <stop offset="70%" stopColor="#a855f7" stopOpacity="0.05" />
+                {/* Incandescent Soma Thermal Bloom (White-Hot Center -> Orange Corona -> Outer Fog) */}
+                <radialGradient id="somaThermalCore" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                  <stop offset="25%" stopColor="#fffbeb" stopOpacity="0.95" />
+                  <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.85" />
+                  <stop offset="75%" stopColor="#dc2626" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
+                </radialGradient>
+
+                <radialGradient id="somaAtmosphereGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.35" />
+                  <stop offset="40%" stopColor="#f97316" stopOpacity="0.15" />
+                  <stop offset="70%" stopColor="#6366f1" stopOpacity="0.05" />
                   <stop offset="100%" stopColor="#000000" stopOpacity="0" />
                 </radialGradient>
 
-                {/* Starlight Grid Pattern */}
-                <pattern id="starlightGrid" width="25" height="25" patternUnits="userSpaceOnUse">
-                  <circle cx="12.5" cy="12.5" r="0.5" fill="#38bdf8" fillOpacity="0.15" />
-                </pattern>
-
-                {/* Branch Glow Filters */}
-                <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
+                {/* Confocal Optical Bloom Filter */}
+                <filter id="confocalGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur1" />
+                  <feGaussianBlur stdDeviation="7" result="blur2" />
                   <feMerge>
-                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur2" />
+                    <feMergeNode in="blur1" />
                     <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
+
+                {/* Neuropil Micro-Spine Pattern for Depth of Field */}
+                <pattern id="neuropilMesh" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 0 20 Q 20 0 40 20 T 80 20" fill="none" stroke="#6366f1" strokeWidth="0.3" strokeOpacity="0.08" />
+                  <path d="M 20 0 Q 0 20 20 40 T 20 80" fill="none" stroke="#06b6d4" strokeWidth="0.3" strokeOpacity="0.06" />
+                </pattern>
               </defs>
 
-              {/* Cosmic Starlight Canvas */}
-              <rect x="0" y="0" width="860" height="520" fill="url(#starlightGrid)" />
+              {/* Background Neuropil Mesh Layer */}
+              <rect x="0" y="0" width="880" height="540" fill="url(#neuropilMesh)" />
 
-              {/* Ambient Nebula Fog */}
-              <circle cx="430" cy="260" r="160" fill="url(#centerNebula)" />
-
-              {/* Concentric Neural Orbital Rings */}
-              <circle cx="430" cy="260" r="85" fill="none" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="3 5" opacity="0.25" />
-              <circle cx="430" cy="260" r="170" fill="none" stroke="#6366f1" strokeWidth="0.8" strokeDasharray="4 6" opacity="0.20" />
-              <circle cx="430" cy="260" r="245" fill="none" stroke="#a855f7" strokeWidth="0.8" strokeDasharray="2 7" opacity="0.15" />
+              {/* Deep Field Ambient Bloom around Soma */}
+              <circle cx="440" cy="270" r="180" fill="url(#somaAtmosphereGlow)" />
 
               {/* =============================================================
-               * CROSS-DOMAIN SYNERGY BRIDGES (LIGHT UP ON HOVER / SELECTION)
+               * NEUROPIL BACKGROUND FIBERS (CONFOCAL DEPTH OF FIELD MESH)
+               * ============================================================= */}
+              <g opacity="0.22" filter="url(#confocalGlow)">
+                {/* Out of focus background axons and micro-filaments (like Ref 3 & 4) */}
+                <path d="M 120 80 Q 260 220 440 270 Q 620 320 780 440" fill="none" stroke="#6366f1" strokeWidth="1.2" strokeDasharray="6 8" />
+                <path d="M 760 110 Q 560 230 440 270 Q 320 310 160 460" fill="none" stroke="#06b6d4" strokeWidth="1" strokeDasharray="4 6" />
+                <path d="M 440 30 Q 420 180 440 270 Q 460 360 430 510" fill="none" stroke="#10b981" strokeWidth="1.2" strokeDasharray="5 7" />
+                <path d="M 90 280 Q 270 290 440 270 Q 610 250 810 260" fill="none" stroke="#f59e0b" strokeWidth="0.8" strokeDasharray="3 5" />
+                <path d="M 220 500 Q 330 380 440 270 Q 550 160 680 50" fill="none" stroke="#a3e635" strokeWidth="0.8" strokeDasharray="5 5" />
+              </g>
+
+              {/* =============================================================
+               * CROSS-DOMAIN SYNERGY AXONS (ACTION POTENTIAL HIGHLIGHTS)
                * ============================================================= */}
               {synergyBridges.map((bridge, bIdx) => {
                 const nodeFrom = nodes.find(n => n.id === bridge.from);
@@ -1265,74 +1343,162 @@ export const SkillTreeTab: React.FC = () => {
                 return (
                   <path
                     key={`bridge-${bIdx}`}
-                    d={`M ${nodeFrom.cx} ${nodeFrom.cy} Q 430 260 ${nodeTo.cx} ${nodeTo.cy}`}
+                    d={`M ${nodeFrom.cx} ${nodeFrom.cy} C 440 270, 440 270, ${nodeTo.cx} ${nodeTo.cy}`}
                     fill="none"
-                    stroke={isConnected ? '#38bdf8' : '#334155'}
-                    strokeWidth={isConnected ? 2 : 0.8}
-                    strokeDasharray={isConnected ? 'none' : '3 4'}
+                    stroke={isConnected ? '#fbbf24' : '#334155'}
+                    strokeWidth={isConnected ? 2.5 : 0.8}
+                    strokeDasharray={isConnected ? 'none' : '3 5'}
                     opacity={isConnected ? 0.95 : 0.25}
-                    filter={isConnected ? 'url(#glowEffect)' : undefined}
+                    filter={isConnected ? 'url(#confocalGlow)' : undefined}
                     className="transition-all duration-300"
                   />
                 );
               })}
 
               {/* =============================================================
-               * MAIN RADIAL TRUNKS (7 DOMAIN NERVE SPINES)
+               * PRIMARY DENDRITIC TRUNKS (TAPERING ORGANIC NEURAL PROCESSES)
+               * 7 distinct trunks emerging from soma membrane and branching outward
                * ============================================================= */}
-              {/* Spine 0: Geophysics (Top) */}
-              <path d="M 430 260 Q 430 180 430 95" fill="none" stroke="#10b981" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 430 160 L 375 120 L 400 50 M 430 95 L 485 120 L 460 45 L 525 65" fill="none" stroke="#10b981" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              
+              {/* Trunk 0: GFP Emerald (Top - Geofísica) */}
+              <g filter="url(#confocalGlow)">
+                {/* Base trunk: thick tapering process */}
+                <path d="M 436 248 C 438 210, 435 160, 440 90" fill="none" stroke="#10b981" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 440 90 C 442 70, 420 55, 405 48" fill="none" stroke="#10b981" strokeWidth="2.8" strokeLinecap="round" opacity="0.85" />
+                <path d="M 440 90 C 445 70, 465 55, 475 45" fill="none" stroke="#10b981" strokeWidth="2.8" strokeLinecap="round" opacity="0.85" />
+                <path d="M 440 135 C 410 145, 395 138, 385 130" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 440 135 C 470 145, 485 138, 495 130" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 475 45 C 510 50, 530 58, 545 65" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
-              {/* Spine 1: Biogeo (Top-Right) */}
-              <path d="M 430 260 Q 510 200 620 125" fill="none" stroke="#06b6d4" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 550 155 L 600 180 L 675 140 L 695 95 L 750 130" fill="none" stroke="#06b6d4" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              {/* Trunk 1: CFP Cyan (Top-Right - Biogeoquímica) */}
+              <g filter="url(#confocalGlow)">
+                <path d="M 452 255 C 490 235, 540 205, 640 135" fill="none" stroke="#06b6d4" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 525 215 C 545 190, 555 175, 565 165" fill="none" stroke="#06b6d4" strokeWidth="2.8" strokeLinecap="round" opacity="0.85" />
+                <path d="M 550 210 C 585 205, 605 200, 615 195" fill="none" stroke="#06b6d4" strokeWidth="2.4" strokeLinecap="round" opacity="0.75" />
+                <path d="M 640 135 C 670 145, 685 150, 695 155" fill="none" stroke="#06b6d4" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 640 135 C 680 120, 700 110, 715 105" fill="none" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                <path d="M 695 155 C 735 150, 755 148, 775 145" fill="none" stroke="#06b6d4" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
-              {/* Spine 2: Comms (Mid-Right) */}
-              <path d="M 430 260 Q 540 270 665 305" fill="none" stroke="#f97316" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 615 260 L 680 240 L 740 275 L 785 325" fill="none" stroke="#f97316" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              {/* Trunk 2: Texas Red / mCherry (Mid-Right - Comunicaciones) */}
+              <g filter="url(#confocalGlow)">
+                <path d="M 458 270 C 510 272, 570 275, 685 315" fill="none" stroke="#f97316" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 550 275 C 590 270, 615 268, 635 265" fill="none" stroke="#f97316" strokeWidth="3" strokeLinecap="round" opacity="0.85" />
+                <path d="M 635 265 C 670 255, 690 250, 705 245" fill="none" stroke="#f97316" strokeWidth="2.4" strokeLinecap="round" opacity="0.75" />
+                <path d="M 685 315 C 725 300, 745 290, 765 280" fill="none" stroke="#f97316" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 685 315 C 750 325, 780 330, 810 335" fill="none" stroke="#f97316" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
-              {/* Spine 3: Culture & Policy (Bottom-Right) */}
-              <path d="M 430 260 Q 510 340 580 445" fill="none" stroke="#a855f7" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 555 375 L 625 395 L 655 455 L 715 480 M 580 445 L 515 460 L 610 495" fill="none" stroke="#a855f7" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              {/* Trunk 3: Cy5 Violet (Bottom-Right - Cultura & Políticas) */}
+              <g filter="url(#confocalGlow)">
+                <path d="M 450 285 C 485 325, 530 380, 600 455" fill="none" stroke="#c084fc" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 505 325 C 540 355, 560 370, 575 385" fill="none" stroke="#c084fc" strokeWidth="3" strokeLinecap="round" opacity="0.85" />
+                <path d="M 575 385 C 610 395, 630 400, 645 405" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" opacity="0.75" />
+                <path d="M 600 455 C 640 460, 660 462, 675 465" fill="none" stroke="#c084fc" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 535 395 C 535 435, 535 450, 535 470" fill="none" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                <path d="M 675 465 C 705 478, 720 484, 735 490" fill="none" stroke="#c084fc" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+                <path d="M 600 455 C 615 480, 625 495, 630 505" fill="none" stroke="#c084fc" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
-              {/* Spine 4: Grassroots & Territory (Bottom-Left) */}
-              <path d="M 430 260 Q 340 340 280 445" fill="none" stroke="#84cc16" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 305 375 L 235 395 L 205 455 L 145 480 M 280 445 L 345 460" fill="none" stroke="#84cc16" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              {/* Trunk 4: Phyto-Lime YFP (Bottom-Left - Grassroots & Territorio) */}
+              <g filter="url(#confocalGlow)">
+                <path d="M 430 285 C 395 325, 350 380, 290 455" fill="none" stroke="#a3e635" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 375 325 C 345 355, 325 370, 315 385" fill="none" stroke="#a3e635" strokeWidth="3" strokeLinecap="round" opacity="0.85" />
+                <path d="M 315 385 C 280 395, 260 400, 245 405" fill="none" stroke="#a3e635" strokeWidth="2.5" strokeLinecap="round" opacity="0.75" />
+                <path d="M 290 455 C 250 460, 230 462, 215 465" fill="none" stroke="#a3e635" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 345 395 C 350 435, 355 450, 355 470" fill="none" stroke="#a3e635" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                <path d="M 215 465 C 185 478, 170 484, 155 490" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
-              {/* Spine 5: Project Management & Consortia (Mid-Left) */}
-              <path d="M 430 260 Q 320 270 195 305" fill="none" stroke="#f59e0b" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 245 260 L 180 240 L 120 275 L 75 325" fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              {/* Trunk 5: Lucifer Amber (Mid-Left - Gestión de Proyectos) */}
+              <g filter="url(#confocalGlow)">
+                <path d="M 422 270 C 370 272, 310 275, 195 315" fill="none" stroke="#fbbf24" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 335 275 C 290 270, 265 268, 245 265" fill="none" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" opacity="0.85" />
+                <path d="M 245 265 C 210 255, 190 250, 175 245" fill="none" stroke="#fbbf24" strokeWidth="2.4" strokeLinecap="round" opacity="0.75" />
+                <path d="M 195 315 C 155 300, 135 290, 115 285" fill="none" stroke="#fbbf24" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 195 315 C 130 325, 100 330, 70 335" fill="none" stroke="#fbbf24" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
-              {/* Spine 6: Software, Product Owner & AI (Top-Left) */}
-              <path d="M 430 260 Q 340 190 240 125" fill="none" stroke="#6366f1" strokeWidth="2.2" opacity="0.75" />
-              <path d="M 310 155 L 260 180 L 185 140 L 165 95 L 210 50 M 185 140 L 110 130" fill="none" stroke="#6366f1" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+              {/* Trunk 6: Laser Electric Blue (Top-Left - Product Owner & Software) */}
+              <g filter="url(#confocalGlow)">
+                <path d="M 428 255 C 390 235, 340 205, 240 135" fill="none" stroke="#60a5fa" strokeWidth="5.5" strokeLinecap="round" opacity="0.85" />
+                <path d="M 355 215 C 335 190, 325 175, 315 165" fill="none" stroke="#60a5fa" strokeWidth="2.8" strokeLinecap="round" opacity="0.85" />
+                <path d="M 330 210 C 295 205, 275 200, 265 195" fill="none" stroke="#60a5fa" strokeWidth="2.4" strokeLinecap="round" opacity="0.75" />
+                <path d="M 240 135 C 210 145, 195 150, 185 155" fill="none" stroke="#60a5fa" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+                <path d="M 240 135 C 200 120, 180 110, 165 105" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                <path d="M 240 135 C 230 95, 225 75, 215 60" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                <path d="M 185 155 C 145 150, 125 148, 105 145" fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+              </g>
 
               {/* =============================================================
-               * CENTRAL NUCLEUS: DANIEL SANTANDER (TRANSDISCIPLINARY CORE)
+               * DENDRITIC SPINES (FINE CONNECTING NECKS TO BOUTONS)
+               * ============================================================= */}
+              {nodes.map(node => {
+                const nodeColor = node.isMarketGap ? '#ef4444' : branchStyles[node.branch].color;
+                const isSelected = selectedNodeId === node.id;
+                const isHovered = hoveredNodeId === node.id;
+
+                return (
+                  <line 
+                    key={`spine-${node.id}`}
+                    x1={node.spineOrigin.x} 
+                    y1={node.spineOrigin.y} 
+                    x2={node.cx} 
+                    y2={node.cy} 
+                    stroke={nodeColor} 
+                    strokeWidth={isSelected || isHovered ? "1.8" : "1"} 
+                    strokeOpacity={isSelected || isHovered ? 0.95 : 0.65}
+                    strokeDasharray={node.isMarketGap ? "2 2" : undefined}
+                    filter={isSelected || isHovered ? "url(#confocalGlow)" : undefined}
+                    className="transition-all duration-200"
+                  />
+                );
+              })}
+
+              {/* =============================================================
+               * THE SOMA: ORGANIC WHITE-HOT MULTIPOLAR CELL BODY
+               * Inspired directly by confocal images 1, 2, 4, 5
                * ============================================================= */}
               <g 
                 className="cursor-pointer group"
                 onClick={() => setSelectedNodeId('n7-wetland')}
               >
-                {/* Outer Rotating Halo */}
-                <circle cx="430" cy="260" r="34" fill="#091325" stroke="#38bdf8" strokeWidth="2" filter="url(#glowEffect)" />
-                <circle cx="430" cy="260" r="40" fill="none" stroke="#6366f1" strokeWidth="1" strokeDasharray="3 4" opacity="0.6" />
-                <circle cx="430" cy="260" r="4.5" fill="#38bdf8" />
-                
-                <text x="430" y="256" fill="#ffffff" fontSize="8" fontWeight="900" fontFamily="sans-serif" textAnchor="middle" letterSpacing="0.5">
+                {/* Outermost membrane radiation aura */}
+                <ellipse cx="440" cy="270" rx="38" ry="32" fill="url(#somaThermalCore)" filter="url(#confocalGlow)" opacity="0.9" />
+
+                {/* Multipolar biological cell body with organic lobes emerging into dendrites */}
+                <path 
+                  d="M 436 242 
+                     C 445 242, 456 250, 460 262 
+                     C 466 270, 462 284, 452 292 
+                     C 442 298, 430 296, 422 288 
+                     C 414 280, 416 265, 424 252 
+                     C 428 244, 432 242, 436 242 Z" 
+                  fill="#ffffff" 
+                  filter="url(#confocalGlow)"
+                />
+
+                {/* Blazing incandescent core (white-hot nucleus) */}
+                <ellipse cx="439" cy="269" rx="16" ry="12" fill="#ffffff" />
+                <circle cx="439" cy="269" r="6" fill="#fffbeb" />
+
+                {/* Organic Membrane Texture / Cytoplasm flecks */}
+                <circle cx="433" cy="264" r="2" fill="#fde047" opacity="0.8" />
+                <circle cx="445" cy="273" r="2.5" fill="#f97316" opacity="0.8" />
+                <circle cx="441" cy="260" r="1.5" fill="#fbbf24" opacity="0.9" />
+
+                {/* Core Labeling */}
+                <text x="439" y="267" fill="#000000" fontSize="7.5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle" letterSpacing="0.4">
                   D. SANTANDER
                 </text>
-                <text x="430" y="268" fill="#38bdf8" fontSize="6.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
-                  CORE TRANSDISCIPLINAR
-                </text>
-                <text x="430" y="277" fill="#94a3b8" fontSize="5" fontFamily="monospace" textAnchor="middle">
-                  7 POLOS EN SINERGIA
+                <text x="439" y="276" fill="#78350f" fontSize="5.5" fontWeight="900" fontFamily="monospace" textAnchor="middle">
+                  SOMA TRANSDISCIPLINAR
                 </text>
               </g>
 
               {/* =============================================================
-               * NODES RENDERING (WITH BIOLUMINESCENT PARTICLES & GAP ALERTS)
+               * SYNAPTIC BOUTONS (THE SKILL NODES - LUMINESCENT MEMBRANE PUNCTA)
                * ============================================================= */}
               {nodes.map(node => {
                 const isSelected = selectedNodeId === node.id;
@@ -1357,7 +1523,7 @@ export const SkillTreeTab: React.FC = () => {
                   ? '#ef4444' 
                   : branchStyles[node.branch].color;
 
-                const opacity = isVisible ? (isHovered || isSelected || isSynergyActive ? 1 : 0.85) : 0.15;
+                const opacity = isVisible ? (isHovered || isSelected || isSynergyActive ? 1 : 0.88) : 0.12;
 
                 return (
                   <g 
@@ -1368,72 +1534,73 @@ export const SkillTreeTab: React.FC = () => {
                     onMouseLeave={() => setHoveredNodeId(null)}
                     onClick={() => setSelectedNodeId(node.id)}
                   >
-                    {/* Pulsing Alert Ring for Market Gaps */}
+                    {/* Market Gap: Scarlet Red Pulsing Receptor Ring */}
                     {node.isMarketGap && (
                       <circle 
                         cx={node.cx} 
                         cy={node.cy} 
-                        r="16" 
+                        r="14" 
                         fill="none" 
                         stroke="#ef4444" 
                         strokeWidth="1.2"
                         strokeDasharray="2 3"
                         className="animate-spin"
-                        style={{ animationDuration: '6s' }}
+                        style={{ animationDuration: '5s' }}
                       />
                     )}
 
-                    {/* Selected or Synergy Halo Ring */}
+                    {/* Active Synapse Photonic Bloom Halo */}
                     {(isSelected || isHovered || isSynergyActive) && (
                       <circle 
                         cx={node.cx} 
                         cy={node.cy} 
-                        r={isSelected ? "17" : "14"} 
+                        r={isSelected ? "16" : "13"} 
                         fill={nodeColor} 
-                        fillOpacity="0.25" 
+                        fillOpacity="0.35" 
                         stroke={nodeColor}
-                        strokeWidth={isSelected ? "2" : "1.2"}
-                        filter="url(#glowEffect)"
+                        strokeWidth={isSelected ? "2" : "1"}
+                        filter="url(#confocalGlow)"
                       />
                     )}
 
-                    {/* Node Main Body */}
+                    {/* Synaptic Bouton Head (Solid Lipid Membrane Body) */}
                     <circle 
                       cx={node.cx} 
                       cy={node.cy} 
-                      r={isSelected ? "10.5" : "8"} 
-                      fill="#070d1e" 
+                      r={isSelected ? "9.5" : "7.5"} 
+                      fill="#020617" 
                       stroke={nodeColor} 
-                      strokeWidth={isSelected ? "2.5" : "1.6"} 
+                      strokeWidth={isSelected ? "2.4" : "1.8"} 
                       strokeDasharray={node.isMarketGap ? "2 2" : undefined}
+                      filter="url(#confocalGlow)"
                     />
 
-                    {/* Inner Core Pip */}
+                    {/* Concentrated Vesicle Core (Dense Photonic Pip) */}
                     <circle 
                       cx={node.cx} 
                       cy={node.cy} 
-                      r={node.isMarketGap ? "2.5" : node.status === 'MASTERED' ? "3" : "2"} 
-                      fill={nodeColor} 
+                      r={node.isMarketGap ? "2.8" : node.status === 'MASTERED' ? "3.2" : "2.2"} 
+                      fill={node.isMarketGap ? "#ffffff" : node.status === 'MASTERED' ? "#ffffff" : nodeColor} 
                     />
 
-                    {/* Node Floating Label */}
+                    {/* Micro Floating Label */}
                     <text 
                       x={node.cx} 
-                      y={node.cy + (node.cy > 260 ? 17 : -12)} 
+                      y={node.cy + (node.cy > 270 ? 17 : -12)} 
                       fontSize="6.8" 
                       fontWeight="bold" 
                       fontFamily="sans-serif" 
                       textAnchor="middle"
-                      fill={isSelected ? '#38bdf8' : isHovered ? '#ffffff' : '#cbd5e1'}
-                      className="transition-colors"
+                      fill={isSelected ? '#ffffff' : isHovered ? nodeColor : '#cbd5e1'}
+                      className="transition-colors drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
                     >
                       {node.shortName}
                     </text>
                     <text 
                       x={node.cx} 
-                      y={node.cy + (node.cy > 260 ? 24 : -5)} 
+                      y={node.cy + (node.cy > 270 ? 24 : -5)} 
                       fill={nodeColor} 
-                      fontSize="5.5" 
+                      fontSize="5.2" 
                       fontFamily="monospace" 
                       textAnchor="middle"
                       fontWeight="bold"
@@ -1447,35 +1614,35 @@ export const SkillTreeTab: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: THE DEEP DOSSIER DRAWER (4 COLS) */}
+        {/* RIGHT COLUMN: CONFOCAL TECHNICAL DOSSIER (4 COLS) */}
         <div className="lg:col-span-4 space-y-3.5">
           
           {/* Main Selected Capability Inspector Card */}
           <div 
-            className={`p-4 rounded-2xl border shadow-2xl relative transition-all duration-300 ${
+            className={`p-4 rounded-2xl border shadow-2xl relative transition-all duration-300 backdrop-blur-md ${
               selectedNode.isMarketGap 
-                ? 'bg-rose-500/10 border-rose-500/50 shadow-rose-950/30' 
+                ? 'bg-rose-950/20 border-rose-500/50 shadow-rose-950/40' 
                 : `${currentBranchStyle.bg} ${currentBranchStyle.border}`
             }`}
           >
-            <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2 mb-2.5">
-              <span className="text-[9.5px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5">
+              <span className="text-[9.5px] font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                 {selectedNode.isMarketGap ? (
                   <>
                     <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-                    <span className="text-rose-400 font-extrabold">RADAR DE VACÍO DE MERCADO</span>
+                    <span className="text-rose-400 font-extrabold">SINAPSIS SILENTE / GAP DE MERCADO</span>
                   </>
                 ) : (
                   <>
                     <span>{currentBranchStyle.icon}</span>
-                    <span>FICHA TÉCNICA VERIFICADA</span>
+                    <span>BOTÓN SINÁPTICO ACTIVO</span>
                   </>
                 )}
               </span>
               <span className={`text-[9px] font-mono px-2 py-0.5 rounded border font-bold ${
                 selectedNode.isMarketGap 
-                  ? 'bg-rose-600 text-white border-rose-500' 
-                  : 'bg-[var(--panel-bg)] text-[var(--text-primary)] border-[var(--card-border)]'
+                  ? 'bg-rose-600 text-white border-rose-400' 
+                  : 'bg-black/60 text-white border-white/20'
               }`}>
                 {selectedNode.isMarketGap ? '⚡ VACÍO DETECTADO' : `ID: ${selectedNode.id}`}
               </span>
@@ -1484,12 +1651,13 @@ export const SkillTreeTab: React.FC = () => {
             <div className="space-y-3">
               <div>
                 <div 
-                  className="text-[9px] font-mono font-bold uppercase tracking-wider"
+                  className="text-[9px] font-mono font-bold uppercase tracking-wider flex items-center justify-between"
                   style={{ color: currentBranchStyle.color }}
                 >
-                  {currentBranchStyle.label}
+                  <span>{currentBranchStyle.label}</span>
+                  <span className="text-[8px] opacity-75 font-mono">{currentBranchStyle.fluorophore}</span>
                 </div>
-                <h3 className="text-sm sm:text-base font-black text-[var(--text-primary)] tracking-tight mt-0.5">
+                <h3 className="text-sm sm:text-base font-black text-white tracking-tight mt-0.5">
                   {selectedNode.name}
                 </h3>
               </div>
@@ -1500,32 +1668,32 @@ export const SkillTreeTab: React.FC = () => {
                   <div 
                     className="p-3 rounded-xl border space-y-1.5 backdrop-blur-sm"
                     style={{ 
-                      backgroundColor: 'var(--panel-bg)', 
-                      borderColor: 'var(--panel-border)' 
+                      backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+                      borderColor: 'rgba(244, 63, 94, 0.3)' 
                     }}
                   >
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-[var(--text-muted)] font-mono">Demanda en Ofertas:</span>
+                      <span className="text-slate-400 font-mono">Demanda en Ofertas:</span>
                       <span className="text-rose-400 font-mono font-bold text-[10px]">
                         {selectedNode.gapDemand}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-[var(--panel-border)]">
-                      <span className="text-[var(--text-muted)] font-mono">Impacto Salarial/Match:</span>
+                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/10">
+                      <span className="text-slate-400 font-mono">Impacto Salarial/Match:</span>
                       <span className="text-emerald-400 font-mono font-bold text-[10px]">
                         {selectedNode.gapImpact}
                       </span>
                     </div>
                   </div>
 
-                  <div className="text-[11.5px] text-[var(--text-secondary)] leading-relaxed font-sans">
+                  <div className="text-[11.5px] text-slate-300 leading-relaxed font-sans">
                     {selectedNode.description}
                   </div>
 
                   {/* Immediate 3-step Action Roadmap */}
                   {selectedNode.gapRoadmap && (
-                    <div className="pt-2 border-t border-[var(--panel-border)] space-y-2">
-                      <div className="text-[9.5px] font-mono font-bold text-[var(--text-primary)] uppercase flex items-center gap-1.5">
+                    <div className="pt-2 border-t border-white/10 space-y-2">
+                      <div className="text-[9.5px] font-mono font-bold text-white uppercase flex items-center gap-1.5">
                         <TrendingUp className="h-3.5 w-3.5 text-rose-500" />
                         <span>HOJA DE RUTA PARA CERRAR LA BRECHA</span>
                       </div>
@@ -1533,16 +1701,12 @@ export const SkillTreeTab: React.FC = () => {
                         {selectedNode.gapRoadmap.map((step, idx) => (
                           <div 
                             key={idx} 
-                            className="p-2 rounded-xl border text-[10.5px] flex items-start gap-2 backdrop-blur-sm"
-                            style={{ 
-                              backgroundColor: 'var(--panel-bg)', 
-                              borderColor: 'var(--card-border)' 
-                            }}
+                            className="p-2 rounded-xl border text-[10.5px] flex items-start gap-2 bg-black/40 border-white/10"
                           >
                             <span className="h-4 w-4 rounded-full bg-rose-500/20 text-rose-400 font-mono text-[9px] font-bold flex items-center justify-center shrink-0 mt-0.5">
                               {idx + 1}
                             </span>
-                            <span className="text-[var(--text-secondary)] leading-snug">{step}</span>
+                            <span className="text-slate-300 leading-snug">{step}</span>
                           </div>
                         ))}
                       </div>
@@ -1553,56 +1717,52 @@ export const SkillTreeTab: React.FC = () => {
                 /* Regular Mastered/Active Node Inspector */
                 <div className="space-y-3">
                   <div 
-                    className="p-3 rounded-xl border space-y-1.5 backdrop-blur-sm"
-                    style={{ 
-                      backgroundColor: 'var(--panel-bg)', 
-                      borderColor: 'var(--panel-border)' 
-                    }}
+                    className="p-3 rounded-xl border space-y-1.5 bg-black/60 border-white/10"
                   >
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-[var(--text-muted)] font-mono">Nivel de Dominio:</span>
+                      <span className="text-slate-400 font-mono">Nivel de Dominio:</span>
                       <span className="text-emerald-400 font-mono font-bold">
                         {selectedNode.level} de {selectedNode.maxLevel} ({selectedNode.level === 5 ? 'Senior / Mastered' : 'Activo'})
                       </span>
                     </div>
 
                     {/* 5 Pip Progress Bar */}
-                    <div className="grid grid-cols-5 gap-1.5 h-1.5 w-full bg-black/40 rounded-full p-0.5 border border-white/10">
+                    <div className="grid grid-cols-5 gap-1.5 h-1.5 w-full bg-black/70 rounded-full p-0.5 border border-white/15">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <div
                           key={i}
                           className={`h-full rounded-full transition-all duration-500 ${
                             i < selectedNode.level 
-                              ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]' 
+                              ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' 
                               : 'bg-transparent'
                           }`}
                         />
                       ))}
                     </div>
 
-                    <div className="flex justify-between items-center text-[9px] text-[var(--text-muted)] font-mono pt-0.5">
+                    <div className="flex justify-between items-center text-[9px] text-slate-400 font-mono pt-0.5">
                       <span>Horas de Vuelo & Respaldo:</span>
-                      <span className="text-[var(--text-primary)] font-bold">{selectedNode.xp} XP</span>
+                      <span className="text-white font-bold">{selectedNode.xp} XP</span>
                     </div>
                   </div>
 
                   {/* Technical Description */}
-                  <div className="text-[11.5px] text-[var(--text-secondary)] leading-relaxed font-sans">
+                  <div className="text-[11.5px] text-slate-300 leading-relaxed font-sans">
                     {selectedNode.description}
                   </div>
 
                   {/* Connected Synergy Bridges for this Node */}
                   {activeSynergies.length > 0 && (
-                    <div className="pt-2 border-t border-[var(--panel-border)] space-y-1.5">
-                      <div className="text-[9.5px] font-mono font-bold text-cyan-400 uppercase flex items-center gap-1.5">
+                    <div className="pt-2 border-t border-white/10 space-y-1.5">
+                      <div className="text-[9.5px] font-mono font-bold text-amber-400 uppercase flex items-center gap-1.5">
                         <Layers className="h-3.5 w-3.5" />
-                        <span>SINERGIAS ACTIVAS CON OTROS POLOS</span>
+                        <span>AXONES COLATERALES & SINERGIAS ACTIVAS</span>
                       </div>
                       <div className="space-y-1">
                         {activeSynergies.map((s, idx) => (
                           <div 
                             key={idx}
-                            className="p-1.5 rounded-lg border text-[10px] font-mono flex items-center justify-between text-cyan-300 bg-cyan-950/20 border-cyan-500/20"
+                            className="p-1.5 rounded-lg border text-[10px] font-mono flex items-center justify-between text-amber-300 bg-amber-950/20 border-amber-500/25"
                           >
                             <span>⚡ {s.label}</span>
                           </div>
@@ -1612,20 +1772,16 @@ export const SkillTreeTab: React.FC = () => {
                   )}
 
                   {/* Direct Evidence Anchor to Portafolio App */}
-                  <div className="pt-2 border-t border-[var(--panel-border)] space-y-1.5">
-                    <div className="text-[9.5px] font-mono font-bold text-[var(--text-primary)] uppercase flex items-center gap-1.5">
+                  <div className="pt-2 border-t border-white/10 space-y-1.5">
+                    <div className="text-[9.5px] font-mono font-bold text-white uppercase flex items-center gap-1.5">
                       <Award className="h-3.5 w-3.5 text-cyan-400" />
                       <span>RESPALDO AUDITADO EN PORTAFOLIO</span>
                     </div>
                     <div 
-                      className="p-2.5 rounded-xl border flex items-center justify-between group shadow"
-                      style={{ 
-                        backgroundColor: 'var(--panel-bg)', 
-                        borderColor: 'var(--card-border)' 
-                      }}
+                      className="p-2.5 rounded-xl border flex items-center justify-between group shadow bg-black/50 border-white/15"
                     >
                       <div className="overflow-hidden pr-2">
-                        <div className="text-[11.5px] font-bold text-[var(--text-primary)] truncate">
+                        <div className="text-[11.5px] font-bold text-white truncate">
                           {selectedNode.evidenceTitle}
                         </div>
                         <div className="text-[9.5px] text-emerald-400 font-mono flex items-center gap-1">
@@ -1652,35 +1808,27 @@ export const SkillTreeTab: React.FC = () => {
 
           {/* Archetype Target Context Card */}
           <div 
-            className="p-3.5 rounded-2xl border shadow-xl space-y-2 transition-colors"
-            style={{ 
-              backgroundColor: 'var(--card-bg)', 
-              borderColor: 'var(--card-border)' 
-            }}
+            className="p-3.5 rounded-2xl border shadow-xl space-y-2 transition-colors bg-black/60 border-white/10"
           >
-            <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-1.5">
-              <span className="text-[11px] font-bold uppercase text-[var(--text-primary)] flex items-center gap-1.5">
-                <Target className="h-3.5 w-3.5 text-cyan-400" />
-                <span>MERCADO DIANA: {currentArchetypeInfo.name.toUpperCase()}</span>
+            <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+              <span className="text-[11px] font-bold uppercase text-white flex items-center gap-1.5">
+                <Target className="h-3.5 w-3.5 text-amber-400" />
+                <span>CANAL DIANA: {currentArchetypeInfo.name.toUpperCase()}</span>
               </span>
               <span className="text-[9px] font-mono text-emerald-400 font-bold">
                 {offers.length} OFERTAS ACTIVAS
               </span>
             </div>
 
-            <p className="text-[10.5px] text-[var(--text-secondary)] leading-relaxed">
+            <p className="text-[10.5px] text-slate-300 leading-relaxed">
               {currentArchetypeInfo.description}
             </p>
 
             <div 
-              className="p-2.5 rounded-xl border text-[10px] font-mono space-y-1"
-              style={{ 
-                backgroundColor: 'var(--panel-bg)', 
-                borderColor: 'var(--panel-border)' 
-              }}
+              className="p-2.5 rounded-xl border text-[10px] font-mono space-y-1 bg-black/40 border-white/10"
             >
-              <div className="text-[var(--text-muted)] font-bold">ENTIDADES Y CENTROS OBJETIVO:</div>
-              <div className="text-cyan-400 leading-snug">{currentArchetypeInfo.targets}</div>
+              <div className="text-slate-400 font-bold">ENTIDADES Y CENTROS OBJETIVO:</div>
+              <div className="text-amber-400 leading-snug">{currentArchetypeInfo.targets}</div>
             </div>
           </div>
         </div>
