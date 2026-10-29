@@ -114,7 +114,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
 
   // Branch statistics counts
   const branchCounts = useMemo(() => {
-    const counts: Record<string, number> = { ALL: ACADEMY_COURSES.length, ONLY_GAPS: 0 };
+    const counts: Record<string, number> = { ALL: ACADEMY_COURSES.length, ONLY_GAPS: 0, FAO: 0 };
     Object.keys(BRANCH_CONFIG).forEach(b => {
       counts[b] = 0;
     });
@@ -126,6 +126,9 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
       if (c.isMarketGap) {
         counts.ONLY_GAPS++;
       }
+      if (c.url.includes('elearning.fao.org')) {
+        counts.FAO++;
+      }
     });
 
     return counts;
@@ -134,11 +137,13 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
   // Filtered courses
   const filteredCourses = useMemo(() => {
     return ACADEMY_COURSES.filter(course => {
-      // 1. Branch / Gap mode filter
-      if (selectedBranchFilter === 'ONLY_GAPS' && !course.isMarketGap) {
+      // 1. Branch / Gap mode / FAO filter
+      if (selectedBranchFilter === 'FAO') {
+        const isFao = course.url.includes('elearning.fao.org');
+        if (!isFao) return false;
+      } else if (selectedBranchFilter === 'ONLY_GAPS' && !course.isMarketGap) {
         return false;
-      }
-      if (selectedBranchFilter !== 'ALL' && selectedBranchFilter !== 'ONLY_GAPS' && course.branch !== selectedBranchFilter) {
+      } else if (selectedBranchFilter !== 'ALL' && selectedBranchFilter !== 'ONLY_GAPS' && course.branch !== selectedBranchFilter) {
         return false;
       }
 
@@ -342,7 +347,20 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                 <span className="text-[10px] opacity-75 font-normal">({branchCounts.ONLY_GAPS})</span>
               </button>
 
-              {/* 3. The 7 Authentic Disciplines + Languages */}
+              {/* 3. FAO E-learning Academy Filter Button */}
+              <button
+                onClick={() => { setSelectedBranchFilter('FAO'); setActiveGapFilter(undefined); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs border ${
+                  selectedBranchFilter === 'FAO'
+                    ? 'bg-sky-600 text-white font-black border-sky-600 shadow-md'
+                    : 'bg-sky-500/10 border-sky-500/30 text-sky-600 dark:text-sky-400 hover:bg-sky-500/20'
+                }`}
+              >
+                <span>🇺🇳 FAO Naciones Unidas</span>
+                <span className="text-[10px] opacity-80 font-normal">({branchCounts.FAO})</span>
+              </button>
+
+              {/* 4. The 7 Authentic Disciplines + Languages */}
               {(Object.keys(BRANCH_CONFIG) as AcademyBranch[]).map(branchKey => {
                 const conf = BRANCH_CONFIG[branchKey];
                 const isSelected = selectedBranchFilter === branchKey;
@@ -435,6 +453,67 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
       </div>
 
       {/* =========================================================================
+       * FAO E-LEARNING ACADEMY (NACIONES UNIDAS) SPOTLIGHT & FAST LAUNCHER
+       * ========================================================================= */}
+      <div 
+        className="p-4 sm:p-5 rounded-2xl border relative overflow-hidden transition-all bg-gradient-to-r from-sky-500/10 via-cyan-500/5 to-transparent border-sky-500/30 shadow-xs"
+        style={{ backgroundColor: 'var(--card-bg)' }}
+      >
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="h-11 w-11 rounded-2xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0 text-2xl shadow-xs">
+              🇺🇳
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 uppercase tracking-wider">
+                  Naciones Unidas · Portal Multilateral
+                </span>
+                <span className="text-[11px] font-mono text-[var(--text-muted)] font-bold">
+                  elearning.fao.org
+                </span>
+              </div>
+              <h2 className="text-sm sm:text-base font-black text-[var(--text-primary)] mt-0.5">
+                FAO E-learning Academy · Organización de las Naciones Unidas (FAO)
+              </h2>
+              <p className="text-xs text-[var(--text-secondary)] mt-1 max-w-3xl leading-relaxed">
+                Cursos oficiales abiertos y con certificación digital internacional de Naciones Unidas. Claves para tu formación continua en: <strong className="text-sky-600 dark:text-sky-400">FAO WaPOR</strong> (balances hídricos y teledetección de cuencas), <strong className="text-cyan-600 dark:text-cyan-400">GSOCmrV & RothC</strong> (carbono del suelo y RecSOIL), <strong className="text-emerald-600 dark:text-emerald-400">Cartografía de Turberas</strong> (IPCC) y <strong className="text-amber-600 dark:text-amber-400">Neutralidad en Degradación de Tierras</strong> (ODS 15.3.1).
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto pt-2 md:pt-0 font-mono text-xs">
+            <button
+              onClick={() => {
+                setSelectedBranchFilter('FAO');
+                setActiveGapFilter(undefined);
+              }}
+              className={`flex-1 sm:flex-none px-3.5 py-2 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs border ${
+                selectedBranchFilter === 'FAO'
+                  ? 'bg-sky-600 text-white border-sky-600 shadow-md'
+                  : 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30 hover:bg-sky-500/20'
+              }`}
+            >
+              <span>Ver Cursos FAO</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-white/10 font-bold">
+                {branchCounts.FAO}
+              </span>
+            </button>
+
+            <a
+              href="https://elearning.fao.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-black transition flex items-center justify-center gap-1.5 shadow-sm hover:opacity-90 cursor-pointer"
+            >
+              <span>Portal elearning.fao.org</span>
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
        * 3. 4-COLUMN HARMONIC & COMPACT CARDS GRID
        * ========================================================================= */}
       {filteredCourses.length === 0 ? (
@@ -476,6 +555,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
             const currentStatus = userProg.status;
             const branchStyle = BRANCH_CONFIG[course.branch];
             const costBadge = getCostBadge(course.costType, course.costLabel);
+            const isFaoCourse = course.url.includes('elearning.fao.org');
 
             return (
               <div
@@ -485,18 +565,20 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                     ? 'border-emerald-500/50 bg-emerald-500/[0.04]'
                     : currentStatus === 'IN_PROGRESS'
                     ? 'border-amber-500/50 bg-amber-500/[0.04]'
+                    : isFaoCourse
+                    ? 'border-sky-500/40 hover:border-sky-500'
                     : 'hover:border-cyan-500/50'
                 }`}
                 style={{
                   backgroundColor: currentStatus === 'AVAILABLE' ? 'var(--card-bg)' : undefined,
-                  borderColor: currentStatus === 'AVAILABLE' ? 'var(--card-border)' : undefined
+                  borderColor: currentStatus === 'AVAILABLE' && !isFaoCourse ? 'var(--card-border)' : undefined
                 }}
               >
                 {/* Accent top edge pill */}
                 <div>
-                  <div className="flex items-center justify-between gap-1.5 mb-2">
+                  <div className="flex items-center justify-between gap-1 mb-2">
                     <span 
-                      className={`text-[9.5px] font-mono font-bold px-2 py-0.5 rounded-md border flex items-center gap-1 truncate max-w-[62%] ${branchStyle.bgBadge} ${branchStyle.borderBadge}`}
+                      className={`text-[9.5px] font-mono font-bold px-2 py-0.5 rounded-md border flex items-center gap-1 truncate max-w-[55%] ${branchStyle.bgBadge} ${branchStyle.borderBadge}`}
                       style={{ color: branchStyle.color }}
                       title={course.branchName}
                     >
@@ -504,9 +586,17 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                       <span className="truncate">{branchStyle.shortLabel}</span>
                     </span>
 
-                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${costBadge.bg}`}>
-                      {costBadge.label}
-                    </span>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {isFaoCourse && (
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/30 flex items-center gap-0.5">
+                          <span>🇺🇳</span>
+                          <span>FAO</span>
+                        </span>
+                      )}
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${costBadge.bg}`}>
+                        {costBadge.label}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Institution / Provider */}
@@ -634,10 +724,14 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                       href={course.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-2.5 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-[10.5px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer group"
+                      className={`px-2.5 py-1 rounded-lg text-white font-mono text-[10.5px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer group ${
+                        isFaoCourse 
+                          ? 'bg-sky-600 hover:bg-sky-500' 
+                          : 'bg-cyan-600 hover:bg-cyan-500'
+                      }`}
                       title={`Abrir página oficial de ${course.provider}`}
                     >
-                      <span>Acceder</span>
+                      <span>{isFaoCourse ? 'FAO Portal' : 'Acceder'}</span>
                       <ExternalLink className="h-3 w-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   </div>

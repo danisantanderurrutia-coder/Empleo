@@ -47,6 +47,15 @@ describe('Gap-Closer Academy · Catálogo Curado & Verificación', () => {
     });
   });
 
+  it('integra cursos clave de FAO E-learning Academy con enlaces a elearning.fao.org', () => {
+    const faoCourses = ACADEMY_COURSES.filter(c => c.url.includes('elearning.fao.org'));
+    expect(faoCourses.length).toBeGreaterThanOrEqual(4);
+    faoCourses.forEach(c => {
+      expect(c.url).toContain('https://elearning.fao.org');
+      expect(c.costType).toBe('FREE');
+    });
+  });
+
   it('todos los cursos tienen URLs válidas HTTPS oficiales y campos requeridos', () => {
     expect(ACADEMY_COURSES.length).toBeGreaterThanOrEqual(10);
 
