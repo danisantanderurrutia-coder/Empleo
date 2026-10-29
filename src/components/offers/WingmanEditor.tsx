@@ -55,7 +55,7 @@ export const WingmanEditor: React.FC<WingmanEditorProps> = ({ offer, dossier, on
 
   return (
     <form onSubmit={submit} className="p-4 rounded-xl bg-slate-900 border border-sky-500/40 space-y-3">
-      <div className="font-bold text-sky-300 text-sm">Datos del supervisor y del proyecto</div>
+      <div className="font-bold text-sky-300 text-sm">Datos del Decisor / Investigador Principal y Retos del Proyecto</div>
       <p className="text-slate-400">Un elemento por línea en las listas. Solo se guarda en tu navegador.</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div><span className={label}>Título (Prof. Dr.)</span><input className={input} value={f.honorific} onChange={set('honorific')} /></div>
@@ -75,7 +75,7 @@ export const WingmanEditor: React.FC<WingmanEditorProps> = ({ offer, dossier, on
       </div>
       <div className="flex justify-end gap-2">
         <button type="button" onClick={onCancel} className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 cursor-pointer">Cancelar</button>
-        <button type="submit" className="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl cursor-pointer">Guardar dossier</button>
+        <button type="submit" className="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl cursor-pointer">Guardar datos del decisor</button>
       </div>
     </form>
   );

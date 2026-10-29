@@ -119,10 +119,10 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
             <Award className="h-4 w-4 text-amber-500" />
           </div>
           <div className="text-2xl font-black text-slate-900 dark:text-white font-sans tracking-tight">
-            €840M+
+            {totalFundingCount} Convocatorias
           </div>
           <div className="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold mt-1 flex items-center gap-1">
-            <span>{totalFundingCount} programas (Horizon • DFG • Hazitek)</span>
+            <span>{europeFunding} Horizon • {germanyFunding} DFG/DAAD • {euskadiFunding} Hazitek</span>
           </div>
         </div>
 
@@ -201,7 +201,7 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
               <div className="flex flex-col items-center justify-center my-1.5 text-center">
                 <div className="text-3xl font-black text-amber-400 font-sans tracking-tight drop-shadow-md">
-                  €2.8M+
+                  {totalFundingCount} Programas
                 </div>
                 <div className="text-[11px] font-mono font-black text-white uppercase tracking-wider mt-0.5">
                   BOLSA DE FONDOS DISPONIBLES
@@ -213,9 +213,9 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
 
               <div className="space-y-1">
                 <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700 flex">
-                  <div className="h-full bg-amber-400" style={{ width: '45%' }} title="DACH / DFG / DAAD" />
-                  <div className="h-full bg-sky-400" style={{ width: '35%' }} title="Horizon Europe" />
-                  <div className="h-full bg-emerald-400" style={{ width: '20%' }} title="Euskadi Hazitek" />
+                  <div className="h-full bg-amber-400" style={{ width: `${Math.round((germanyFunding / (totalFundingCount || 1)) * 100)}%` }} title="DACH / DFG / DAAD" />
+                  <div className="h-full bg-sky-400" style={{ width: `${Math.round((europeFunding / (totalFundingCount || 1)) * 100)}%` }} title="Horizon Europe" />
+                  <div className="h-full bg-emerald-400" style={{ width: `${Math.round((euskadiFunding / (totalFundingCount || 1)) * 100)}%` }} title="Euskadi Hazitek" />
                 </div>
                 <div className="text-[10px] font-mono font-bold text-slate-300 flex items-center justify-between">
                   <span>HORIZON • DFG • HAZITEK</span>

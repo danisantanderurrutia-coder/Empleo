@@ -33,7 +33,7 @@ interface FiveStepPipelineModalProps {
 
 const STEPS = [
   { num: 1, label: 'Análisis empleo', icon: Search },
-  { num: 2, label: 'Consejo Wingman', icon: Target },
+  { num: 2, label: 'Decisor & Foco', icon: Target },
   { num: 3, label: 'Docs requeridos', icon: FolderCheck },
   { num: 4, label: 'Preparar CV', icon: FileText },
   { num: 5, label: 'Carta', icon: MessageSquare },
@@ -65,7 +65,7 @@ const INITIAL_REQUIRED_DOCS: RequiredDocItem[] = [
     category: 'core',
     description: 'Carta nominal orientada al supervisor o equipo técnico (sin clichés).',
     status: 'in_progress',
-    tip: 'Personalizada con los ganchos de Wingman en el Paso 5.'
+    tip: 'Personalizada con los ganchos técnicos y el foco del proyecto en el Paso 5.'
   },
   {
     id: 'doc-degrees',
@@ -315,7 +315,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   <span>Abrir vacante</span><ExternalLink className="h-4 w-4" />
                 </a>
               </div>
-              <Nav next={2} nextLabel="Paso 2: Consejo Wingman" />
+              <Nav next={2} nextLabel="Paso 2: Decisor & Foco Táctico" />
             </div>
           )}
 
@@ -341,7 +341,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
               <div className={card}>
                 <h4 className="font-bold text-white text-sm flex items-center gap-2">
                   <Target className="h-4 w-4 text-sky-400" />
-                  <span>Paso 2: Consejo Wingman — supervisor e instituto</span>
+                  <span>Paso 2: Decisor & Foco Táctico — supervisor e instituto</span>
                 </h4>
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-950 border border-slate-800">
                   <UserCheck className="h-5 w-5 text-sky-400 shrink-0 mt-0.5" />
@@ -469,7 +469,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
           {activeStep === 4 && (
             <div className="space-y-4">
               <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 space-y-1">
-                <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Guía Wingman para el CV de {leadFull}</span>
+                <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Guía de Calibración para el CV de {leadFull}</span>
                 <ul className="text-slate-300 space-y-0.5">{dossier.cvGuidance.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
               </div>
               <div className={card}>
@@ -501,7 +501,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
           {activeStep === 5 && (
             <div className="space-y-4">
               <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 space-y-1">
-                <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Ángulos Wingman para la carta</span>
+                <span className="font-bold text-sky-300 flex items-center gap-1.5"><Target className="h-4 w-4" />Ángulos Tácticos para la carta</span>
                 <ul className="text-slate-300 space-y-0.5">{dossier.coverLetterAngles.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
               </div>
               <div className={card}>

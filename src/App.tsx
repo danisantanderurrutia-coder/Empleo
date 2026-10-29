@@ -9,11 +9,13 @@ import { MissionControlTab } from './components/control/MissionControlTab';
 import { FundingTab } from './components/funding/FundingTab';
 import { SettingsTab } from './components/settings/SettingsTab';
 
-import { getStoredOffers, saveStoredOffers, getStoredProfile, getStoredApplications, saveStoredApplications } from './services/db';
+import { getStoredOffers, saveStoredOffers, getStoredProfile, getStoredApplications, saveStoredApplications, getStoredCompanies } from './services/db';
 import { calculateMatchScore } from './services/matchEngine';
 import { getStoredTheme, saveStoredTheme, applyThemeToDOM, type AppTheme } from './services/themeManager';
+import { getDossierForOffer } from './services/jobWingmanService';
 import { getSlugForState, parseSlugToState } from './utils/routes';
 import type { JobOffer } from './types/offers';
+import type { ApplicationItem } from './types/applications';
 
 export function App() {
   const [theme, setTheme] = useState<AppTheme>(getStoredTheme());
@@ -184,27 +186,85 @@ export function App() {
       const currentApps = getStoredApplications();
       const existing = currentApps.find(a => a.offerId === offerId);
       if (!existing) {
+        const dossier = getDossierForOffer(targetOffer);
+        const lead = dossier.leadProfile;
         const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
-        const newApp = {
+        const newApp: ApplicationItem = {
           id: `CAND-${Date.now().toString().slice(-6)}`,
           offerId: targetOffer.id,
           offerTitle: targetOffer.title,
           companyName: targetOffer.company,
           location: targetOffer.location,
-          currentStage: 1 as const,
-          status: 'En Progreso' as const,
+          currentStage: 1,
+          status: 'En Progreso',
           createdDate: timestamp.split(' ')[0],
           updatedDate: timestamp.split(' ')[0],
           offerUrl: targetOffer.url,
+          decisionMakerName: lead.name ? `${lead.titleHonorific ? lead.titleHonorific + ' ' : ''}${lead.name}`.trim() : undefined,
+          decisionMakerRole: lead.role || undefined,
+          decisionMakerEmail: lead.email || undefined,
+          decisionMakerChannel: lead.email ? 'Email' : 'LinkedIn',
+          directPitchHook: dossier.candidateValueThesis || dossier.technicalHooks?.[0] || undefined,
+          selectedCapabilities: targetOffer.requirements || [],
           humanApprovalGranted: false,
           adaptedCvSummary: targetOffer.requirements || [],
           history: [
             {
               id: `h-${Date.now()}`,
               timestamp,
-              stage: 1 as const,
-              title: `Oferta guardada en Locker desde el Radar`,
-              actor: 'Usuario' as const
+              stage: 1,
+              title: `Oferta registrada desde el Radar`,
+              actor: 'Usuario'
+            }
+          ]
+        };
+        saveStoredApplications([newApp, ...currentApps]);
+      }
+    }
+    handleNavigate('mission_control', 'applications');
+  };
+
+  const handleStartPipelineFromCompany = (companyId: string) => {
+    const currentCompanies = getStoredCompanies();
+    const targetCompany = currentCompanies.find(c => c.id === companyId);
+    if (targetCompany) {
+      const currentApps = getStoredApplications();
+      const existing = currentApps.find(a => a.companyName.toLowerCase() === targetCompany.name.toLowerCase());
+      if (!existing) {
+        const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
+        const primaryContact = targetCompany.contacts?.[0];
+        const newApp: ApplicationItem = {
+          id: `CAND-CO-${Date.now().toString().slice(-6)}`,
+          offerId: `co-${targetCompany.id}`,
+          offerTitle: `Prospección Táctica // ${targetCompany.name}`,
+          companyName: targetCompany.name,
+          location: targetCompany.headquarters || 'DACH / Euskadi',
+          currentStage: 1,
+          status: 'En Progreso',
+          createdDate: timestamp.split(' ')[0],
+          updatedDate: timestamp.split(' ')[0],
+          offerUrl: targetCompany.website,
+          decisionMakerName: primaryContact?.name || undefined,
+          decisionMakerRole: primaryContact?.role || undefined,
+          decisionMakerEmail: primaryContact?.email || undefined,
+          decisionMakerLinkedin: primaryContact?.linkedinUrl || undefined,
+          decisionMakerChannel: primaryContact?.email ? 'Email' : 'LinkedIn',
+          directPitchHook: targetCompany.keyProjects?.length 
+            ? `Prospección en ${targetCompany.keyProjects.slice(0, 2).join(' y ')} con background cuantitativo en geofísica ambiental.` 
+            : `Prospección directa y análisis de dolor técnico en ${targetCompany.name}.`,
+          selectedCapabilities: targetCompany.techStack || ['Geofísica Ambiental', 'Sensorica In-Situ', 'Modelado R/Python'],
+          humanApprovalGranted: false,
+          adaptedCvSummary: [
+            `Identificación de decisores en ${targetCompany.name}`,
+            `Sede: ${targetCompany.headquarters}`
+          ],
+          history: [
+            {
+              id: `h-${Date.now()}`,
+              timestamp,
+              stage: 1,
+              title: `Prospección de Cuenta Diana iniciada desde Mercado (${targetCompany.name})`,
+              actor: 'Usuario'
             }
           ]
         };
@@ -285,6 +345,7 @@ export function App() {
                 initialSubTab={radarSubTab}
                 initialFilter={radarLocationFilter}
                 onStartApplication={handleStartApplicationFromOffer}
+                onStartPipelineFromCompany={handleStartPipelineFromCompany}
                 onOpenStudio={(offerId, docType) => handleNavigate('agent_dossier', 'studio', undefined, offerId, docType)}
                 onReturnToHub={() => handleNavigate('dashboard')}
               />

@@ -22,7 +22,7 @@ import {
   FolderCheck,
   ShieldCheck,
   Lightbulb,
-  Bot,
+  Target,
   Workflow,
   Cpu,
   ChevronDown,
@@ -180,7 +180,7 @@ const THUENEN_SEED_APP: ApplicationItem = {
       id: 'h-thuenen-2',
       timestamp: '2026-10-22 20:00',
       stage: 2,
-      title: 'Dossier Wingman generado para Prof. Dr. Axel Don',
+      title: 'Dossier táctico generado para Prof. Dr. Axel Don',
       actor: 'Usuario'
     }
   ]
@@ -297,6 +297,51 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
   const [dispatchTab, setDispatchTab] = useState<'briefing' | 'letter' | 'docs' | 'qa'>('briefing');
   const [emailLang, setEmailLang] = useState<'de' | 'en'>('de');
   const [showPipelineExplainer, setShowPipelineExplainer] = useState(true);
+
+  // Editable decision maker & outreach state
+  const [editingDmName, setEditingDmName] = useState('');
+  const [editingDmRole, setEditingDmRole] = useState('');
+  const [editingDmChannel, setEditingDmChannel] = useState<'LinkedIn' | 'Email' | 'Portal Oficial' | 'Referencia'>('Email');
+  const [editingDmEmail, setEditingDmEmail] = useState('');
+  const [editingDmLinkedin, setEditingDmLinkedin] = useState('');
+  const [editingPitchHook, setEditingPitchHook] = useState('');
+  const [editingFollowUpDate, setEditingFollowUpDate] = useState('');
+  const [isSavingDm, setIsSavingDm] = useState(false);
+
+  useEffect(() => {
+    if (assistedDispatchApp) {
+      const offer = getOfferForApp(assistedDispatchApp);
+      const dossier = getDossierForOffer(offer);
+      setEditingDmName(assistedDispatchApp.decisionMakerName || dossier?.leadProfile.name || '');
+      setEditingDmRole(assistedDispatchApp.decisionMakerRole || dossier?.leadProfile.role || '');
+      setEditingDmChannel(assistedDispatchApp.decisionMakerChannel || (assistedDispatchApp.decisionMakerEmail ? 'Email' : 'LinkedIn'));
+      setEditingDmEmail(assistedDispatchApp.decisionMakerEmail || dossier?.leadProfile.email || '');
+      setEditingDmLinkedin(assistedDispatchApp.decisionMakerLinkedin || '');
+      setEditingPitchHook(assistedDispatchApp.directPitchHook || dossier?.candidateValueThesis || dossier?.technicalHooks?.[0] || '');
+      setEditingFollowUpDate(assistedDispatchApp.followUpDueDate || '');
+    }
+  }, [assistedDispatchApp]);
+
+  const handleSaveDmChanges = () => {
+    if (!assistedDispatchApp) return;
+    const updatedApp: ApplicationItem = {
+      ...assistedDispatchApp,
+      decisionMakerName: editingDmName.trim() || undefined,
+      decisionMakerRole: editingDmRole.trim() || undefined,
+      decisionMakerChannel: editingDmChannel,
+      decisionMakerEmail: editingDmEmail.trim() || undefined,
+      decisionMakerLinkedin: editingDmLinkedin.trim() || undefined,
+      directPitchHook: editingPitchHook.trim() || undefined,
+      followUpDueDate: editingFollowUpDate || undefined,
+      updatedDate: new Date().toISOString().substring(0, 10)
+    };
+    const updatedList = applications.map(a => a.id === updatedApp.id ? updatedApp : a);
+    setApplications(updatedList);
+    saveStoredApplications(updatedList);
+    setAssistedDispatchApp(updatedApp);
+    setIsSavingDm(true);
+    setTimeout(() => setIsSavingDm(false), 2000);
+  };
 
   useEffect(() => {
     saveStoredApplications(applications);
@@ -445,35 +490,28 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
 
           {/* Left: Avatar + Title & Mission Statement */}
           <div className="flex items-start gap-4 sm:gap-5 relative z-10 max-w-3xl">
-            {/* Robot / Tactical Copilot Wingman Avatar */}
+            {/* Tactical Outbound Pipeline Emblem */}
             <div className="relative shrink-0">
-              <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-hidden border-2 border-sky-400/50 shadow-lg shadow-sky-500/20 group bg-slate-950">
-                <img 
-                  src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=400&q=80" 
-                  alt="Job Wingman AI Copilot" 
-                  className="h-full w-full object-cover grayscale contrast-125 group-hover:scale-105 transition duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-sky-500/20" />
+              <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-hidden border-2 border-sky-400/50 shadow-lg shadow-sky-500/20 group bg-slate-950 flex items-center justify-center">
+                <Target className="h-10 w-10 text-sky-400 group-hover:scale-110 transition duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-sky-500/10 pointer-events-none" />
                 <div className="absolute bottom-1 left-0 right-0 flex justify-center">
                   <span className="px-1.5 py-0.5 rounded bg-sky-600 text-white font-mono font-black text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                    <Bot className="h-2.5 w-2.5" />
-                    <span>WINGMAN</span>
+                    <ShieldCheck className="h-2.5 w-2.5" />
+                    <span>HEADHUNTER</span>
                   </span>
                 </div>
-              </div>
-              <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 border-2 border-[var(--card-bg)] flex items-center justify-center shadow" title="Wingman en línea y asistiendo">
-                <span className="h-2 w-2 rounded-full bg-white animate-ping" />
               </div>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-300 border border-sky-500/30 text-[10px] font-mono font-black uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="h-3 w-3 text-sky-500 animate-pulse" />
-                  JOB WINGMAN // TACTICAL APPLICATION COPILOT
+                  <Sparkles className="h-3 w-3 text-sky-500" />
+                  HEADHUNTER OS // PIPELINE DEFINITIVO (PD)
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/30 text-[10px] font-mono font-bold">
-                  Pipeline Asistido en 7 Fases
+                  Procedimiento Táctico en 8 Fases
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold">
                   Zero-Servility Standard
@@ -485,7 +523,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
               </h2>
 
               <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-                Tu copiloto técnico para superar el filtro burocrático de empleo y convocatorias I+D. Mapeamos la psicología del PI a cargo, diagnosticamos los cuellos de botella del proyecto, calibramos el CV cuantitativo y redactamos cartas con rigor físico de par a par — garantizando siempre <span className="font-bold text-[var(--text-primary)]">control y despacho humano innegociable</span>.
+                Procedimiento estructurado de outbound para superar el filtro burocrático de empleo y convocatorias I+D. Mapeamos al decisor técnico a cargo, diagnosticamos los cuellos de botella del proyecto, calibramos el CV cuantitativo y redactamos cartas con rigor de par a par — garantizando siempre <span className="font-bold text-[var(--text-primary)]">control y despacho humano innegociable</span>.
               </p>
             </div>
           </div>
@@ -806,7 +844,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
               <div className="relative h-44 w-full shrink-0 overflow-hidden bg-slate-950">
                 <img 
                   src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" 
-                  alt="Job Wingman Ops" 
+                  alt="Headhunter OS Tactical Dispatch" 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--panel-bg)] via-[var(--panel-bg)]/40 to-transparent" />
@@ -814,8 +852,8 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
                 <div className="absolute top-3 left-4 right-4 flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="px-2.5 py-1 rounded-full bg-sky-500/30 text-sky-200 border border-sky-400/40 text-[10px] font-mono font-black uppercase tracking-wider backdrop-blur-md flex items-center gap-1.5 shadow-sm">
-                      <Sparkles className="h-3 w-3 text-sky-400 animate-pulse" />
-                      JOB WINGMAN // TACTICAL DISPATCH HUB
+                      <Sparkles className="h-3 w-3 text-sky-400" />
+                      HEADHUNTER OS // TACTICAL DISPATCH HUB
                     </span>
                     <span className="px-2 py-0.5 rounded bg-black/50 text-slate-300 text-[10px] font-mono border border-white/10 backdrop-blur-md">
                       Etapa {assistedDispatchApp.currentStage}: {STAGES.find(s => s.stage === assistedDispatchApp.currentStage)?.shortName}
@@ -858,7 +896,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
                   }`}
                 >
                   <UserCheck className="h-3.5 w-3.5" />
-                  <span>🎯 Briefing Wingman & Contacto PI</span>
+                  <span>🎯 Decisor, Gancho & Briefing Táctico</span>
                 </button>
                 <button
                   onClick={() => setDispatchTab('letter')}
@@ -898,70 +936,121 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
               {/* Body Content */}
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
                 
-                {/* TAB 1: BRIEFING WINGMAN */}
+                {/* TAB 1: BRIEFING & DECISOR */}
                 {dispatchTab === 'briefing' && (
                   <div className="space-y-4 font-sans text-xs">
-                    {/* Explanatory Wingman Mission Box */}
+                    {/* Explanatory Mission Box */}
                     <div className="p-4 rounded-xl border border-sky-500/30 bg-sky-500/10 space-y-2">
                       <div className="flex items-center space-x-2 font-mono font-black text-sky-600 dark:text-sky-300 text-xs uppercase tracking-wide">
                         <Sparkles className="h-4 w-4 text-sky-500 shrink-0" />
-                        <span>Misión Wingman: De la Burocracia al Abordaje de Alto Valor</span>
+                        <span>Protocolo Táctico: De la Burocracia al Abordaje Directo</span>
                       </div>
                       <p className="text-[11.5px] text-[var(--text-secondary)] leading-relaxed font-sans">
-                        Job Wingman analiza las prioridades del decisor científico ({dispatchDossier?.leadProfile.name || 'Supervisor a cargo'}), detecta los cuellos de botella del proyecto ({dispatchOffer.title}) y formula ángulos sin clichés ni servilismo. Tu perfil geofísico en física de medios porosos y modelado de datos en R/Python se posiciona como una ventaja técnica diferencial frente a perfiles agronómicos tradicionales.
+                        Headhunter OS analiza las prioridades del decisor científico ({editingDmName || dispatchDossier?.leadProfile.name || 'Supervisor a cargo'}), detecta los cuellos de botella del proyecto ({dispatchOffer.title}) y formula ángulos sin clichés ni servilismo. Tu perfil en física de medios porosos y modelado de datos cuantitativo en R/Python se posiciona como una ventaja técnica diferencial frente a perfiles tradicionales.
                       </p>
                     </div>
 
-                    {/* PI Intelligence Card */}
+                    {/* Interactive Decision Maker & Channel Form */}
                     <div 
                       className="p-4 rounded-xl border space-y-3"
                       style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
                     >
-                      <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2">
+                      <div className="flex items-center justify-between border-b border-[var(--panel-border)] pb-2.5">
                         <div className="flex items-center space-x-2 font-mono font-bold text-xs uppercase">
                           <UserCheck className="h-4 w-4 text-purple-500" />
-                          <span>Decisor / Investigador Principal (PI)</span>
+                          <span>Mapeo del Decisor, Canal & Gancho (NP2 / PD-3)</span>
                         </div>
-                        {dispatchDossier?.leadProfile.email && (
-                          <a
-                            href={`mailto:${dispatchDossier.leadProfile.email}`}
-                            className="font-mono text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 font-bold"
+                        <button
+                          onClick={handleSaveDmChanges}
+                          className="px-3 py-1 bg-sky-600 hover:bg-sky-500 text-white font-mono font-bold text-xs rounded-lg transition cursor-pointer shadow-sm flex items-center gap-1.5"
+                        >
+                          <Check className="h-3.5 w-3.5" />
+                          <span>{isSavingDm ? '✓ Guardado' : 'Guardar Cambios'}</span>
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-[11px] font-mono">
+                        <div>
+                          <label className="text-[var(--text-muted)] block mb-1 uppercase font-bold">Nombre del Decisor / PI:</label>
+                          <input
+                            type="text"
+                            value={editingDmName}
+                            onChange={e => setEditingDmName(e.target.value)}
+                            placeholder="Prof. Dr. / Dr. / Hiring Manager"
+                            className="w-full p-2 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-sky-500"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[var(--text-muted)] block mb-1 uppercase font-bold">Rol / Cargo:</label>
+                          <input
+                            type="text"
+                            value={editingDmRole}
+                            onChange={e => setEditingDmRole(e.target.value)}
+                            placeholder="Leiter der Arbeitsgruppe / Director"
+                            className="w-full p-2 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-sky-500"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[var(--text-muted)] block mb-1 uppercase font-bold">Canal de Abordaje:</label>
+                          <select
+                            value={editingDmChannel}
+                            onChange={e => setEditingDmChannel(e.target.value as any)}
+                            className="w-full p-2 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-sky-500"
                           >
-                            <Mail className="h-3.5 w-3.5" />
-                            <span>{dispatchDossier.leadProfile.email}</span>
-                          </a>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11.5px]">
-                        <div>
-                          <span className="font-mono text-[var(--text-muted)] text-[10px] uppercase block">Nombre y Afiliación:</span>
-                          <span className="font-bold text-[var(--text-primary)]">
-                            {dispatchDossier?.leadProfile.name || 'Prof. Dr. Axel Don'}
-                          </span>
-                          <span className="text-[var(--text-secondary)] block text-[11px]">
-                            {dispatchDossier?.leadProfile.role || 'Leiter der Arbeitsgruppe Subsoil Carbon / Thünen-Institut'}
-                          </span>
+                            <option value="Email">Email Institucional</option>
+                            <option value="LinkedIn">LinkedIn InMail / Mensaje Directo</option>
+                            <option value="Portal Oficial">Portal Oficial de Empleo</option>
+                            <option value="Referencia">Referencia / Conferencia</option>
+                          </select>
                         </div>
 
                         <div>
-                          <span className="font-mono text-[var(--text-muted)] text-[10px] uppercase block">Reto Clave del Proyecto:</span>
-                          <span className="text-[var(--text-secondary)]">
-                            {dispatchDossier?.projectPainPoints?.[0] || 'Cuantificación in-situ de biomasa radicular bajo UV (RootBox) y transporte en macroporos.'}
-                          </span>
+                          <label className="text-[var(--text-muted)] block mb-1 uppercase font-bold">Email Directo:</label>
+                          <input
+                            type="email"
+                            value={editingDmEmail}
+                            onChange={e => setEditingDmEmail(e.target.value)}
+                            placeholder="supervisor@instituto.de"
+                            className="w-full p-2 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-sky-500"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[var(--text-muted)] block mb-1 uppercase font-bold">Perfil LinkedIn (Opcional):</label>
+                          <input
+                            type="url"
+                            value={editingDmLinkedin}
+                            onChange={e => setEditingDmLinkedin(e.target.value)}
+                            placeholder="https://linkedin.com/in/..."
+                            className="w-full p-2 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-sky-500"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[var(--text-muted)] block mb-1 uppercase font-bold">Fecha Límite Seguimiento:</label>
+                          <input
+                            type="date"
+                            value={editingFollowUpDate}
+                            onChange={e => setEditingFollowUpDate(e.target.value)}
+                            className="w-full p-2 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-sky-500"
+                          />
                         </div>
                       </div>
 
-                      {dispatchDossier?.leadProfile.keyPublications && dispatchDossier.leadProfile.keyPublications.length > 0 && (
-                        <div className="pt-2 border-t border-[var(--panel-border)]">
-                          <span className="font-mono text-[var(--text-muted)] text-[10px] uppercase block mb-1">Publicaciones / Enfoques de Referencia:</span>
-                          <ul className="list-disc list-inside space-y-0.5 text-[11px] text-[var(--text-secondary)] font-mono">
-                            {dispatchDossier.leadProfile.keyPublications.map((pub, i) => (
-                              <li key={i}>{pub}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                      <div className="pt-2 border-t border-[var(--panel-border)]">
+                        <label className="text-[var(--text-muted)] font-mono text-[10px] uppercase font-bold block mb-1">
+                          Gancho Directo / Hook de Conversión (&lt; 100 palabras):
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={editingPitchHook}
+                          onChange={e => setEditingPitchHook(e.target.value)}
+                          placeholder="Propuesta de valor concreta enfocada en un dolor técnico verificable del proyecto o vacante..."
+                          className="w-full p-2.5 bg-[var(--panel-bg)] border border-[var(--card-border)] rounded-lg text-[var(--text-primary)] text-xs focus:outline-none focus:border-sky-500"
+                        />
+                      </div>
                     </div>
 
                     {/* Cold Approach Email Box */}
@@ -1355,12 +1444,16 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   const isEuskadi = app.location.toLowerCase().includes('bilbao') || app.location.toLowerCase().includes('bizkaia') || app.location.toLowerCase().includes('donostia');
   const isRemote = app.location.toLowerCase().includes('remoto') || app.location.toLowerCase().includes('remote');
 
-  // Compute days since last activity
+  // Compute days since last activity & real follow-up checks
   const dateStr = app.updatedDate || app.createdDate;
   const parsedTime = dateStr ? new Date(dateStr).getTime() : now;
   const daysAgo = Math.max(0, Math.floor((now - parsedTime) / (1000 * 60 * 60 * 24)));
 
-  const needsFollowUp = (app.currentStage === 6 || app.currentStage === 7) && daysAgo >= 7;
+  const hasFollowUpDate = Boolean(app.followUpDueDate);
+  const followUpDueTime = app.followUpDueDate ? new Date(app.followUpDueDate).getTime() : null;
+  const isOverdue = followUpDueTime !== null && followUpDueTime < (now - 24 * 60 * 60 * 1000);
+  const isDueToday = followUpDueTime !== null && Math.abs(followUpDueTime - now) <= (24 * 60 * 60 * 1000);
+  const needsFollowUp = isOverdue || ((app.currentStage === 7 || app.currentStage === 8 || app.status === 'Enviada' || app.status === 'En Seguimiento') && daysAgo >= 5);
 
   return (
     <div 
@@ -1409,12 +1502,39 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           <MapPin className="h-3 w-3 text-[var(--text-muted)] shrink-0" />
           <span className="truncate">{app.location}</span>
         </div>
+
+        {/* Decision Maker if mapped */}
+        {app.decisionMakerName && (
+          <div className="flex items-center space-x-1 text-[10.5px] text-purple-600 dark:text-purple-300 font-mono mt-1 pt-1 border-t border-[var(--panel-border)] truncate">
+            <UserCheck className="h-3 w-3 shrink-0 text-purple-500" />
+            <span className="font-bold truncate">{app.decisionMakerName}</span>
+            <span className="text-[var(--text-muted)] text-[9.5px]">({app.decisionMakerChannel || 'Email'})</span>
+          </div>
+        )}
       </div>
 
-      {/* Follow-up Alert badge if 7+ days */}
-      {needsFollowUp && (
+      {/* Follow-up Alert badges */}
+      {isOverdue && (
+        <div className="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/40 text-[9.5px] font-mono font-bold text-rose-600 dark:text-rose-400 flex items-center justify-between">
+          <span className="flex items-center gap-1">⚠️ Seguimiento vencido</span>
+          <span>{app.followUpDueDate}</span>
+        </div>
+      )}
+      {!isOverdue && isDueToday && (
+        <div className="p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/40 text-[9.5px] font-mono font-bold text-amber-600 dark:text-amber-400 flex items-center justify-between">
+          <span className="flex items-center gap-1">⏰ Seguimiento hoy</span>
+          <span>{app.followUpDueDate}</span>
+        </div>
+      )}
+      {!isOverdue && !isDueToday && hasFollowUpDate && (
+        <div className="p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/30 text-[9.5px] font-mono font-bold text-sky-600 dark:text-sky-300 flex items-center justify-between">
+          <span className="flex items-center gap-1">📅 Seguimiento</span>
+          <span>{app.followUpDueDate}</span>
+        </div>
+      )}
+      {!hasFollowUpDate && needsFollowUp && (
         <div className="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[9.5px] font-mono font-bold text-amber-600 dark:text-amber-400 flex items-center justify-between">
-          <span>⏰ Seguimiento sugerido</span>
+          <span>⏰ Seguimiento sugerido (Regla 5d)</span>
           <span>+{daysAgo}d</span>
         </div>
       )}
@@ -1457,7 +1577,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           <button
             onClick={onOpenDispatch}
             className="px-2 py-1 bg-sky-500/15 hover:bg-sky-600 text-sky-600 dark:text-sky-300 hover:text-white rounded-lg text-[10px] font-mono font-bold transition flex items-center space-x-1 border border-sky-500/30 cursor-pointer shadow-sm"
-            title="Abrir Despacho Asistido con Inteligencia Wingman y Radar"
+            title="Abrir Despacho Asistido & Abordaje Directo"
           >
             <Sparkles className="h-3 w-3 text-sky-500" />
             <span>Despacho</span>

@@ -169,16 +169,28 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onRetur
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* AI Assistant Provider */}
             <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl">
-              <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-                <Cpu className="h-5 w-5 text-cyan-400" />
-                <h3 className="font-bold text-sm text-white font-mono uppercase">
-                  Proveedor de Asistencia de Redacción
-                </h3>
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <Cpu className="h-5 w-5 text-cyan-400" />
+                  <h3 className="font-bold text-sm text-white font-mono uppercase">
+                    Proveedor de Asistencia de Redacción
+                  </h3>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  Modo Local / Determinista
+                </span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-300 space-y-1">
+                <p className="font-semibold text-cyan-300">Garantía de Privacidad & Operación Sin Dependencias:</p>
+                <p className="text-slate-400 leading-relaxed">
+                  Headhunter OS ensambla CVs cuantitativos (A4) y cartas de motivación directamente en tu navegador a partir de hechos y datos de tu portafolio, sin requerir llamadas obligatorias a servicios externos de pago. Los siguientes campos permiten conectar opcionalmente modelos externos en próximas actualizaciones.
+                </p>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-slate-400 block mb-1 font-mono">Proveedor LLM</label>
+                  <label className="text-slate-400 block mb-1 font-mono">Proveedor LLM (Opcional)</label>
                   <select
                     value={settings.llmProvider}
                     onChange={(e) => setSettings({ ...settings, llmProvider: e.target.value })}
