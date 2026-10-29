@@ -3,15 +3,18 @@ import {
   Building2, 
   Compass, 
   ChevronLeft, 
-  Globe2
+  Globe2,
+  TrendingUp
 } from 'lucide-react';
 import { CompaniesTab } from '../companies/CompaniesTab';
 import { DailyPortalsRadar } from './DailyPortalsRadar';
+import { ClusterBenchmarkTable } from './ClusterBenchmarkTable';
 import { getStoredCompanies } from '../../services/db';
 import { DAILY_PORTALS } from '../../data/dailyPortalsCatalog';
+import type { CompanySectorCluster, QuadrantType } from '../../types/companies';
 
 interface MarketRadarTabProps {
-  initialSubTab?: 'organizations' | 'portals' | string;
+  initialSubTab?: 'organizations' | 'benchmark' | 'portals' | string;
   initialFilter?: string;
   onStartApplication?: (offerId: string) => void;
   onStartPipelineFromCompany?: (companyId: string) => void;
@@ -26,12 +29,21 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
   onStartPipelineFromCompany,
   onReturnToHub
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'organizations' | 'portals'>(
-    initialSubTab === 'portals' ? 'portals' : 'organizations'
+  const [activeSubTab, setActiveSubTab] = useState<'organizations' | 'benchmark' | 'portals'>(
+    initialSubTab === 'portals' ? 'portals' :
+    initialSubTab === 'benchmark' ? 'benchmark' : 'organizations'
   );
+  const [drilldownQuadrant, setDrilldownQuadrant] = useState<string>(initialFilter);
+  const [drilldownSectorCluster, setDrilldownSectorCluster] = useState<CompanySectorCluster>('ALL');
 
   const companies = getStoredCompanies();
   const portalsCount = DAILY_PORTALS.length;
+
+  const handleBenchmarkDrilldown = (cluster: CompanySectorCluster, quadrant: QuadrantType) => {
+    setDrilldownQuadrant(quadrant);
+    setDrilldownSectorCluster(cluster);
+    setActiveSubTab('organizations');
+  };
 
   return (
     <div className="space-y-5 text-slate-100 animate-fadeIn">
@@ -68,23 +80,35 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
           </div>
         </div>
 
-        {/* SubTab Toggle: Organizaciones vs Portales Diarios */}
-        <div className="flex items-center bg-[#070b14] p-1 rounded-xl border border-slate-800 self-start md:self-auto shadow-inner">
+        {/* SubTab Toggle: Organizaciones vs Benchmark vs Portales Diarios */}
+        <div className="flex flex-wrap items-center bg-[#070b14] p-1 rounded-xl border border-slate-800 self-start md:self-auto shadow-inner gap-1">
           <button
             onClick={() => setActiveSubTab('organizations')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
               activeSubTab === 'organizations'
                 ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
             <Building2 className="h-4 w-4" />
-            <span>ORGANIZACIONES & CENTROS ({companies.length})</span>
+            <span>ORGANIZACIONES ({companies.length})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveSubTab('benchmark')}
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
+              activeSubTab === 'benchmark'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <TrendingUp className="h-4 w-4 text-purple-300" />
+            <span>BENCHMARK PROBABILIDAD (3-6M)</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('portals')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
               activeSubTab === 'portals'
                 ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -102,8 +126,13 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
           onStartPipeline={onStartPipelineFromCompany || ((companyId) => {
             if (onStartApplication) onStartApplication(companyId);
           })}
-          initialQuadrant={initialFilter}
+          initialQuadrant={drilldownQuadrant}
+          initialSectorCluster={drilldownSectorCluster}
         />
+      )}
+
+      {activeSubTab === 'benchmark' && (
+        <ClusterBenchmarkTable onSelectClusterFilter={handleBenchmarkDrilldown} />
       )}
 
       {activeSubTab === 'portals' && (

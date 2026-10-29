@@ -14,29 +14,36 @@ import {
   Mail,
   Coins,
   Send,
-  Search
+  Search,
+  TrendingUp
 } from 'lucide-react';
 import { getStoredCompanies, saveStoredCompanies } from '../../services/db';
 import type { CompanyDossier, QuadrantType, CompanyContact, CompanySectorCluster } from '../../types/companies';
 import { AddCompanyModal } from './AddCompanyModal';
 import { EditCompanyModal } from './EditCompanyModal';
 import { WebsitePreviewModal } from '../common/WebsitePreviewModal';
+import { ClusterBenchmarkTable } from '../radar/ClusterBenchmarkTable';
 import { FUNDING_CATALOG } from '../../data/fundingCatalog';
 import { inferCompanyQuadrants, inferCompanySectorCluster } from '../../utils/quadrants';
 
 interface CompaniesTabProps {
   onStartPipeline?: (companyId: string) => void;
   initialQuadrant?: string;
+  initialSectorCluster?: CompanySectorCluster;
 }
 
-export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, initialQuadrant = 'ALL' }) => {
+export const CompaniesTab: React.FC<CompaniesTabProps> = ({ 
+  onStartPipeline, 
+  initialQuadrant = 'ALL',
+  initialSectorCluster = 'ALL'
+}) => {
   const [companies, setCompanies] = useState<CompanyDossier[]>(getStoredCompanies());
   const [selectedQuadrant, setSelectedQuadrant] = useState<string>(
     initialQuadrant === 'GERMANY' ? 'DACH' :
     initialQuadrant === 'BILBAO' || initialQuadrant === 'EUSKADI' ? 'EUSKADI' :
     initialQuadrant === 'REMOTE' ? 'GLOBAL' : 'ALL'
   );
-  const [selectedSectorCluster, setSelectedSectorCluster] = useState<CompanySectorCluster>('ALL');
+  const [selectedSectorCluster, setSelectedSectorCluster] = useState<CompanySectorCluster>(initialSectorCluster);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>(companies[0]?.id || '');
   
@@ -44,6 +51,7 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [isBenchmarkModalOpen, setIsBenchmarkModalOpen] = useState(false);
 
   // Add Contact Form inline state
   const [isAddingContact, setIsAddingContact] = useState(false);
@@ -179,13 +187,24 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
           </p>
         </div>
 
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 self-start sm:self-auto cursor-pointer"
-        >
-          <PlusCircle className="h-4 w-4" />
-          <span>Agregar Organización</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setIsBenchmarkModalOpen(true)}
+            className="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-mono font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 cursor-pointer"
+            title="Abrir tabla de probabilidades ponderadas (3 a 6 meses)"
+          >
+            <TrendingUp className="h-4 w-4 text-purple-200" />
+            <span>Benchmark Probabilidad (3-6m)</span>
+          </button>
+
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 cursor-pointer font-mono"
+          >
+            <PlusCircle className="h-4 w-4" />
+            <span>Agregar Org</span>
+          </button>
+        </div>
       </div>
 
       {/* 2D Matrix Filter Bar (Geographic Poles x Sector Clusters) & Search */}
@@ -737,6 +756,33 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
           company={selectedCompany.name}
           location={selectedCompany.headquarters}
         />
+      )}
+
+      {/* Benchmark Probabilidad Modal */}
+      {isBenchmarkModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+          <div className="bg-[#0b101e] border border-slate-700 rounded-3xl p-6 max-w-5xl w-full max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-bold font-mono text-white flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-cyan-400" />
+                <span>BENCHMARK DE PROBABILIDAD DE EMPLEO // DANIEL SANTANDER (3-6M)</span>
+              </h3>
+              <button
+                onClick={() => setIsBenchmarkModalOpen(false)}
+                className="p-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer font-mono text-xs font-bold"
+              >
+                ✕ CERRAR
+              </button>
+            </div>
+            <ClusterBenchmarkTable 
+              onSelectClusterFilter={(cl, q) => {
+                setSelectedSectorCluster(cl);
+                setSelectedQuadrant(q);
+                setIsBenchmarkModalOpen(false);
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
