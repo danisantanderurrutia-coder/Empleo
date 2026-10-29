@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  Building2, 
   Newspaper, 
   ShieldAlert, 
   MessageSquare, 
@@ -174,39 +173,7 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-slate-900/90 border border-slate-800 gap-4 shadow-xl">
-        <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
-            <Building2 className="h-5 w-5 text-emerald-400" />
-            <span>DIRECTORIO ESTRATÉGICO DE ORGANIZACIONES // CUADRANTES</span>
-          </h2>
-          <p className="text-xs text-slate-300 mt-1 max-w-2xl">
-            Centros de investigación, institutos públicos e ingenierías clasificadas por cuadrante geográfico y operativo. Identifica decisores y prepara ganchos antes de iniciar contacto.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-          <button
-            onClick={() => setIsBenchmarkModalOpen(true)}
-            className="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-mono font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 cursor-pointer"
-            title="Abrir tabla de probabilidades ponderadas (3 a 6 meses)"
-          >
-            <TrendingUp className="h-4 w-4 text-purple-200" />
-            <span>Benchmark Probabilidad (3-6m)</span>
-          </button>
-
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-1.5 cursor-pointer font-mono"
-          >
-            <PlusCircle className="h-4 w-4" />
-            <span>Agregar Org</span>
-          </button>
-        </div>
-      </div>
-
+    <div className="space-y-4 animate-fadeIn">
       {/* 2D Matrix Filter Bar (Geographic Poles x Sector Clusters) & Search */}
       <div className="space-y-3">
         {/* Row 1: Geographic Poles with Regularization pathways */}
@@ -284,16 +251,28 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({
             </button>
           </div>
 
-          {/* Search */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar organización o sector..."
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-            />
+          {/* Search & Actions */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar organización o sector..."
+                className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center space-x-1.5 cursor-pointer font-mono shrink-0"
+              title="Registrar nueva organización"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Agregar Org</span>
+              <span className="sm:hidden">+ Org</span>
+            </button>
           </div>
         </div>
 

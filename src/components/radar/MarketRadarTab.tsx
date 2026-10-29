@@ -46,48 +46,67 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
   };
 
   return (
-    <div className="space-y-5 text-slate-100 animate-fadeIn">
+    <div className="space-y-4 text-[var(--text-primary)] animate-fadeIn">
       {/* Top Bar with Title and SubTab Switcher */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl bg-[#0a0f1d]/95 border border-slate-700/80 shadow-2xl backdrop-blur-md gap-4">
+      <div 
+        className="flex flex-col md:flex-row md:items-center justify-between p-3.5 sm:p-4 rounded-2xl border shadow-xl backdrop-blur-md gap-3 transition-colors"
+        style={{ 
+          backgroundColor: 'var(--card-bg)', 
+          borderColor: 'var(--card-border)' 
+        }}
+      >
         <div className="flex items-center gap-3">
           {onReturnToHub && (
             <button
               onClick={onReturnToHub}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 hover:border-cyan-500 transition flex items-center gap-1.5 cursor-pointer shadow"
+              className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer shadow border shrink-0"
+              style={{ 
+                backgroundColor: 'var(--panel-bg)', 
+                borderColor: 'var(--panel-border)',
+                color: 'var(--text-primary)'
+              }}
               title="Volver a la consola central Career"
             >
-              <ChevronLeft className="h-4 w-4 text-cyan-400" />
-              <span>« CAREER HUB</span>
+              <ChevronLeft className="h-4 w-4 text-sky-500" />
+              <span className="hidden sm:inline">« PANEL</span>
             </button>
           )}
 
-          <div className="h-9 w-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/30 shrink-0">
+          <div className="h-9 w-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0">
             <Compass className="h-5 w-5" />
           </div>
 
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className="text-base font-black text-white flex items-center gap-2 font-mono uppercase tracking-tight">
-                MERCADO // ECOSISTEMA DE CUADRANTES & PORTALES
+              <h1 className="text-sm sm:text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight">
+                MERCADO // PROSPECCIÓN & CUADRANTES
               </h1>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-extrabold hidden sm:inline-block">
-                PROSPECCIÓN DIRECTA
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 font-bold hidden sm:inline-block">
+                DIRECTA
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-mono">
-              DACH • EUSKADI • EUROPA & GLOBAL // CERO OFERTAS FANTASMA
+            <p className="text-xs text-[var(--text-muted)] font-mono">
+              {activeSubTab === 'organizations' && 'Directorio de 63 centros de I+D, institutos públicos e ingenierías (Euskadi • DACH • Europa)'}
+              {activeSubTab === 'portals' && '15 radares oficiales de rastreo matutino directo y sin ofertas fantasma'}
+              {activeSubTab === 'benchmark' && 'Matriz algorítmica de probabilidad y viabilidad regulatoria (3 a 6 meses)'}
             </p>
           </div>
         </div>
 
-        {/* SubTab Toggle: Organizaciones vs Benchmark vs Portales Diarios */}
-        <div className="flex flex-wrap items-center bg-[#070b14] p-1 rounded-xl border border-slate-800 self-start md:self-auto shadow-inner gap-1">
+        {/* SubTab Switcher: Ordered & Non-Wrapping Segmented Control */}
+        <div 
+          className="flex items-center p-1 rounded-xl border gap-1 self-start md:self-auto shrink-0 shadow-inner overflow-x-auto max-w-full"
+          style={{ 
+            backgroundColor: 'var(--panel-bg)', 
+            borderColor: 'var(--panel-border)' 
+          }}
+        >
           <button
             onClick={() => setActiveSubTab('organizations')}
-            className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer whitespace-nowrap ${
               activeSubTab === 'organizations'
-                ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-sky-600 text-white shadow font-black'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <Building2 className="h-4 w-4" />
@@ -95,27 +114,27 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveSubTab('benchmark')}
-            className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
-              activeSubTab === 'benchmark'
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-            }`}
-          >
-            <TrendingUp className="h-4 w-4 text-purple-300" />
-            <span>BENCHMARK PROBABILIDAD (3-6M)</span>
-          </button>
-
-          <button
             onClick={() => setActiveSubTab('portals')}
-            className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer whitespace-nowrap ${
               activeSubTab === 'portals'
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-sky-600 text-white shadow font-black'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             <Globe2 className="h-4 w-4" />
             <span>PORTALES DIARIOS ({portalsCount})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveSubTab('benchmark')}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer whitespace-nowrap ${
+              activeSubTab === 'benchmark'
+                ? 'bg-sky-600 text-white shadow font-black'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            <TrendingUp className="h-4 w-4" />
+            <span>BENCHMARK (3-6M)</span>
           </button>
         </div>
       </div>

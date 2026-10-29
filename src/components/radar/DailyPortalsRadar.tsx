@@ -102,40 +102,7 @@ export const DailyPortalsRadar: React.FC<DailyPortalsRadarProps> = () => {
   };
 
   return (
-    <div className="space-y-5 animate-fadeIn">
-      {/* Header bar */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2 font-mono">
-              <Compass className="h-5 w-5 text-cyan-400" />
-              <span>PORTALES DE RASTREO DIARIO</span>
-            </h2>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono font-bold">
-              RUTINA MATUTINA
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Accesos directos con búsquedas pre-filtradas para tu perfil. Ábrelos en 1 minuto cada mañana para explorar novedades sin intermediarios ficticios.
-          </p>
-        </div>
-
-        {/* Progress badge */}
-        <div className="flex items-center gap-3">
-          <div className="px-3.5 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-mono flex items-center gap-2">
-            <span className="text-slate-400">Revisados hoy:</span>
-            <span className={`font-bold ${checkedCount > 0 ? 'text-emerald-400' : 'text-slate-300'}`}>
-              {checkedCount} / {totalCount}
-            </span>
-            {checkedCount === totalCount && (
-              <span className="text-emerald-400 flex items-center gap-1 font-bold">
-                <CheckCircle2 className="h-3.5 w-3.5" /> ¡Completado!
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-4 animate-fadeIn">
       {/* Filters & Search */}
       <div className="space-y-2.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -193,16 +160,30 @@ export const DailyPortalsRadar: React.FC<DailyPortalsRadarProps> = () => {
             </button>
           </div>
 
-          {/* Search */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filtrar por portal o keyword..."
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-            />
+          {/* Progress badge & Search */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <div className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono flex items-center gap-2 shrink-0">
+              <span className="text-slate-400">Revisados:</span>
+              <span className={`font-bold ${checkedCount > 0 ? 'text-emerald-400' : 'text-slate-300'}`}>
+                {checkedCount} / {totalCount}
+              </span>
+              {checkedCount === totalCount && (
+                <span className="text-emerald-400 flex items-center gap-1 font-bold">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                </span>
+              )}
+            </div>
+
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Filtrar por portal o keyword..."
+                className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+              />
+            </div>
           </div>
         </div>
 
