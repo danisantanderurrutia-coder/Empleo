@@ -14,6 +14,8 @@ export const APP_SLUGS = {
   PROTOCOL: '/protocolo',
 
   // 2. Submódulos de Mercado
+  MARKET_ORGANIZATIONS: '/mercado/organizaciones',
+  MARKET_PORTALS: '/mercado/portales',
   MARKET_OFFERS: '/mercado/ofertas',
   MARKET_SOURCES: '/mercado/fuentes',
   MARKET_COMPANIES: '/mercado/empresas',
@@ -52,9 +54,11 @@ export const getSlugForState = (
   docType: 'cv' | 'cover_letter' = 'cv'
 ): string => {
   if (stationId === 'market_radar') {
+    if (subTab === 'portals') return APP_SLUGS.MARKET_PORTALS;
     if (subTab === 'sources') return APP_SLUGS.MARKET_SOURCES;
-    if (subTab === 'companies') return APP_SLUGS.MARKET_COMPANIES;
-    return APP_SLUGS.MARKET_OFFERS;
+    if (subTab === 'companies' || subTab === 'organizations') return APP_SLUGS.MARKET_ORGANIZATIONS;
+    if (subTab === 'offers') return APP_SLUGS.MARKET_OFFERS;
+    return APP_SLUGS.MARKET_ORGANIZATIONS;
   }
 
   if (stationId === 'agent_dossier') {
@@ -98,14 +102,20 @@ export const parseSlugToState = (rawPath: string): ParsedRouteState => {
   const clean = path.toLowerCase().replace(/\/+$/, '') || '/';
 
   // 1. Mercado
-  if (clean === '/mercado' || clean === '/mercado/ofertas' || clean.startsWith('/mercado/ofertas/')) {
-    return { station: 'market_radar', subTab: 'offers' };
+  if (clean === '/mercado/portales' || clean.startsWith('/mercado/portales/')) {
+    return { station: 'market_radar', subTab: 'portals' };
   }
-  if (clean === '/mercado/fuentes') {
-    return { station: 'market_radar', subTab: 'sources' };
+  if (clean === '/mercado/organizaciones' || clean.startsWith('/mercado/organizaciones/')) {
+    return { station: 'market_radar', subTab: 'organizations' };
   }
   if (clean === '/mercado/empresas' || clean.startsWith('/mercado/empresas/')) {
-    return { station: 'market_radar', subTab: 'companies' };
+    return { station: 'market_radar', subTab: 'organizations' };
+  }
+  if (clean === '/mercado/fuentes') {
+    return { station: 'market_radar', subTab: 'portals' };
+  }
+  if (clean === '/mercado' || clean === '/mercado/ofertas' || clean.startsWith('/mercado/ofertas/')) {
+    return { station: 'market_radar', subTab: 'organizations' };
   }
 
   // 2. Perfil

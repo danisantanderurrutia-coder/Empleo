@@ -22,7 +22,8 @@ describe('routes · slugs de navegación', () => {
   });
 
   it('parsea un slug de URL hacia el estado interno correcto de Empleo', () => {
-    expect(parseSlugToState('/mercado/ofertas')).toEqual({ station: 'market_radar', subTab: 'offers' });
+    expect(parseSlugToState('/mercado/organizaciones')).toEqual({ station: 'market_radar', subTab: 'organizations' });
+    expect(parseSlugToState('/mercado/portales')).toEqual({ station: 'market_radar', subTab: 'portals' });
     expect(parseSlugToState('/perfil/cv-studio')).toEqual({ station: 'agent_dossier', subTab: 'studio', docType: 'cv' });
     expect(parseSlugToState('/perfil/cover-letter')).toEqual({ station: 'agent_dossier', subTab: 'studio', docType: 'cover_letter' });
     expect(parseSlugToState('/candidaturas/inteligencia')).toEqual({ station: 'mission_control', subTab: 'intelligence' });
