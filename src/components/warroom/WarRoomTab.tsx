@@ -8,7 +8,8 @@ import {
   ArrowRight,
   Compass,
   Building2,
-  Globe2
+  Globe2,
+  GraduationCap
 } from 'lucide-react';
 import { getStoredProfile, getStoredApplications, getStoredCompanies } from '../../services/db';
 import { FUNDING_CATALOG } from '../../data/fundingCatalog';
@@ -60,8 +61,13 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
         <div className="flex items-center space-x-3.5">
           <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl overflow-hidden shadow-lg border border-cyan-500/40 shrink-0 bg-[#090b0e] flex items-center justify-center p-0.5 group">
             <img 
-              src={resolveAsset('/empleo_master_logo.jpg')} 
+              src={resolveAsset('/headhunter_os_logo.jpg')} 
               alt="Headhunter OS Logo" 
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.onerror = null;
+                target.src = resolveAsset('/app_icon.svg');
+              }}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           </div>
@@ -551,10 +557,18 @@ export const WarRoomTab: React.FC<WarRoomTabProps> = ({ onSelectStation, onLaunc
           </button>
 
           <button
+            onClick={() => onSelectStation('agent_dossier', 'academy')}
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-cyan-500/10 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-200"
+          >
+            <GraduationCap className="h-3.5 w-3.5 text-cyan-400" />
+            <span>[4] Radar Academy</span>
+          </button>
+
+          <button
             onClick={() => onSelectStation('mission_control', 'applications')}
             className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono font-black transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
           >
-            <span>[4] Pipeline Definitivo</span>
+            <span>[5] Pipeline Definitivo</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>

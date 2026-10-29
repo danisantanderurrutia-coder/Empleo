@@ -4,7 +4,9 @@ import type { CompanyDossier } from '../types/companies';
 import type { ApplicationItem } from '../types/applications';
 import type { JobSource } from '../types/sources';
 import type { CVVersion } from '../types/cv';
+import type { UserCourseProgress, CourseStatus } from '../types/academy';
 import { initialProfile, initialOffers, initialCompanies, initialApplications, initialSources, initialCVs } from './sampleData';
+import { INITIAL_COURSE_PROGRESS } from '../data/academyCourses';
 
 export interface AppSettings {
   llmProvider: string;
@@ -44,7 +46,8 @@ const KEYS = {
   SOURCES: 'job_search_os_sources_v19',
   CVS: 'job_search_os_cvs_v19',
   DOCS: 'job_search_os_docs_v19',
-  SETTINGS: 'job_search_os_settings_v19'
+  SETTINGS: 'job_search_os_settings_v19',
+  ACADEMY_PROGRESS: 'job_search_os_academy_progress_v1'
 };
 
 /**
@@ -440,6 +443,56 @@ export const saveStoredDocs = (docs: any[]): void => {
   localStorage.setItem(KEYS.DOCS, JSON.stringify(docs));
 };
 
+export const getStoredCourseProgress = (): Record<string, UserCourseProgress> => {
+  const data = localStorage.getItem(KEYS.ACADEMY_PROGRESS);
+  if (!data) {
+    saveStoredCourseProgress(INITIAL_COURSE_PROGRESS as Record<string, UserCourseProgress>);
+    return INITIAL_COURSE_PROGRESS as Record<string, UserCourseProgress>;
+  }
+  try {
+    const parsed = JSON.parse(data);
+    return {
+      ...(INITIAL_COURSE_PROGRESS as Record<string, UserCourseProgress>),
+      ...parsed
+    };
+  } catch {
+    return INITIAL_COURSE_PROGRESS as Record<string, UserCourseProgress>;
+  }
+};
+
+export const saveStoredCourseProgress = (progress: Record<string, UserCourseProgress>): void => {
+  localStorage.setItem(KEYS.ACADEMY_PROGRESS, JSON.stringify(progress));
+};
+
+export const setCourseStatus = (
+  courseId: string, 
+  status: CourseStatus, 
+  progressPercent?: number, 
+  notes?: string
+): void => {
+  const current = getStoredCourseProgress();
+  const existing = current[courseId] || {
+    courseId,
+    status: 'AVAILABLE',
+    progressPercent: 0
+  };
+
+  const updatedProgress: UserCourseProgress = {
+    ...existing,
+    courseId,
+    status,
+    progressPercent: progressPercent !== undefined 
+      ? progressPercent 
+      : status === 'COMPLETED' ? 100 : status === 'AVAILABLE' ? 0 : existing.progressPercent || 25,
+    startedAt: status !== 'AVAILABLE' ? (existing.startedAt || new Date().toISOString().slice(0, 10)) : undefined,
+    completedAt: status === 'COMPLETED' ? (existing.completedAt || new Date().toISOString().slice(0, 10)) : undefined,
+    notes: notes !== undefined ? notes : existing.notes
+  };
+
+  current[courseId] = updatedProgress;
+  saveStoredCourseProgress(current);
+};
+
 /**
  * Export complete verified database as JSON file for manual backup.
  */
@@ -454,7 +507,8 @@ export const exportCompleteUserDataBackup = (): string => {
     sources: getStoredSources(),
     cvs: getStoredCVs(),
     docs: getStoredDocs(),
-    settings: getStoredSettings()
+    settings: getStoredSettings(),
+    academyProgress: getStoredCourseProgress()
   };
   return JSON.stringify(backup, null, 2);
 };
@@ -475,6 +529,7 @@ export const restoreCompleteUserDataBackup = (jsonText: string): boolean => {
     if (parsed.cvs) saveStoredCVs(parsed.cvs);
     if (parsed.docs) saveStoredDocs(parsed.docs);
     if (parsed.settings) saveStoredSettings(parsed.settings);
+    if (parsed.academyProgress) saveStoredCourseProgress(parsed.academyProgress);
     return true;
   } catch (err) {
     console.error('Failed to restore backup:', err);
@@ -491,4 +546,5 @@ export const resetDatabase = (): void => {
   saveStoredCompanies(initialCompanies);
   saveStoredApplications(initialApplications);
   saveStoredSources(initialSources);
+  saveStoredCourseProgress(INITIAL_COURSE_PROGRESS as Record<string, UserCourseProgress>);
 };

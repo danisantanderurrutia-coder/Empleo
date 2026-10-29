@@ -22,6 +22,7 @@ export const APP_SLUGS = {
 
   // 3. Submódulos de Perfil / Operators
   DOSSIER_SHOWCASE: '/perfil/resumen',
+  DOSSIER_ACADEMY: '/perfil/academia',
   DOSSIER_PROFILE: '/perfil/maestro',
   DOSSIER_CV_STUDIO: '/perfil/cv-studio',
   DOSSIER_COVER_LETTER: '/perfil/cover-letter',
@@ -65,6 +66,7 @@ export const getSlugForState = (
     if (subTab === 'studio') {
       return docType === 'cover_letter' ? APP_SLUGS.DOSSIER_COVER_LETTER : APP_SLUGS.DOSSIER_CV_STUDIO;
     }
+    if (subTab === 'academy') return APP_SLUGS.DOSSIER_ACADEMY;
     if (subTab === 'profile') return APP_SLUGS.DOSSIER_PROFILE;
     return APP_SLUGS.DOSSIER_SHOWCASE;
   }
@@ -119,6 +121,9 @@ export const parseSlugToState = (rawPath: string): ParsedRouteState => {
   }
 
   // 2. Perfil
+  if (clean === '/perfil/academia' || clean === '/perfil/academy' || clean.startsWith('/perfil/academia')) {
+    return { station: 'agent_dossier', subTab: 'academy' };
+  }
   if (clean === '/perfil/cv-studio' || clean.startsWith('/perfil/cv-studio')) {
     return { station: 'agent_dossier', subTab: 'studio', docType: 'cv' };
   }

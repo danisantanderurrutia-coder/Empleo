@@ -81,10 +81,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}>
           {!logoError ? (
             <img 
-              src={resolveAsset('/app_icon.svg')} 
+              src={resolveAsset('/headhunter_os_logo.jpg')} 
               alt="Headhunter OS Logo" 
               onError={() => setLogoError(true)}
-              className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300" 
+              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" 
             />
           ) : (
             <Crosshair className="h-6 w-6 text-cyan-400 group-hover:rotate-45 transition-transform duration-300" />

@@ -7,9 +7,13 @@ import {
   Target,
   Compass,
   Layers,
-  CheckCircle2
+  CheckCircle2,
+  GraduationCap,
+  Zap
 } from 'lucide-react';
-import { getStoredOffers } from '../../services/db';
+import { getStoredOffers, getStoredCourseProgress, setCourseStatus } from '../../services/db';
+import { ACADEMY_COURSES } from '../../data/academyCourses';
+import type { CourseStatus } from '../../types/academy';
 import { resolveAsset } from '../../utils/assets';
 
 export type SkillBranch = 
@@ -57,8 +61,20 @@ export interface CapabilityNode {
   gapRoadmap?: string[];
 }
 
-export const SkillTreeTab: React.FC = () => {
+export interface SkillTreeTabProps {
+  onNavigateToAcademy?: (gapId?: string) => void;
+}
+
+export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy }) => {
   const offers = getStoredOffers();
+  const [courseProgress, setCourseProgressState] = useState(getStoredCourseProgress());
+
+  const handleToggleCourseStatus = (courseId: string, currentStatus: CourseStatus) => {
+    const nextStatus: CourseStatus = currentStatus === 'COMPLETED' ? 'AVAILABLE' : currentStatus === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS';
+    const nextPercent = nextStatus === 'COMPLETED' ? 100 : nextStatus === 'IN_PROGRESS' ? 50 : 0;
+    setCourseStatus(courseId, nextStatus, nextPercent);
+    setCourseProgressState({ ...getStoredCourseProgress() });
+  };
 
   // Selected filter mode
   const [filterMode, setFilterMode] = useState<'all' | 'mastered' | 'training' | 'gaps'>('all');
@@ -174,7 +190,7 @@ export const SkillTreeTab: React.FC = () => {
   // BOTONES SINÁPTICOS & ESPINAS DENDRÍTICAS (40+ NODOS VIVOS)
   // Centro Soma: (440, 270)
   // --------------------------------------------------------------------------
-  const nodes: CapabilityNode[] = [
+  const rawNodes: CapabilityNode[] = [
     // ========================================================================
     // DENDRITA 1: GEOFÍSICA & SENSORES REMOTOS (GFP Emerald, Top)
     // ========================================================================
@@ -1013,6 +1029,40 @@ export const SkillTreeTab: React.FC = () => {
     }
   ];
 
+  // Dynamically augment market gap nodes based on user progress in Academy courses
+  const nodes: CapabilityNode[] = rawNodes.map(node => {
+    if (!node.isMarketGap) return node;
+    const linkedCourses = ACADEMY_COURSES.filter(c => c.gapId === node.id);
+    if (linkedCourses.length === 0) return node;
+
+    const completed = linkedCourses.filter(c => courseProgress[c.id]?.status === 'COMPLETED');
+    const inProgress = linkedCourses.filter(c => courseProgress[c.id]?.status === 'IN_PROGRESS');
+
+    const bonusXP = linkedCourses.reduce((sum, c) => {
+      const p = courseProgress[c.id];
+      if (p?.status === 'COMPLETED') return sum + c.xpValue;
+      if (p?.status === 'IN_PROGRESS') return sum + Math.round((c.xpValue * (p.progressPercent || 25)) / 100);
+      return sum;
+    }, 0);
+
+    if (completed.length === linkedCourses.length && linkedCourses.length > 0) {
+      return {
+        ...node,
+        xp: Math.min(1000, node.xp + bonusXP),
+        level: 5 as const,
+        status: 'MASTERED' as const
+      };
+    } else if (completed.length > 0 || inProgress.length > 0) {
+      return {
+        ...node,
+        xp: Math.min(950, node.xp + bonusXP),
+        level: (completed.length > 0 ? 4 : 3) as any,
+        status: 'IN_TRAINING' as const
+      };
+    }
+    return node;
+  });
+
   const selectedNode = nodes.find(n => n.id === selectedNodeId) || nodes[0];
   const currentBranchStyle = branchStyles[selectedNode.branch];
 
@@ -1035,7 +1085,15 @@ export const SkillTreeTab: React.FC = () => {
   const totalCount = nodes.length;
   const masteredCount = nodes.filter(n => n.status === 'MASTERED').length;
   const trainingCount = nodes.filter(n => n.status === 'ACTIVE' || n.status === 'IN_TRAINING').length;
-  const gapsCount = nodes.filter(n => n.isMarketGap).length;
+  const rawGapsCount = rawNodes.filter(n => n.isMarketGap).length;
+  const remainingGapsCount = nodes.filter(n => n.isMarketGap && n.status === 'MARKET_GAP').length;
+  const closedGapsCount = rawGapsCount - remainingGapsCount;
+  const gapsCount = rawGapsCount;
+
+  // Synaptic Charge calculations
+  const totalSynapticXP = nodes.reduce((acc, n) => acc + n.xp, 0);
+  const maxPossibleXP = nodes.length * 1000;
+  const synapticChargePercent = Math.min(100, Math.round((totalSynapticXP / maxPossibleXP) * 100));
 
   // Archetype Data for Dynamic Fit
   const archetypeDefinitions = {
@@ -1111,22 +1169,53 @@ export const SkillTreeTab: React.FC = () => {
             </p>
           </div>
 
-          {/* Incandescent Core Telemetry Badge */}
-          <div 
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl border shrink-0 backdrop-blur-md shadow-2xl"
-            style={{ 
-              backgroundColor: '#060a17', 
-              borderColor: 'rgba(251, 191, 36, 0.4)' 
-            }}
-          >
-            <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-amber-400/30 to-red-500/30 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.4)]">
-              <Compass className="h-6 w-6 animate-pulse" />
+          {/* Incandescent Core Telemetry Badge & Academy Shortcut */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+            {onNavigateToAcademy && (
+              <button
+                onClick={() => onNavigateToAcademy()}
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-white font-mono text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg border border-cyan-400/40 cursor-pointer"
+                title="Abrir el Radar de Cursos & Certificaciones para cerrar brechas"
+              >
+                <GraduationCap className="h-4 w-4" />
+                <span>Radar Academy</span>
+                <span className="px-1.5 py-0.5 rounded-full bg-black/40 text-[9.5px] border border-cyan-300/40">
+                  {closedGapsCount}/{gapsCount} cerradas
+                </span>
+              </button>
+            )}
+
+            <div 
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl border shrink-0 backdrop-blur-md shadow-2xl"
+              style={{ 
+                backgroundColor: '#060a17', 
+                borderColor: 'rgba(251, 191, 36, 0.4)' 
+              }}
+            >
+              <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-amber-400/30 to-red-500/30 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+                <Compass className="h-6 w-6 animate-pulse" />
+              </div>
+              <div>
+                <div className="text-[9px] text-amber-400 font-mono font-bold uppercase tracking-wider">NÚCLEO PROFESIONAL</div>
+                <div className="text-xs font-black text-white">DANIEL SANTANDER URRUTIA</div>
+                <div className="text-[9.5px] text-slate-400 font-mono">Doble M.Sc. Kiel/Poznań • Geofísica U. de Chile</div>
+              </div>
             </div>
-            <div>
-              <div className="text-[9px] text-amber-400 font-mono font-bold uppercase tracking-wider">NÚCLEO PROFESIONAL</div>
-              <div className="text-xs font-black text-white">DANIEL SANTANDER URRUTIA</div>
-              <div className="text-[9.5px] text-slate-400 font-mono">Doble M.Sc. Kiel/Poznań • Geofísica U. de Chile</div>
-            </div>
+          </div>
+        </div>
+
+        {/* Synaptic Charge Global Status */}
+        <div className="mt-3 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono">
+          <div className="flex items-center gap-2 text-slate-300">
+            <Zap className="h-4 w-4 text-cyan-400" />
+            <span>CARGA SINÁPTICA TOTAL: <strong className="text-cyan-400 font-bold">{totalSynapticXP.toLocaleString()} XP</strong> ({synapticChargePercent}% de dominancia)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] text-slate-400">
+            <span className="text-emerald-400 font-bold">{masteredCount} Mastered</span>
+            <span>•</span>
+            <span className="text-sky-400 font-bold">{trainingCount} En Entrenamiento</span>
+            <span>•</span>
+            <span className="text-rose-400 font-bold">{remainingGapsCount} Brechas Pendientes</span>
           </div>
         </div>
 
@@ -1737,6 +1826,13 @@ export const SkillTreeTab: React.FC = () => {
                         {selectedNode.gapImpact}
                       </span>
                     </div>
+                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/10">
+                      <span className="text-slate-400 font-mono">Progreso de Cierre (XP):</span>
+                      <span className="text-cyan-400 font-mono font-bold text-[10px] flex items-center gap-1">
+                        <Zap className="h-3 w-3" />
+                        <span>{selectedNode.xp} / 1000 XP ({selectedNode.status === 'MASTERED' ? 'CERRADA' : selectedNode.status === 'IN_TRAINING' ? 'EN ENTRENAMIENTO' : 'PENDIENTE'})</span>
+                      </span>
+                    </div>
                   </div>
 
                   <div className="text-[11.5px] text-slate-300 leading-relaxed font-sans">
@@ -1765,6 +1861,93 @@ export const SkillTreeTab: React.FC = () => {
                       </div>
                     </div>
                   )}
+
+                  {/* Recommended Official Academy Courses */}
+                  {(() => {
+                    const linkedCourses = ACADEMY_COURSES.filter(c => c.gapId === selectedNode.id);
+                    if (linkedCourses.length === 0) return null;
+
+                    return (
+                      <div className="pt-2.5 border-t border-white/10 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="text-[9.5px] font-mono font-bold text-cyan-400 uppercase flex items-center gap-1.5">
+                            <GraduationCap className="h-3.5 w-3.5" />
+                            <span>PROGRAMAS OFICIALES ({linkedCourses.length})</span>
+                          </div>
+                          {onNavigateToAcademy && (
+                            <button
+                              onClick={() => onNavigateToAcademy(selectedNode.id)}
+                              className="text-[9.5px] font-mono font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
+                            >
+                              <span>Ver en Academy</span>
+                              <span>→</span>
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          {linkedCourses.map(course => {
+                            const prog = courseProgress[course.id] || { status: 'AVAILABLE', progressPercent: 0 };
+                            return (
+                              <div 
+                                key={course.id}
+                                className={`p-2.5 rounded-xl border text-[10.5px] transition-all bg-black/50 ${
+                                  prog.status === 'COMPLETED' 
+                                    ? 'border-emerald-500/40' 
+                                    : prog.status === 'IN_PROGRESS'
+                                    ? 'border-amber-500/40'
+                                    : 'border-white/10'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between gap-1 mb-1">
+                                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-black/40 text-cyan-400 border border-white/10 truncate max-w-[170px]">
+                                    {course.provider}
+                                  </span>
+                                  <span className={`text-[8.5px] font-mono font-bold px-1.5 py-0.2 rounded border ${
+                                    prog.status === 'COMPLETED'
+                                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                      : prog.status === 'IN_PROGRESS'
+                                      ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                                      : 'bg-slate-800 text-slate-300 border-white/10'
+                                  }`}>
+                                    {prog.status === 'COMPLETED' ? 'CERTIFICADO' : prog.status === 'IN_PROGRESS' ? `${prog.progressPercent || 25}% EN CURSO` : 'DISPONIBLE'}
+                                  </span>
+                                </div>
+
+                                <div className="font-bold text-white leading-tight mb-1">
+                                  {course.title}
+                                </div>
+
+                                <div className="text-[9.5px] text-slate-400 line-clamp-2 mb-2 font-sans">
+                                  {course.syllabusSummary}
+                                </div>
+
+                                <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10">
+                                  <button
+                                    onClick={() => handleToggleCourseStatus(course.id, prog.status)}
+                                    className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white cursor-pointer transition"
+                                    title="Alternar estado: Disponible ➜ En Curso ➜ Certificado"
+                                  >
+                                    {prog.status === 'COMPLETED' ? '↺ Reiniciar' : prog.status === 'IN_PROGRESS' ? '✓ Marcar Certificado' : '▶ Iniciar Estudio'}
+                                  </button>
+
+                                  <a
+                                    href={course.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[9px] font-mono font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
+                                  >
+                                    <span>Acceder</span>
+                                    <ExternalLink className="h-3 w-3" />
+                                  </a>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               ) : (
                 /* Regular Mastered/Active Node Inspector */

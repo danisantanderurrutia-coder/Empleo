@@ -1,8 +1,19 @@
-# Headhunter OS
+<p align="center">
+  <img src="public/headhunter_os_logo.jpg" alt="Headhunter OS Logo" width="140" style="border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
 
-Sistema de prospección directa, inteligencia corporativa y postulación estructurada de alto valor para perfiles transdisciplinarios y científicos, desarrollado en **React 19**, **TypeScript** y **Vite**.
+<h1 align="center">Headhunter OS</h1>
 
-Todos los datos personales, notas de decisores y expedientes se almacenan exclusivamente en el navegador (`localStorage`) del usuario, garantizando total privacidad sin servidores intermediarios.
+<p align="center">
+  <strong>Consola de Prospección Directa & Executive Search para Científicos y Líderes Técnicos</strong><br>
+  <em>Arquitectura Táctica • Monitoreo de Cuadrantes DACH / Euskadi / Global • Privacidad Local</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Active_Radar-06b6d4?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Security-Client--Side_Only-10b981?style=flat-square" alt="Privacy" />
+  <img src="https://img.shields.io/badge/Stack-React_19_%7C_TypeScript_%7C_Vite-38bdf8?style=flat-square" alt="Stack" />
+</p>
 
 ---
 
