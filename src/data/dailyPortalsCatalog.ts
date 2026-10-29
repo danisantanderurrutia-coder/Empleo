@@ -119,6 +119,18 @@ export const DAILY_PORTALS: DailyPortal[] = [
     description: 'Bolsa académica referente para universidades del norte y centro de Europa (Alemania, Escandinavia, Países Bajos).',
     iconName: 'GraduationCap'
   },
+  {
+    id: 'portal-climate-kic',
+    name: 'EIT Climate-KIC Careers & Opportunities',
+    quadrant: 'EUROPA',
+    quadrantLabel: 'Europa / Innovación Climática',
+    category: 'Ambiental / Clima',
+    directUrl: 'https://www.climate-kic.org/careers/',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['Climate Innovation', 'Systems Transformation', 'Nature-based Solutions', 'Carbon', 'Horizon Europe'],
+    description: 'Portal oficial de vacantes y convocatorias de la mayor agencia de innovación climática de la UE (EIT). Ofertas en Ámsterdam, Berlín, Bruselas y España.',
+    iconName: 'Leaf'
+  },
   // -------------------------------------------------------------
   // CUADRANTE GLOBAL & REMOTO / CLIMA
   // -------------------------------------------------------------

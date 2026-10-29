@@ -475,6 +475,20 @@ export const initialSources: JobSource[] = [
     lastScraped: '',
     offersExtracted: 0,
     notes: 'Convocatorias oficiales del Ministerio de Transición Ecológica MITECO.'
+  },
+  {
+    id: 'src-climate-kic',
+    name: 'EIT Climate-KIC (Careers & Open Opportunities)',
+    type: 'research_center',
+    url: 'https://www.climate-kic.org/careers/',
+    priority: 'Alta',
+    frequency: 'Semanal',
+    status: 'Activo',
+    lastScraped: '',
+    offersExtracted: 0,
+    region: 'Europa / Global',
+    notes: 'Agencia de innovación climática de la Unión Europea (EIT). Vacantes en transformación sistémica, NbS, carbono y políticas climáticas.',
+    countryFocus: 'Paneuropeo (Ámsterdam, Berlín, Bruselas, España)'
   }
 ];
 
@@ -2815,6 +2829,55 @@ export const initialCompanies: CompanyDossier[] = [
     lastResearched: '2026-10-29',
     quadrants: ['GLOBAL'],
     sectorCluster: 'GEOTHERMAL_ENERGY'
+  },
+  {
+    id: 'comp-climate-kic',
+    name: 'EIT Climate-KIC',
+    website: 'https://www.climate-kic.org/',
+    sector: 'Agencia de Innovación Climática de la UE, Transición Sistémica & Soluciones Basadas en la Naturaleza',
+    size: '250+ especialistas (Red paneuropea de 400+ socios)',
+    headquarters: 'Ámsterdam, Países Bajos (Hubs en Berlín, Bruselas, Londres y Valencia/Madrid)',
+    description: 'La mayor iniciativa de innovación climática y colaboración público-privada de la Unión Europea, respaldada por el Instituto Europeo de Innovación y Tecnología (EIT). Lidera transformaciones sistémicas en ciudades neutras en carbono, uso sostenible del suelo, restauración ecológica basada en la naturaleza (NbS) y descarbonización industrial, facilitando la colaboración entre el mundo académico, gobiernos y startups.',
+    keyProjects: [
+      'NetZeroCities (Misión de la UE para 112 Ciudades Inteligentes y Climáticamente Neutras en 2030)',
+      'Deep Demonstrations: Demostraciones a escala de paisaje de transición agroforestal, regeneración de suelos y humedales',
+      'Plataformas de aceleración e innovación climática de la Comisión Europea bajo Horizon Europe',
+      'Desarrollo de metodologías de evaluación de impacto sistémico, finanzas sostenibles y monitoreo MRV de carbono'
+    ],
+    recentNews: [
+      {
+        title: 'EIT Climate-KIC expande programas de demostración sistémica y soluciones basadas en la naturaleza',
+        date: '2026-10-15',
+        snippet: 'Consolidación de alianzas estratégicas con ciudades y regiones europeas para acelerar la resiliencia climática y la neutralidad de emisiones.',
+        url: 'https://www.climate-kic.org/news/'
+      }
+    ],
+    workCulture: [
+      'Ambiente paneuropeo multidisciplinar con mentalidad de misión y pensamiento sistémico (Systems Thinking)',
+      'Organización distribuida con gran flexibilidad de trabajo híbrido y sedes en los principales nodos de innovación europeos',
+      'Impacto tangible en la formulación e implementación de políticas del Pacto Verde Europeo (European Green Deal)'
+    ],
+    redFlags: [
+      'Proyectos estructurados en torno a marcos de subvención europeos y consorcios con múltiples contrapartes'
+    ],
+    interviewArguments: [
+      'Máster europeo en Gestión y Protección Ambiental completado en Alemania (CAU Kiel) con conocimiento operativo de los marcos y directivas climáticas de la UE.',
+      'Sólida base biofísica cuantitativa en ciencias de la Tierra, suelos, turberas y balance de gases de efecto invernadero (Eddy Covariance y modelado espacial).',
+      'Experiencia demostrada en gobernanza ambiental, diálogo con comunidades y presentación ante órganos legislativos e internacionales (comisión legislativa, foros globales).',
+      'Alineamiento directo con el enfoque de Soluciones Basadas en la Naturaleza (NbS) y diseño de paisajes regenerativos.'
+    ],
+    techStack: [
+      'Systems Innovation',
+      'Horizon Europe',
+      'Nature-based Solutions (NbS)',
+      'Carbon MRV',
+      'GIS / Remote Sensing',
+      'Stakeholder Management'
+    ],
+    lastResearched: '2026-10-29',
+    quadrants: ['UK_NL', 'DACH', 'EUSKADI', 'GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV',
+    fundingTies: ['f-climate-kic-awards', 'f-horizon-cluster6']
   }
 ];
 
