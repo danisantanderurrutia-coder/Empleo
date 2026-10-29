@@ -240,7 +240,7 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
               }`}
             >
-              DACH (Kiel/Bonn/TVöD)
+              DACH (Bonn/Berlín/TVöD)
             </button>
             <button
               onClick={() => setSelectedQuadrant('UK_NL')}

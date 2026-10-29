@@ -16,12 +16,11 @@ import { MasterProfileTab } from '../profile/MasterProfileTab';
 import { CVStudioTab } from '../cvs/CVStudioTab';
 import { CVPreviewModal } from '../cvs/CVPreviewModal';
 import { SkillTreeTab } from './SkillTreeTab';
-import { GapCloserAcademyTab } from '../academy/GapCloserAcademyTab';
 import { getStoredProfile, getStoredCVs } from '../../services/db';
 import type { CVVersion } from '../../types/cv';
 
 interface AgentDossierTabProps {
-  initialSubTab?: 'showcase' | 'skills' | 'academy' | 'profile' | 'cvs' | 'studio';
+  initialSubTab?: 'showcase' | 'skills' | 'profile' | 'cvs' | 'studio';
   initialStudioOfferId?: string;
   initialStudioDocType?: 'cv' | 'cover_letter';
   onReturnToHub?: () => void;
@@ -40,18 +39,15 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   const normalizedInitial = (
     initialSubTab === 'skills' ? 'showcase' : 
     initialSubTab === 'cvs' ? 'studio' : 
-    initialSubTab === 'academy' ? 'academy' :
     initialSubTab
-  ) as 'showcase' | 'academy' | 'profile' | 'studio';
+  ) as 'showcase' | 'profile' | 'studio';
 
-  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'academy' | 'profile' | 'studio'>(normalizedInitial);
-  const [targetGapId, setTargetGapId] = useState<string | undefined>();
+  const [activeSubTab, setActiveSubTab] = useState<'showcase' | 'profile' | 'studio'>(normalizedInitial);
   const [previewingCv, setPreviewingCv] = useState<CVVersion | null>(null);
 
   useEffect(() => {
     if (initialSubTab === 'skills') setActiveSubTab('showcase');
     else if (initialSubTab === 'cvs') setActiveSubTab('studio');
-    else if (initialSubTab === 'academy') setActiveSubTab('academy');
     else setActiveSubTab(initialSubTab as any);
   }, [initialSubTab]);
 
@@ -127,18 +123,6 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
             >
               <ShieldCheck className="h-3.5 w-3.5" />
               <span>Resumen & Competencias</span>
-            </button>
-
-            <button
-              onClick={() => setActiveSubTab('academy')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                activeSubTab === 'academy'
-                  ? 'bg-cyan-600 text-white shadow font-black'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              <Award className="h-3.5 w-3.5" />
-              <span>Gap-Closer Academy</span>
             </button>
 
             <button
@@ -323,7 +307,7 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
                 <div className="pt-2 border-t border-[var(--panel-border)] flex items-center justify-between text-[10px] font-mono text-[var(--text-secondary)]">
                   <span>Español: <strong>C2 Nativo</strong></span>
                   <span>•</span>
-                  <span>English: <strong>C1 CEMS</strong></span>
+                  <span>English: <strong>C2 Bilingüe / CEMS</strong></span>
                   <span>•</span>
                   <span>Deutsch: <strong>B1</strong></span>
                 </div>
@@ -587,25 +571,8 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         </div>
 
         {/* SECTOR COMPETENCIAS DIRECTAMENTE DEBAJO DEL RESUMEN */}
-        <SkillTreeTab onNavigateToAcademy={(gapId) => {
-          if (onNavigateToAcademy) {
-            onNavigateToAcademy(gapId);
-          } else {
-            setTargetGapId(gapId);
-            setActiveSubTab('academy');
-          }
-        }} />
+        <SkillTreeTab onNavigateToAcademy={onNavigateToAcademy} />
       </div>
-      )}
-
-      {/* SUB-PANEL 2: GAP-CLOSER ACADEMY (RADAR DE CURSOS Y CERTIFICACIONES) */}
-      {activeSubTab === 'academy' && (
-        <div className="space-y-4">
-          <GapCloserAcademyTab 
-            initialGapId={targetGapId}
-            onNavigateToSkillTree={() => setActiveSubTab('showcase')}
-          />
-        </div>
       )}
 
       {/* SUB-PANEL 2: MASTER PROFILE DETAILED FORM */}

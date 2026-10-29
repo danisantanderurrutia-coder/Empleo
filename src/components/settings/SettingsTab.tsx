@@ -264,7 +264,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onRetur
                   <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-[11px] text-slate-300 space-y-1">
                     <div className="font-bold text-white font-mono">Cuadrantes Activos:</div>
                     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
-                      <li><strong className="text-teal-400">DACH:</strong> Alemania (Kiel, Potsdam, Braunschweig, Berlín)</li>
+                      <li><strong className="text-teal-400">DACH:</strong> Alemania (Bonn, Leipzig, Potsdam, Braunschweig, Berlín, Múnich)</li>
                       <li><strong className="text-emerald-400">Euskadi:</strong> Bilbao, Donostia, Vitoria, Zamudio, Arkaute</li>
                       <li><strong className="text-sky-400">Global & Remoto:</strong> Consorcios europeos y organizaciones internacionales</li>
                     </ul>

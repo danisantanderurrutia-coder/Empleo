@@ -95,7 +95,7 @@ const INITIAL_REQUIRED_DOCS: RequiredDocItem[] = [
     id: 'doc-language',
     name: 'Certificados de Competencia Lingüística',
     category: 'academic',
-    description: 'Acreditación de Inglés C1 y Alemán funcional (B1-B2).',
+    description: 'Acreditación de Inglés C2 y Alemán funcional (B1-B2).',
     status: 'ready',
     tip: 'Certificados oficiales o acreditación de máster impartido íntegramente en inglés.'
   },

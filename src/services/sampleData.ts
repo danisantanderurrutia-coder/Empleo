@@ -192,7 +192,7 @@ export const initialProfile: MasterProfile = {
   ],
   languages: [
     { id: 'lang-1', language: 'Español', proficiency: 'Nativo' },
-    { id: 'lang-2', language: 'Inglés', proficiency: 'C1' },
+    { id: 'lang-2', language: 'Inglés', proficiency: 'C2' },
     { id: 'lang-3', language: 'Alemán', proficiency: 'B1' },
     { id: 'lang-4', language: 'Polaco', proficiency: 'A1' }
   ],
@@ -1527,7 +1527,7 @@ export const initialCompanies: CompanyDossier[] = [
     interviewArguments: [
       'Puente perfecto entre el rigor técnico alemán (CAU Kiel) y la experiencia política sobre el terreno en Chile.',
       'Experiencia verificada en incidencia técnica parlamentaria sobre gestión hídrica y transición justa.',
-      'Alemán funcional B1 e inglés C1 fluido.'
+      'Alemán funcional B1 e inglés C2 bilingüe/profesional.'
     ],
     techStack: ['Políticas Públicas', 'Gobernanza de Cuencas', 'Salvaguardias Ambientales', 'Gestión Multiactor'],
     lastResearched: '2026-10-28',
@@ -1745,7 +1745,7 @@ export const initialCompanies: CompanyDossier[] = [
     interviewArguments: [
           "Tesis en dinámica de turberas y balance de gases de efecto invernadero (CAU Kiel / Wallener Au).",
           "Formación europea M.Sc. con dominio de teledetección satelital e hidrogeofísica.",
-          "Capacidad de interlocución técnica en inglés C1 en el ecosistema británico de Edinburgh Climate Tech."
+          "Capacidad de interlocución técnica en inglés C2 en el ecosistema británico de Edinburgh Climate Tech."
     ],
     techStack: ["Python","SAR","Sentinel-1/2","R","QGIS","Earth Engine"],
     lastResearched: '2026-10-29',
@@ -2467,7 +2467,7 @@ export const initialCompanies: CompanyDossier[] = [
     interviewArguments: [
           "Geofísico con investigación empírica en flujos de carbono en turberas y humedales de Europa y Chile.",
           "Autor de informes técnicos y publicaciones sobre cuencas hídricas y conservación ecosistémica.",
-          "Inglés C1 fluido y capacidad demostrada para sintetizar datos científicos complejos en recomendaciones de política pública."
+          "Inglés C2 fluido y capacidad demostrada para sintetizar datos científicos complejos en recomendaciones de política pública."
     ],
     techStack: ["GIS Espacial","Python","Indicadores de Biodiversidad","R","Policy Briefs ONU"],
     lastResearched: '2026-10-29',

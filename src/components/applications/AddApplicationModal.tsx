@@ -195,7 +195,7 @@ export const AddApplicationModal: React.FC<AddApplicationModalProps> = ({
                 required
                 value={location}
                 onChange={e => setLocation(e.target.value)}
-                placeholder="ej: Bilbao, Bizkaia / Kiel, Alemania"
+                placeholder="ej: Bilbao, Bizkaia / Bonn, Alemania"
                 className="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-red-500 font-sans text-xs"
               />
             </div>
@@ -216,7 +216,7 @@ export const AddApplicationModal: React.FC<AddApplicationModalProps> = ({
               </button>
               <button
                 type="button"
-                onClick={() => { setLocation('Kiel / Berlín, Alemania'); setLegalRegime('AufenthG §20'); }}
+                onClick={() => { setLocation('Bonn / Berlín, Alemania'); setLegalRegime('AufenthG §20'); }}
                 className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300 border border-slate-700 hover:border-sky-500 transition cursor-pointer"
               >
                 🇩🇪 Alemania / DACH

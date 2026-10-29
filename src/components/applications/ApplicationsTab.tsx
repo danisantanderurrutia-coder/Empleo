@@ -249,7 +249,7 @@ const DEFAULT_SEED_APPS: ApplicationItem[] = [
     offerUrl: 'https://unjobs.org/vacancies/1786913775321',
     humanApprovalGranted: true,
     approvalTimestamp: '2026-10-05 16:20',
-    adaptedCvSummary: ['Monitoreo Satelital MARS', 'Gobernanza Climática', 'Inglés C1 / Francés'],
+    adaptedCvSummary: ['Monitoreo Satelital MARS', 'Gobernanza Climática', 'Inglés C2 / Francés'],
     interviewNotes: 'Postulación oficial enviada por portal Inspira. Esperando respuesta de primera ronda.',
     history: [
       {
@@ -1226,7 +1226,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
                         { title: 'Urkunden & Zeugnisse (Títulos Oficiales)', desc: 'Licenciatura y Título de Geofísico de la Univ. de Chile "con distinción", con traducción jurada/oficial.', status: 'Requerido' },
                         { title: 'Notenübersicht / Transcript of Records', desc: 'Certificado de notas detallado en escala original con ponderación de créditos.', status: 'Requerido' },
                         { title: 'Empfehlungsschreiben / Referenzen (2 contactos)', desc: 'Contactos académicos directos (teléfono/email institucional de profesores guía).', status: 'Recomendado' },
-                        { title: 'Sprachzertifikate (Alemán / Inglés)', desc: 'Acreditación de inglés C1 y nivel de alemán operativo (B1/B2 o compromiso de inmersión).', status: 'Recomendado' },
+                        { title: 'Sprachzertifikate (Alemán / Inglés)', desc: 'Acreditación de inglés C2 y nivel de alemán operativo (B1/B2 o compromiso de inmersión).', status: 'Recomendado' },
                         { title: 'Arbeitsproben / Repositorios GitHub', desc: 'Scripts en R / Python demostrando reproducibilidad en análisis numérico de datos.', status: 'Opcional' }
                       ].map((doc, idx) => (
                         <div 

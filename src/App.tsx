@@ -23,7 +23,7 @@ export function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [radarSubTab, setRadarSubTab] = useState<'offers' | 'sources' | 'companies'>('offers');
   const [radarLocationFilter, setRadarLocationFilter] = useState<string>('ALL');
-  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'skills' | 'academy' | 'profile' | 'cvs' | 'studio'>('showcase');
+  const [dossierSubTab, setDossierSubTab] = useState<'showcase' | 'skills' | 'profile' | 'cvs' | 'studio'>('showcase');
   const [studioOfferId, setStudioOfferId] = useState<string | undefined>();
   const [studioDocType, setStudioDocType] = useState<'cv' | 'cover_letter'>('cv');
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
@@ -68,11 +68,10 @@ export function App() {
       else resolvedSubTab = 'offers';
       setRadarSubTab(resolvedSubTab as 'offers' | 'sources' | 'companies');
       setActiveTab('market_radar');
-    } else if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'academy', 'profile', 'cvs', 'studio'].includes(stationId)) {
+    } else if (stationId === 'agent_dossier' || ['showcase', 'gunsmith', 'skills', 'profile', 'cvs', 'studio'].includes(stationId)) {
       resolvedStation = 'agent_dossier';
       if (subTab === 'gunsmith' || stationId === 'gunsmith') resolvedSubTab = 'studio';
       else if (subTab === 'skills' || stationId === 'skills') resolvedSubTab = 'showcase';
-      else if (subTab === 'academy' || stationId === 'academy') resolvedSubTab = 'academy';
       else if (subTab === 'cvs' || stationId === 'cvs') resolvedSubTab = 'studio';
       else if (subTab === 'studio' || stationId === 'studio') {
         resolvedSubTab = 'studio';
@@ -80,7 +79,7 @@ export function App() {
       }
       else if (subTab === 'profile' || stationId === 'profile') resolvedSubTab = 'profile';
       else resolvedSubTab = 'showcase';
-      setDossierSubTab(resolvedSubTab as 'showcase' | 'skills' | 'academy' | 'profile' | 'cvs' | 'studio');
+      setDossierSubTab(resolvedSubTab as 'showcase' | 'skills' | 'profile' | 'cvs' | 'studio');
       setActiveTab('agent_dossier');
     } else if (stationId === 'academy') {
       resolvedStation = 'academy';
@@ -331,7 +330,7 @@ export function App() {
       {/* Main Content with Relative Stacking */}
       <div className="relative z-10 flex flex-col min-h-screen w-full">
         <Navbar
-          currentTab={(activeTab === 'agent_dossier' && dossierSubTab === 'academy') ? 'academy' : activeTab}
+          currentTab={activeTab}
           currentTheme={theme}
           onToggleTheme={handleToggleTheme}
           onOpenUnifiedHelp={() => setIsUnifiedHelpOpen(true)}

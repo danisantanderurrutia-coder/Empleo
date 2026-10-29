@@ -2,12 +2,25 @@ export type CourseCostType = 'FREE' | 'EU_SUBSIDIZED' | 'FREE_AUDIT' | 'OFFICIAL
 export type CourseDifficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 export type CourseStatus = 'AVAILABLE' | 'IN_PROGRESS' | 'COMPLETED';
 
+export type AcademyBranch = 
+  | 'geophysics'
+  | 'biogeo'
+  | 'software'
+  | 'pm'
+  | 'grassroots'
+  | 'culture'
+  | 'comms'
+  | 'languages';
+
 export interface AcademyCourse {
   id: string;
   title: string;
   provider: string;
-  gapId: string;
-  gapName: string;
+  branch: AcademyBranch;
+  branchName: string;
+  isMarketGap?: boolean;
+  gapId?: string;
+  gapName?: string;
   costType: CourseCostType;
   costLabel: string;
   durationHours: number;

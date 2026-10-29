@@ -129,7 +129,7 @@ export const getStoredOffers = (): JobOffer[] => {
           location: 'París, Francia / Remoto Europa',
           url: 'https://unjobs.org/vacancies/1786913775321',
           rawDescription: 'UNEP IMEO (International Methane Emissions Observatory) busca Coordinador de Implementación del Sistema MARS (Methane Alert and Response System) para monitoreo satelital de emisiones, mitigación climática y gobernanza ambiental.',
-          requirements: ['Monitoreo Satelital & Emisiones', 'Gobernanza Climática', 'Inglés C1 / Francés / Español', 'Ciencias Ambientales / Geofísica']
+          requirements: ['Monitoreo Satelital & Emisiones', 'Gobernanza Climática', 'Inglés C2 / Francés / Español', 'Ciencias Ambientales / Geofísica']
         };
       }
       return off;

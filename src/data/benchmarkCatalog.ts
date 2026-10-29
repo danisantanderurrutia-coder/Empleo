@@ -10,7 +10,7 @@ export interface BenchmarkClusterRow {
   prob6m: number;
   visaFriction: 'Nula' | 'Baja' | 'Media' | 'Alta' | 'Extrema';
   hiringSpeed: 'Muy Rápida (2-4 sem)' | 'Rápida (4-6 sem)' | 'Media (6-10 sem)' | 'Lenta (3-6 meses)';
-  languageFit: 'Nativo' | 'C1 Inglés' | 'B1 Alemán (OK)' | 'Barrera Alta';
+  languageFit: 'Nativo' | 'C2 Inglés' | 'B1 Alemán (OK)' | 'Barrera Alta';
   tier: 'TIER 1 · Máxima Prioridad' | 'TIER 2 · Paralelo Activo' | 'TIER 3 · Outbound de Nicho' | 'TIER 4 · Desaconsejado';
   strategicReturn: 'Pasaporte UE 2a' | 'Graduado DE § 20' | 'IEC Canadá' | 'Sueldo Alto / Sin Pasaporte' | 'Riesgo / Descarte';
   whyScore: string;
@@ -23,7 +23,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     cluster: 'RD_PUBLIC',
     clusterName: 'I+D Público Suelos & Turberas',
     quadrant: 'DACH',
-    quadrantName: 'Alemania / DACH',
+    quadrantName: 'Alemania (Bonn/Leipzig/Potsdam)',
     prob3m: 74,
     prob6m: 95,
     visaFriction: 'Baja',
@@ -31,7 +31,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     languageFit: 'B1 Alemán (OK)',
     tier: 'TIER 1 · Máxima Prioridad',
     strategicReturn: 'Graduado DE § 20',
-    whyScore: 'Encaje casi perfecto con tu tesis de maestría (Kiel/Wallener Au), Eddy Covariance, cámaras cerradas y mecánica de suelos. Tienes visa de estudiante en Alemania con acceso directo al visado de 18 meses para graduados (§ 20 AufenthG). Salarios federales TVöD E13.',
+    whyScore: 'Encaje directo con tu maestría europea, Eddy Covariance, cámaras cerradas y mecánica de suelos. Tienes visa en Alemania con acceso al visado de 18 meses para graduados (§ 20 AufenthG). Centros federales en polos científicos como Braunschweig, Leipzig, Potsdam y Bonn con sueldos TVöD E13.',
     keyTargets: ['Thünen-Institut', 'UBA', 'GFZ Potsdam', 'UFZ Leipzig', 'Greifswald Mire Centre', 'Jülich IBG-3']
   },
   {
@@ -44,10 +44,10 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     prob6m: 89,
     visaFriction: 'Baja',
     hiringSpeed: 'Muy Rápida (2-4 sem)',
-    languageFit: 'C1 Inglés',
+    languageFit: 'C2 Inglés',
     tier: 'TIER 1 · Máxima Prioridad',
     strategicReturn: 'Sueldo Alto / Sin Pasaporte',
-    whyScore: 'La industria de ratings de carbono y satélites busca desesperadamente científicos que entiendan la física real detrás de los píxeles (GEE, Sentinel, flujos de GEI sin greenwashing). Procesos de contratación ágiles de 2 a 4 semanas con sueldos tecnológicos.',
+    whyScore: 'La industria de ratings de carbono y satélites busca desesperadamente científicos que entiendan la física real detrás de los píxeles (GEE, Sentinel, flujos de GEI sin greenwashing). Procesos de contratación ágiles de 2 a 4 semanas con sueldos tecnológicos e inglés C2 bilingüe.',
     keyTargets: ['Sylvera', 'BeZero Carbon', 'Space Intelligence', 'Soil Capital', 'CarbonSpace', 'Pachama']
   },
   {
@@ -76,10 +76,10 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     prob6m: 83,
     visaFriction: 'Baja',
     hiringSpeed: 'Media (6-10 sem)',
-    languageFit: 'C1 Inglés',
+    languageFit: 'C2 Inglés',
     tier: 'TIER 2 · Paralelo Activo',
     strategicReturn: 'Graduado DE § 20',
-    whyScore: 'Finlandia y Suecia son la capital mundial de turberas boreales y flujos de carbono. Toda la investigación científica en ICOS, LUKE y VTT opera 100% en inglés. Visados de investigación rápidos en el espacio Schengen.',
+    whyScore: 'Finlandia y Suecia son la capital mundial de turberas boreales y flujos de carbono. Toda la investigación científica en ICOS, LUKE y VTT opera 100% en inglés C2. Visados de investigación rápidos en el espacio Schengen.',
     keyTargets: ['ICOS Head Office', 'LUKE', 'VTT', 'NILU', 'SMHI', 'Carboculture']
   },
   {
@@ -92,7 +92,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     prob6m: 72,
     visaFriction: 'Media',
     hiringSpeed: 'Rápida (4-6 sem)',
-    languageFit: 'C1 Inglés',
+    languageFit: 'C2 Inglés',
     tier: 'TIER 2 · Paralelo Activo',
     strategicReturn: 'Sueldo Alto / Sin Pasaporte',
     whyScore: 'Tu tesis de geofísica en modelación física de incendios forestales y balance hidrológico en cuencas degradadas tiene aplicación directa en reaseguros paramétricos. Puestos muy bien remunerados aunque selectivos.',
@@ -103,7 +103,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     cluster: 'GEOTHERMAL_ENERGY',
     clusterName: 'Geotermia & Geofísica Subsuelo',
     quadrant: 'DACH',
-    quadrantName: 'Alemania / Euskadi / Canadá',
+    quadrantName: 'Alemania (Essen/Baviera) / Euskadi / Canadá',
     prob3m: 42,
     prob6m: 69,
     visaFriction: 'Baja',
@@ -111,7 +111,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     languageFit: 'B1 Alemán (OK)',
     tier: 'TIER 3 · Outbound de Nicho',
     strategicReturn: 'Graduado DE § 20',
-    whyScore: 'Valida directamente tu título de Geofísico de 5 años de la Universidad de Chile (métodos electromagnéticos, sismología, resistividad). En Alemania y Canadá hay auge de geotermia profunda, pero son puestos de nicho que exigen prospección outbound.',
+    whyScore: 'Valida directamente tu título de Geofísico de 5 años de la Universidad de Chile (métodos electromagnéticos, sismología, resistividad). En Alemania (Essen, Baviera) y Canadá hay auge de geotermia profunda, pero son puestos de nicho que exigen prospección outbound.',
     keyTargets: ['DMT Group', 'Telur Geotermia', 'Eavor Technologies', 'Storengy', 'DEEP Earth Energy']
   },
   {
@@ -124,7 +124,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     prob6m: 62,
     visaFriction: 'Baja',
     hiringSpeed: 'Lenta (3-6 meses)',
-    languageFit: 'C1 Inglés',
+    languageFit: 'C2 Inglés',
     tier: 'TIER 3 · Outbound de Nicho',
     strategicReturn: 'Graduado DE § 20',
     whyScore: 'Cuentas con la credencial verificada de haber testificado ante el Senado y Cámara de Diputados de Chile en leyes de aguas e incendios. Sin embargo, las convocatorias de la ONU y GIZ tardan de 3 a 6 meses en resolverse, por lo que no sirven como ancla a corto plazo.',
@@ -140,7 +140,7 @@ export const BENCHMARK_DATA: BenchmarkClusterRow[] = [
     prob6m: 34,
     visaFriction: 'Alta',
     hiringSpeed: 'Lenta (3-6 meses)',
-    languageFit: 'C1 Inglés',
+    languageFit: 'C2 Inglés',
     tier: 'TIER 4 · Desaconsejado',
     strategicReturn: 'Riesgo / Descarte',
     whyScore: 'Aunque Chile tiene el tratado exclusivo H-1B1 (1.400 visas sin lotería), el 95% de los filtros de RRHH (ATS) descartan automáticamente a extranjeros que requieren patrocinio. Agencias federales (USGS/NOAA) exigen ciudadanía estadounidense. Contracción de VC en climate-tech.',

@@ -582,8 +582,8 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
     },
     {
       id: 'n4-languages',
-      name: 'Dominio Lingüístico: ES (C2), EN (C1), DE (B1/B2)',
-      shortName: 'Idiomas C2/C1/B2',
+      name: 'Dominio Lingüístico: ES (Nativo), EN (C2 Bilingüe), DE (B1/B2)',
+      shortName: 'Idiomas Nativo/C2/B2',
       level: 5,
       maxLevel: 5,
       status: 'MASTERED',
@@ -593,7 +593,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       cy: 465,
       spineOrigin: { x: 595, y: 415 },
       archetypes: ['rd-scientist', 'policy-advisor', 'campaign-lead'],
-      description: 'Español nativo (oratoria parlamentaria), Inglés científico C1 (CEMS, ponencias en Bonn/Oslo/Davos) y Alemán académico B1-B2 (§20 AufenthG).',
+      description: 'Español nativo (oratoria parlamentaria), Inglés bilingüe profesional C2 (CEMS, ponencias y publicaciones internacionales) y Alemán académico B1-B2 (§20 AufenthG).',
       evidenceTitle: 'Lámina 005: Conferencias Bonn, Oslo y Bogotá',
       evidenceAnchor: '#conferencias-internacionales'
     },
@@ -1101,7 +1101,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       name: 'Investigador Científico I+D',
       match: '92% Afinidad',
       description: 'Modelación biofísica, balance de GEI en turberas, resistividad ERT, limnología y publicaciones.',
-      targets: 'Helmholtz GFZ, CAU Kiel, BC3 Basque Centre, AZTI, Thünen Institut'
+      targets: 'Helmholtz GFZ, UFZ Leipzig, BC3 Basque Centre, AZTI, Thünen Institut'
     },
     'ai-product': {
       name: 'AI Product Owner & Climate-Tech',

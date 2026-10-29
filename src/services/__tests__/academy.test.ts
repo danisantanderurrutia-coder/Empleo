@@ -33,9 +33,17 @@ describe('Gap-Closer Academy · Catálogo Curado & Verificación', () => {
   ];
 
   it('cubre exactamente las 8 brechas prioritarias de mercado de Daniel Santander', () => {
-    const presentGaps = new Set(ACADEMY_COURSES.map(c => c.gapId));
+    const presentGaps = new Set(ACADEMY_COURSES.map(c => c.gapId).filter(Boolean));
     REQUIRED_GAP_IDS.forEach(gapId => {
       expect(presentGaps.has(gapId)).toBe(true);
+    });
+  });
+
+  it('cubre todas las 7 disciplinas auténticas del perfil más idiomas', () => {
+    const branches = new Set(ACADEMY_COURSES.map(c => c.branch));
+    const expected = ['geophysics', 'biogeo', 'software', 'pm', 'grassroots', 'culture', 'comms', 'languages'];
+    expected.forEach(b => {
+      expect(branches.has(b as any)).toBe(true);
     });
   });
 

@@ -67,7 +67,7 @@ export const ClusterBenchmarkTable: React.FC<ClusterBenchmarkTableProps> = ({ on
               </h2>
             </div>
             <p className="text-xs text-slate-300 mt-1 max-w-3xl">
-              Ponderación algorítmica de tus opciones de empleo basada en tus <strong className="text-white">variables personales objetivas</strong>: nacionalidad chilena, convenio español de 2 años, visado de graduado alemán de 18m (§ 20 AufenthG), tesis en Eddy Covariance y turberas, e idiomas (EN C1, DE B1, ES Nativo).
+              Ponderación algorítmica de tus opciones de empleo basada en tus <strong className="text-white">variables personales objetivas</strong>: nacionalidad chilena, convenio español de 2 años, visado de graduado alemán de 18m (§ 20 AufenthG), tesis en Eddy Covariance y turberas, e idiomas (EN C2 Bilingüe, DE B1, ES Nativo).
             </p>
           </div>
 
@@ -114,7 +114,7 @@ export const ClusterBenchmarkTable: React.FC<ClusterBenchmarkTableProps> = ({ on
           </div>
           <div className="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
             <span className="text-slate-500 block">4. Idioma Real (15%)</span>
-            <span className="text-indigo-400 font-bold">EN C1 / DE B1</span>
+            <span className="text-indigo-400 font-bold">EN C2 / DE B1</span>
           </div>
           <div className="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
             <span className="text-slate-500 block">5. Retorno Ciudadanía (15%)</span>
