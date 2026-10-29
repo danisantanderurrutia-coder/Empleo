@@ -8,8 +8,7 @@ import {
   Compass,
   Layers,
   CheckCircle2,
-  GraduationCap,
-  Zap
+  GraduationCap
 } from 'lucide-react';
 import { getStoredOffers, getStoredCourseProgress, setCourseStatus } from '../../services/db';
 import { ACADEMY_COURSES } from '../../data/academyCourses';
@@ -1090,11 +1089,6 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
   const closedGapsCount = rawGapsCount - remainingGapsCount;
   const gapsCount = rawGapsCount;
 
-  // Synaptic Charge calculations
-  const totalSynapticXP = nodes.reduce((acc, n) => acc + n.xp, 0);
-  const maxPossibleXP = nodes.length * 1000;
-  const synapticChargePercent = Math.min(100, Math.round((totalSynapticXP / maxPossibleXP) * 100));
-
   // Archetype Data for Dynamic Fit
   const archetypeDefinitions = {
     all: {
@@ -1204,18 +1198,18 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
           </div>
         </div>
 
-        {/* Synaptic Charge Global Status */}
+        {/* Professional Readiness Status */}
         <div className="mt-3 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono">
           <div className="flex items-center gap-2 text-slate-300">
-            <Zap className="h-4 w-4 text-cyan-400" />
-            <span>CARGA SINÁPTICA TOTAL: <strong className="text-cyan-400 font-bold">{totalSynapticXP.toLocaleString()} XP</strong> ({synapticChargePercent}% de dominancia)</span>
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            <span>ESTADO DE COMPETENCIAS: <strong className="text-white font-bold">{masteredCount + trainingCount} de {totalCount} Acreditadas</strong> ({Math.round(((masteredCount + trainingCount) / totalCount) * 100)}% de Cobertura Profesional)</span>
           </div>
           <div className="flex items-center gap-2 text-[11px] text-slate-400">
-            <span className="text-emerald-400 font-bold">{masteredCount} Mastered</span>
+            <span className="text-emerald-400 font-bold">{masteredCount} Consolidadas (Senior)</span>
             <span>•</span>
-            <span className="text-sky-400 font-bold">{trainingCount} En Entrenamiento</span>
+            <span className="text-sky-400 font-bold">{trainingCount} En Ejercicio Directo</span>
             <span>•</span>
-            <span className="text-rose-400 font-bold">{remainingGapsCount} Brechas Pendientes</span>
+            <span className="text-rose-400 font-bold">{remainingGapsCount} Brechas Prioritarias</span>
           </div>
         </div>
 
@@ -1284,7 +1278,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                   : 'bg-white/5 text-slate-300 hover:text-white border border-white/10'
               }`}
             >
-              <span>Dominadas (Senior)</span>
+              <span>Consolidadas (Senior)</span>
               <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/30">{masteredCount}</span>
             </button>
 
@@ -1296,7 +1290,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                   : 'bg-white/5 text-slate-300 hover:text-white border border-white/10'
               }`}
             >
-              <span>En Desarrollo</span>
+              <span>En Ejercicio Directo</span>
               <span className="px-1.5 py-0.2 rounded text-[10px] bg-black/30">{trainingCount}</span>
             </button>
 
@@ -1311,7 +1305,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                   : 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30'
               }`}
             >
-              <span>⚡ Brechas de Mercado (Skill Gaps)</span>
+              <span>Brechas de Mercado</span>
               <span className="px-1.5 py-0.2 rounded text-[10px] bg-rose-600 text-white font-extrabold">{gapsCount}</span>
             </button>
           </div>
@@ -1625,10 +1619,10 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
 
                 {/* Core Labeling */}
                 <text x="439" y="267" fill="#000000" fontSize="7.5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle" letterSpacing="0.4">
-                  D. SANTANDER
+                  DANIEL SANTANDER
                 </text>
                 <text x="439" y="276" fill="#78350f" fontSize="5.5" fontWeight="900" fontFamily="monospace" textAnchor="middle">
-                  SOMA TRANSDISCIPLINAR
+                  CIENCIA & COMUNICACIÓN
                 </text>
               </g>
 
@@ -1747,7 +1741,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                       fontWeight="bold"
                       className="pointer-events-none"
                     >
-                      {node.isMarketGap ? '⚡ GAP' : `Nvl ${node.level}/5`}
+                      {node.isMarketGap ? 'BRECHA' : (node.level === 5 ? 'SENIOR' : 'ACTIVO')}
                     </text>
                   </g>
                 );
@@ -1786,7 +1780,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                   ? 'bg-rose-600 text-white border-rose-400' 
                   : 'bg-black/60 text-white border-white/20'
               }`}>
-                {selectedNode.isMarketGap ? '⚡ VACÍO DETECTADO' : `ID: ${selectedNode.id}`}
+                {selectedNode.isMarketGap ? 'BRECHA DE MERCADO A CERRAR' : `ID: ${selectedNode.id}`}
               </span>
             </div>
 
@@ -1827,10 +1821,10 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/10">
-                      <span className="text-slate-400 font-mono">Progreso de Cierre (XP):</span>
+                      <span className="text-slate-400 font-mono">Estado de Cobertura Formativa:</span>
                       <span className="text-cyan-400 font-mono font-bold text-[10px] flex items-center gap-1">
-                        <Zap className="h-3 w-3" />
-                        <span>{selectedNode.xp} / 1000 XP ({selectedNode.status === 'MASTERED' ? 'CERRADA' : selectedNode.status === 'IN_TRAINING' ? 'EN ENTRENAMIENTO' : 'PENDIENTE'})</span>
+                        <GraduationCap className="h-3 w-3" />
+                        <span>{selectedNode.status === 'MASTERED' ? 'CERRADA / CERTIFICADA' : selectedNode.status === 'IN_TRAINING' ? 'CURSO EN FORMACIÓN' : 'PLAN DE FORMACIÓN PENDIENTE'}</span>
                       </span>
                     </div>
                   </div>
@@ -1953,32 +1947,21 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                 /* Regular Mastered/Active Node Inspector */
                 <div className="space-y-3">
                   <div 
-                    className="p-3 rounded-xl border space-y-1.5 bg-black/60 border-white/10"
+                    className="p-3 rounded-xl border space-y-2 bg-black/60 border-white/10"
                   >
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-400 font-mono">Nivel de Dominio:</span>
+                      <span className="text-slate-400 font-mono">Madurez Técnica:</span>
                       <span className="text-emerald-400 font-mono font-bold">
-                        {selectedNode.level} de {selectedNode.maxLevel} ({selectedNode.level === 5 ? 'Senior / Mastered' : 'Activo'})
+                        {selectedNode.level === 5 ? 'Senior / Especialista Consolidado' : 'Avanzado / En Ejercicio Directo'}
                       </span>
                     </div>
 
-                    {/* 5 Pip Progress Bar */}
-                    <div className="grid grid-cols-5 gap-1.5 h-1.5 w-full bg-black/70 rounded-full p-0.5 border border-white/15">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            i < selectedNode.level 
-                              ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' 
-                              : 'bg-transparent'
-                          }`}
-                        />
-                      ))}
-                    </div>
-
-                    <div className="flex justify-between items-center text-[9px] text-slate-400 font-mono pt-0.5">
-                      <span>Horas de Vuelo & Respaldo:</span>
-                      <span className="text-white font-bold">{selectedNode.xp} XP</span>
+                    <div className="flex items-center justify-between text-[10px] text-slate-300 font-mono pt-1.5 border-t border-white/10">
+                      <span className="text-slate-400">Estado de Acreditación:</span>
+                      <span className="text-emerald-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        <span>Acreditado con Evidencia en Portafolio</span>
+                      </span>
                     </div>
                   </div>
 

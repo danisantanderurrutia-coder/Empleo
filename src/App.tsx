@@ -5,6 +5,7 @@ import { TacticalHelpAndProtocolModal } from './components/common/TacticalHelpAn
 import { WarRoomTab } from './components/warroom/WarRoomTab';
 import { MarketRadarTab } from './components/radar/MarketRadarTab';
 import { AgentDossierTab } from './components/dossier/AgentDossierTab';
+import { GapCloserAcademyTab } from './components/academy/GapCloserAcademyTab';
 import { MissionControlTab } from './components/control/MissionControlTab';
 import { FundingTab } from './components/funding/FundingTab';
 import { SettingsTab } from './components/settings/SettingsTab';
@@ -26,6 +27,7 @@ export function App() {
   const [studioOfferId, setStudioOfferId] = useState<string | undefined>();
   const [studioDocType, setStudioDocType] = useState<'cv' | 'cover_letter'>('cv');
   const [missionSubTab, setMissionSubTab] = useState<'applications' | 'batch' | 'intelligence'>('applications');
+  const [academyTargetGap, setAcademyTargetGap] = useState<string | undefined>();
 
   const [isUnifiedHelpOpen, setIsUnifiedHelpOpen] = useState(false);
   const [dataRefreshKey, setDataRefreshKey] = useState(0);
@@ -80,6 +82,10 @@ export function App() {
       else resolvedSubTab = 'showcase';
       setDossierSubTab(resolvedSubTab as 'showcase' | 'skills' | 'academy' | 'profile' | 'cvs' | 'studio');
       setActiveTab('agent_dossier');
+    } else if (stationId === 'academy') {
+      resolvedStation = 'academy';
+      if (filterParam) setAcademyTargetGap(filterParam);
+      setActiveTab('academy');
     } else if (stationId === 'mission_control' || ['applications', 'batch_applications', 'intelligence'].includes(stationId)) {
       resolvedStation = 'mission_control';
       if (subTab === 'batch' || stationId === 'batch_applications') resolvedSubTab = 'batch';
@@ -325,7 +331,7 @@ export function App() {
       {/* Main Content with Relative Stacking */}
       <div className="relative z-10 flex flex-col min-h-screen w-full">
         <Navbar
-          currentTab={activeTab}
+          currentTab={(activeTab === 'agent_dossier' && dossierSubTab === 'academy') ? 'academy' : activeTab}
           currentTheme={theme}
           onToggleTheme={handleToggleTheme}
           onOpenUnifiedHelp={() => setIsUnifiedHelpOpen(true)}
@@ -366,6 +372,14 @@ export function App() {
                 initialStudioDocType={studioDocType}
                 onReturnToHub={() => handleNavigate('dashboard')}
                 onOpenSettings={() => handleNavigate('settings')}
+                onNavigateToAcademy={(gapId) => handleNavigate('academy', undefined, gapId)}
+              />
+            )}
+
+            {activeTab === 'academy' && (
+              <GapCloserAcademyTab
+                initialGapId={academyTargetGap}
+                onNavigateToSkillTree={() => handleNavigate('agent_dossier', 'showcase')}
               />
             )}
 
