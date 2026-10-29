@@ -43,7 +43,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ onRefreshData, onRetur
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `job_search_os_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `headhunter_backup_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
   };
 

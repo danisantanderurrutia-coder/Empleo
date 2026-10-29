@@ -182,7 +182,7 @@ export const getStoredDossiers = (): JobDossier[] => {
       parsed.push(UBA_KILAB_DOSSIER);
     }
     return parsed;
-  } catch (e) {
+  } catch {
     return [THUENEN_TECHWORMS_DOSSIER, UBA_KILAB_DOSSIER];
   }
 };
@@ -201,8 +201,8 @@ export const saveDossier = (dossier: JobDossier): void => {
       dossiers.unshift(dossier);
     }
     localStorage.setItem(WINGMAN_STORAGE_KEY, JSON.stringify(dossiers));
-  } catch (e) {
-    console.error('Error saving wingman dossier', e);
+  } catch (error) {
+    console.error('Error saving wingman dossier', error);
   }
 };
 

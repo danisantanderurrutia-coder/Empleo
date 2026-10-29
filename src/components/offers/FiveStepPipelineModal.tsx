@@ -122,6 +122,58 @@ const btnPrimary = 'px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white f
 const btnGhost = 'px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 cursor-pointer';
 const textareaCls = 'w-full p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 font-mono text-[11px] leading-relaxed focus:outline-none';
 
+interface CopyBtnProps {
+  k: string;
+  text: string;
+  label: string;
+  copiedKey: string | null;
+  onCopy: (key: string, text: string) => void;
+}
+
+const CopyBtn: React.FC<CopyBtnProps> = ({ k, text, label, copiedKey, onCopy }) => (
+  <button
+    onClick={() => onCopy(k, text)}
+    className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition flex items-center space-x-1 border border-slate-700 cursor-pointer"
+  >
+    {copiedKey === k ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+    <span>{copiedKey === k ? '¡Copiado!' : label}</span>
+  </button>
+);
+
+interface LangToggleProps<T extends string> {
+  value: T;
+  options: { v: T; l: string }[];
+  onChange: (v: T) => void;
+}
+
+const LangToggle = <T extends string>({ value, options, onChange }: LangToggleProps<T>) => (
+  <div className="flex bg-slate-950 rounded-lg p-0.5 border border-slate-800">
+    {options.map(o => (
+      <button
+        key={o.v}
+        onClick={() => onChange(o.v)}
+        className={`px-3 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${value === o.v ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}
+      >
+        {o.l}
+      </button>
+    ))}
+  </div>
+);
+
+interface NavProps {
+  prev?: number;
+  next?: number;
+  nextLabel?: string;
+  onStep: (step: number) => void;
+}
+
+const Nav: React.FC<NavProps> = ({ prev, next, nextLabel, onStep }) => (
+  <div className="flex justify-end pt-2 space-x-2">
+    {prev && <button onClick={() => onStep(prev)} className={btnGhost}>← Atrás</button>}
+    {next && <button onClick={() => onStep(next)} className={btnPrimary}>{nextLabel} →</button>}
+  </div>
+);
+
 export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
   offer,
   isOpen,
@@ -168,37 +220,6 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
     setCopied(key);
     setTimeout(() => setCopied(null), 2000);
   };
-
-  const CopyBtn = ({ k, text, label }: { k: string; text: string; label: string }) => (
-    <button
-      onClick={() => copy(k, text)}
-      className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition flex items-center space-x-1 border border-slate-700 cursor-pointer"
-    >
-      {copied === k ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-      <span>{copied === k ? '¡Copiado!' : label}</span>
-    </button>
-  );
-
-  const LangToggle = <T extends string>({ value, options, onChange }: { value: T; options: { v: T; l: string }[]; onChange: (v: T) => void }) => (
-    <div className="flex bg-slate-950 rounded-lg p-0.5 border border-slate-800">
-      {options.map(o => (
-        <button
-          key={o.v}
-          onClick={() => onChange(o.v)}
-          className={`px-3 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${value === o.v ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}
-        >
-          {o.l}
-        </button>
-      ))}
-    </div>
-  );
-
-  const Nav = ({ prev, next, nextLabel }: { prev?: number; next?: number; nextLabel?: string }) => (
-    <div className="flex justify-end pt-2 space-x-2">
-      {prev && <button onClick={() => setActiveStep(prev)} className={btnGhost}>← Atrás</button>}
-      {next && <button onClick={() => setActiveStep(next)} className={btnPrimary}>{nextLabel} →</button>}
-    </div>
-  );
 
   const interviewQuestions = [
     {
@@ -315,7 +336,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   <span>Abrir vacante</span><ExternalLink className="h-4 w-4" />
                 </a>
               </div>
-              <Nav next={2} nextLabel="Paso 2: Decisor & Foco Táctico" />
+              <Nav next={2} nextLabel="Paso 2: Decisor & Foco Táctico" onStep={setActiveStep} />
             </div>
           )}
 
@@ -390,7 +411,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   <ul className="space-y-1 text-slate-300">{dossier.coverLetterAngles.map((g, i) => <li key={i}>▸ {g}</li>)}</ul>
                 </div>
               </div>
-              <Nav prev={1} next={3} nextLabel="Paso 3: Documentos Requeridos" />
+              <Nav prev={1} next={3} nextLabel="Paso 3: Documentos Requeridos" onStep={setActiveStep} />
             </div>
           )}
 
@@ -461,7 +482,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                 </div>
               </div>
 
-              <Nav prev={2} next={4} nextLabel="Paso 4: Preparar CV" />
+              <Nav prev={2} next={4} nextLabel="Paso 4: Preparar CV" onStep={setActiveStep} />
             </div>
           )}
 
@@ -489,11 +510,11 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                       <ExternalLink className="h-3.5 w-3.5" /><span>Afinar en CV Studio A4</span>
                     </button>
                   )}
-                  <CopyBtn k="cv" text={cvText} label="Copiar CV" />
+                  <CopyBtn k="cv" text={cvText} label="Copiar CV" copiedKey={copied} onCopy={copy} />
                 </div>
                 <textarea value={cvText} readOnly rows={10} className={textareaCls} />
               </div>
-              <Nav prev={3} next={5} nextLabel="Paso 5: Carta" />
+              <Nav prev={3} next={5} nextLabel="Paso 5: Carta" onStep={setActiveStep} />
             </div>
           )}
 
@@ -521,12 +542,12 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                         <ExternalLink className="h-3.5 w-3.5" /><span>Afinar en Carta Studio</span>
                       </button>
                     )}
-                    <CopyBtn k="letter" text={coverLetter.fullMarkdown} label="Copiar carta" />
+                    <CopyBtn k="letter" text={coverLetter.fullMarkdown} label="Copiar carta" copiedKey={copied} onCopy={copy} />
                   </div>
                 </div>
                 <textarea value={coverLetter.fullMarkdown} readOnly rows={15} className={textareaCls} />
               </div>
-              <Nav prev={4} next={6} nextLabel="Paso 6: Contacto & Formularios" />
+              <Nav prev={4} next={6} nextLabel="Paso 6: Contacto & Formularios" onStep={setActiveStep} />
             </div>
           )}
 
@@ -549,7 +570,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                         Abrir en correo
                       </a>
                     )}
-                    <CopyBtn k="email" text={emailBody} label="Copiar cuerpo" />
+                    <CopyBtn k="email" text={emailBody} label="Copiar cuerpo" copiedKey={copied} onCopy={copy} />
                   </div>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 font-mono"><strong className="text-slate-400">Asunto:</strong> {emailSubject}</div>
@@ -563,13 +584,13 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   <div key={idx} className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                     <div className="flex items-center justify-between text-slate-300 font-semibold">
                       <span>{qa.question}</span>
-                      <CopyBtn k={`qa${idx}`} text={qa.recommendedAnswer} label="Copiar" />
+                      <CopyBtn k={`qa${idx}`} text={qa.recommendedAnswer} label="Copiar" copiedKey={copied} onCopy={copy} />
                     </div>
                     <p className="text-slate-300 text-[11px] font-mono">{qa.recommendedAnswer}</p>
                   </div>
                 ))}
               </div>
-              <Nav prev={5} next={7} nextLabel="Paso 7: Entrevista" />
+              <Nav prev={5} next={7} nextLabel="Paso 7: Entrevista" onStep={setActiveStep} />
             </div>
           )}
 
@@ -608,7 +629,7 @@ export const FiveStepPipelineModal: React.FC<FiveStepPipelineModalProps> = ({
                   Nada se envía automáticamente a {offer.company}. Los borradores quedan solo en tu ordenador; el envío oficial lo haces tú en el portal.
                 </p>
               </div>
-              <Nav prev={6} />
+              <Nav prev={6} onStep={setActiveStep} />
             </div>
           )}
 

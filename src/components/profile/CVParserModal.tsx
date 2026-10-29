@@ -15,6 +15,7 @@ export const CVParserModal: React.FC<CVParserModalProps> = ({ isOpen, onClose, o
   const [cvText, setCvText] = useState('');
   const [attachedFileName, setAttachedFileName] = useState<string | null>(null);
   const [isExtractingPdf, setIsExtractingPdf] = useState(false);
+  const [extractionWarning, setExtractionWarning] = useState<string | null>(null);
   const [parsedResult, setParsedResult] = useState<ParsedCVResult | null>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [importMode, setImportMode] = useState<'merge' | 'replace'>('merge');
@@ -27,12 +28,20 @@ export const CVParserModal: React.FC<CVParserModalProps> = ({ isOpen, onClose, o
 
     setIsExtractingPdf(true);
     setAttachedFileName(file.name);
+    setExtractionWarning(null);
 
     try {
       const doc = await extractTextFromDocumentFile(file);
-      setCvText(doc.text);
+      if (!doc.text || doc.text.trim().length === 0) {
+        setExtractionWarning(
+          'Aviso de limitación OCR: No se pudo extraer texto seleccionable de este documento. Es probable que sea un PDF escaneado (imagen plana). Por favor, sube un PDF digital con texto seleccionable o pega tu texto directamente.'
+        );
+      } else {
+        setCvText(doc.text);
+      }
     } catch (err) {
       console.error('Error extrayendo archivo PDF:', err);
+      setExtractionWarning('Error al procesar el archivo. Asegúrate de que sea un PDF válido.');
     } finally {
       setIsExtractingPdf(false);
     }
@@ -41,24 +50,18 @@ export const CVParserModal: React.FC<CVParserModalProps> = ({ isOpen, onClose, o
   const handleParseAntigravity = () => {
     if (!cvText.trim()) return;
     setIsParsing(true);
-
-    setTimeout(() => {
-      const res = parseCVWithAntigravity(cvText);
-      setParsedResult(res);
-      setIsParsing(false);
-    }, 600);
+    const res = parseCVWithAntigravity(cvText);
+    setParsedResult(res);
+    setIsParsing(false);
   };
 
   const handleParseStandard = (e: React.FormEvent) => {
     e.preventDefault();
     if (!cvText.trim()) return;
-
     setIsParsing(true);
-    setTimeout(() => {
-      const res = parseCVTextToProfile(cvText);
-      setParsedResult(res);
-      setIsParsing(false);
-    }, 600);
+    const res = parseCVTextToProfile(cvText);
+    setParsedResult(res);
+    setIsParsing(false);
   };
 
   const handleApply = () => {
@@ -119,6 +122,13 @@ export const CVParserModal: React.FC<CVParserModalProps> = ({ isOpen, onClose, o
                 )}
               </div>
             </div>
+
+            {extractionWarning && (
+              <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-600 dark:text-amber-300 text-[11px] font-sans flex items-start space-x-2">
+                <span className="shrink-0 text-sm">⚠️</span>
+                <span>{extractionWarning}</span>
+              </div>
+            )}
 
             <div>
               <label className="font-medium text-[var(--text-secondary)] block mb-1">
