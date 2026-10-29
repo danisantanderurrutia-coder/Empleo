@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   Building2, 
   Compass, 
-  ChevronLeft, 
   Globe2,
   TrendingUp
 } from 'lucide-react';
@@ -27,7 +26,7 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
   initialFilter = 'ALL',
   onStartApplication,
   onStartPipelineFromCompany,
-  onReturnToHub
+  onReturnToHub: _onReturnToHub
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'organizations' | 'benchmark' | 'portals'>(
     initialSubTab === 'portals' ? 'portals' :
@@ -56,22 +55,6 @@ export const MarketRadarTab: React.FC<MarketRadarTabProps> = ({
         }}
       >
         <div className="flex items-center gap-3">
-          {onReturnToHub && (
-            <button
-              onClick={onReturnToHub}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer shadow border shrink-0"
-              style={{ 
-                backgroundColor: 'var(--panel-bg)', 
-                borderColor: 'var(--panel-border)',
-                color: 'var(--text-primary)'
-              }}
-              title="Volver a la consola central Career"
-            >
-              <ChevronLeft className="h-4 w-4 text-sky-500" />
-              <span className="hidden sm:inline">« PANEL</span>
-            </button>
-          )}
-
           <div className="h-9 w-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0">
             <Compass className="h-5 w-5" />
           </div>

@@ -7,7 +7,6 @@ import {
   Clock, 
   Sparkles, 
   Zap, 
-  ChevronLeft,
   X,
   BookOpen,
   Filter
@@ -91,7 +90,7 @@ const BRANCH_CONFIG: Record<AcademyBranch, { label: string; shortLabel: string; 
 
 export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
   initialGapId,
-  onNavigateToSkillTree
+  onNavigateToSkillTree: _onNavigateToSkillTree
 }) => {
   const [courseProgress, setCourseProgressState] = useState(getStoredCourseProgress());
   
@@ -231,22 +230,6 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
         {/* Top Header Row with Title & Quick Metrics Bar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            {onNavigateToSkillTree && (
-              <button
-                onClick={onNavigateToSkillTree}
-                className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer shadow-xs border shrink-0 hover:border-cyan-500"
-                style={{ 
-                  backgroundColor: 'var(--panel-bg)', 
-                  borderColor: 'var(--panel-border)',
-                  color: 'var(--text-primary)'
-                }}
-                title="Volver a la vista del Árbol de Habilidades"
-              >
-                <ChevronLeft className="h-4 w-4 text-cyan-500" />
-                <span className="hidden sm:inline">« ÁRBOL</span>
-              </button>
-            )}
-
             <div className="h-10 w-10 rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center border border-cyan-500/30 shrink-0">
               <GraduationCap className="h-5 w-5" />
             </div>

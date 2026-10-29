@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { 
   Send, 
   KanbanSquare, 
-  LineChart,
-  ChevronLeft
+  LineChart
 } from 'lucide-react';
 import { ApplicationsTab } from '../applications/ApplicationsTab';
 import { IntelligenceTab } from '../intelligence/IntelligenceTab';
@@ -16,7 +15,7 @@ interface MissionControlTabProps {
 
 export const MissionControlTab: React.FC<MissionControlTabProps> = ({ 
   initialSubTab = 'applications',
-  onReturnToHub,
+  onReturnToHub: _onReturnToHub,
   onOpenStudio
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'applications' | 'intelligence'>(
@@ -34,22 +33,6 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
         }}
       >
         <div className="flex items-center gap-3">
-          {onReturnToHub && (
-            <button
-              onClick={onReturnToHub}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow border"
-              style={{ 
-                backgroundColor: 'var(--panel-bg)', 
-                borderColor: 'var(--panel-border)',
-                color: 'var(--text-primary)'
-              }}
-              title="Volver al Panel Central"
-            >
-              <ChevronLeft className="h-4 w-4 text-sky-500" />
-              <span>« PANEL CENTRAL</span>
-            </button>
-          )}
-
           <div className="h-9 w-9 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center border border-purple-500/30 shrink-0">
             <Send className="h-5 w-5" />
           </div>
