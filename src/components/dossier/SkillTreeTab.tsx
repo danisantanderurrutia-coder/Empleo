@@ -259,7 +259,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n7-agritwin'],
       description: 'Monitoreo multiespectral de reflectancia de dosel, índices NDVI/NDRE, cálculo de estrés hídrico de vegetación y cicatrices de quema.',
-      evidenceTitle: 'Lámina 002: Sensores de Laboratorio & Teledetección',
+      evidenceTitle: 'Lámina 002: Teledetección & Sensores Satelitales',
       evidenceAnchor: '#capacidades-computacionales'
     },
     {
@@ -914,8 +914,8 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
     },
     {
       id: 'n7-agritwin',
-      name: 'AgriTwin: Plataforma AgTech IoT & Satélites',
-      shortName: 'AgriTwin IoT',
+      name: 'AgriTwin: Gemelo Digital Agrícola',
+      shortName: 'AgriTwin Maule',
       level: 5,
       maxLevel: 5,
       status: 'MASTERED',
@@ -926,7 +926,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       spineOrigin: { x: 305, y: 175 },
       archetypes: ['ai-product'],
       synergies: ['n1-sentinel', 'n2-soil-lab', 'n5-keyline'],
-      description: 'Plataforma que integra telemetría de suelo LoRaWAN con índices satelitales Sentinel-2 (NDVI/NDRE) para prevención de estrés hídrico en viñedos.',
+      description: 'Integración de telemetría de humedad de suelo en tiempo real con índices satelitales Sentinel-2 (NDVI/NDRE) en viñedos del Maule.',
       evidenceTitle: 'Lámina 006: Chile Agrotech & Plataforma AgriTwin',
       evidenceAnchor: '#liderazgo-innovacion'
     },
