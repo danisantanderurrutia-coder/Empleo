@@ -17,6 +17,7 @@ interface NavTabItem {
 const NAV_TABS: NavTabItem[] = [
   { id: 'market_radar', label: 'MERCADO', matches: ['market_radar', 'offers', 'sources', 'companies'] },
   { id: 'agent_dossier', label: 'PERFIL', matches: ['agent_dossier', 'profile', 'cvs', 'studio', 'showcase', 'gunsmith', 'skills', 'settings'] },
+  { id: 'academy', label: 'ACADEMIA', matches: ['academy', 'courses', 'cursos'] },
   { id: 'mission_control', label: 'CANDIDATURAS', matches: ['mission_control', 'applications', 'batch_applications', 'intelligence'] },
   { id: 'funding', label: 'CONVOCATORIAS', matches: ['funding', 'convocatorias'] }
 ];

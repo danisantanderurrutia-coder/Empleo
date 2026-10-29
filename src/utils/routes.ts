@@ -8,6 +8,7 @@ export const APP_SLUGS = {
   DASHBOARD: '/consola',
   MARKET: '/mercado',
   DOSSIER: '/perfil',
+  ACADEMY: '/academia',
   APPLICATIONS: '/candidaturas',
   FUNDING: '/convocatorias',
   SETTINGS: '/ajustes',
@@ -78,6 +79,7 @@ export const getSlugForState = (
   }
 
   if (stationId === 'funding') return APP_SLUGS.FUNDING;
+  if (stationId === 'academy') return APP_SLUGS.ACADEMY;
   if (stationId === 'settings') return APP_SLUGS.SETTINGS;
 
   return APP_SLUGS.DASHBOARD;
@@ -118,6 +120,11 @@ export const parseSlugToState = (rawPath: string): ParsedRouteState => {
   }
   if (clean === '/mercado' || clean === '/mercado/ofertas' || clean.startsWith('/mercado/ofertas/')) {
     return { station: 'market_radar', subTab: 'organizations' };
+  }
+
+  // 1.5. Academia Formativa
+  if (clean === '/academia' || clean === '/academy' || clean.startsWith('/academia/') || clean.startsWith('/academy/')) {
+    return { station: 'academy' };
   }
 
   // 2. Perfil

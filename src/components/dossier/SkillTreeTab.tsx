@@ -168,11 +168,11 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
   // PUENTES DE SINERGIA TRANSDISCIPLINARIOS (AXONES COLATERALES)
   // --------------------------------------------------------------------------
   const synergyBridges: SynergyBridge[] = [
-    { from: 'n7-agritwin', to: 'n1-sentinel', label: 'IoT LoRaWAN + NDVI Sentinel-2' },
-    { from: 'n7-agritwin', to: 'n2-soil-lab', label: 'Potencial mátrico & sensores de suelo' },
-    { from: 'n7-agritwin', to: 'n5-keyline', label: 'Riego predictivo con hidrología Keyline' },
+    { from: 'n7-agritwin', to: 'n1-sentinel', label: 'Telemetría de suelo + NDVI Sentinel-2' },
+    { from: 'n7-agritwin', to: 'n2-soil-lab', label: 'Sensores de humedad & física de suelo' },
+    { from: 'n7-agritwin', to: 'n5-keyline', label: 'Riego y drenaje con hidrología Keyline' },
     { from: 'n7-wetland', to: 'n2-peatlands', label: 'Gemelo digital de turbera Wallener Au' },
-    { from: 'n7-wetland', to: 'n2-ghg', label: 'Visualización de flujos Eddy Covariance' },
+    { from: 'n7-wetland', to: 'n2-ghg', label: 'Visualización 3D de flujos Eddy Covariance' },
     { from: 'n7-docker', to: 'n1-gee', label: 'Contenedorización de pipelines GEE' },
     { from: 'n7-rewilding-suite', to: 'n5-rewilding', label: 'PWA de campo en Aljezur (Portugal)' },
     { from: 'n4-congreso', to: 'n5-incendios', label: 'Alegato pericial sobre megaincendios' },
@@ -212,8 +212,8 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
     },
     {
       id: 'n1-sismica',
-      name: 'Prospección Geoeléctrica Syscal Pro (ERT)',
-      shortName: 'Syscal ERT',
+      name: 'Resistividad Eléctrica de Suelos (SEV)',
+      shortName: 'Resistividad SEV',
       level: 5,
       maxLevel: 5,
       status: 'MASTERED',
@@ -223,7 +223,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       cy: 90,
       spineOrigin: { x: 440, y: 135 },
       archetypes: ['rd-scientist'],
-      description: 'Sondeos Eléctricos Verticales (SEV) y Tomografía de Resistividad Eléctrica con Iris Instruments. Detección de nivel freático y acuíferos en U. de Chile.',
+      description: 'Sondeos Eléctricos Verticales (SEV) para caracterización de resistividad de suelos y monitoreo del descenso freático en la Cuenca del Maule (U. de Chile).',
       evidenceTitle: 'Lámina 007: Licenciatura en Geofísica (Distinción)',
       evidenceAnchor: '#titulaciones-academicas'
     },
@@ -329,8 +329,8 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
     },
     {
       id: 'n2-ghg',
-      name: 'Eddy Covariance & Analizadores LI-COR',
-      shortName: 'LI-COR Flux',
+      name: 'Flujos de GEI & Eddy Covariance',
+      shortName: 'Flujos GEI',
       level: 5,
       maxLevel: 5,
       status: 'MASTERED',
@@ -341,7 +341,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       spineOrigin: { x: 575, y: 175 },
       archetypes: ['rd-scientist'],
       synergies: ['n7-wetland'],
-      description: 'Operación de torres de flujo micrometeorológico con analizadores infrarrojos LI-COR LI-7500/LI-7700 y cámaras de respiración de suelo cerradas.',
+      description: 'Medición y balance de flujos de CO₂ y CH₄ en turberas rehumedecidas mediante torres de Eddy Covariance y cámaras cerradas (CAU Kiel).',
       evidenceTitle: 'Lámina 001: Modelación Cuantitativa CAU Kiel',
       evidenceAnchor: '#investigacion-cuantitativa'
     },
@@ -365,8 +365,8 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
     },
     {
       id: 'n2-soil-lab',
-      name: 'Instrumentación Edáfica & Testigos Inalterados',
-      shortName: 'Lab Suelos',
+      name: 'Física de Suelos & Preconsolidación Edáfica',
+      shortName: 'Física de Suelos',
       level: 4,
       maxLevel: 5,
       status: 'ACTIVE',
@@ -377,7 +377,7 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
       spineOrigin: { x: 635, y: 170 },
       archetypes: ['rd-scientist', 'ai-product'],
       synergies: ['n7-agritwin'],
-      description: 'Ensayos de compresión edáfica, retención hídrica (curvas pF), carbono orgánico total (TOC) y sondeos con barrenas Edelman.',
+      description: 'Ensayos edáficos de compresión, cálculo de tensión de preconsolidación (σp = 62,4 kPa) y análisis de compactación en turberas (CAU Kiel).',
       evidenceTitle: 'Lámina 002: Laboratorio de Suelos CAU Kiel',
       evidenceAnchor: '#capacidades-computacionales'
     },

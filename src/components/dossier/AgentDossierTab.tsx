@@ -26,6 +26,7 @@ interface AgentDossierTabProps {
   initialStudioDocType?: 'cv' | 'cover_letter';
   onReturnToHub?: () => void;
   onOpenSettings?: () => void;
+  onNavigateToAcademy?: (gapId?: string) => void;
 }
 
 export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({ 
@@ -33,7 +34,8 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
   initialStudioOfferId,
   initialStudioDocType,
   onReturnToHub,
-  onOpenSettings
+  onOpenSettings,
+  onNavigateToAcademy
 }) => {
   const normalizedInitial = (
     initialSubTab === 'skills' ? 'showcase' : 
@@ -585,7 +587,14 @@ export const AgentDossierTab: React.FC<AgentDossierTabProps> = ({
         </div>
 
         {/* SECTOR COMPETENCIAS DIRECTAMENTE DEBAJO DEL RESUMEN */}
-        <SkillTreeTab onNavigateToAcademy={(gapId) => { setTargetGapId(gapId); setActiveSubTab('academy'); }} />
+        <SkillTreeTab onNavigateToAcademy={(gapId) => {
+          if (onNavigateToAcademy) {
+            onNavigateToAcademy(gapId);
+          } else {
+            setTargetGapId(gapId);
+            setActiveSubTab('academy');
+          }
+        }} />
       </div>
       )}
 

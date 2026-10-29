@@ -173,14 +173,14 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base sm:text-lg font-black tracking-tight text-[var(--text-primary)] uppercase">
-                  Radar de Cursos & Certificaciones (Gap-Closer Academy)
+                  Academia Estratégica & Radar de Certificaciones
                 </h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-bold hidden sm:inline-block">
-                  OFICIAL & VERIFICADO
+                  EXPANSIÓN CONTINUA & BRECHAS CLAVE
                 </span>
               </div>
               <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-                Programas formativos de alto impacto diseñados para cerrar de forma inmediata las 8 brechas de mercado detectadas en convocatorias y ofertas europeas.
+                Programas oficiales y subvencionados para expandir tu campo transdisciplinario de habilidades (Geofísica, Suelos & Carbono, Consorcios I+D, CSRD, Alemán C1 e IA) y cerrar brechas de mercado prioritarias.
               </p>
             </div>
           </div>
