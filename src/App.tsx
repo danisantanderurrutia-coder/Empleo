@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/layout/Navbar';
 import { TacticalHelpAndProtocolModal } from './components/common/TacticalHelpAndProtocolModal';
+import { CosmicNeuralBackground } from './components/common/CosmicNeuralBackground';
 
 import { WarRoomTab } from './components/warroom/WarRoomTab';
 import { MarketRadarTab } from './components/radar/MarketRadarTab';
@@ -311,15 +312,11 @@ export function App() {
       className={`min-h-screen w-full bg-[var(--bg-app)] text-[var(--text-primary)] flex flex-col font-sans selection:bg-sky-500 selection:text-white theme-${theme} transition-colors duration-300 relative overflow-x-hidden`} 
       data-theme={theme}
     >
-      {/* Tactical Snow Atmosphere Layer (Rainbow Six Operation Black Ice / Chalet) */}
-      <div 
-        className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-700 ${
-          theme === 'arctic' ? 'tactical-snow-atmosphere opacity-90' : 'tactical-dark-snow-atmosphere opacity-95'
-        }`}
-      />
+      {/* Dynamic Cosmic-Neural Background Layer (Universe meets Neurons) */}
+      <CosmicNeuralBackground theme={theme} />
 
       {/* High-tech Technical Coordinate & Compass Grid */}
-      <div className="fixed inset-0 pointer-events-none z-0 tactical-grid-overlay opacity-40" />
+      <div className="fixed inset-0 pointer-events-none z-0 tactical-grid-overlay opacity-30" />
 
       {/* Main Content with Relative Stacking */}
       <div className="relative z-10 flex flex-col min-h-screen w-full">
