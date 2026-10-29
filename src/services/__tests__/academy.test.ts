@@ -68,6 +68,15 @@ describe('Gap-Closer Academy · Catálogo Curado & Verificación', () => {
     expect(digitalTechCourses.length).toBeGreaterThanOrEqual(3);
   });
 
+  it('integra cursos clave de ESA EO College con enlaces a eo-college.org', () => {
+    const esaCourses = ACADEMY_COURSES.filter(c => c.url.includes('eo-college.org'));
+    expect(esaCourses.length).toBeGreaterThanOrEqual(4);
+    esaCourses.forEach(c => {
+      expect(c.url).toContain('https://eo-college.org');
+      expect(c.costType).toBe('FREE');
+    });
+  });
+
   it('todos los cursos tienen URLs válidas HTTPS oficiales y campos requeridos', () => {
     expect(ACADEMY_COURSES.length).toBeGreaterThanOrEqual(10);
 

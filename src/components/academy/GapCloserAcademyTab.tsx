@@ -113,6 +113,9 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
   };
 
   // Helper predicates for multilateral platforms
+  const isEsaCourse = (c: { url: string; provider: string }) =>
+    c.url.includes('eo-college.org') || c.provider.includes('EO College') || c.provider.includes('ESA');
+
   const isEuCourse = (c: { url: string; provider: string }) =>
     c.url.includes('academy.europa.eu') || c.provider.includes('EU Academy') || c.provider.includes('Comisión Europea');
 
@@ -121,7 +124,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
 
   // Branch statistics counts
   const branchCounts = useMemo(() => {
-    const counts: Record<string, number> = { ALL: ACADEMY_COURSES.length, ONLY_GAPS: 0, EU: 0, FAO: 0 };
+    const counts: Record<string, number> = { ALL: ACADEMY_COURSES.length, ONLY_GAPS: 0, ESA: 0, EU: 0, FAO: 0 };
     Object.keys(BRANCH_CONFIG).forEach(b => {
       counts[b] = 0;
     });
@@ -132,6 +135,9 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
       }
       if (c.isMarketGap) {
         counts.ONLY_GAPS++;
+      }
+      if (isEsaCourse(c)) {
+        counts.ESA++;
       }
       if (isEuCourse(c)) {
         counts.EU++;
@@ -148,7 +154,9 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
   const filteredCourses = useMemo(() => {
     return ACADEMY_COURSES.filter(course => {
       // 1. Branch / Gap mode / Multilateral Hub filter
-      if (selectedBranchFilter === 'EU') {
+      if (selectedBranchFilter === 'ESA') {
+        if (!isEsaCourse(course)) return false;
+      } else if (selectedBranchFilter === 'EU') {
         if (!isEuCourse(course)) return false;
       } else if (selectedBranchFilter === 'FAO') {
         if (!isFaoCourse(course)) return false;
@@ -358,7 +366,20 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                 <span className="text-[10px] opacity-75 font-normal">({branchCounts.ONLY_GAPS})</span>
               </button>
 
-              {/* 3. EU Academy (Comisión Europea) Filter Button */}
+              {/* 3. EO College / ESA Filter Button */}
+              <button
+                onClick={() => { setSelectedBranchFilter('ESA'); setActiveGapFilter(undefined); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs border ${
+                  selectedBranchFilter === 'ESA'
+                    ? 'bg-emerald-600 text-white font-black border-emerald-600 shadow-md'
+                    : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20'
+                }`}
+              >
+                <span>🛰️ EO College (ESA)</span>
+                <span className="text-[10px] opacity-80 font-normal">({branchCounts.ESA})</span>
+              </button>
+
+              {/* 4. EU Academy (Comisión Europea) Filter Button */}
               <button
                 onClick={() => { setSelectedBranchFilter('EU'); setActiveGapFilter(undefined); }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs border ${
@@ -371,7 +392,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                 <span className="text-[10px] opacity-80 font-normal">({branchCounts.EU})</span>
               </button>
 
-              {/* 4. FAO E-learning Academy Filter Button */}
+              {/* 5. FAO E-learning Academy Filter Button */}
               <button
                 onClick={() => { setSelectedBranchFilter('FAO'); setActiveGapFilter(undefined); }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs border ${
@@ -384,7 +405,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                 <span className="text-[10px] opacity-80 font-normal">({branchCounts.FAO})</span>
               </button>
 
-              {/* 5. The 7 Authentic Disciplines + Languages */}
+              {/* 6. The 7 Authentic Disciplines + Languages */}
               {(Object.keys(BRANCH_CONFIG) as AcademyBranch[]).map(branchKey => {
                 const conf = BRANCH_CONFIG[branchKey];
                 const isSelected = selectedBranchFilter === branchKey;
@@ -477,11 +498,79 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
       </div>
 
       {/* =========================================================================
-       * DUAL MULTILATERAL INSTITUTIONAL HUBS: EU ACADEMY & FAO E-LEARNING ACADEMY
+       * TRI-HUB MULTILATERAL & SPACE AGENCIES: ESA EO-COLLEGE, EU ACADEMY & FAO
        * ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
         
-        {/* Hub 1: EU Academy (Comisión Europea) */}
+        {/* Hub 1: EO College (European Space Agency / ESA) */}
+        <div 
+          className="p-4 rounded-2xl border relative overflow-hidden transition-all bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border-emerald-500/30 shadow-xs flex flex-col justify-between"
+          style={{ backgroundColor: 'var(--card-bg)' }}
+        >
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🛰️</span>
+                <div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 uppercase tracking-wider block sm:inline">
+                    Agencia Espacial Europea (ESA)
+                  </span>
+                </div>
+              </div>
+              <span className="text-[10.5px] font-mono text-[var(--text-muted)] font-bold hidden sm:inline">
+                eo-college.org
+              </span>
+            </div>
+
+            <h2 className="text-sm sm:text-base font-black text-[var(--text-primary)]">
+              EO College · European Space Agency (ESA)
+            </h2>
+            <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">
+              Plataforma abierta oficial de la ESA para observación de la Tierra y geofísica radar. Clave para tu perfil en: <strong className="text-emerald-600 dark:text-emerald-400">Radar SAR (Sentinel-1)</strong>, <strong className="text-teal-600 dark:text-teal-400">Interferometría DInSAR</strong> (subsidencia y deformación), <strong className="text-lime-600 dark:text-lime-400">Humedad del Suelo</strong>, polarimetría y biomasa forestal con SNAP y Python.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-white/10 font-mono text-xs">
+            <button
+              onClick={() => {
+                setSelectedBranchFilter('ESA');
+                setActiveGapFilter(undefined);
+              }}
+              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs border ${
+                selectedBranchFilter === 'ESA'
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-md'
+                  : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+              }`}
+            >
+              <span>Ver Cursos ESA</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-white/10 font-bold">
+                {branchCounts.ESA}
+              </span>
+            </button>
+
+            <a
+              href="https://eo-college.org/courses/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:flex-none px-3 py-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold transition flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+            >
+              <span>Catálogo SAR</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
+
+            <a
+              href="https://eo-college.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-black transition flex items-center justify-center gap-1 shadow-sm hover:opacity-90 cursor-pointer"
+            >
+              <span>eo-college.org</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+        </div>
+
+        {/* Hub 2: EU Academy (Comisión Europea) */}
         <div 
           className="p-4 rounded-2xl border relative overflow-hidden transition-all bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent border-blue-500/30 shadow-xs flex flex-col justify-between"
           style={{ backgroundColor: 'var(--card-bg)' }}
@@ -505,7 +594,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
               EU Academy · Unión Europea (Comisión Europea)
             </h2>
             <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">
-              Formación oficial, libre y con credenciales digitales verificables de la UE. Especial relevancia en: <strong className="text-blue-600 dark:text-blue-400">Directiva de Suelos</strong>, <strong className="text-amber-600 dark:text-amber-400">Metodología PM²</strong>, <strong className="text-purple-600 dark:text-purple-400">Reporte CSRD / ESRS</strong> y el track oficial <strong className="text-cyan-600 dark:text-cyan-400">Data & Digital Technology</strong> (<a href="https://academy.europa.eu/topics/data-digital-technology/" target="_blank" rel="noopener noreferrer" className="underline hover:text-cyan-500">EU AI Act</a>, Espacios de Datos Green Deal, Directiva INSPIRE y Gemelos Digitales Destination Earth).
+              Formación oficial y libre de la UE: <strong className="text-blue-600 dark:text-blue-400">Directiva de Suelos</strong>, <strong className="text-amber-600 dark:text-amber-400">Metodología PM²</strong>, <strong className="text-purple-600 dark:text-purple-400">Normas CSRD/ESRS</strong> y track <strong className="text-cyan-600 dark:text-cyan-400">Data & Digital Technology</strong> (<a href="https://academy.europa.eu/topics/data-digital-technology/" target="_blank" rel="noopener noreferrer" className="underline hover:text-cyan-500">EU AI Act</a>, Espacios de Datos Green Deal, INSPIRE y Destination Earth).
             </p>
           </div>
 
@@ -549,7 +638,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
           </div>
         </div>
 
-        {/* Hub 2: FAO E-learning Academy (Naciones Unidas) */}
+        {/* Hub 3: FAO E-learning Academy (Naciones Unidas) */}
         <div 
           className="p-4 rounded-2xl border relative overflow-hidden transition-all bg-gradient-to-br from-sky-500/10 via-cyan-500/5 to-transparent border-sky-500/30 shadow-xs flex flex-col justify-between"
           style={{ backgroundColor: 'var(--card-bg)' }}
@@ -570,10 +659,10 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
             </div>
 
             <h2 className="text-sm sm:text-base font-black text-[var(--text-primary)]">
-              FAO E-learning Academy · Organización de las Naciones Unidas (FAO)
+              FAO E-learning Academy · FAO (ONU)
             </h2>
             <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">
-              Formación oficial abierta y con certificación digital verificable de Naciones Unidas. Clave en: <strong className="text-sky-600 dark:text-sky-400">FAO WaPOR</strong> (balances hídricos y teledetección de cuencas), <strong className="text-cyan-600 dark:text-cyan-400">GSOCmrV & RothC</strong> (carbono del suelo y RecSOIL), <strong className="text-emerald-600 dark:text-emerald-400">Cartografía de Turberas</strong> (IPCC) y <strong className="text-amber-600 dark:text-amber-400">Neutralidad en Degradación de Tierras</strong> (ODS 15.3.1).
+              Formación oficial abierta y certificada de la ONU en: <strong className="text-sky-600 dark:text-sky-400">FAO WaPOR</strong> (balances hídricos y teledetección de cuencas), <strong className="text-cyan-600 dark:text-cyan-400">GSOCmrV & RothC</strong> (carbono del suelo), <strong className="text-emerald-600 dark:text-emerald-400">Cartografía de Turberas</strong> (IPCC) y <strong className="text-amber-600 dark:text-amber-400">Degradación de Tierras</strong> (ODS 15.3.1).
             </p>
           </div>
 
@@ -651,6 +740,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
             const currentStatus = userProg.status;
             const branchStyle = BRANCH_CONFIG[course.branch];
             const costBadge = getCostBadge(course.costType, course.costLabel);
+            const isEsa = isEsaCourse(course);
             const isEu = isEuCourse(course);
             const isFao = isFaoCourse(course);
 
@@ -662,6 +752,8 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                     ? 'border-emerald-500/50 bg-emerald-500/[0.04]'
                     : currentStatus === 'IN_PROGRESS'
                     ? 'border-amber-500/50 bg-amber-500/[0.04]'
+                    : isEsa
+                    ? 'border-emerald-500/40 hover:border-emerald-500'
                     : isEu
                     ? 'border-blue-500/40 hover:border-blue-500'
                     : isFao
@@ -670,7 +762,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                 }`}
                 style={{
                   backgroundColor: currentStatus === 'AVAILABLE' ? 'var(--card-bg)' : undefined,
-                  borderColor: currentStatus === 'AVAILABLE' && !isEu && !isFao ? 'var(--card-border)' : undefined
+                  borderColor: currentStatus === 'AVAILABLE' && !isEsa && !isEu && !isFao ? 'var(--card-border)' : undefined
                 }}
               >
                 {/* Accent top edge pill */}
@@ -686,6 +778,12 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                     </span>
 
                     <div className="flex items-center gap-1 shrink-0">
+                      {isEsa && (
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 flex items-center gap-0.5">
+                          <span>🛰️</span>
+                          <span>ESA</span>
+                        </span>
+                      )}
                       {isEu && (
                         <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30 flex items-center gap-0.5">
                           <span>🇪🇺</span>
@@ -830,7 +928,9 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`px-2.5 py-1 rounded-lg text-white font-mono text-[10.5px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer group ${
-                        isEu
+                        isEsa
+                          ? 'bg-emerald-600 hover:bg-emerald-500'
+                          : isEu
                           ? 'bg-blue-600 hover:bg-blue-500'
                           : isFao 
                           ? 'bg-sky-600 hover:bg-sky-500' 
@@ -838,7 +938,7 @@ export const GapCloserAcademyTab: React.FC<GapCloserAcademyTabProps> = ({
                       }`}
                       title={`Abrir página oficial de ${course.provider}`}
                     >
-                      <span>{isEu ? 'EU Portal' : isFao ? 'FAO Portal' : 'Acceder'}</span>
+                      <span>{isEsa ? 'EO College' : isEu ? 'EU Portal' : isFao ? 'FAO Portal' : 'Acceder'}</span>
                       <ExternalLink className="h-3 w-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   </div>
