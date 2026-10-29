@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ExternalLink,
   Award,
@@ -8,7 +8,9 @@ import {
   Compass,
   Layers,
   CheckCircle2,
-  GraduationCap
+  GraduationCap,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import { getStoredOffers, getStoredCourseProgress, setCourseStatus } from '../../services/db';
 import { ACADEMY_COURSES } from '../../data/academyCourses';
@@ -86,6 +88,28 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
 
   // Selected node for technical inspector
   const [selectedNodeId, setSelectedNodeId] = useState<string>('n7-wetland');
+
+  // Fullscreen view toggle
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // ESC key listener & body scroll lock for fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsFullscreen(false);
+      }
+    };
+    if (isFullscreen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isFullscreen]);
 
   // --------------------------------------------------------------------------
   // LAS 7 ÁREAS PROFESIONALES DE DANIEL SANTANDER
@@ -1323,7 +1347,11 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
         
         {/* LEFT CANVAS: CONFOCAL FLUORESCENCE STAGE (8 COLS) */}
         <div 
-          className="lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
+          className={
+            isFullscreen 
+              ? "fixed inset-0 z-50 p-4 sm:p-6 bg-[#020409] flex flex-col justify-between overflow-hidden shadow-2xl"
+              : "lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
+          }
           style={{ 
             backgroundColor: '#020409', 
             borderColor: 'rgba(255, 255, 255, 0.15)' 
@@ -1370,14 +1398,38 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />
                 <span>⚡ Brecha (Gap)</span>
               </span>
+
+              {/* Botón Pantalla Completa */}
+              <button
+                type="button"
+                onClick={() => setIsFullscreen(prev => !prev)}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-mono font-bold transition shadow cursor-pointer text-xs ml-auto sm:ml-2 ${
+                  isFullscreen 
+                    ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/30 ring-1 ring-white/30' 
+                    : 'bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-200 border border-cyan-400/40 hover:text-white'
+                }`}
+                title={isFullscreen ? 'Salir de pantalla completa (ESC)' : 'Expandir mapa a pantalla completa'}
+              >
+                {isFullscreen ? (
+                  <>
+                    <Minimize2 className="h-3.5 w-3.5" />
+                    <span>Salir (ESC)</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="h-3.5 w-3.5" />
+                    <span>Pantalla Completa</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
           {/* SVG Biological Confocal Microscope Stage */}
-          <div className="relative z-10 w-full overflow-x-auto">
+          <div className={`relative z-10 w-full ${isFullscreen ? 'flex-1 flex items-center justify-center min-h-0 overflow-hidden my-auto' : 'overflow-x-auto'}`}>
             <svg 
               viewBox="0 0 880 540" 
-              className="w-full min-w-[780px] h-auto select-none rounded-xl"
+              className={isFullscreen ? "w-full max-h-[calc(100vh-140px)] h-auto select-none rounded-xl" : "w-full min-w-[780px] h-auto select-none rounded-xl"}
               style={{ backgroundColor: 'transparent' }}
             >
               <defs>
@@ -1748,6 +1800,42 @@ export const SkillTreeTab: React.FC<SkillTreeTabProps> = ({ onNavigateToAcademy 
               })}
             </svg>
           </div>
+
+          {/* Fullscreen Floating Inspector HUD */}
+          {isFullscreen && (
+            <div className="relative z-20 mt-2 px-4 py-2.5 rounded-xl bg-black/85 border border-white/20 backdrop-blur-md flex flex-wrap items-center justify-between gap-3 text-xs shadow-xl animate-fade-in">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="p-1.5 rounded-lg bg-black/60 border border-white/10 text-base">
+                  {currentBranchStyle.icon}
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-white text-sm truncate">{selectedNode.name}</span>
+                    <span 
+                      className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase shrink-0"
+                      style={{ 
+                        backgroundColor: selectedNode.isMarketGap ? '#e11d48' : currentBranchStyle.color,
+                        color: '#ffffff'
+                      }}
+                    >
+                      {selectedNode.isMarketGap ? 'Brecha de Mercado' : 'Verificado'}
+                    </span>
+                  </div>
+                  <p className="text-slate-300 text-[11px] line-clamp-1">{selectedNode.description}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-slate-400 font-mono text-[11px] shrink-0">
+                <span className="hidden md:inline">{selectedNode.evidenceTitle}</span>
+                <button
+                  type="button"
+                  onClick={() => setIsFullscreen(false)}
+                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition font-bold cursor-pointer"
+                >
+                  Cerrar (ESC)
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* RIGHT COLUMN: CONFOCAL TECHNICAL DOSSIER (4 COLS) */}
