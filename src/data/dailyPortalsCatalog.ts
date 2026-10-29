@@ -33,7 +33,7 @@ export const DAILY_PORTALS: DailyPortal[] = [
     quadrant: 'DACH',
     quadrantLabel: 'Alemania / DACH',
     category: 'Ambiental / Clima',
-    directUrl: 'https://www.greenjobs.de/angebote/suche.html?suchbegriff=Boden+Klima+Geophysik',
+    directUrl: 'https://www.greenjobs.de/angebote/index.html',
     recommendedFrequency: 'Diario',
     suggestedKeywords: ['Boden', 'Klimafolgen', 'Hydrologie', 'Moorrenaturierung'],
     description: 'Portal de referencia especializado en medio ambiente, energías renovables, consultoría ecológica y suelos en Alemania.',
@@ -119,19 +119,6 @@ export const DAILY_PORTALS: DailyPortal[] = [
     description: 'Bolsa académica referente para universidades del norte y centro de Europa (Alemania, Escandinavia, Países Bajos).',
     iconName: 'GraduationCap'
   },
-  {
-    id: 'portal-dfg-gepris',
-    name: 'DFG GEPRIS / Stellenmarkt',
-    quadrant: 'EUROPA',
-    quadrantLabel: 'Alemania / I+D',
-    category: 'Científico / I+D',
-    directUrl: 'https://gepris.dfg.de/gepris/OCTOPUS?module=gepris&task=buergerstiftung',
-    recommendedFrequency: 'Semanal',
-    suggestedKeywords: ['DFG Einzelstipendium', 'Walter Benjamin', 'Sonderforschungsbereich', 'Moorforschung'],
-    description: 'Sistema de información de la Deutsche Forschungsgemeinschaft. Permite ver qué proyectos han recibido fondos recientemente.',
-    iconName: 'Search'
-  },
-
   // -------------------------------------------------------------
   // CUADRANTE GLOBAL & REMOTO / CLIMA
   // -------------------------------------------------------------

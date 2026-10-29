@@ -195,6 +195,22 @@ export const getStoredCompanies = (): CompanyDossier[] => {
     }
   }
 
+  // Migración: eliminar contactos sembrados que no estaban verificados y corregir un id de convocatoria
+  const UNVERIFIED_CONTACT_IDS = new Set(['cnt-gfz-1', 'cnt-gmc-1', 'cnt-iker-1']);
+  let migrated = false;
+  list = list.map(c => {
+    const hasBad = (c.contacts || []).some(ct => UNVERIFIED_CONTACT_IDS.has(ct.id));
+    const hasOldFundingId = (c.fundingTies || []).includes('f-ikerbasque-fellow');
+    if (!hasBad && !hasOldFundingId) return c;
+    migrated = true;
+    return {
+      ...c,
+      contacts: (c.contacts || []).filter(ct => !UNVERIFIED_CONTACT_IDS.has(ct.id)),
+      fundingTies: (c.fundingTies || []).map(id => id === 'f-ikerbasque-fellow' ? 'f-ikerbasque-fellowship' : id)
+    };
+  });
+  if (migrated) saveStoredCompanies(list);
+
   // Ensure all 18 authentic institutions & enterprises are populated without overwriting user customizations
   const existingIds = new Set(list.map(c => c.id));
   const existingNames = new Set(list.map(c => c.name.trim().toLowerCase()));

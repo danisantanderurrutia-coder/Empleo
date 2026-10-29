@@ -1195,15 +1195,6 @@ export const initialCompanies: CompanyDossier[] = [
     techStack: ['Python', 'QGIS', 'Copernicus / Sentinel', 'GRACE', 'R', 'Linux HPC'],
     lastResearched: '2026-10-25',
     quadrants: ['DACH'],
-    contacts: [
-      {
-        id: 'cnt-gfz-1',
-        name: 'Prof. Dr. Niels Hovius',
-        role: 'Director Científico Interino / División Geofísica',
-        linkedinUrl: 'https://www.linkedin.com/search/results/people/?keywords=GFZ%20Potsdam%20Geophysics',
-        notes: 'Contacto institucional en Telegrafenberg para líneas de investigación en geociencias ambientales'
-      }
-    ],
     fundingTies: ['f-dfg-walter-benjamin', 'f-helmholtz-postdoc']
   },
   {
@@ -1240,15 +1231,6 @@ export const initialCompanies: CompanyDossier[] = [
     techStack: ['EddyPro', 'R', 'QGIS', 'Licor Eddy Covariance', 'Python'],
     lastResearched: '2026-10-25',
     quadrants: ['DACH'],
-    contacts: [
-      {
-        id: 'cnt-gmc-1',
-        name: 'Dr. Franziska Tanneberger',
-        role: 'Directora del Greifswald Mire Centre',
-        linkedinUrl: 'https://www.linkedin.com/search/results/people/?keywords=Franziska%20Tanneberger',
-        notes: 'Premio Ambiental Alemán (Deutscher Umweltpreis). Líder de consorcios europeos en turberas'
-      }
-    ],
     fundingTies: ['f-dfg-walter-benjamin', 'f-daad-research']
   },
   {
@@ -1285,16 +1267,7 @@ export const initialCompanies: CompanyDossier[] = [
     techStack: ['Research Fellowships', 'Horizon Europe', 'Gestión de Proyectos I+D'],
     lastResearched: '2026-10-25',
     quadrants: ['EUSKADI'],
-    contacts: [
-      {
-        id: 'cnt-iker-1',
-        name: 'Coordinación de Programas de Atracción de Talento',
-        role: 'Ikerbasque Research Fellows Office',
-        email: 'convocatorias@ikerbasque.net',
-        notes: 'Contacto para resolución de dudas sobre requisitos de elegibilidad y centros anfitriones'
-      }
-    ],
-    fundingTies: ['f-ikerbasque-fellow']
+    fundingTies: ['f-ikerbasque-fellowship']
   }
 ];
 
