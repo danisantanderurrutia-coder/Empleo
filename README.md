@@ -1,52 +1,41 @@
-# Job Search OS (Empleo)
+# Headhunter OS
 
-Herramienta frontend privada para la gestión, seguimiento y postulación estructurada a ofertas de empleo, desarrollada en **React 19**, **TypeScript** y **Vite**.
+Sistema de prospección directa, inteligencia corporativa y postulación estructurada de alto valor para perfiles transdisciplinarios y científicos, desarrollado en **React 19**, **TypeScript** y **Vite**.
 
-Todos los datos personales y candidaturas se guardan exclusivamente en el navegador (`localStorage`) del usuario, garantizando total privacidad sin servidores intermediarios.
-
----
-
-## 🌟 Funcionalidades Reales
-
-### 1. Perfil Maestro y Banco de Logros
-- **Master Profile centralizado:** experiencia, educación, idiomas, enlaces profesionales y preferencias de ubicación/salario.
-- **Banco de logros:** registro estructurado de hitos cuantificables para adaptar a cada postulación.
-- **Privacidad total:** no se envía ningún dato personal a servidores externos.
-
-### 2. Búsqueda en APIs Públicas Reales
-- Integración directa desde el navegador (con soporte CORS abierto) con plataformas públicas de empleo:
-  - **Remotive API** (empleos remotos internacionales)
-  - **Arbeitnow API** (empleos en Europa, Alemania y remotos)
-  - **Jobicy API** (vacantes remotas globales)
-- Sin necesidad de API keys para la búsqueda básica.
-- Soporte para añadir y estructurar manualmente ofertas copiadas desde cualquier portal o convocatoria pública.
-
-### 3. Match Engine Determinista y Explicable
-- Cálculo de compatibilidad (0–100%) entre el perfil y la oferta basado en:
-  - **Habilidades técnicas y blandas** coincidentes en el texto.
-  - **Preferencias de ubicación y teletrabajo** configuradas por el usuario.
-  - **Rangos salariales reales** contrastados con la expectativa mínima y deseada.
-- **Sin puntuaciones artificiales:** si una oferta no contiene información salarial o habilidades, no se otorgan puntos fantasma (0 pts por defecto con desglose explicable).
-
-### 4. Extracción de CV desde PDF
-- Extracción de texto plano en el navegador mediante `pdfjs-dist` (cargado de forma diferida mediante *dynamic import* para optimizar el bundle).
-- Detección básica mediante patrones de datos de contacto (email, teléfono, nombre) sin inventar puestos ni estudios no presentes en el documento.
-
-### 5. Asistente de Plantillas para Cartas y Preguntas ATS
-- Generación de borradores de cartas de presentación y respuestas frecuentes con marcadores `[COMPLETAR]`.
-- No inventa afirmaciones sobre empresas ni logros inexistentes: solo rellena datos ya contrastados del perfil y la vacante.
-
-### 6. Seguimiento de Candidaturas (Tracker Local)
-- Registro y ciclo de vida de candidaturas (Nueva, Borrador, Enviada manualmente, En Seguimiento, Descartada).
-- Portabilidad completa mediante **Exportar/Importar copia de seguridad en JSON**.
+Todos los datos personales, notas de decisores y expedientes se almacenan exclusivamente en el navegador (`localStorage`) del usuario, garantizando total privacidad sin servidores intermediarios.
 
 ---
 
-## 🛡️ Principios de Honestidad y Límites Técnicos
+## 🌟 Arquitectura y Módulos Tácticos
 
-- **Sin postulaciones automáticas universales:** los portales de empleo y sistemas ATS requieren autenticación, captchas y formularios propietarios. El usuario revisa y confirma el envío en la web oficial correspondiente.
-- **Sin scraping de portales con login:** la aplicación no vulnera términos de servicio ni finge sincronizaciones con cuentas de LinkedIn, InfoJobs o XING.
-- **Sin tareas en segundo plano con la pestaña cerrada:** una aplicación 100% frontend estática no puede ejecutar tareas cron sin backend o Service Worker dedicado.
+### 1. Directorio de Organizaciones & Cuadrantes (Mercado)
+- **Atlas de Cuentas Diana:** Centros de investigación (Helmholtz GFZ, CAU Kiel, Thünen, UBA, Greifswald Mire Centre), institutos de la RVCTI (BC3, Tecnalia, Neiker, AZTI, Ikerbasque) y consultoras ambientales.
+- **Segmentación por Cuadrantes:** Filtros tácticos por DACH (Alemania/Austria/Suiza), Euskadi / Norte y Global / Remoto.
+- **Mapeo de Decisores (Hiring Managers / PIs):** Registro estructurado de directores de laboratorio, supervisores y reclutadores técnicos con sus canales de contacto directo (LinkedIn, email institucional).
+- **Vínculos con Financiación:** Detección de convocatorias públicas compatibles para co-diseño de proyectos (DFG, Hazitek, Horizon Europe).
+
+### 2. Portales de Rastreo Diario
+- Cuadrícula matutina de 12 portales verificados con parámetros booleanos pre-configurados para geofísica, turberas, balances de carbono, teledetección y gobernanza ambiental.
+- Accesos directos a LinkedIn, XING, StepStone, EURAXESS, DFG GEPRIS, Bund.de, InfoJobs, Tecnoempleo, Climatebase y Eurobrussels.
+- Checklist local de revisión diaria.
+
+### 3. Pipeline Definitivo (PD-1 a PD-8)
+Procedimiento táctico híbrido que combina la prospección proactiva con el rigor de la postulación formal:
+1. **Cuenta Diana:** Selección de organización prioritaria por cuadrante.
+2. **Revisión de Oferta / Proyecto:** Análisis de dolor técnico y requerimientos.
+3. **Mapeo del Decisor:** Identificación del supervisor o Hiring Manager.
+4. **Capacidades & CV:** Cruce transdisciplinario de hechos verificados (`verifiedCvFacts`) y adaptación del CV.
+5. **Gancho & Carta:** Doble mensaje (gancho directo de <100 palabras + carta formal de 5 párrafos rigurosos).
+6. **Control de Calidad:** Verificación de enlaces, títulos y expediente.
+7. **Despacho & Registro:** Confirmación y registro del canal de envío utilizado.
+8. **Seguimiento & Diálogo:** Cadencia de 5 días hábiles para follow-up y preparación de reuniones.
+
+### 4. Expediente & Arsenal de Solvencia (Perfil)
+- **Fuente de la Verdad Inmutable (`verifiedCvFacts.ts`):** Solo hechos respaldados por el portafolio público o evidencia verificable (títulos, publicaciones, instrumentación eddy covariance, testimonio ante el Congreso).
+- **CV Studio:** Generación de formatos A4 calibrados con tipografía y diseño profesional.
+
+### 5. Palanca de Convocatorias (Fondos I+D)
+- Catálogo curado de programas institucionales oficiales europeos, alemanes y vascos (DFG Walter Benjamin, DAAD, Humboldt, Helmholtz, Horizon Europe MSCA, Hazitek, Bikaintek, Ikerbasque).
 
 ---
 
@@ -70,29 +59,4 @@ npm run build
 
 # Previsualizar build de producción
 npm run preview
-```
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-src/
-├── components/          # Componentes de interfaz de usuario organizados por módulos
-│   ├── applications/   # Módulo de seguimiento de candidaturas
-│   ├── companies/      # Fichas de empresas y entidades
-│   ├── cvs/            # Gestión de versiones y plantillas de CV
-│   ├── offers/         # Listado, búsqueda y filtrado de vacantes
-│   ├── profile/        # Edición del Master Profile y Banco de Logros
-│   ├── settings/       # Configuración y copias de seguridad JSON
-│   └── sources/        # Directorio de portales y fuentes de referencia
-├── services/           # Lógica de negocio y persistencia
-│   ├── antigravityEngine.ts    # Parseo heurístico de texto de CV
-│   ├── coverLetterCopilot.ts   # Plantillas de carta de presentación
-│   ├── db.ts                   # Repositorio y acceso a localStorage
-│   ├── matchEngine.ts          # Algoritmo explicable de cálculo de match
-│   ├── pdfExtractor.ts         # Extracción de texto con pdfjs-dist diferido
-│   ├── publicJobApis.ts        # Clientes HTTP para Remotive, Arbeitnow y Jobicy
-│   └── __tests__/              # Tests unitarios automatizados (Vitest)
-└── types/              # Definiciones TypeScript de modelos de datos
 ```

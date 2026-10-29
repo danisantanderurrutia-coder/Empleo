@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { 
   Send, 
   KanbanSquare, 
-  CheckSquare, 
   LineChart,
   ChevronLeft
 } from 'lucide-react';
 import { ApplicationsTab } from '../applications/ApplicationsTab';
-import { BatchApplicationsTab } from '../applications/BatchApplicationsTab';
 import { IntelligenceTab } from '../intelligence/IntelligenceTab';
 
 interface MissionControlTabProps {
-  initialSubTab?: 'applications' | 'batch' | 'intelligence';
+  initialSubTab?: 'applications' | 'intelligence' | string;
   onReturnToHub?: () => void;
   onOpenStudio?: (offerId: string, docType?: 'cv' | 'cover_letter') => void;
 }
@@ -21,7 +19,9 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
   onReturnToHub,
   onOpenStudio
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'applications' | 'batch' | 'intelligence'>(initialSubTab);
+  const [activeSubTab, setActiveSubTab] = useState<'applications' | 'intelligence'>(
+    initialSubTab === 'intelligence' ? 'intelligence' : 'applications'
+  );
 
   return (
     <div className="space-y-5 text-[var(--text-primary)] animate-fadeIn">
@@ -56,17 +56,17 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
 
           <div>
             <h1 className="text-base font-black text-[var(--text-primary)] flex items-center gap-2 font-mono uppercase tracking-tight">
-              CANDIDATURAS // GESTIÓN & SEGUIMIENTO DE PROCESOS
+              CANDIDATURAS // PIPELINE DEFINITIVO & PROSPECCIÓN
             </h1>
-            <p className="text-[11px] text-[var(--text-secondary)] font-sans">
-              Seguimiento de postulaciones laborales y convocatorias I+D • Control humano 100% verificado.
+            <p className="text-xs text-[var(--text-muted)] font-mono">
+              Flujo híbrido de 8 etapas: Cuenta Diana ➔ Oferta ➔ Decisor ➔ CV Transdisciplinar ➔ Gancho & Carta ➔ Despacho ➔ Seguimiento.
             </p>
           </div>
         </div>
 
-        {/* Sub-Tabs Switcher */}
+        {/* SubTab switcher */}
         <div 
-          className="flex items-center p-1 rounded-xl border gap-1 shrink-0"
+          className="flex items-center p-1 rounded-xl border self-start md:self-auto shrink-0 shadow-inner"
           style={{ 
             backgroundColor: 'var(--panel-bg)', 
             borderColor: 'var(--panel-border)' 
@@ -74,61 +74,37 @@ export const MissionControlTab: React.FC<MissionControlTabProps> = ({
         >
           <button
             onClick={() => setActiveSubTab('applications')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
               activeSubTab === 'applications'
-                ? 'bg-purple-600 text-white shadow font-black'
+                ? 'bg-purple-600 text-white shadow-md'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
-            <KanbanSquare className="h-3.5 w-3.5" />
-            <span>TABLERO DE PROCESOS</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('batch')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              activeSubTab === 'batch'
-                ? 'bg-purple-600 text-white shadow font-black'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            <CheckSquare className="h-3.5 w-3.5" />
-            <span>REVISIÓN EN LOTE</span>
+            <KanbanSquare className="h-4 w-4" />
+            <span>PIPELINE DEFINITIVO</span>
           </button>
 
           <button
             onClick={() => setActiveSubTab('intelligence')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
               activeSubTab === 'intelligence'
-                ? 'bg-purple-600 text-white shadow font-black'
+                ? 'bg-purple-600 text-white shadow-md'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
-            <LineChart className="h-3.5 w-3.5" />
-            <span>INTELIGENCIA & CONVERSIÓN</span>
+            <LineChart className="h-4 w-4" />
+            <span>ASESOR ESTRATÉGICO</span>
           </button>
         </div>
       </div>
 
-      {/* SUB-PANEL 1: APPLICATIONS KANBAN & UNIFIED DESPACHO ASISTIDO */}
+      {/* Main Content Area */}
       {activeSubTab === 'applications' && (
-        <div className="space-y-4">
-          <ApplicationsTab onOpenStudio={onOpenStudio} />
-        </div>
+        <ApplicationsTab onOpenStudio={onOpenStudio} />
       )}
 
-      {/* SUB-PANEL 2: BATCH APPLICATIONS */}
-      {activeSubTab === 'batch' && (
-        <div className="space-y-4">
-          <BatchApplicationsTab />
-        </div>
-      )}
-
-      {/* SUB-PANEL 3: INTELLIGENCE & CONVERSION */}
       {activeSubTab === 'intelligence' && (
-        <div className="space-y-4">
-          <IntelligenceTab />
-        </div>
+        <IntelligenceTab />
       )}
     </div>
   );

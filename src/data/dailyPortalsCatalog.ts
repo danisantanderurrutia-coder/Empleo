@@ -1,0 +1,174 @@
+export interface DailyPortal {
+  id: string;
+  name: string;
+  quadrant: 'DACH' | 'EUSKADI' | 'EUROPA' | 'GLOBAL_REMOTE';
+  quadrantLabel: string;
+  category: 'Científico / I+D' | 'General / Profesional' | 'Ambiental / Clima' | 'Gobernanza / Público';
+  directUrl: string;
+  recommendedFrequency: 'Diario' | '2-3 veces/semana' | 'Semanal';
+  suggestedKeywords: string[];
+  description: string;
+  iconName: 'Linkedin' | 'Briefcase' | 'Compass' | 'Leaf' | 'GraduationCap' | 'Globe' | 'Search' | 'Building2' | 'CloudRain' | 'Landmark';
+}
+
+export const DAILY_PORTALS: DailyPortal[] = [
+  // -------------------------------------------------------------
+  // CUADRANTE DACH (Alemania, Austria, Suiza)
+  // -------------------------------------------------------------
+  {
+    id: 'portal-xing-dach',
+    name: 'XING Jobs (DACH)',
+    quadrant: 'DACH',
+    quadrantLabel: 'Alemania / DACH',
+    category: 'General / Profesional',
+    directUrl: 'https://www.xing.com/jobs/search?keywords=Klimaschutz%20Bodenkunde%20Geophysik',
+    recommendedFrequency: 'Diario',
+    suggestedKeywords: ['Klimaschutz', 'Bodenkunde', 'Geophysik', 'Moor', 'Eddy Covariance'],
+    description: 'La principal red profesional en Alemania y Suiza. Clave para conectar con institutos y consultoras alemanas.',
+    iconName: 'Briefcase'
+  },
+  {
+    id: 'portal-greenjobs-de',
+    name: 'GreenJobs.de (Alemania)',
+    quadrant: 'DACH',
+    quadrantLabel: 'Alemania / DACH',
+    category: 'Ambiental / Clima',
+    directUrl: 'https://www.greenjobs.de/angebote/suche.html?suchbegriff=Boden+Klima+Geophysik',
+    recommendedFrequency: 'Diario',
+    suggestedKeywords: ['Boden', 'Klimafolgen', 'Hydrologie', 'Moorrenaturierung'],
+    description: 'Portal de referencia especializado en medio ambiente, energías renovables, consultoría ecológica y suelos en Alemania.',
+    iconName: 'Leaf'
+  },
+  {
+    id: 'portal-stepstone-de',
+    name: 'StepStone Deutschland',
+    quadrant: 'DACH',
+    quadrantLabel: 'Alemania / DACH',
+    category: 'General / Profesional',
+    directUrl: 'https://www.stepstone.de/work/geophysik-environmental-science',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Geophysik', 'Environmental Scientist', 'GIS Analyst', 'Klimaforschung'],
+    description: 'Bolsa de empleo líder para posiciones técnicas en la industria, ingenierías ambientales y grandes entidades en Alemania.',
+    iconName: 'Compass'
+  },
+  {
+    id: 'portal-bund-de',
+    name: 'Bund.de (Empleo Público Federal)',
+    quadrant: 'DACH',
+    quadrantLabel: 'Alemania / DACH',
+    category: 'Gobernanza / Público',
+    directUrl: 'https://service.bund.de/Content/DE/Stellen/Suche/Formular.html?nn=4642&cl2Categories_Bereich=umwelt-klima',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['Thünen', 'Umweltbundesamt', 'BfN', 'DWD', 'Wissenschaftliche Mitarbeiter'],
+    description: 'Convocatorias oficiales de institutos federales alemanes (Thünen-Institut, UBA, Bundesamt für Naturschutz, DWD).',
+    iconName: 'Landmark'
+  },
+
+  // -------------------------------------------------------------
+  // CUADRANTE EUSKADI / ESPAÑA
+  // -------------------------------------------------------------
+  {
+    id: 'portal-infojobs-es',
+    name: 'InfoJobs (Euskadi & España)',
+    quadrant: 'EUSKADI',
+    quadrantLabel: 'Euskadi / España',
+    category: 'General / Profesional',
+    directUrl: 'https://www.infojobs.net/jobsearch/search-results/list.xhtml?keyword=medio%20ambiente%20gis',
+    recommendedFrequency: 'Diario',
+    suggestedKeywords: ['Medio Ambiente', 'GIS', 'Hidrología', 'Suelos Contaminados', 'Consultoría Ambiental'],
+    description: 'Portal líder para vacantes en empresas de consultoría e ingeniería ambiental en Bizkaia, Gipuzkoa y España.',
+    iconName: 'Building2'
+  },
+  {
+    id: 'portal-tecnoempleo',
+    name: 'Tecnoempleo (Tech & Datos)',
+    quadrant: 'EUSKADI',
+    quadrantLabel: 'Euskadi / España',
+    category: 'General / Profesional',
+    directUrl: 'https://www.tecnoempleo.com/ofertas-trabajo/?te=python+gis+data',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Python', 'GIS Data', 'Remote Sensing', 'Data Analyst'],
+    description: 'Ofertas especializadas en desarrollo técnico, análisis de datos, Python y sistemas de información geográfica.',
+    iconName: 'Search'
+  },
+
+  // -------------------------------------------------------------
+  // CUADRANTE EUROPA & CIENCIA / I+D
+  // -------------------------------------------------------------
+  {
+    id: 'portal-euraxess',
+    name: 'EURAXESS (Comisión Europea)',
+    quadrant: 'EUROPA',
+    quadrantLabel: 'Europa / I+D',
+    category: 'Científico / I+D',
+    directUrl: 'https://euraxess.ec.europa.eu/jobs/search?keywords=geophysics%20climate%20peatland',
+    recommendedFrequency: 'Diario',
+    suggestedKeywords: ['Geophysics', 'Peatlands', 'Eddy Covariance', 'Soil Carbon', 'MSCA'],
+    description: 'Portal oficial de la Comisión Europea para investigadores. Publica plazas post-máster, doctorales, postdocs y consorcios.',
+    iconName: 'GraduationCap'
+  },
+  {
+    id: 'portal-academic-positions',
+    name: 'Academic Positions (Europa & DACH)',
+    quadrant: 'EUROPA',
+    quadrantLabel: 'Europa / I+D',
+    category: 'Científico / I+D',
+    directUrl: 'https://academicpositions.com/find-jobs?keyword=environmental%20science%20geophysics',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Environmental Sciences', 'Earth Observation', 'Biogeochemistry', 'Helmholtz'],
+    description: 'Bolsa académica referente para universidades del norte y centro de Europa (Alemania, Escandinavia, Países Bajos).',
+    iconName: 'GraduationCap'
+  },
+  {
+    id: 'portal-dfg-gepris',
+    name: 'DFG GEPRIS / Stellenmarkt',
+    quadrant: 'EUROPA',
+    quadrantLabel: 'Alemania / I+D',
+    category: 'Científico / I+D',
+    directUrl: 'https://gepris.dfg.de/gepris/OCTOPUS?module=gepris&task=buergerstiftung',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['DFG Einzelstipendium', 'Walter Benjamin', 'Sonderforschungsbereich', 'Moorforschung'],
+    description: 'Sistema de información de la Deutsche Forschungsgemeinschaft. Permite ver qué proyectos han recibido fondos recientemente.',
+    iconName: 'Search'
+  },
+
+  // -------------------------------------------------------------
+  // CUADRANTE GLOBAL & REMOTO / CLIMA
+  // -------------------------------------------------------------
+  {
+    id: 'portal-linkedin-global',
+    name: 'LinkedIn Jobs (Radar Especializado)',
+    quadrant: 'GLOBAL_REMOTE',
+    quadrantLabel: 'Global & Remoto',
+    category: 'General / Profesional',
+    directUrl: 'https://www.linkedin.com/jobs/search/?keywords=Geophysicist%20OR%20%22Peatland%22%20OR%20%22Eddy%20Covariance%22%20OR%20%22Remote%20Sensing%22',
+    recommendedFrequency: 'Diario',
+    suggestedKeywords: ['Geophysicist', 'Peatland', 'Eddy Covariance', 'Remote Sensing', 'Environmental Data'],
+    description: 'Búsqueda directa con operadores booleanos adaptados a tu perfil transdisciplinario.',
+    iconName: 'Linkedin'
+  },
+  {
+    id: 'portal-climatebase',
+    name: 'Climatebase (Impacto & Remoto)',
+    quadrant: 'GLOBAL_REMOTE',
+    quadrantLabel: 'Global & Remoto',
+    category: 'Ambiental / Clima',
+    directUrl: 'https://climatebase.org/jobs?q=geospatial%20carbon',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Geospatial', 'Carbon Accounting', 'Remote Sensing', 'Ecosystem Restoration'],
+    description: 'Plataforma internacional de empresas y startups dedicadas a soluciones climáticas, teledetección y créditos de carbono.',
+    iconName: 'CloudRain'
+  },
+  {
+    id: 'portal-eurobrussels',
+    name: 'EuroBrussels & UNjobs',
+    quadrant: 'GLOBAL_REMOTE',
+    quadrantLabel: 'Europa & Global',
+    category: 'Gobernanza / Público',
+    directUrl: 'https://www.eurobrussels.com/jobs/environment',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['Environmental Policy', 'Climate Governance', 'Just Transition', 'Water Framework Directive'],
+    description: 'Puestos de gobernanza ambiental, asuntos europeos, ONGs internacionales y agencias de Naciones Unidas.',
+    iconName: 'Globe'
+  }
+];

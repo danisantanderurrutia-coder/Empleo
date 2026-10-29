@@ -58,7 +58,7 @@ export const AddApplicationModal: React.FC<AddApplicationModalProps> = ({
       status = 'Entrevista';
       humanApproval = true;
     } else if (initialColumn === 'done') {
-      stage = 9;
+      stage = 8;
       status = 'Oferta Recibida';
       humanApproval = true;
     }

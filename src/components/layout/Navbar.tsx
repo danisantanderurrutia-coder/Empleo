@@ -83,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {!logoError ? (
             <img 
               src={resolveAsset('/app_icon.svg')} 
-              alt="Empleo Master Logo" 
+              alt="Headhunter OS Logo" 
               onError={() => setLogoError(true)}
               className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300" 
             />
@@ -93,10 +93,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
         <div>
           <h1 className="font-black text-base sm:text-lg tracking-tight text-[var(--text-primary)] font-sans group-hover:text-cyan-500 transition">
-            EMPLEO MASTER
+            HEADHUNTER OS
           </h1>
           <p className="text-[10px] text-[var(--text-muted)] font-mono hidden sm:block">
-            Consola Profesional & Radar Laboral
+            Consola de Prospección Directa & Executive Search
           </p>
         </div>
       </button>

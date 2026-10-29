@@ -40,66 +40,75 @@ import { FiveStepPipelineModal } from '../offers/FiveStepPipelineModal';
 const PIPELINE_STEPS_DECLARATION = [
   {
     step: 1,
-    title: 'Radar & Análisis',
-    badge: 'Filtro Algorítmico',
-    desc: 'Extracción de requerimientos clave, stack técnico y condiciones contractuales (TVöD/TV-L/Sector Privado).',
-    wingmanRole: 'Ingesta y parsing de la vacante',
+    title: 'Cuenta Diana',
+    badge: 'NP-1 // Cuenta',
+    desc: 'Selección de la entidad o centro I+D objetivo dentro de los cuadrantes estratégicos (DACH, Euskadi, Global).',
+    objective: 'Foco en la organización',
+    icon: Building2,
+    color: 'text-teal-500 bg-teal-500/10 border-teal-500/30'
+  },
+  {
+    step: 2,
+    title: 'Oferta / Proyecto',
+    badge: 'PA-1 // Requisitos',
+    desc: 'Revisión técnica de la vacante, proyecto de investigación o convocatoria pública detectada en la cuenta.',
+    objective: 'Diagnóstico de dolor técnico',
     icon: Search,
     color: 'text-sky-500 bg-sky-500/10 border-sky-500/30'
   },
   {
-    step: 2,
-    title: 'Inteligencia de PI',
-    badge: 'Wingman Radar',
-    desc: 'Mapeo de publicaciones del supervisor/director, diagnóstico del dolor del proyecto y ganchos de paridad.',
-    wingmanRole: 'Dossier de abordaje interpersonal',
+    step: 3,
+    title: 'Mapeo del Decisor',
+    badge: 'PA-2 + NP-2 // Decisor',
+    desc: 'Identificación directa del responsable de grupo, supervisor, PI o reclutador con poder de decisión.',
+    objective: 'Interlocutor humano verificado',
     icon: UserCheck,
     color: 'text-purple-500 bg-purple-500/10 border-purple-500/30'
   },
   {
-    step: 3,
-    title: 'Auditoría de Docs',
-    badge: 'Expediente Oficial',
-    desc: 'Verificación estricta de documentos requeridos (título con distinción, transcript, cartas de recomendación).',
-    wingmanRole: 'Checklist anti-descalificación',
-    icon: FolderCheck,
-    color: 'text-amber-500 bg-amber-500/10 border-amber-500/30'
-  },
-  {
     step: 4,
-    title: 'Calibración de CV',
-    badge: 'CV Cuantitativo',
-    desc: 'Reordenamiento de módulos: física de medios porosos, balances de masa y reproducibilidad en R/Python.',
-    wingmanRole: 'Sugerencias de priorización de hechos',
+    title: 'Capacidades & CV',
+    badge: 'NP-3 + PA-3 // Transdisciplinar',
+    desc: 'Cruce de capacidades transdisciplinarias (geofísica, turberas, satélites, software) y adaptación de CV.',
+    objective: 'Solvencia cuantitativa',
     icon: FileText,
     color: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30'
   },
   {
     step: 5,
-    title: 'Carta de Impacto',
-    badge: '5 Párrafos Rigurosos',
-    desc: 'Borrador académico en alemán/inglés/español con balances físicos concretos y cero clichés serviles.',
-    wingmanRole: 'Ensamblaje anti-AI y rigor técnico',
-    icon: Sparkles,
+    title: 'Gancho & Carta',
+    badge: 'NP-4 + PA-4 // Doble Enfoque',
+    desc: 'Redacción del mensaje directo corto para LinkedIn/Email como gancho, y la carta formal de 5 párrafos.',
+    objective: 'Gancho directo + carta formal',
+    icon: Mail,
     color: 'text-indigo-500 bg-indigo-500/10 border-indigo-500/30'
   },
   {
     step: 6,
-    title: 'Cold Approach',
-    badge: 'Email al Supervisor',
-    desc: 'Pregunta técnica pertinente o consulta previa directamente al PI antes o durante la postulación.',
-    wingmanRole: 'Borrador sobrio de par a par',
-    icon: Mail,
-    color: 'text-rose-500 bg-rose-500/10 border-rose-500/30'
+    title: 'Control Calidad',
+    badge: 'PA-6 // Auditoría',
+    desc: 'Checklist exhaustivo de documentos requeridos, enlaces del portafolio y confirmación del usuario.',
+    objective: 'Verificación de expediente',
+    icon: FolderCheck,
+    color: 'text-amber-500 bg-amber-500/10 border-amber-500/30'
   },
   {
     step: 7,
-    title: 'Despacho & Control',
-    badge: 'Aprobación Humana',
-    desc: 'Ningún envío se ejecuta en automático. El candidato aprueba y confirma el envío en la plataforma oficial.',
-    wingmanRole: 'Blindaje ético y confirmación formal',
+    title: 'Despacho & Registro',
+    badge: 'PA-7 // Envío Confirmado',
+    desc: 'Envío formal por el canal seleccionado (LinkedIn, correo del PI, portal oficial) y registro en el sistema.',
+    objective: 'Aprobación humana',
     icon: Send,
-    color: 'text-teal-500 bg-teal-500/10 border-teal-500/30'
+    color: 'text-rose-500 bg-rose-500/10 border-rose-500/30'
+  },
+  {
+    step: 8,
+    title: 'Seguimiento & Diálogo',
+    badge: 'NP-7 // Cadencia 5 Días',
+    desc: 'Temporizador de seguimiento a 5 días hábiles, registro de respuestas técnicas y preparación de reuniones.',
+    objective: 'Cierre de conversación',
+    icon: ShieldCheck,
+    color: 'text-cyan-500 bg-cyan-500/10 border-cyan-500/30'
   }
 ];
 
@@ -316,11 +325,10 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
       let newStatus = app.status;
 
       if (direction === 'next') {
-        if (newStage < 9) newStage = (newStage + 1) as ApplicationStage;
+        if (newStage < 8) newStage = (newStage + 1) as ApplicationStage;
         if (newStage >= 7) {
           if (newStage === 7) newStatus = 'Enviada';
-          else if (newStage === 8) newStatus = 'Entrevista';
-          else if (newStage === 9) newStatus = 'Oferta Recibida';
+          else if (newStage === 8) newStatus = 'En Seguimiento';
         }
       } else {
         if (newStage > 1) newStage = (newStage - 1) as ApplicationStage;
@@ -511,16 +519,16 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
               <div className="flex items-center space-x-2">
                 <Cpu className="h-4 w-4 text-sky-500" />
                 <h3 className="font-mono font-black text-xs uppercase tracking-wider text-[var(--text-primary)]">
-                  Arquitectura del Pipeline Asistido (7 Pasos de Alto Valor)
+                  Arquitectura del Pipeline Definitivo (8 Fases Estratégicas: NP + PA)
                 </h3>
               </div>
               <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                «El Wingman investiga y modela. El candidato valida y ejecuta.»
+                «Procedimiento Táctico: de la Cuenta Diana al Gancho Directo, Validación y Seguimiento.»
               </span>
             </div>
 
             {/* Step sequence grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2">
               {PIPELINE_STEPS_DECLARATION.map((item) => {
                 const IconComponent = item.icon;
                 return (
@@ -537,7 +545,7 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
                         <span className={`h-6 w-6 rounded-lg flex items-center justify-center border text-[10px] font-mono font-black ${item.color}`}>
                           0{item.step}
                         </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--panel-bg)] text-[var(--text-muted)] border border-[var(--card-border)] font-bold">
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--panel-bg)] text-[var(--text-muted)] border border-[var(--card-border)] font-bold truncate max-w-[90px]">
                           {item.badge}
                         </span>
                       </div>
@@ -553,8 +561,8 @@ export const ApplicationsTab: React.FC<ApplicationsTabProps> = ({ onOpenStudio }
                     </div>
 
                     <div className="pt-2 border-t border-[var(--panel-border)] text-[9.5px] font-mono text-sky-600 dark:text-sky-400">
-                      <span className="font-bold">Wingman: </span>
-                      <span className="text-[var(--text-muted)]">{item.wingmanRole}</span>
+                      <span className="font-bold">Objetivo: </span>
+                      <span className="text-[var(--text-muted)]">{item.objective}</span>
                     </div>
                   </div>
                 );

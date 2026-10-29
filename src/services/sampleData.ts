@@ -1158,7 +1158,143 @@ export const initialCompanies: CompanyDossier[] = [
       'Doble formación germano-iberoamericana ideal para la cultura binacional de la compañía.'
     ],
     techStack: ['Python', 'WAsP / WindPRO', 'QGIS', 'Análisis Micrometeorológico', 'LCA'],
-    lastResearched: '2026-10-14'
+    lastResearched: '2026-10-14',
+    quadrants: ['EUSKADI', 'DACH', 'GLOBAL']
+  },
+  {
+    id: 'comp-gfz',
+    name: 'GFZ Helmholtz-Zentrum Potsdam (Deutsches GeoForschungsZentrum)',
+    website: 'https://www.gfz-potsdam.de/',
+    sector: 'Geociencias, Geofísica, Teledetección & Modelación Terrestre',
+    size: '1.200+ científicos y personal técnico',
+    headquarters: 'Telegrafenberg, Potsdam (Brandenburg, Alemania)',
+    description: 'Centro nacional de investigación en geociencias de Alemania y miembro de la Helmholtz-Gemeinschaft. Lidera la investigación mundial en física de la Tierra sólida, gravimetría por satélite (GRACE-FO), sensoramiento remoto hiperespectral (EnMAP) y dinámica de cuencas.',
+    keyProjects: [
+      'Procesamiento y modelado de datos hiperespectrales del satélite EnMAP',
+      'Monitoreo hidrogeofísico de humedad de suelo y acuíferos profundos',
+      'Modelos de deformación cortical y monitoreo de riesgos geodinámicos'
+    ],
+    recentNews: [
+      {
+        title: 'Nuevos proyectos de observación de la Tierra y monitoreo hidrogeológico',
+        date: '2026-10-12',
+        snippet: 'Líneas de investigación abiertas en asimilación de datos satelitales y series temporales.'
+      }
+    ],
+    workCulture: [
+      'Centro de excelencia mundial con investigadores de más de 40 países',
+      'Campus histórico de Telegrafenberg con infraestructura de supercomputación',
+      'Convenio colectivo del sector público federal (TVöD Bund)'
+    ],
+    redFlags: ['Procesos de selección altamente competitivos que valoran experiencia de publicación'],
+    interviewArguments: [
+      'Geofísico de base cuantitativa con comprensión matemática de inversión de datos físicos y series temporales.',
+      'Doble maestría en Alemania y Polonia con conocimiento del ecosistema Helmholtz.',
+      'Experiencia en programación científica en Python, R y manejo de datos espaciales (GIS, Sentinel).'
+    ],
+    techStack: ['Python', 'QGIS', 'Copernicus / Sentinel', 'GRACE', 'R', 'Linux HPC'],
+    lastResearched: '2026-10-25',
+    quadrants: ['DACH'],
+    contacts: [
+      {
+        id: 'cnt-gfz-1',
+        name: 'Prof. Dr. Niels Hovius',
+        role: 'Director Científico Interino / División Geofísica',
+        linkedinUrl: 'https://www.linkedin.com/search/results/people/?keywords=GFZ%20Potsdam%20Geophysics',
+        notes: 'Contacto institucional en Telegrafenberg para líneas de investigación en geociencias ambientales'
+      }
+    ],
+    fundingTies: ['f-dfg-walter-benjamin', 'f-helmholtz-postdoc']
+  },
+  {
+    id: 'comp-greifswald',
+    name: 'Greifswald Mire Centre (GMC)',
+    website: 'https://www.greifswaldmoor.de/',
+    sector: 'Restauración de Turberas, Paludicultura y Flujos de Carbono',
+    size: '80-120 científicos y consultores de turberas',
+    headquarters: 'Greifswald (Mecklenburg-Vorpommern, Alemania)',
+    description: 'El mayor centro de conocimiento y referencia mundial en ecología de turberas (Moorforschung), paludicultura y contabilidad de gases de efecto invernadero en suelos orgánicos húmedos. Colaboración estrecha con Universität Greifswald y Michael Succow Stiftung.',
+    keyProjects: [
+      'Paludicultura y agricultura sobre turberas restauradas con monitoreo de GEI',
+      'MoorFutures y certificación de créditos de carbono basados en rehumedecimiento de turberas',
+      'Global Peatland Database e inventarios paneuropeos de carbono orgánico'
+    ],
+    recentNews: [
+      {
+        title: 'Presentación del manual técnico de monitoreo de flujos de carbono en turberas restauradas',
+        date: '2026-10-02',
+        snippet: 'Guías de medición con torres micrometeorológicas y cámaras para la UE.'
+      }
+    ],
+    workCulture: [
+      'Liderazgo mundial y compromiso absoluto con la restauración de ecosistemas de turbera',
+      'Ambiente interdisciplinar entre biólogos, climatólogos, geógrafos y economistas',
+      'Incidencia directa en políticas agrarias de la Unión Europea (PAC) y de Alemania'
+    ],
+    redFlags: ['Gran parte de los fondos provienen de proyectos competitivos del BMUV y programas LIFE'],
+    interviewArguments: [
+      'Experiencia directa en terreno en monitoreo de flujos de gases de efecto invernadero (torres eddy covariance en turberas) durante el máster en CAU Kiel.',
+      'Comprensión integral de la física del suelo, hidrogeología de turberas y balance de masas de carbono.',
+      'Capacidad para comunicar resultados cuantitativos a tomadores de decisiones y autoridades políticas.'
+    ],
+    techStack: ['EddyPro', 'R', 'QGIS', 'Licor Eddy Covariance', 'Python'],
+    lastResearched: '2026-10-25',
+    quadrants: ['DACH'],
+    contacts: [
+      {
+        id: 'cnt-gmc-1',
+        name: 'Dr. Franziska Tanneberger',
+        role: 'Directora del Greifswald Mire Centre',
+        linkedinUrl: 'https://www.linkedin.com/search/results/people/?keywords=Franziska%20Tanneberger',
+        notes: 'Premio Ambiental Alemán (Deutscher Umweltpreis). Líder de consorcios europeos en turberas'
+      }
+    ],
+    fundingTies: ['f-dfg-walter-benjamin', 'f-daad-research']
+  },
+  {
+    id: 'comp-ikerbasque',
+    name: 'Ikerbasque - Basque Foundation for Science',
+    website: 'https://www.ikerbasque.net/',
+    sector: 'Atracción y Consolidación de Talento Investigador en Euskadi',
+    size: '300+ investigadores de excelencia adscritos',
+    headquarters: 'Bilbao (Bizkaia)',
+    description: 'Fundación creada por el Gobierno Vasco para reforzar la investigación científica en Euskadi mediante la atracción y consolidación de investigadoras e investigadores de todo el mundo en centros de la RVCTI y universidades vascas (UPV/EHU, Deusto, Mondragon).',
+    keyProjects: [
+      'Convocatoria Research Fellows (contratos de 5 años para investigadores prometedores)',
+      'Convocatoria Research Associates y Research Professors',
+      'Proyectos de investigación avanzada en clima, sostenibilidad, energía y materiales'
+    ],
+    recentNews: [
+      {
+        title: 'Publicación de la convocatoria anual Research Fellows para jóvenes investigadores',
+        date: '2026-09-15',
+        snippet: 'Contratos de 5 años con opción a consolidación permanente en centros de investigación vascos.'
+      }
+    ],
+    workCulture: [
+      'Excelencia científica evaluada por comités internacionales independientes',
+      'Adscripción directa a centros líderes (BC3, Tecnalia, AZTI, CIC energiGUNE)',
+      'Estabilidad investigadora y respaldo institucional del Gobierno Vasco'
+    ],
+    redFlags: ['Exige un historial científico sólido con publicaciones y clara vocación de permanencia en Euskadi'],
+    interviewArguments: [
+      'Candidato a doble máster europeo con experiencia internacional demostrada en Alemania, Polonia y Chile.',
+      'Perfil de alto valor estratégico para la transición ecológica y la resiliencia territorial de Euskadi.',
+      'Voluntad explícita de arraigo e investigación aplicada a largo plazo en Bizkaia/Euskadi.'
+    ],
+    techStack: ['Research Fellowships', 'Horizon Europe', 'Gestión de Proyectos I+D'],
+    lastResearched: '2026-10-25',
+    quadrants: ['EUSKADI'],
+    contacts: [
+      {
+        id: 'cnt-iker-1',
+        name: 'Coordinación de Programas de Atracción de Talento',
+        role: 'Ikerbasque Research Fellows Office',
+        email: 'convocatorias@ikerbasque.net',
+        notes: 'Contacto para resolución de dudas sobre requisitos de elegibilidad y centros anfitriones'
+      }
+    ],
+    fundingTies: ['f-ikerbasque-fellow']
   }
 ];
 
