@@ -157,5 +157,53 @@ export const DAILY_PORTALS: DailyPortal[] = [
     suggestedKeywords: ['Environmental Policy', 'Climate Governance', 'Just Transition', 'Water Framework Directive'],
     description: 'Puestos de gobernanza ambiental, asuntos europeos, ONGs internacionales y agencias de Naciones Unidas.',
     iconName: 'Globe'
+  },
+  {
+    id: 'portal-icos-hub',
+    name: 'ICOS ERIC Career Hub (Nórdicos & Europa)',
+    quadrant: 'EUROPA',
+    quadrantLabel: 'Nórdicos & Europa / ICOS',
+    category: 'Científico / I+D',
+    directUrl: 'https://www.icos-cp.eu/about/vacancies',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Eddy Covariance', 'GHG Flux', 'Peatlands', 'Atmospheric Station', 'Data Scientist'],
+    description: 'Red paneuropea de observación de carbono. Estaciones de flujo de GEI y turberas en Finlandia, Suecia, Alemania y Países Bajos.',
+    iconName: 'Leaf'
+  },
+  {
+    id: 'portal-wur-wageningen',
+    name: 'Wageningen UR (Países Bajos)',
+    quadrant: 'EUROPA',
+    quadrantLabel: 'Países Bajos & UK',
+    category: 'Científico / I+D',
+    directUrl: 'https://www.wur.nl/en/jobs-wur.htm',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['Soil Carbon', 'Peatlands', 'Biogeochemistry', 'Remote Sensing', 'MRV'],
+    description: 'Referente mundial en suelos, humedales, dinámica de carbono edáfico y teledetección agroambiental.',
+    iconName: 'GraduationCap'
+  },
+  {
+    id: 'portal-reliefweb',
+    name: 'ReliefWeb (ONU / Multilateral / GIZ)',
+    quadrant: 'GLOBAL_REMOTE',
+    quadrantLabel: 'Multilateral & Global',
+    category: 'Gobernanza / Público',
+    directUrl: 'https://reliefweb.int/jobs?search=climate%20disaster%20risk%20geospatial',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Disaster Risk', 'Watershed Management', 'Geospatial', 'Wildfire Prevention', 'GIZ'],
+    description: 'Plataforma oficial de la ONU para mitigación del riesgo de desastres, cuencas, gobernanza hídrica y proyectos UE-LATAM.',
+    iconName: 'Globe'
+  },
+  {
+    id: 'portal-eo-gislounge',
+    name: 'Earth Observation Jobs & GIS Lounge',
+    quadrant: 'GLOBAL_REMOTE',
+    quadrantLabel: 'Global & Remoto',
+    category: 'Ambiental / Clima',
+    directUrl: 'https://www.gislounge.com/jobs/',
+    recommendedFrequency: '2-3 veces/semana',
+    suggestedKeywords: ['Copernicus', 'Sentinel', 'Google Earth Engine', 'SAR', 'Thermal Infrared', 'Cat Modeling'],
+    description: 'Portal de empleo técnico en teledetección satelital, Earth Observation (Copernicus/ESA/NASA) y geoinformática.',
+    iconName: 'Compass'
   }
 ];

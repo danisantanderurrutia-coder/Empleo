@@ -17,12 +17,12 @@ import {
   Search
 } from 'lucide-react';
 import { getStoredCompanies, saveStoredCompanies } from '../../services/db';
-import type { CompanyDossier, QuadrantType, CompanyContact } from '../../types/companies';
+import type { CompanyDossier, QuadrantType, CompanyContact, CompanySectorCluster } from '../../types/companies';
 import { AddCompanyModal } from './AddCompanyModal';
 import { EditCompanyModal } from './EditCompanyModal';
 import { WebsitePreviewModal } from '../common/WebsitePreviewModal';
 import { FUNDING_CATALOG } from '../../data/fundingCatalog';
-import { inferCompanyQuadrants } from '../../utils/quadrants';
+import { inferCompanyQuadrants, inferCompanySectorCluster } from '../../utils/quadrants';
 
 interface CompaniesTabProps {
   onStartPipeline?: (companyId: string) => void;
@@ -36,6 +36,7 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
     initialQuadrant === 'BILBAO' || initialQuadrant === 'EUSKADI' ? 'EUSKADI' :
     initialQuadrant === 'REMOTE' ? 'GLOBAL' : 'ALL'
   );
+  const [selectedSectorCluster, setSelectedSectorCluster] = useState<CompanySectorCluster>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>(companies[0]?.id || '');
   
@@ -104,10 +105,14 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
     });
   };
 
-  // Filter companies by quadrant and search
+  // Filter companies by quadrant, sector cluster, and search
   const filteredCompanies = companies.filter(comp => {
     const quads = inferCompanyQuadrants(comp);
     if (selectedQuadrant !== 'ALL' && !quads.includes(selectedQuadrant as QuadrantType)) {
+      return false;
+    }
+    const cluster = inferCompanySectorCluster(comp);
+    if (selectedSectorCluster !== 'ALL' && cluster !== selectedSectorCluster) {
       return false;
     }
     if (searchQuery.trim()) {
@@ -134,9 +139,29 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
     switch (quad) {
       case 'DACH': return 'bg-teal-900/60 text-teal-300 border-teal-700/60';
       case 'EUSKADI': return 'bg-emerald-900/60 text-emerald-300 border-emerald-700/60';
+      case 'UK_NL': return 'bg-blue-900/60 text-blue-300 border-blue-700/60';
+      case 'NORDICS': return 'bg-indigo-900/60 text-indigo-300 border-indigo-700/60';
+      case 'CANADA_GLOBAL': return 'bg-rose-900/60 text-rose-300 border-rose-700/60';
       case 'GLOBAL': return 'bg-sky-900/60 text-sky-300 border-sky-700/60';
-      case 'REMOTE': return 'bg-indigo-900/60 text-indigo-300 border-indigo-700/60';
+      case 'REMOTE': return 'bg-violet-900/60 text-violet-300 border-violet-700/60';
       default: return 'bg-slate-800 text-slate-300 border-slate-700';
+    }
+  };
+
+  const getClusterBadge = (cluster: CompanySectorCluster) => {
+    switch (cluster) {
+      case 'CARBON_TECH_MRV':
+        return { label: 'Carbon-Tech & MRV', color: 'bg-emerald-950/80 text-emerald-400 border-emerald-700/60' };
+      case 'CAT_RISK_INSURANCE':
+        return { label: 'Cat Risk & Seguros', color: 'bg-amber-950/80 text-amber-300 border-amber-700/60' };
+      case 'RD_PUBLIC':
+        return { label: 'I+D Público & Centros', color: 'bg-teal-950/80 text-teal-300 border-teal-700/60' };
+      case 'MULTILATERAL_POLICY':
+        return { label: 'Multilateral & Políticas', color: 'bg-purple-950/80 text-purple-300 border-purple-700/60' };
+      case 'GEOTHERMAL_ENERGY':
+        return { label: 'Geotermia & Subsuelo', color: 'bg-orange-950/80 text-orange-300 border-orange-700/60' };
+      default:
+        return { label: 'Sector Estratégico', color: 'bg-slate-800 text-slate-300 border-slate-700' };
     }
   };
 
@@ -163,62 +188,122 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
         </button>
       </div>
 
-      {/* Quadrants Bar & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Quadrant filter tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800">
-          <button
-            onClick={() => setSelectedQuadrant('ALL')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'ALL'
-                ? 'bg-slate-700 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Todos ({companies.length})
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('DACH')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'DACH'
-                ? 'bg-teal-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Cuadrante DACH (Alemania)
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('EUSKADI')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'EUSKADI'
-                ? 'bg-emerald-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Cuadrante Euskadi / Norte
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('GLOBAL')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'GLOBAL'
-                ? 'bg-sky-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Remoto / Europa & Global
-          </button>
+      {/* 2D Matrix Filter Bar (Geographic Poles x Sector Clusters) & Search */}
+      <div className="space-y-3">
+        {/* Row 1: Geographic Poles with Regularization pathways */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800">
+            <button
+              onClick={() => setSelectedQuadrant('ALL')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'ALL'
+                  ? 'bg-slate-700 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Todos ({companies.length})
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('EUSKADI')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'EUSKADI'
+                  ? 'bg-emerald-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Euskadi / España (Vía 2a)
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('DACH')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'DACH'
+                  ? 'bg-teal-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              DACH (Kiel/Bonn/TVöD)
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('UK_NL')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'UK_NL'
+                  ? 'bg-blue-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              UK & NL (Wageningen/Londres)
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('NORDICS')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'NORDICS'
+                  ? 'bg-indigo-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Nórdicos (ICOS/Finlandia/Suecia)
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('CANADA_GLOBAL')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'CANADA_GLOBAL'
+                  ? 'bg-rose-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Canadá / IEC Global
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('GLOBAL')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'GLOBAL'
+                  ? 'bg-sky-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Remoto & Global
+            </button>
+          </div>
+
+          {/* Search */}
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar organización o sector..."
+              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            />
+          </div>
         </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por nombre o sector..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-          />
+        {/* Row 2: Functional Sector Clusters */}
+        <div className="flex flex-wrap items-center gap-1.5 text-xs">
+          <span className="text-[11px] font-mono text-slate-500 mr-1">Clúster Funcional:</span>
+          {[
+            { id: 'ALL' as CompanySectorCluster, label: 'Todos los sectores' },
+            { id: 'CARBON_TECH_MRV' as CompanySectorCluster, label: 'Carbon-Tech & MRV' },
+            { id: 'CAT_RISK_INSURANCE' as CompanySectorCluster, label: 'Cat Risk & Seguros' },
+            { id: 'RD_PUBLIC' as CompanySectorCluster, label: 'I+D Público & Centros' },
+            { id: 'MULTILATERAL_POLICY' as CompanySectorCluster, label: 'Multilateral & Políticas' },
+            { id: 'GEOTHERMAL_ENERGY' as CompanySectorCluster, label: 'Geotermia & Subsuelo' }
+          ].map((cluster) => {
+            const active = selectedSectorCluster === cluster.id;
+            return (
+              <button
+                key={cluster.id}
+                onClick={() => setSelectedSectorCluster(cluster.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono transition cursor-pointer ${
+                  active
+                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/60 shadow-xs font-bold'
+                    : 'bg-slate-900/70 text-slate-400 hover:text-slate-200 border border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                {cluster.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -261,7 +346,12 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-400 line-clamp-1">{comp.sector}</p>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-mono font-bold border ${getClusterBadge(inferCompanySectorCluster(comp)).color}`}>
+                      {getClusterBadge(inferCompanySectorCluster(comp)).label}
+                    </span>
+                    <span className="text-xs text-slate-400 line-clamp-1">{comp.sector}</span>
+                  </div>
 
                   <div className="text-[11px] text-slate-400 flex items-center justify-between pt-1 border-t border-slate-800/80 font-mono">
                     <span className="truncate max-w-[170px]">📍 {comp.headquarters}</span>
@@ -311,14 +401,19 @@ export const CompaniesTab: React.FC<CompaniesTabProps> = ({ onStartPipeline, ini
                     <span className="text-slate-400">{selectedCompany.size}</span>
                   </div>
 
-                  {/* Quadrant tags */}
-                  <div className="flex items-center gap-1.5 pt-1">
+                  {/* Quadrant and Sector Cluster tags */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
                     <span className="text-[11px] text-slate-500 font-mono">Cuadrante(s):</span>
                     {inferCompanyQuadrants(selectedCompany).map(q => (
                       <span key={q} className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold border ${getQuadrantColor(q)}`}>
                         {q}
                       </span>
                     ))}
+                    <span className="text-slate-600">•</span>
+                    <span className="text-[11px] text-slate-500 font-mono">Clúster:</span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold border ${getClusterBadge(inferCompanySectorCluster(selectedCompany)).color}`}>
+                      {getClusterBadge(inferCompanySectorCluster(selectedCompany)).label}
+                    </span>
                   </div>
                 </div>
 

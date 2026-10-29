@@ -25,6 +25,7 @@ const STORAGE_KEY_CHECKED = 'job_search_os_portals_checked_today_v1';
 
 export const DailyPortalsRadar: React.FC<DailyPortalsRadarProps> = () => {
   const [selectedQuadrant, setSelectedQuadrant] = useState<string>('ALL');
+  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [checkedPortals, setCheckedPortals] = useState<Record<string, string>>({});
 
@@ -66,6 +67,9 @@ export const DailyPortalsRadar: React.FC<DailyPortalsRadarProps> = () => {
 
   const filteredPortals = DAILY_PORTALS.filter(portal => {
     if (selectedQuadrant !== 'ALL' && portal.quadrant !== selectedQuadrant) {
+      return false;
+    }
+    if (selectedCategory !== 'ALL' && portal.category !== selectedCategory) {
       return false;
     }
     if (searchQuery.trim()) {
@@ -133,71 +137,100 @@ export const DailyPortalsRadar: React.FC<DailyPortalsRadarProps> = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Quadrant tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
-          <button
-            onClick={() => setSelectedQuadrant('ALL')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'ALL'
-                ? 'bg-cyan-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Todos ({DAILY_PORTALS.length})
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('DACH')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'DACH'
-                ? 'bg-teal-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            DACH (Alemania)
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('EUSKADI')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'EUSKADI'
-                ? 'bg-emerald-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Euskadi / España
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('EUROPA')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'EUROPA'
-                ? 'bg-indigo-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Europa / I+D
-          </button>
-          <button
-            onClick={() => setSelectedQuadrant('GLOBAL_REMOTE')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
-              selectedQuadrant === 'GLOBAL_REMOTE'
-                ? 'bg-sky-600 text-white shadow'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            Global & Remoto
-          </button>
+      <div className="space-y-2.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Quadrant tabs */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+            <button
+              onClick={() => setSelectedQuadrant('ALL')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'ALL'
+                  ? 'bg-cyan-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Todos ({DAILY_PORTALS.length})
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('DACH')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'DACH'
+                  ? 'bg-teal-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              DACH (Alemania)
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('EUSKADI')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'EUSKADI'
+                  ? 'bg-emerald-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Euskadi / España
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('EUROPA')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'EUROPA'
+                  ? 'bg-indigo-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Europa / I+D & Nórdicos
+            </button>
+            <button
+              onClick={() => setSelectedQuadrant('GLOBAL_REMOTE')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                selectedQuadrant === 'GLOBAL_REMOTE'
+                  ? 'bg-sky-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Global & Remoto
+            </button>
+          </div>
+
+          {/* Search */}
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Filtrar por portal o keyword..."
+              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+            />
+          </div>
         </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Filtrar por portal o keyword..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-          />
+        {/* Category chips row */}
+        <div className="flex flex-wrap items-center gap-1.5 text-xs">
+          <span className="text-[11px] font-mono text-slate-500 mr-1">Vertical:</span>
+          {[
+            { id: 'ALL', label: 'Todas las áreas' },
+            { id: 'Científico / I+D', label: 'I+D & Observación' },
+            { id: 'Ambiental / Clima', label: 'Climate-Tech & Satelital' },
+            { id: 'Gobernanza / Público', label: 'Multilateral & Público' },
+            { id: 'General / Profesional', label: 'General & Redes' }
+          ].map((cat) => {
+            const active = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono transition cursor-pointer ${
+                  active
+                    ? 'bg-slate-700 text-cyan-300 border border-cyan-500/40 shadow-xs'
+                    : 'bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
