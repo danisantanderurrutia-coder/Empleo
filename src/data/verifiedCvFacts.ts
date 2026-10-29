@@ -59,6 +59,54 @@ export const CV_SUMMARY = {
   en: "Geophysicist (Universidad de Chile, with distinction) and dual M.Sc. candidate in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland). Combines quantitative fieldwork in hydrogeophysics and peatland greenhouse-gas fluxes with data analysis, scientific application development, testimony before Chile's National Congress, and large-scale public communication."
 } as const;
 
+export type TacticalAngle = 'general' | 'biofisica' | 'mrv_carbon' | 'cat_risk' | 'politicas';
+
+export const TACTICAL_HEADLINES: Record<TacticalAngle, { es: string; en: string }> = {
+  general: {
+    es: 'Geofísico Ambiental • Candidato a Doble M.Sc. Europeo',
+    en: 'Environmental Geophysicist • Dual European M.Sc. Candidate'
+  },
+  biofisica: {
+    es: 'Geofísico Ambiental • Especialista en Flujos de GEI & Eddy Covariance',
+    en: 'Environmental Geophysicist • GHG Fluxes & Eddy Covariance Specialist'
+  },
+  mrv_carbon: {
+    es: 'Geofísico Cuantitativo • Especialista en Teledetección, MRV & Carbon-Tech',
+    en: 'Quantitative Geophysicist • Remote Sensing, MRV & Carbon-Tech Specialist'
+  },
+  cat_risk: {
+    es: 'Geofísico Computacional • Modelación de Riesgos Físicos, Incendios & Cuencas',
+    en: 'Computational Geophysicist • Physical Risk Modeling, Wildfires & Watersheds'
+  },
+  politicas: {
+    es: 'Geofísico Ambiental • Asesor en Políticas Climáticas, Cuencas & Salvaguardias',
+    en: 'Environmental Geophysicist • Climate Policy Advisor, Watersheds & Safeguards'
+  }
+};
+
+export const TACTICAL_SUMMARIES: Record<TacticalAngle, { es: string; en: string }> = {
+  general: {
+    es: 'Geofísico (Universidad de Chile, con distinción) y candidato a doble Máster en Ciencias en Manejo Ambiental (CAU Kiel, Alemania) y Protección Ambiental (AMU Poznań, Polonia). Combina trabajo cuantitativo de terreno en hidrogeofísica y flujos de gases de efecto invernadero en turberas con análisis de datos, desarrollo de aplicaciones científicas, testimonio ante el Congreso Nacional de Chile y comunicación pública de gran alcance.',
+    en: "Geophysicist (Universidad de Chile, with distinction) and dual M.Sc. candidate in Environmental Management (CAU Kiel, Germany) and Environmental Protection (AMU Poznań, Poland). Combines quantitative fieldwork in hydrogeophysics and peatland greenhouse-gas fluxes with data analysis, scientific application development, testimony before Chile's National Congress, and large-scale public communication."
+  },
+  biofisica: {
+    es: 'Geofísico (U. de Chile) y candidato a doble M.Sc. europeo (CAU Kiel / AMU Poznań) especializado en balance de GEI (CO₂, CH₄) mediante Eddy Covariance y cámaras cerradas en turberas templadas. Experiencia directa en instrumentación micrometeorológica, cálculo de tensión de preconsolidación edáfica (σp = 62,4 kPa) y análisis de series temporales continuas en R y Python para centros de investigación y redes de monitoreo de flujos.',
+    en: 'Geophysicist (U. de Chile) and dual European M.Sc. candidate (CAU Kiel / AMU Poznań) specializing in GHG balances (CO₂, CH₄) using Eddy Covariance and closed chambers in temperate peatlands. Hands-on experience with micrometeorological instrumentation, soil precompression stress analysis (σp = 62.4 kPa), and continuous flux time series in R/Python for research centers and flux networks.'
+  },
+  mrv_carbon: {
+    es: 'Geofísico cuantitativo (U. de Chile, CAU Kiel) especializado en teledetección satelital (Google Earth Engine, Sentinel-2, Landsat), validación empírica en terreno y calificación de integridad en proyectos de carbono edáfico y humedales. Combina modelación de flujos de carbono, programación geoespacial en Python/R y rigor metodológico para plataformas de calificación MRV y rating de créditos climáticos.',
+    en: 'Quantitative geophysicist (U. de Chile, CAU Kiel) specialized in satellite remote sensing (Google Earth Engine, Sentinel-2, Landsat), ground-truthing, and integrity rating for soil carbon and wetland offset projects. Combines carbon flux modeling, geospatial Python/R programming, and methodological rigor for MRV verification platforms and climate credit rating agencies.'
+  },
+  cat_risk: {
+    es: 'Geofísico (U. de Chile) enfocado en modelación física de amenazas catastróficas, dinámica de incendios forestales y balance hidrológico en cuencas degradadas. Combina física de propagación, series temporales hidrológicas, teledetección multiespectral y programación científica para el análisis de riesgo físico agudo/crónico orientado a reaseguros, seguros paramétricos y resiliencia territorial.',
+    en: 'Geophysicist (U. de Chile) focused on physical hazard modeling, wildfire dynamics, and watershed hydrological balance in degraded landscapes. Integrates propagation physics, hydrological time series, multispectral remote sensing, and scientific programming for acute/chronic physical risk analysis targeting reinsurance, parametric insurance, and territorial resilience.'
+  },
+  politicas: {
+    es: 'Geofísico ambiental y candidato a doble M.Sc. europeo con trayectoria contrastada en la interfaz ciencia-política: autor de informes técnicos y compareciente ante el Senado y Cámara de Diputados de Chile en legislación de aguas, incendios y cuencas. Aporta visión técnica rigurosa para organismos multilaterales (GIZ, UE), salvaguardias ambientales y diseño de marcos regulatorios climáticos.',
+    en: 'Environmental geophysicist and dual European M.Sc. candidate with a proven track record at the science-policy interface: author of technical reports and parliamentary expert witness before the Chilean Senate and Chamber of Deputies on water, wildfire, and watershed legislation. Provides rigorous technical insight for multilateral bodies (GIZ, EU), environmental safeguards, and climate policy design.'
+  }
+};
+
 export const CV_FOOTER_GENERAL = {
   es: 'CV de referencia general: cada postulación se ajusta con antecedentes específicos según el rol.',
   en: 'General reference CV: every application is tailored with role-specific background.'

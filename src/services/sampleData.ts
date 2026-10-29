@@ -1267,7 +1267,373 @@ export const initialCompanies: CompanyDossier[] = [
     techStack: ['Research Fellowships', 'Horizon Europe', 'Gestión de Proyectos I+D'],
     lastResearched: '2026-10-25',
     quadrants: ['EUSKADI'],
+    sectorCluster: 'RD_PUBLIC',
     fundingTies: ['f-ikerbasque-fellowship']
+  },
+  {
+    id: 'comp-sylvera',
+    name: 'Sylvera',
+    website: 'https://www.sylvera.com/',
+    sector: 'Carbon-Tech & Calificación Independiente de Créditos de Carbono (MRV)',
+    size: '180+ especialistas en machine learning, teledetección y ciencias de la tierra',
+    headquarters: 'Londres (Reino Unido) / Hub Remoto Europa',
+    description: 'La calificadora líder mundial de integridad de créditos de carbono. Diseña frameworks rigurosos de calificación cruzando observaciones satelitales (LiDAR, radar SAR, óptico) con balances biofísicos de carbono edáfico y forestal para erradicar el greenwashing corporativo.',
+    keyProjects: [
+      'Sylvera Carbon Ratings Framework para proyectos de carbono en suelos agrícolas y rehumidificación de turberas',
+      'Plataforma de monitoreo de riesgo de reversión y adicionalidad basada en teledetección de alta resolución',
+      'Modelado de biomasa supraterránea y carbono orgánico del suelo con calibración in-situ'
+    ],
+    recentNews: [
+      {
+        title: 'Expansión de la cobertura de calificación a proyectos de carbono edáfico y humedales en Europa',
+        date: '2026-10-10',
+        snippet: 'Despliegue de nuevos algoritmos para cuantificar incertidumbre en flujos de carbono edáfico.'
+      }
+    ],
+    workCulture: [
+      'Cultura técnica de alto ritmo orientada a la misión climática',
+      'Entorno multinacional 100% en inglés con política de teletrabajo flexible en Europa',
+      'Remuneración competitiva de mercado tecnológico con equity options'
+    ],
+    redFlags: ['Ritmo exigente de startup y necesidad de comunicar conceptos biofísicos complejos a clientes financieros'],
+    interviewArguments: [
+      'Comprensión empírica directa de la física de flujos de carbono (Eddy Covariance) para validar modelos satelitales.',
+      'Manejo avanzado de R, Python y Google Earth Engine para procesamiento a escala de datos geoespaciales.',
+      'Experiencia previa en auditoría de integridad de carbono forestal con redes internacionales (EPN).'
+    ],
+    techStack: ['Python', 'R', 'Google Earth Engine', 'QGIS', 'LiDAR', 'Sentinel-1/2', 'Carbon MRV'],
+    lastResearched: '2026-10-28',
+    quadrants: ['UK_NL', 'GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV',
+    contacts: [
+      {
+        id: 'cnt-sylvera-team',
+        name: 'Sylvera Applied Science Team',
+        role: 'Head of Applied Science / Remote Sensing Lead',
+        email: 'careers@sylvera.com',
+        linkedinUrl: 'https://www.linkedin.com/company/sylvera/'
+      }
+    ]
+  },
+  {
+    id: 'comp-bezero',
+    name: 'BeZero Carbon',
+    website: 'https://bezerocarbon.com/',
+    sector: 'Agencia Global de Calificación de Riesgo de Carbono & Mercados Voluntarios',
+    size: '150+ analistas de riesgo y científicos de la tierra',
+    headquarters: 'Londres (Reino Unido)',
+    description: 'Agencia global de calificación crediticia de carbono que provee análisis de riesgo independiente y transparente a fondos de inversión, bancos y corporaciones para evaluar la probabilidad de que un crédito logre 1 tonelada de CO2e evitada o eliminada.',
+    keyProjects: [
+      'BeZero Carbon Rating (BCR) escala de 8 niveles (AAA a C) para proyectos de soluciones basadas en la naturaleza',
+      'Desarrollo de metodologías de evaluación de fuga (leakage) y permanencia de carbono en turberas y manglares',
+      'Integración de modelos bioclimáticos globales con series temporales satelitales'
+    ],
+    recentNews: [
+      {
+        title: 'Publicación de nuevas directivas de rating para proyectos de biochar y carbono en suelos',
+        date: '2026-09-28',
+        snippet: 'Evaluación de permanencia y estabilidad mineral del carbono en horizontes agrícolas.'
+      }
+    ],
+    workCulture: [
+      'Rigurosidad analítica inspirada en agencias financieras (S&P, Moody\'s) aplicada a la ciencia del clima',
+      'Ambiente interdisciplinario combinando economistas, climatólogos y geocientíficos',
+      'Sede en Londres con opción híbrida'
+    ],
+    redFlags: ['Enfoque muy analítico y de escrutinio metodológico minucioso'],
+    interviewArguments: [
+      'Base matemática de Geofísica para modelar distribuciones de probabilidad e incertidumbre en balances de carbono.',
+      'Dominio de dinámicas de degradación y saturación de carbono edáfico adquirido en Kiel y Poznań.'
+    ],
+    techStack: ['Python', 'R', 'GIS', 'Series Temporales', 'Estadística Bayesiana'],
+    lastResearched: '2026-10-28',
+    quadrants: ['UK_NL', 'GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-agreena',
+    name: 'Agreena',
+    website: 'https://agreena.com/',
+    sector: 'Certificación de Carbono en Suelos Agrícolas & Agricultura Regenerativa',
+    size: '200+ ingenieros agrónomos, desarrolladores y especialistas en suelos',
+    headquarters: 'Copenhague (Dinamarca) / Hubs en Berlín y Londres',
+    description: 'La mayor plataforma europea de certificación de carbono edáfico (Soil Carbon Farming). Ayuda a miles de agricultores en más de 16 países europeos a monetizar la transición a prácticas regenerativas mediante créditos de carbono de alta integridad verificados con satélite.',
+    keyProjects: [
+      'Programa AgreenaCarbon con más de 2 millones de hectáreas bajo monitoreo regenerativo en Europa',
+      'Modelado biofísico de secuestro de carbono edáfico con el modelo biogeoquímico DNDC y calibración satelital',
+      'Despliegue de gemelos edáficos para predecir mineralización de materia orgánica en suelos del norte de Europa'
+    ],
+    recentNews: [
+      {
+        title: 'Certificación de créditos de carbono edáfico bajo el estándar Verra en el norte y este de Europa',
+        date: '2026-10-15',
+        snippet: 'Pioneros en auditar reducción de N2O y secuestro de carbono en cereales.'
+      }
+    ],
+    workCulture: [
+      'Startup climate-tech europea en hipercrecimiento',
+      'Contacto directo con la realidad del campo agrícola combinado con satélites',
+      'Equipos en Copenhague, Alemania y Reino Unido'
+    ],
+    redFlags: ['Crecimiento acelerado con cambios frecuentes de prioridades de producto'],
+    interviewArguments: [
+      'Especialización en modelación biogeoquímica de suelos y dinámica de gases de efecto invernadero.',
+      'Alemán funcional B1 y formación en Alemania (CAU Kiel) ideal para interactuar con agricultores e institutos del norte de Europa.',
+      'Certificación en Diseño de Permacultura (Keyline / regeneración edáfica).'
+    ],
+    techStack: ['Python', 'R', 'DNDC', 'Sentinel Satelital', 'GIS'],
+    lastResearched: '2026-10-28',
+    quadrants: ['NORDICS', 'DACH', 'UK_NL'],
+    sectorCluster: 'CARBON_TECH_MRV'
+  },
+  {
+    id: 'comp-mitiga',
+    name: 'Mitiga Solutions',
+    website: 'https://www.mitigasolutions.com/',
+    sector: 'Modelación de Catástrofes (Cat Risk) & Riesgo Físico Climático',
+    size: '60+ modeladores geofísicos, climatólogos e ingenieros de software',
+    headquarters: 'Barcelona (España) / Oficinas en Londres y Remoto',
+    description: 'Spin-off nacida del Barcelona Supercomputing Center (BSC). Desarrolla tecnología de vanguardia para predecir el impacto físico y financiero de riesgos climáticos (megaincendios forestales, inundaciones, vulcanismo, sequías) para aseguradoras, gestores de activos y corporaciones globales bajo el marco CSRD.',
+    keyProjects: [
+      'Plataforma Climate Risk Engine para análisis de riesgo físico regulatorio europeo (CSRD / EU Taxonomy)',
+      'Simulación física de dinámica de propagación de megaincendios forestales integrando combustible, viento y humedad del suelo',
+      'Evaluación de resiliencia de infraestructuras críticas ante eventos extremos'
+    ],
+    recentNews: [
+      {
+        title: 'Ronda de inversión Serie A y despliegue del simulador de incendios para el mercado de reaseguros de Londres',
+        date: '2026-09-20',
+        snippet: 'Integración de datos de supercomputación con modelos predictivos de riesgo forestal.'
+      }
+    ],
+    workCulture: [
+      'Espíritu científico de alta investigación trasladado a producto comercial B2B',
+      'Sede principal en España con posibilidad de contratación bajo la Ley 14/2013',
+      'Colaboración continua con universidades y centros de supercomputación'
+    ],
+    redFlags: ['Alta exigencia en algoritmos de computación científica y física computacional'],
+    interviewArguments: [
+      'Formación fundacional en Geofísica (física de fluidos, medios continuos y modelado numérico).',
+      'Experiencia empírica demostrada en correlación estructural entre monocultivos forestales y riesgo de megaincendios (presentada en el Congreso de Chile).',
+      'Posibilidad de contratación inmediata en España con residencia de 2 años para nacionalidad.'
+    ],
+    techStack: ['Python', 'HPC / Supercomputación', 'QGIS', 'Física de Incendios', 'Modelado Cat Risk'],
+    lastResearched: '2026-10-28',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-descartes',
+    name: 'Descartes Underwriting',
+    website: 'https://descartesunderwriting.com/',
+    sector: 'Seguros Climáticos Paramétricos & Resiliencia ante Desastres',
+    size: '160+ científicos de datos, meteorólogos y suscriptores de seguros',
+    headquarters: 'París (Francia) / Hubs en Madrid, Londres y Zúrich',
+    description: 'Insurtech líder que revoluciona el mercado de seguros contra catástrofes climáticas mediante pólizas paramétricas. Utiliza datos satelitales en tiempo real, radares meteorológicos y modelos biofísicos para indemnizar automáticamente ante sequías, tormentas extremas o incendios.',
+    keyProjects: [
+      'Seguros paramétricos para sequía en cuencas agrícolas basados en índices de déficit de humedad del suelo',
+      'Coberturas contra incendios forestales para activos forestales sostenibles',
+      'Modelado de impacto del fenómeno El Niño/La Niña en infraestructuras y cosechas'
+    ],
+    recentNews: [
+      {
+        title: 'Expansión de coberturas paramétricas para energías renovables y agricultura en el sur de Europa y LATAM',
+        date: '2026-10-02',
+        snippet: 'Indemnización instantánea mediante disparadores satelitales de humedad edáfica.'
+      }
+    ],
+    workCulture: [
+      'Entorno ágil, multicultural e impulsado por datos cuantitativos',
+      'Fuerte presencia de doctores y másteres en física y ciencias del clima',
+      'Hub en Madrid con conexión directa a proyectos globales y latinoamericanos'
+    ],
+    redFlags: ['Negocio estrictamente corporativo y financiero; requiere foco en valor de mercado'],
+    interviewArguments: [
+      'Capacidad para vincular mediciones edáficas in-situ con índices satelitales de humedad y sequía.',
+      'Bilingüe español/inglés con conocimiento del riesgo hídrico en cuencas de América Latina y Europa.'
+    ],
+    techStack: ['Python', 'Machine Learning', 'Earth Observation', 'Índices Paramétricos', 'R'],
+    lastResearched: '2026-10-28',
+    quadrants: ['EUSKADI', 'GLOBAL'],
+    sectorCluster: 'CAT_RISK_INSURANCE'
+  },
+  {
+    id: 'comp-giz',
+    name: 'GIZ (Deutsche Gesellschaft für Internationale Zusammenarbeit)',
+    website: 'https://www.giz.de/',
+    sector: 'Cooperación Internacional y Políticas de Transición Climática UE-LATAM',
+    size: '25.000+ empleados y expertos en más de 120 países',
+    headquarters: 'Bonn y Eschborn (Alemania)',
+    description: 'La agencia federal del Gobierno de Alemania para la cooperación internacional para el desarrollo sostenible. Su división de Clima, Energía y Medio Ambiente asesora a ministerios y gobiernos de todo el mundo en gobernanza de cuencas, transición energética justa, restauración de turberas y mercados de carbono.',
+    keyProjects: [
+      'Programa de Transición Ecológica Justa y Gobernanza de Cuencas en el Cono Sur (Chile / Argentina)',
+      'Proyecto Global de Protección de Turberas y Humedales para el Balance de GEI (IKI - BMUV)',
+      'Fortalecimiento de capacidades ministeriales para la implementación de las NDCs del Acuerdo de París'
+    ],
+    recentNews: [
+      {
+        title: 'Nuevos fondos de la Iniciativa Climática Internacional (IKI) para conservación de humedales en América Latina',
+        date: '2026-09-18',
+        snippet: 'Proyectos de cooperación técnica coordinados desde la sede de Bonn.'
+      }
+    ],
+    workCulture: [
+      'Estándar federal alemán con alta estabilidad y excelentes condiciones laborales',
+      'Impacto político y social directo en políticas públicas internacionales',
+      'Sede principal en Bonn con viajes a países socios'
+    ],
+    redFlags: ['Procesos de selección burocráticos y necesidad de cumplir baremos específicos de titulación'],
+    interviewArguments: [
+      'Puente perfecto entre el rigor técnico alemán (CAU Kiel) y la experiencia política sobre el terreno en Chile.',
+      'Experiencia verificada en incidencia técnica parlamentaria sobre gestión hídrica y transición justa.',
+      'Alemán funcional B1 e inglés C1 fluido.'
+    ],
+    techStack: ['Políticas Públicas', 'Gobernanza de Cuencas', 'Salvaguardias Ambientales', 'Gestión Multiactor'],
+    lastResearched: '2026-10-28',
+    quadrants: ['DACH', 'GLOBAL'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-clientearth',
+    name: 'ClientEarth',
+    website: 'https://www.clientearth.org/',
+    sector: 'Litigio Climático Estratégico & Evidencia Científica Ambiental',
+    size: '300+ abogados, científicos y analistas de políticas',
+    headquarters: 'Londres (Reino Unido) / Oficinas en Berlín, Bruselas y Madrid',
+    description: 'La principal organización no gubernamental de derecho y litigio ambiental de Europa. Utiliza el poder de la ley y la evidencia científica cuantitativa para exigir el cumplimiento de metas climáticas a gobiernos y grandes corporaciones, proteger bosques y restaurar ecosistemas degradados.',
+    keyProjects: [
+      'Litigios contra el greenwashing corporativo en cadenas de suministro de biomasa y créditos de carbono',
+      'Monitoreo legal del cumplimiento de la Ley de Restauración de la Naturaleza de la UE (Nature Restoration Law)',
+      'Demandas de rendición de cuentas contra subsidios a monocultivos destructivos'
+    ],
+    recentNews: [
+      {
+        title: 'Acciones legales europeas por falta de integridad en proyectos de compensación de emisiones',
+        date: '2026-10-08',
+        snippet: 'Demanda de transparencia metodológica en la contabilidad de carbono forestal.'
+      }
+    ],
+    workCulture: [
+      'Ambiente activista de alto nivel profesional y rigor jurídico',
+      'Equipos en Berlín, Bruselas y Madrid con gran autonomía',
+      'Defensa directa del interés público y los derechos ecológicos'
+    ],
+    redFlags: ['ONG financiada por donaciones y filantropía estratégica; contratos sujetos a fondos de proyecto'],
+    interviewArguments: [
+      'Historial demostrado con la Environmental Paper Network (EPN) en auditoría de biomasa forestal.',
+      'Capacidad para traducir datos físicos y satelitales en pruebas concluyentes para informes periciales y litigios.',
+      'Compromiso personal probado ante el Congreso Nacional en defensa del territorio y el agua.'
+    ],
+    techStack: ['Evidencia Científica', 'Litigio Climático', 'Contabilidad de Carbono', 'Derecho Ambiental'],
+    lastResearched: '2026-10-28',
+    quadrants: ['DACH', 'UK_NL', 'EUSKADI'],
+    sectorCluster: 'MULTILATERAL_POLICY'
+  },
+  {
+    id: 'comp-wur',
+    name: 'Wageningen University & Research (WUR)',
+    website: 'https://www.wur.nl/',
+    sector: 'Centro Global de Investigación Edáfica, Biosfera y Modelado Biofísico',
+    size: '6.800+ científicos y docentes',
+    headquarters: 'Wageningen (Países Bajos)',
+    description: 'Clasificada recurrentemente como la universidad número 1 del mundo en Agricultura y Silvicultura, y en Ciencias Ambientales. Sus grupos de Soil Physics and Land Management y Environmental Sciences coordinan los mayores consorcios europeos de modelado de suelos, balances de GEI y resiliencia climática.',
+    keyProjects: [
+      'Coordinación de la Misión de Suelos de la Unión Europea (Soil Mission Horizon Europe)',
+      'Red de medición de flujos de carbono y metano en suelos agrícolas y turberas rehumidificadas de Holanda',
+      'Modelado biofísico de transporte de agua, solutos y gases en medios porosos edáficos'
+    ],
+    recentNews: [
+      {
+        title: 'Liderazgo en la implementación de la nueva Directiva Europea de Monitoreo de Suelos',
+        date: '2026-10-12',
+        snippet: 'Estandarización de metodologías de muestreo y balance de carbono para toda la UE.'
+      }
+    ],
+    workCulture: [
+      'Epicentro internacional de la ciencia ambiental europea; 100% en inglés',
+      'Acceso a infraestructuras de laboratorio y campo de primer orden mundial',
+      'Convenio colectivo de universidades holandesas (CAO-NU) con excelentes condiciones y pensiones'
+    ],
+    redFlags: ['Mercado de vivienda muy tensionado en la región de Wageningen'],
+    interviewArguments: [
+      'Doble máster europeo en gestión ambiental con experiencia empírica directa en turberas en Alemania y Polonia.',
+      'Base matemática de Geofísica (física de fluidos y medios continuos) para integrarse de inmediato en grupos de física del suelo.'
+    ],
+    techStack: ['R', 'Python', 'Eddy Covariance', 'Física del Suelo', 'Modelos Biogeoquímicos'],
+    lastResearched: '2026-10-28',
+    quadrants: ['UK_NL', 'GLOBAL'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-icos',
+    name: 'ICOS Head Office & FMI (Integrated Carbon Observation System)',
+    website: 'https://www.icos-cp.eu/',
+    sector: 'Infraestructura Europea de Observación de Carbono y Torres Eddy Covariance',
+    size: '500+ científicos en 16 países miembros',
+    headquarters: 'Helsinki (Finlandia)',
+    description: 'La Infraestructura Europea de Investigación (ERIC) que estandariza, recopila y publica mediciones continuas de flujos de gases de efecto invernadero a través de más de 170 estaciones micrometeorológicas (torres Eddy Covariance) en ecosistemas terrestres, atmósfera y océanos de Europa.',
+    keyProjects: [
+      'Estandarización europea de procesamiento de flujos de alta frecuencia (10-20 Hz) de CO2, CH4 y H2O',
+      'Monitoreo a largo plazo del balance de carbono en turberas boreales y templadas de Europa',
+      'Portal de datos abiertos ICOS Carbon Portal integrado con Copernicus y modelos climáticos globales'
+    ],
+    recentNews: [
+      {
+        title: 'Integración de nuevas estaciones micrometeorológicas en ecosistemas de humedales en transición',
+        date: '2026-09-30',
+        snippet: 'Protocolos unificados para medición de picos de metano tras rehumidificación.'
+      }
+    ],
+    workCulture: [
+      'Referencia científica continental absoluta en micrometeorología y flujos de GEI',
+      'Comunidad científica paneuropea con sede central en Helsinki',
+      'Entorno de trabajo 100% en inglés'
+    ],
+    redFlags: ['Clima nórdico exigente en invierno para trabajo de campo prolongado'],
+    interviewArguments: [
+      'Experiencia directa en operación y procesamiento de datos de torres Eddy Covariance en turberas durante la investigación en CAU Kiel y AMU Poznań.',
+      'Capacidad para procesar datos de turbulencia en R y Python conforme a los estándares de ICOS.'
+    ],
+    techStack: ['EddyPro', 'R', 'Python', 'Micrometeorología', 'Sensores Licor / Campbell Scientific'],
+    lastResearched: '2026-10-28',
+    quadrants: ['NORDICS', 'GLOBAL'],
+    sectorCluster: 'RD_PUBLIC'
+  },
+  {
+    id: 'comp-ghgsat',
+    name: 'GHGSat',
+    website: 'https://www.ghgsat.com/',
+    sector: 'Teledetección Espacial de Alta Resolución para Emisiones de Metano y GEI',
+    size: '120+ ingenieros aeroespaciales, físicos de la atmósfera y científicos de datos',
+    headquarters: 'Montreal (Canadá) / Oficinas en Londres y Calgary',
+    description: 'Líder mundial indiscutido en teledetección espacial de alta resolución para emisiones de gases de efecto invernadero. Opera una constelación propia de nanosatélites en órbita baja con espectrómetros infrarrojos capaces de detectar penachos individuales de metano y CO2 a nivel de metro cuadrado.',
+    keyProjects: [
+      'Constelación de nanosatélites de monitoreo global de metano (resolución espacial < 25 metros)',
+      'Detección de emisiones fugitivas en humedales, vertederos y plantas de gas natural',
+      'Fusión de datos satelitales propios con Sentinel-5P y mediciones de superficie para auditoría global'
+    ],
+    recentNews: [
+      {
+        title: 'Lanzamiento de tres nuevos satélites y contrato con agencias espaciales para monitoreo de metano',
+        date: '2026-10-04',
+        snippet: 'Capacidad de revisar sitios de emisión cada pocos días a escala planetaria.'
+      }
+    ],
+    workCulture: [
+      'Pioneros de la industria NewSpace y climate-tech canadiense',
+      'Sede en Montreal (polo aeroespacial y de inteligencia artificial de Norteamérica)',
+      'Posibilidad de visado Working Holiday IEC de 1 año para ciudadanos chilenos'
+    ],
+    redFlags: ['Diferencia horaria respecto a Europa y necesidad de adaptarse al ecosistema NewSpace'],
+    interviewArguments: [
+      'Geofísica con física de transferencia radiativa y espectrometría de gases (CO2/CH4).',
+      'Especialista en emisiones de metano en humedales y turberas.',
+      'Acceso al tratado de movilidad laboral bilateral Chile-Canadá (IEC hasta los 35 años).'
+    ],
+    techStack: ['Python', 'Espectrometría Infrarroja', 'Earth Observation', 'Sentinel-5P', 'GIS'],
+    lastResearched: '2026-10-28',
+    quadrants: ['CANADA_GLOBAL', 'GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV'
   }
 ];
 

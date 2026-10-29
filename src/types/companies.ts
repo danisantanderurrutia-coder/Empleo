@@ -1,4 +1,19 @@
-export type QuadrantType = 'DACH' | 'EUSKADI' | 'REMOTE' | 'GLOBAL';
+export type QuadrantType = 
+  | 'DACH' 
+  | 'EUSKADI' 
+  | 'UK_NL' 
+  | 'NORDICS' 
+  | 'CANADA_GLOBAL' 
+  | 'REMOTE' 
+  | 'GLOBAL';
+
+export type CompanySectorCluster = 
+  | 'ALL'
+  | 'RD_PUBLIC'           // I+D Público & Centros
+  | 'CARBON_TECH_MRV'     // Carbon-Tech & Calificación MRV
+  | 'CAT_RISK_INSURANCE'  // Cat Risk & Seguros Climáticos
+  | 'MULTILATERAL_POLICY' // Organismos Multilaterales & Políticas
+  | 'GEOTHERMAL_ENERGY';  // Geotermia & Geofísica del Subsuelo
 
 export interface CompanyContact {
   id: string;
@@ -25,6 +40,7 @@ export interface CompanyDossier {
   techStack?: string[];
   lastResearched: string;
   quadrants?: QuadrantType[];
+  sectorCluster?: CompanySectorCluster;
   contacts?: CompanyContact[];
   fundingTies?: string[];
 }

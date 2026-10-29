@@ -29,7 +29,8 @@ import {
   saveVersions,
   type CvLang,
   type CvLength,
-  type SavedStudioVersion
+  type SavedStudioVersion,
+  type TacticalAngle
 } from '../../services/cvStudio';
 import {
   buildCoverLetter,
@@ -79,6 +80,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
   // ------------------------------------------------------------- Estado CV
   const [lang, setLang] = useState<CvLang>('es');
   const [length, setLength] = useState<CvLength>('1p');
+  const [tacticalAngle, setTacticalAngle] = useState<TacticalAngle>('general');
   const [forceInclude, setForceInclude] = useState<string[]>([]);
   const [exclude, setExclude] = useState<string[]>([]);
   const [location, setLocation] = useState<string>(CANONICAL_CONTACT.defaultLocation);
@@ -122,8 +124,8 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
 
   // Ensamble de CV
   const built = useMemo(
-    () => buildCv({ lang, length, offer, forceInclude, exclude, location, includePhone, phone: profile.phone }),
-    [lang, length, offer, forceInclude, exclude, location, includePhone, profile.phone]
+    () => buildCv({ lang, length, offer, tacticalAngle, forceInclude, exclude, location, includePhone, phone: profile.phone }),
+    [lang, length, offer, tacticalAngle, forceInclude, exclude, location, includePhone, profile.phone]
   );
   const html = useMemo(() => renderCvHtml(built), [built]);
   const audit = useMemo(() => auditProfile(profile), [profile]);
@@ -232,6 +234,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
       createdAt: new Date().toLocaleDateString(),
       lang,
       length,
+      tacticalAngle,
       offerId: offer?.id,
       offerLabel: label,
       forceInclude,
@@ -247,6 +250,7 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
   const loadCvVersion = (v: SavedStudioVersion) => {
     setLang(v.lang);
     setLength(v.length);
+    if (v.tacticalAngle) setTacticalAngle(v.tacticalAngle);
     setOfferId(v.offerId || '');
     setForceInclude(v.forceInclude);
     setExclude(v.exclude);
@@ -425,6 +429,87 @@ export const CVStudioTab: React.FC<CVStudioTabProps> = ({ initialOfferId = '', i
                       <div className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">
                         {tpl.pages} • {tpl.targetAudience}
                       </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Selector de Ángulo Táctico de Posicionamiento */}
+          {docMode === 'cv' && (
+            <div className={panel} style={panelStyle}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-black font-mono uppercase flex items-center gap-1.5">
+                  <Sparkles className="h-4 w-4 text-emerald-400" /> Ángulo Táctico de Posicionamiento
+                </h3>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                  5 Enfoques
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--text-secondary)]">
+                Adapta automáticamente el titular, síntesis ejecutiva y priorización de evidencia técnica según la vertical de la organización.
+              </p>
+              <div className="space-y-1.5 pt-1">
+                {[
+                  {
+                    id: 'general' as TacticalAngle,
+                    name: 'Generalista Dual',
+                    desc: 'Geofísica ambiental + Doble M.Sc. europeo (Kiel / Poznań).',
+                    badge: 'Referencia'
+                  },
+                  {
+                    id: 'biofisica' as TacticalAngle,
+                    name: 'Biofísica & Eddy Covariance',
+                    desc: 'Flujos GEI (CO₂, CH₄), turberas, cámaras cerradas y σp edáfico.',
+                    badge: 'I+D & Suelos'
+                  },
+                  {
+                    id: 'mrv_carbon' as TacticalAngle,
+                    name: 'Carbon-Tech & Calificación MRV',
+                    desc: 'Teledetección (GEE/Sentinel), rating de créditos y contabilidad.',
+                    badge: 'Climate-Tech'
+                  },
+                  {
+                    id: 'cat_risk' as TacticalAngle,
+                    name: 'Cat Risk & Modelación Física',
+                    desc: 'Incendios forestales, balance hídrico y riesgo físico paramétrico.',
+                    badge: 'Seguros / Clima'
+                  },
+                  {
+                    id: 'politicas' as TacticalAngle,
+                    name: 'Políticas & Interfaz Científica',
+                    desc: 'Testimonio en Congreso Nacional, salvaguardias y cuencas.',
+                    badge: 'Multilateral'
+                  }
+                ].map((angle) => {
+                  const isSelected = tacticalAngle === angle.id;
+                  return (
+                    <button
+                      key={angle.id}
+                      type="button"
+                      onClick={() => setTacticalAngle(angle.id)}
+                      className={`w-full p-2 rounded-xl text-left border transition text-xs cursor-pointer flex items-start justify-between gap-2 ${
+                        isSelected
+                          ? 'border-emerald-500 bg-emerald-500/10 shadow-xs ring-1 ring-emerald-500/30'
+                          : 'border-[var(--card-border)] bg-[var(--panel-bg)] hover:border-emerald-500/40'
+                      }`}
+                    >
+                      <div className="space-y-0.5">
+                        <div className="font-bold text-[11px] text-[var(--text-primary)] flex items-center gap-1.5">
+                          <span>{angle.name}</span>
+                        </div>
+                        <div className="text-[10px] text-[var(--text-muted)] line-clamp-1">
+                          {angle.desc}
+                        </div>
+                      </div>
+                      <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold uppercase shrink-0 ${
+                        isSelected
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-black/10 dark:bg-white/10 text-[var(--text-muted)]'
+                      }`}>
+                        {angle.badge}
+                      </span>
                     </button>
                   );
                 })}

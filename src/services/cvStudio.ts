@@ -5,17 +5,22 @@ import {
   CV_FOOTER_GENERAL,
   CV_HEADLINE,
   CV_SUMMARY,
+  TACTICAL_HEADLINES,
+  TACTICAL_SUMMARIES,
   VERIFIED_FACTS,
   type CvFact,
-  type CvSection
+  type CvSection,
+  type TacticalAngle
 } from '../data/verifiedCvFacts';
 
+export type { TacticalAngle };
 export type CvLang = 'es' | 'en';
 export type CvLength = '1p' | '2p';
 
 export interface StudioConfig {
   lang: CvLang;
   length: CvLength;
+  tacticalAngle?: TacticalAngle;
   /** Oferta objetivo (opcional): reordena y selecciona según coincidencias */
   offer?: Pick<JobOffer, 'title' | 'company' | 'rawDescription' | 'requirements' | 'responsibilities'> | null;
   /** Hechos que el usuario fuerza a incluir aunque excedan el cupo */
@@ -80,32 +85,44 @@ export const offerText = (offer: StudioConfig['offer']): string => {
   );
 };
 
-export const scoreFacts = (offer: StudioConfig['offer']): ScoredFact[] => {
+const TACTICAL_ANGLE_KEYWORDS: Record<Exclude<TacticalAngle, 'general'>, string[]> = {
+  biofisica: ['eddy covariance', 'peatland', 'turbera', 'moor', 'ghg', 'gei', 'greenhouse', 'paludiculture', 'paludicultura', 'soil', 'suelo', 'boden', 'biogeochemistry'],
+  mrv_carbon: ['remote sensing', 'teledetección', 'earth observation', 'gee', 'google earth engine', 'sentinel', 'carbon', 'wetland monitor', 'satelital', 'mrv'],
+  cat_risk: ['wildfire', 'incendio', 'catchment', 'cuenca', 'hydrology', 'hidrología', 'riesgo', 'hazard', 'geophysics', 'geofísica'],
+  politicas: ['congreso', 'policy', 'política', 'senado', 'water code', 'código de aguas', 'cuenca', 'watershed', 'comunicación']
+};
+
+export const scoreFacts = (offer: StudioConfig['offer'], tacticalAngle?: TacticalAngle): ScoredFact[] => {
   const text = offerText(offer);
+  const angleKeywords = tacticalAngle && tacticalAngle !== 'general' ? TACTICAL_ANGLE_KEYWORDS[tacticalAngle] : [];
+
   return VERIFIED_FACTS.map((fact) => {
     const matchedTags = text ? fact.tags.filter((tag) => tagMatches(text, tag)) : [];
+    const hasAngleMatch = angleKeywords.length > 0 && fact.tags.some((t) => angleKeywords.includes(t.toLowerCase()));
+    const angleBonus = hasAngleMatch ? 2.5 : 0;
+
     return {
       fact,
       matchedTags,
-      score: fact.priority + matchedTags.length * 1.5,
+      score: fact.priority + matchedTags.length * 1.5 + angleBonus,
       included: false
     };
   });
 };
 
 export const buildCv = (config: StudioConfig): BuiltCv => {
-  const { lang, length, offer } = config;
+  const { lang, length, offer, tacticalAngle = 'general' } = config;
   const exclude = new Set(config.exclude || []);
   const force = new Set(config.forceInclude || []);
-  const scored = scoreFacts(offer);
+  const scored = scoreFacts(offer, tacticalAngle);
   const hasOffer = !!offer;
 
   const sections = SECTION_ORDER.map((section) => {
     const inSection = scored.filter((s) => s.fact.section === section);
     const base = [...inSection];
-    // Sin oferta: orden por prioridad y luego orden de declaración. Con oferta: por puntaje.
+    // Sin oferta: orden por puntaje (incluye prioridad + bonus táctico) y luego orden de declaración. Con oferta: por puntaje.
     base.sort((a, b) => {
-      const diff = hasOffer ? b.score - a.score : b.fact.priority - a.fact.priority;
+      const diff = b.score - a.score;
       return diff !== 0 ? diff : inSection.indexOf(a) - inSection.indexOf(b);
     });
 
@@ -140,10 +157,13 @@ export const buildCv = (config: StudioConfig): BuiltCv => {
   if (location) contact.unshift({ label: 'location', value: location });
   if (config.includePhone && config.phone?.trim()) contact.splice(1, 0, { label: 'phone', value: config.phone.trim() });
 
+  const headline = TACTICAL_HEADLINES[tacticalAngle]?.[lang] || CV_HEADLINE[lang];
+  const summary = TACTICAL_SUMMARIES[tacticalAngle]?.[lang] || CV_SUMMARY[lang];
+
   return {
     config,
-    headline: CV_HEADLINE[lang],
-    summary: CV_SUMMARY[lang],
+    headline,
+    summary,
     contact,
     sections,
     allFacts: scored,
@@ -431,6 +451,7 @@ export interface SavedStudioVersion {
   createdAt: string;
   lang: CvLang;
   length: CvLength;
+  tacticalAngle?: TacticalAngle;
   offerId?: string;
   offerLabel?: string;
   forceInclude: string[];

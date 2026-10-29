@@ -169,3 +169,29 @@ describe('cvStudio · auditProfile', () => {
     expect(auditProfile(initialProfile).some((i) => i.id.startsWith('link-'))).toBe(false);
   });
 });
+
+describe('cvStudio · ángulos tácticos de posicionamiento', () => {
+  it('aplica el ángulo de biofísica y Eddy Covariance correctamente', () => {
+    const cv = buildCv({ lang: 'es', length: '1p', tacticalAngle: 'biofisica' });
+    expect(cv.headline).toContain('Eddy Covariance');
+    expect(cv.summary).toContain('balance de GEI');
+  });
+
+  it('aplica el ángulo de MRV y Carbon-Tech correctamente', () => {
+    const cv = buildCv({ lang: 'es', length: '1p', tacticalAngle: 'mrv_carbon' });
+    expect(cv.headline).toContain('MRV');
+    expect(cv.summary).toContain('teledetección satelital');
+  });
+
+  it('aplica el ángulo de Cat Risk e Incendios correctamente', () => {
+    const cv = buildCv({ lang: 'es', length: '1p', tacticalAngle: 'cat_risk' });
+    expect(cv.headline).toContain('Riesgos Físicos');
+    expect(cv.summary).toContain('incendios forestales');
+  });
+
+  it('aplica el ángulo de Políticas Climáticas y Multilateral correctamente', () => {
+    const cv = buildCv({ lang: 'es', length: '1p', tacticalAngle: 'politicas' });
+    expect(cv.headline).toContain('Políticas Climáticas');
+    expect(cv.summary).toContain('Senado y Cámara de Diputados');
+  });
+});
