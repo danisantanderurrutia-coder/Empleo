@@ -137,6 +137,26 @@ export const ACADEMY_COURSES: AcademyCourse[] = [
     xpValue: 420
   },
   {
+    id: 'course-un-redd-carbon-peats-forests',
+    title: 'UN-REDD Academy: Forests, Peatlands & Soil Carbon MRV',
+    provider: 'UN CC:Learn & UN-REDD Programme (FAO, UNEP, UNDP)',
+    branch: 'biogeo',
+    branchName: 'Biogeoquímica, Suelos & Agua',
+    isMarketGap: false,
+    costType: 'FREE',
+    costLabel: '100% Gratuito (FAO / UNEP / UNDP)',
+    durationHours: 20,
+    certificationType: 'Certificado Oficial UN-REDD / UN CC:Learn',
+    url: 'https://unccelearn.org/courses/?language=en',
+    syllabusSummary: 'Medición, reporte y verificación (MRV) de carbono en biomasa y suelos orgánicos (turberas), salvaguardas sociales de Cancún, niveles de referencia FREL/FRL y contabilización de sumideros naturales de carbono.',
+    difficulty: 'INTERMEDIATE',
+    matchImpact: '+25% en agencias de conservación, certificadoras de carbono, BC3, CIFOR-ICRAF y organismos multilaterales',
+    skillsLearned: ['UN-REDD Framework', 'Soil & Peatland Carbon MRV', 'Salvaguardas de Cancún', 'Niveles de Referencia FREL'],
+    languages: ['EN'],
+    badgeIcon: '🌲',
+    xpValue: 500
+  },
+  {
     id: 'course-fluxnet-eddy-covariance',
     title: 'Eddy Covariance Flux Measurements & Greenhouse Gas Data Processing',
     provider: 'ICOS / FLUXNET Open Science Network',
@@ -309,7 +329,7 @@ export const ACADEMY_COURSES: AcademyCourse[] = [
     costLabel: '100% Gratuito (Naciones Unidas)',
     durationHours: 24,
     certificationType: 'Certificado Oficial de las Naciones Unidas (UN CC:Learn)',
-    url: 'https://www.unccelearn.org/',
+    url: 'https://unccelearn.org/courses/?language=en',
     syllabusSummary: 'Mapeo de donantes filantrópicos internacionales (Patagonia 1%, EOCA, EuroNatur, Oak Foundation), redacción de solicitudes de subvención, métricas de impacto de campo y rendición ética de cuentas.',
     difficulty: 'INTERMEDIATE',
     matchImpact: '+20% en ONGs ambientales, fundaciones de conservación y proyectos territoriales',
@@ -425,6 +445,26 @@ export const ACADEMY_COURSES: AcademyCourse[] = [
     languages: ['ES', 'EN'],
     badgeIcon: '🏛️',
     xpValue: 460
+  },
+  {
+    id: 'course-un-cc-learn-legal-regime',
+    title: 'International Climate Change Legal Regime: UNFCCC, Paris Agreement & NDCs',
+    provider: 'UN CC:Learn (UNITAR & UNFCCC Secretariat)',
+    branch: 'culture',
+    branchName: 'Cultura, Políticas & CSRD',
+    isMarketGap: false,
+    costType: 'FREE',
+    costLabel: '100% Gratuito (Naciones Unidas)',
+    durationHours: 18,
+    certificationType: 'Certificado Oficial de las Naciones Unidas (UNITAR)',
+    url: 'https://unccelearn.org/courses/?language=en',
+    syllabusSummary: 'Arquitectura jurídica internacional del clima: Convenio Marco de las Naciones Unidas (CMNUCC), Mecanismo de Pérdidas y Daños, diseño de Contribuciones Determinadas a Nivel Nacional (NDCs), Artículo 6 (mercados de carbono) y marco de transparencia reforzado (BTR).',
+    difficulty: 'INTERMEDIATE',
+    matchImpact: '+22% en agencias de cooperación, ministerios (MITECO), consultoría de políticas europeas y gobernanza multilateral',
+    skillsLearned: ['UNFCCC & Paris Agreement', 'Art. 6 Carbon Markets', 'Diseño de NDCs', 'Transparencia Climática BTR'],
+    languages: ['EN', 'ES'],
+    badgeIcon: '⚖️',
+    xpValue: 480
   },
 
   // ==========================================================================

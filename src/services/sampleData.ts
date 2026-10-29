@@ -347,6 +347,20 @@ export const initialSources: JobSource[] = [
     notes: 'Ciencias del suelo, agricultura sostenible y agrotecnología en Euskadi.'
   },
   {
+    id: 'src-eit-food',
+    name: 'EIT Food Careers & Opportunities (Bilbao Hub)',
+    type: 'research_center',
+    url: 'https://www.eitfood.eu/careers',
+    priority: 'Alta',
+    frequency: 'Semanal',
+    status: 'Activo',
+    lastScraped: '',
+    offersExtracted: 0,
+    region: 'Euskadi / España',
+    notes: 'Sede para el Sur de Europa de la comunidad de innovación agroalimentaria del EIT en Zamudio (Bilbao). Puestos de gestión de proyectos, agronomía regenerativa y suelos.',
+    countryFocus: 'Euskadi / España (Sede Bilbao Hub)'
+  },
+  {
     id: 'src-aclima',
     name: 'Aclima - Clúster de Industrias del Medio Ambiente de Euskadi',
     type: 'job_board',
@@ -2892,6 +2906,55 @@ export const initialCompanies: CompanyDossier[] = [
     quadrants: ['UK_NL', 'DACH', 'EUSKADI', 'GLOBAL'],
     sectorCluster: 'CARBON_TECH_MRV',
     fundingTies: ['f-climate-kic-awards', 'f-horizon-cluster6']
+  },
+  {
+    id: 'comp-eit-food',
+    name: 'EIT Food (South Hub - Bilbao / Zamudio)',
+    website: 'https://www.eitfood.eu/',
+    sector: 'Innovación Agroalimentaria, Salud del Suelo & Transición Regenerativa de la UE',
+    size: '200+ especialistas (Red europea de 250+ universidades y corporaciones)',
+    headquarters: 'Parque Tecnológico de Bizkaia (Zamudio, Bilbao) / Sede Europea en Lovaina (Bélgica)',
+    description: 'Sede para el Sur de Europa de la comunidad de innovación agroalimentaria del Instituto Europeo de Innovación y Tecnología (EIT), ubicada en el Parque Tecnológico de Bizkaia (Zamudio, Bilbao). Lidera programas europeos de descarbonización agraria, regeneración de suelos edáficos, bioeconomía circular, retención hídrica y aceleración de startups agrotech en España, Italia, Portugal y Grecia bajo Horizon Europe.',
+    keyProjects: [
+      'Regenerative Agriculture Revolution: Formación y transición de agricultores hacia prácticas de salud de suelo y retención de carbono edáfico',
+      'Misión de la UE "A Soil Deal for Europe": Desarrollo de living labs y faros de monitoreo de calidad del suelo en cuencas del sur de Europa',
+      'EIT Food Accelerator Network (FAN) Bilbao Hub: Aceleración de startups agrotech, biotecnología del suelo y teledetección de cultivos',
+      'Plataformas de métricas de sostenibilidad y reducción de huella de carbono y agua en cadenas de valor agroalimentarias'
+    ],
+    recentNews: [
+      {
+        title: 'EIT Food Bilbao expande sus programas de agricultura regenerativa y monitorización de suelos en Euskadi',
+        date: '2026-10-18',
+        snippet: 'Nuevos consorcios colaborativos con centros tecnológicos y universidades para validar métricas de carbono en suelos del País Vasco y Sur de Europa.',
+        url: 'https://www.eitfood.eu/news'
+      }
+    ],
+    workCulture: [
+      'Entorno multicultural y paneuropeo enfocado en impacto de campo, bioeconomía y transferencia tecnológica',
+      'Fuerte sinergia con el ecosistema de I+D vasco (Parque Tecnológico de Zamudio, Neiker, AZTI, Tecnalia, UPV/EHU)',
+      'Flexibilidad de trabajo híbrido con participación en consorcios internacionales de la Comisión Europea (Horizon Europe)'
+    ],
+    redFlags: [
+      'Exigencia rigurosa de justificación técnica y financiera vinculada a los hitos y auditorías de la Comisión Europea'
+    ],
+    interviewArguments: [
+      'Doble maestría europea en Gestión y Protección Ambiental completada en Alemania (CAU Kiel) con conocimiento operativo de los marcos y directivas de la UE.',
+      'Sólida formación científica en ciencias de la Tierra, física del suelo, retención hídrica en medios porosos y balances de carbono orgánico edáfico.',
+      'Radicación directa en Bilbao y conocimiento del tejido científico y tecnológico vasco (RVCTI, Neiker, AZTI, Tecnalia).',
+      'Capacidad probada de comunicación y articulación multiactor ante autoridades públicas, comisiones parlamentarias e instituciones internacionales.'
+    ],
+    techStack: [
+      'Carbon Farming',
+      'Soil Health Frameworks',
+      'Horizon Europe (Cluster 6)',
+      'Living Labs',
+      'GIS / Remote Sensing',
+      'Stakeholder Orchestration'
+    ],
+    lastResearched: '2026-10-29',
+    quadrants: ['EUSKADI', 'UK_NL', 'GLOBAL'],
+    sectorCluster: 'CARBON_TECH_MRV',
+    fundingTies: ['f-hazitek-elkartek', 'f-horizon-cluster6']
   }
 ];
 

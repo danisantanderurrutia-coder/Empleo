@@ -103,6 +103,18 @@ export const DAILY_PORTALS: DailyPortal[] = [
     description: 'Ofertas especializadas en desarrollo técnico, análisis de datos, Python y sistemas de información geográfica.',
     iconName: 'Search'
   },
+  {
+    id: 'portal-eit-food',
+    name: 'EIT Food Careers (Bilbao Hub & Europa)',
+    quadrant: 'EUSKADI',
+    quadrantLabel: 'Euskadi / Innovación UE',
+    category: 'Ambiental / Clima',
+    directUrl: 'https://www.eitfood.eu/careers',
+    recommendedFrequency: 'Semanal',
+    suggestedKeywords: ['Soil Health', 'Carbon Farming', 'Regenerative Agriculture', 'Innovation Manager', 'Bilbao'],
+    description: 'Bolsa de vacantes de la sede para el Sur de Europa de EIT Food en el Parque Tecnológico de Bizkaia (Zamudio). Puestos en agricultura regenerativa, suelos y consorcios UE.',
+    iconName: 'Leaf'
+  },
 
   // -------------------------------------------------------------
   // CUADRANTE EUROPA & CIENCIA / I+D
