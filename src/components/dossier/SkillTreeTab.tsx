@@ -1239,9 +1239,9 @@ export const SkillTreeTab: React.FC = () => {
         
         {/* LEFT CANVAS: CONFOCAL FLUORESCENCE STAGE (8 COLS) */}
         <div 
-          className="lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors"
+          className="lg:col-span-8 p-3 rounded-2xl border shadow-2xl relative overflow-hidden transition-colors backdrop-blur-xl"
           style={{ 
-            backgroundColor: '#020408', 
+            backgroundColor: 'rgba(3, 7, 18, 0.72)', 
             borderColor: 'rgba(255, 255, 255, 0.12)' 
           }}
         >
@@ -1619,7 +1619,7 @@ export const SkillTreeTab: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: CONFOCAL TECHNICAL DOSSIER (4 COLS) */}
-        <div className="lg:col-span-4 space-y-3.5">
+        <div className="lg:col-span-4 space-y-3.5 min-h-[580px]">
           
           {/* Main Selected Capability Inspector Card */}
           <div 

@@ -21,21 +21,7 @@ interface Particle {
 
 export const CosmicNeuralBackground: React.FC<CosmicNeuralBackgroundProps> = ({ theme }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [imgLoaded, setImgLoaded] = useState(false);
   const [imgSrc, setImgSrc] = useState<string>(() => resolveAsset('backgrounds/cosmic-neural-bg.jpg'));
-
-  // Verify and load image
-  useEffect(() => {
-    const img = new Image();
-    img.src = imgSrc;
-    img.onload = () => setImgLoaded(true);
-    img.onerror = () => {
-      // Try fallback extensions if jpg isn't loaded or format differs
-      if (imgSrc.endsWith('.jpg')) {
-        setImgSrc(resolveAsset('backgrounds/cosmic-neural-bg.png'));
-      }
-    };
-  }, [imgSrc]);
 
   // Subtle biological synapse & cosmic web canvas simulation
   useEffect(() => {
@@ -191,41 +177,51 @@ export const CosmicNeuralBackground: React.FC<CosmicNeuralBackgroundProps> = ({ 
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transition-colors duration-700">
-      {/* 1. Base Cosmic Neural Wallpaper Image (from Gemini image-generator) */}
-      {imgLoaded && (
-        <div
-          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
-            isLight ? 'opacity-25 filter contrast-125 brightness-110 saturate-75' : 'opacity-40 filter brightness-90 contrast-110'
-          }`}
-          style={{
-            backgroundImage: `url(${imgSrc})`
-          }}
-        />
-      )}
-
-      {/* 2. Deep Vignette & Dark Stacking Gradient to Guarantee AAA UI Legibility */}
-      <div 
-        className={`absolute inset-0 transition-opacity duration-700 ${
-          isLight
-            ? 'bg-gradient-to-b from-slate-100/85 via-slate-50/70 to-slate-200/90 backdrop-blur-[2px]'
-            : 'bg-gradient-to-b from-[#060a14]/90 via-[#040711]/85 to-[#020409]/95 backdrop-blur-[1px]'
+      {/* 1. Base Cosmic Neural Wallpaper Image (Universe meets Neurons - Gemini AI generation) */}
+      <img
+        src={imgSrc}
+        alt=""
+        aria-hidden="true"
+        className={`absolute inset-0 w-full h-full object-cover object-center select-none transition-opacity duration-1000 ${
+          isLight 
+            ? 'opacity-40 filter contrast-125 brightness-110 saturate-85' 
+            : 'opacity-85 filter brightness-105 contrast-125'
         }`}
+        onError={() => {
+          if (imgSrc.endsWith('.jpg')) {
+            setImgSrc(resolveAsset('backgrounds/cosmic-neural-bg.png'));
+          }
+        }}
+      />
+
+      {/* 2. Soft Atmospheric Vignette (Protects legibility of text while letting stars & filaments shine brilliantly) */}
+      <div 
+        className={`absolute inset-0 transition-opacity duration-700 pointer-events-none ${
+          isLight
+            ? 'bg-gradient-to-b from-slate-100/60 via-transparent to-slate-200/75'
+            : 'bg-gradient-to-b from-[#060a14]/65 via-[#040711]/30 to-[#020409]/75'
+        }`}
+        style={{
+          boxShadow: isLight
+            ? 'inset 0 0 120px rgba(241, 245, 249, 0.7)'
+            : 'inset 0 0 160px rgba(3, 7, 18, 0.85)'
+        }}
       />
 
       {/* 3. Radial Nebula Glow Points */}
       <div 
-        className="absolute inset-0 opacity-40 mix-blend-screen"
+        className="absolute inset-0 opacity-45 mix-blend-screen pointer-events-none"
         style={{
           background: isLight
-            ? 'radial-gradient(circle at 15% 25%, rgba(2, 132, 199, 0.12) 0%, transparent 45%), radial-gradient(circle at 85% 75%, rgba(13, 148, 136, 0.12) 0%, transparent 50%)'
-            : 'radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.12) 0%, transparent 45%), radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%)'
+            ? 'radial-gradient(circle at 15% 25%, rgba(2, 132, 199, 0.15) 0%, transparent 45%), radial-gradient(circle at 85% 75%, rgba(13, 148, 136, 0.15) 0%, transparent 50%)'
+            : 'radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.22) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.18) 0%, transparent 45%), radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%)'
         }}
       />
 
       {/* 4. Interactive Living Synaptic Filament Canvas */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full pointer-events-none"
       />
     </div>
   );
